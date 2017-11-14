@@ -35,7 +35,7 @@ public class CameraScript : MonoBehaviour
                             if(infoObject.GetComponent<StatScript>())
                             {
 
-                                infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString();
+                                infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString() + " \n HP:" + infoObject.GetComponent<StatScript>().HEALTH.ToString();
                             }
                         }
                     }

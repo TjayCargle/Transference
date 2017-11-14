@@ -11,14 +11,61 @@ public class WeaponScript : MonoBehaviour
     [SerializeField]
     private int myLuck;
     [SerializeField]
-    private int myAttackDist;
+    private int myStartkDist;
+    [SerializeField]
+    private int myAttackRange;
     [SerializeField]
     private string myName;
+    [SerializeField]
+    private Element myAfinity = Element.Slash;
+
     private LivingObject owner;
     public LivingObject USER
     {
         get { return owner; }
         set { owner = value; }
+    }
+    public Element AFINITY
+    {
+        get { return myAfinity; }
+    }
+    public EType ATTACK_TYPE
+    {
+
+        get
+        {
+            EType returnType = EType.magical;
+            switch (myAfinity)
+            {
+                case Element.Water:
+                    returnType = EType.magical;
+                    break;
+                case Element.Fire:
+                    returnType = EType.magical;
+                    break;
+                case Element.Ice:
+                    returnType = EType.magical;
+                    break;
+                case Element.Electric:
+                    returnType = EType.magical;
+                    break;
+                case Element.Slash:
+                    returnType = EType.physical;
+                    break;
+                case Element.Pierce:
+                    returnType = EType.physical;
+                    break;
+                case Element.Blunt:
+                    returnType = EType.physical;
+                    break;
+                case Element.Neutral:
+                    returnType = EType.magical;
+                    break;
+
+            }
+            return returnType;
+
+        }
     }
     public int ATTACK
     {
@@ -37,8 +84,13 @@ public class WeaponScript : MonoBehaviour
     }
     public int DIST
     {
-        get { return myAttackDist ; }
-        set { myAttackDist = value; }
+        get { return myStartkDist ; }
+        set { myStartkDist = value; }
+    }
+    public int Range
+    {
+        get { return myAttackRange; }
+        set { myAttackRange = value; }
     }
     public string NAME
     {

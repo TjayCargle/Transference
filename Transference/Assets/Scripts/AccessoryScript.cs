@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum Stat
 {
+    None,
     Attack,
     Accuraccy,
     Defense,
     Speed, 
     Luck,
     Movement,
-    Atk_Dist
+    Atk_Dist,
+    Affinity
 }
 public class AccessoryScript : MonoBehaviour
 {

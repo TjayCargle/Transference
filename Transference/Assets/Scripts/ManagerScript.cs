@@ -19,7 +19,9 @@ public class ManagerScript : MonoBehaviour
     public GameObject Tile;
     public GameObject[] tileMap;
     public List<GridObject> gridObjects;
-
+    public List<TileScript> currentAttackList;
+    public List<List<TileScript>> attackableTiles;
+    int selectedAttackingTile = 0;
     public int MapWidth = 0;
     public int MapHeight = 0;
     public State currentState = State.PlayerInput;
@@ -64,7 +66,7 @@ public class ManagerScript : MonoBehaviour
         GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
         for (int i = 0; i < objs.Length; i++)
         {
-            if(objs[i].gameObject == tempObject)
+            if (objs[i].gameObject == tempObject)
             {
                 continue;
             }
@@ -73,7 +75,7 @@ public class ManagerScript : MonoBehaviour
             objs[i].currentTile.isOccupied = true;
         }
 
-   
+
         isSetup = true;
     }
     void Start()
@@ -85,6 +87,7 @@ public class ManagerScript : MonoBehaviour
         //MaxAttackDist = MoveDist + 2;
     }
     // Update is called once per frame
+    //DMG * (100/100+DEF)
     void Update()
     {
         if (currentObject)
@@ -102,11 +105,71 @@ public class ManagerScript : MonoBehaviour
                     {
                         ShowGridObjectMoveArea(currentObject);
                     }
-                        break;
+                    break;
                 case State.PlayerAttacking:
-                    if (!Input.GetKey(KeyCode.None))
+                    bool hitkey = false;
+                    if (Input.GetKeyDown(KeyCode.W))
                     {
-                        ShowGridObjectAttackArea(currentObject);
+                        ShowWhite();
+                            selectedAttackingTile = 0;
+                        hitkey = true;
+                    }
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        ShowWhite();
+                        selectedAttackingTile = 1;
+                        hitkey = true;
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        ShowWhite();
+                        selectedAttackingTile = 2;
+                        hitkey = true;
+                    }
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        ShowWhite();
+                        selectedAttackingTile = 3;
+                        hitkey = true;
+                    }
+                    if (hitkey == true)
+                    {
+                        if (attackableTiles.Count > 0)
+                        {
+                            for (int i = 0; i < attackableTiles.Count; i++)
+                            {
+                                for (int j = 0; j < attackableTiles[i].Count; j++)
+                                {
+                                    attackableTiles[i][j].myColor = Color.red;
+                                }
+                            }
+                            currentAttackList = attackableTiles[selectedAttackingTile];
+                            bool foundSomething = false;
+                            for (int i = 0; i < currentAttackList.Count; i++)
+                            {
+                                if (GetObjectAtTile(currentAttackList[i]) != null)
+                                {
+                                    foundSomething = true;
+                                    if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[i].transform.position) == true)
+                                    {
+                                        ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                              
+                                    }
+                                 
+                                }
+                                    currentAttackList[i].myColor = Color.green;
+                            }
+                            if(foundSomething == false)
+                            {
+                               if( SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
+                                {
+                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                                
+                                }
+                            
+                            }
+                            //  ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                        }
                     }
                     break;
                 case State.PlayerEquipping:
@@ -114,7 +177,7 @@ public class ManagerScript : MonoBehaviour
                 case State.PlayerWait:
                     break;
                 case State.FreeCamera:
-                   
+
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         ShowWhite();
@@ -203,9 +266,14 @@ public class ManagerScript : MonoBehaviour
                 float objX = obj.currentTile.transform.position.x;
                 float objY = obj.currentTile.transform.position.z;
 
-                int MoveDist = obj.MOVE_DIST;
-                int MaxAttackDist = obj.MAX_ATK_DIST;
-
+                int MoveDist = 0;
+                int attackDist = 0;
+                if (obj.GetComponent<LivingObject>())
+                {
+                    LivingObject liveObj = obj.GetComponent<LivingObject>();
+                    MoveDist = liveObj.MOVE_DIST;
+                    attackDist = liveObj.WEAPON.DIST;
+                }
                 xDist = Mathf.Abs(tempX - objX);
                 yDist = Mathf.Abs(tempY - objY);
                 if (xDist == 0 && yDist == 0)
@@ -218,7 +286,7 @@ public class ManagerScript : MonoBehaviour
                 {
                     temp.GetComponent<TileScript>().myColor = Color.blue;
                 }
-                else if (xDist + yDist == MoveDist + MaxAttackDist)
+                else if (xDist + yDist <= MoveDist + attackDist)
                 {
                     temp.GetComponent<TileScript>().myColor = Color.red;
                 }
@@ -261,7 +329,7 @@ public class ManagerScript : MonoBehaviour
                 float objY = obj.currentTile.transform.position.z;
 
                 int MoveDist = obj.MOVE_DIST;
-                int MaxAttackDist = obj.MAX_ATK_DIST;
+
 
                 xDist = Mathf.Abs(tempX - objX);
                 yDist = Mathf.Abs(tempY - objY);
@@ -295,8 +363,13 @@ public class ManagerScript : MonoBehaviour
                 float objX = obj.currentTile.transform.position.x;
                 float objY = obj.currentTile.transform.position.z;
 
-                int MoveDist = obj.MOVE_DIST;
-                int MaxAttackDist = obj.MAX_ATK_DIST;
+                int attackDist = 0;
+
+                if (obj.GetComponent<LivingObject>())
+                {
+                    LivingObject liveObj = obj.GetComponent<LivingObject>();
+                    attackDist = liveObj.WEAPON.DIST;
+                }
 
                 xDist = Mathf.Abs(tempX - objX);
                 yDist = Mathf.Abs(tempY - objY);
@@ -306,7 +379,7 @@ public class ManagerScript : MonoBehaviour
                     myCamera.infoObject = GetObjectAtTile(temp.GetComponent<TileScript>());
                     temp.GetComponent<TileScript>().myColor = Color.white;
                 }
-                else if (xDist + yDist == MaxAttackDist)
+                else if (xDist + yDist <= attackDist)
                 {
                     temp.GetComponent<TileScript>().myColor = Color.red;
                 }
@@ -316,6 +389,29 @@ public class ManagerScript : MonoBehaviour
                 }
             }
         }
+    }
+    public bool SetGridObjectPosition(GridObject obj, Vector3 newLocation)
+    {
+       
+        Vector3 curPos = GetTile(obj).transform.position;
+        int TileIndex = TwoToOneD((int)newLocation.z, MapWidth, (int)newLocation.x);
+        if (TileIndex >= MapHeight * MapWidth)
+            return false;
+        if (TileIndex < 0)
+            return false;
+        if (obj.GetComponent<LivingObject>())
+        {
+            if (IsTileOccupied(tileMap[TileIndex].GetComponent<TileScript>()) == true)
+            {
+                return false;
+            }
+        }
+
+        obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0);
+        myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
+        myCamera.infoObject = GetObjectAtTile(tileMap[TileIndex].GetComponent<TileScript>());
+        myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
+        return true;
     }
     public void MoveGridObject(GridObject obj, Vector3 direction)
     {
@@ -327,13 +423,13 @@ public class ManagerScript : MonoBehaviour
             return;
         if (TileIndex < 0)
             return;
-      if (obj.GetComponent<LivingObject>())
-      {
-          if (IsTileOccupied(tileMap[TileIndex].GetComponent<TileScript>()) == true)
-          {
-              return;
-          }
-      }
+        if (obj.GetComponent<LivingObject>())
+        {
+            if (IsTileOccupied(tileMap[TileIndex].GetComponent<TileScript>()) == true)
+            {
+                return;
+            }
+        }
         GameObject temp = tileMap[TileIndex];
         float tempX = temp.transform.position.x;
         float tempY = temp.transform.position.z;
@@ -346,9 +442,10 @@ public class ManagerScript : MonoBehaviour
         yDist = Mathf.Abs(tempY - objY);
         if (xDist + yDist <= obj.MOVE_DIST)
         {
-        obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0);
-        myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
-        myCamera.infoObject = GetObjectAtTile(tileMap[TileIndex].GetComponent<TileScript>());
+            obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0);
+            myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
+            myCamera.infoObject = GetObjectAtTile(tileMap[TileIndex].GetComponent<TileScript>());
+            myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
         }
     }
     public void ComfirmMoveGridObject(GridObject obj, int tileIndex)
@@ -371,7 +468,17 @@ public class ManagerScript : MonoBehaviour
         int TileIndex = TwoToOneD((int)checkTile.transform.position.z, MapWidth, (int)checkTile.transform.position.x);
         if (TileIndex >= MapHeight * MapWidth)
             return -1;
-
+        if (TileIndex < 0)
+            return -1;
+        return TileIndex;
+    }
+    public int GetTileIndex(Vector3 checkPosition)
+    {
+        int TileIndex = TwoToOneD((int)checkPosition.z, MapWidth, (int)checkPosition.x);
+        if (TileIndex >= MapHeight * MapWidth)
+            return -1;
+        if (TileIndex < 0)
+            return -1;
         return TileIndex;
     }
     public TileScript GetTile(GridObject checkTile)
@@ -381,10 +488,18 @@ public class ManagerScript : MonoBehaviour
             return null;
         return tileMap[index].GetComponent<TileScript>();
     }
+    public TileScript GetTileAtIndex(int checkIndex)
+    {
+        if (checkIndex >= MapHeight * MapWidth)
+            return null;
+        if (checkIndex < 0)
+            return null;
+        return tileMap[checkIndex].GetComponent<TileScript>();
+    }
     public GridObject GetObjectAtTile(TileScript checkTile)
     {
         GridObject returnedObject = null;
-        if(checkTile.isOccupied == false)
+        if (checkTile.isOccupied == false)
         {
             return returnedObject;
         }
@@ -392,11 +507,11 @@ public class ManagerScript : MonoBehaviour
         {
             for (int i = 0; i < gridObjects.Count; i++)
             {
-                if(gridObjects[i].gameObject == tempObject)
+                if (gridObjects[i].gameObject == tempObject)
                 {
                     continue;
                 }
-                if(gridObjects[i].currentTile == checkTile)
+                if (gridObjects[i].currentTile == checkTile)
                 {
                     returnedObject = gridObjects[i];
                     break;
@@ -405,37 +520,144 @@ public class ManagerScript : MonoBehaviour
         }
         return returnedObject;
     }
-    public List<GridObject> GetAttackableTiles(GridObject obj,SkillScript skill)
+    public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, SkillScript skill)
     {
-        List<GridObject> returnList = new List<GridObject>();
+        int checkIndex = GetTileIndex(obj);
+        if (checkIndex == -1)
+            return null;
 
-        for (int i = 0; i < MapHeight; i++)
+        List<List<TileScript>> returnList = new List<List<TileScript>>();
+        Vector2 Dist = skill.DIST;
+        Vector2 Range = skill.Range;
+
+        Vector2 checkDist = Vector2.zero;
+        Vector2 checkRange = Vector2.zero;
+        for (int i = 0; i < 4; i++)
         {
-            for (int j = 0; j < MapWidth; j++)
+            switch (i)
             {
-                GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)];
-                float tempX = temp.transform.position.x;
-                float tempY = temp.transform.position.z;
+                case 0:
+                    checkDist.x = Dist.x;
+                    checkDist.y = Dist.y;
 
-                float objX = obj.currentTile.transform.position.x;
-                float objY = obj.currentTile.transform.position.z;
+                    checkRange.x = Range.x;
+                    checkRange.y = Range.y;
+                    break;
 
-                int MoveDist = obj.MOVE_DIST;
-                int MaxAttackDist = obj.MAX_ATK_DIST;
-                int MinAttackDist = obj.MIN_ATK_DIST;
-                xDist = Mathf.Abs(tempX - objX);
-                yDist = Mathf.Abs(tempY - objY);
-               
-               if (xDist + yDist == MaxAttackDist )
+                case 1:
+                    checkDist.x = Dist.x * -1;
+                    checkDist.y = Dist.y;
+
+                    checkRange.x = Range.y; //Yes x = y
+                    checkRange.y = Range.x * -1;
+
+
+                    break;
+
+                case 2:
+
+                    checkDist.x = Dist.x * -1;
+                    checkDist.y = Dist.y * -1;
+
+
+
+                    checkRange.x = Range.x * -1;
+                    checkRange.y = Range.y * -1;
+
+                    break;
+
+                case 3:
+
+                    checkDist.x = Dist.x;
+                    checkDist.y = Dist.y * -1;
+
+                    checkRange.x = Range.y * -1; //Yes x = y
+                    checkRange.y = Range.x;
+                    break;
+            }
+            List<TileScript> tiles = new List<TileScript>();
+            for (int j = 0; j < Range.x; j++)
+            {
+                Vector3 checkPos = obj.transform.position;
+                checkPos.x += checkDist.x + j;
+                checkPos.z += checkDist.y;
+                int testIndex = GetTileIndex(checkPos);
+                if (testIndex >= 0)
                 {
-                    temp.GetComponent<TileScript>().myColor = Color.red;
-                    
-                }
-                if (xDist + yDist == MinAttackDist)
-                {
-                    temp.GetComponent<TileScript>().myColor = Color.red;
+                    TileScript realTile = GetTileAtIndex(testIndex);
+                    if (!tiles.Contains(realTile))
+                        tiles.Add(realTile);
                 }
             }
+            for (int j = 0; j < Range.y; j++)
+            {
+                Vector3 checkPos = obj.transform.position;
+                checkPos.x += checkDist.x;
+                checkPos.z = checkDist.y + j;
+                int testIndex = GetTileIndex(checkPos);
+                if (testIndex >= 0)
+                {
+                    TileScript realTile = GetTileAtIndex(testIndex);
+                    if (!tiles.Contains(realTile))
+                        tiles.Add(realTile);
+                }
+            }
+            returnList.Add(tiles);
+        }
+        return returnList;
+    }
+    public List<List<TileScript>> GetWeaponAttackableTiles(LivingObject liveObj)
+    {
+        int checkIndex = GetTileIndex(liveObj);
+        if (checkIndex == -1)
+            return null;
+
+        List<List<TileScript>> returnList = new List<List<TileScript>>();
+        int Dist = liveObj.WEAPON.DIST;
+        int Range = liveObj.WEAPON.Range;
+
+        Vector2 checkDist = Vector2.zero;
+
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    checkDist.x = 0;
+                    checkDist.y = 1;
+                    break;
+
+                case 1:
+                    checkDist.x = 1;
+                    checkDist.y = 0;
+                    break;
+
+                case 2:
+                    checkDist.x = 0;
+                    checkDist.y = -1;
+                    break;
+
+                case 3:
+                    checkDist.x = -1;
+                    checkDist.y = 0;
+                    break;
+            }
+            List<TileScript> tiles = new List<TileScript>();
+            for (int j = 1; j < Range + 1; j++)
+            {
+                Vector3 checkPos = liveObj.transform.position;
+                checkPos.x += (checkDist.x * j);
+                checkPos.z += (checkDist.y * j);
+                int testIndex = GetTileIndex(checkPos);
+                if (testIndex >= 0)
+                {
+                    TileScript realTile = GetTileAtIndex(testIndex);
+                    if (!tiles.Contains(realTile))
+                        tiles.Add(realTile);
+                }
+            }
+
+            returnList.Add(tiles);
         }
         return returnList;
     }
@@ -468,6 +690,18 @@ public class ManagerScript : MonoBehaviour
 
         }
     }
+    public void CancelMenuAction(GridObject invokingObject)
+    {
+        for (int i = 0; i < commandItems.Length; i++)
+        {
+
+            if (commandItems[i].itemType == currentMenuitem)
+            {
+                commandItems[i].CancelAction(invokingObject);
+                break;
+            }
+        }
+    }
     public bool IsTileOccupied(TileScript checkTile)
     {
         bool result = false;
@@ -480,13 +714,70 @@ public class ManagerScript : MonoBehaviour
                 continue;
             }
             TileScript gridTile = GetTile(gridObjects[k]);
-            if (gridTile == checkTile )
+            if (gridTile == checkTile)
             {
                 result = true;
                 break;
-            } 
+            }
+        }
+
+        return result;
+    }
+    public void DamageLivingObject(LivingObject dmgObject, int dmg)
+    {
+        dmgObject.STATS.HEALTH -= dmg;
+    }
+    public int CalcDamage(LivingObject dmgObject, Element attackingElement, int dmg)
+    {
+        int returnInt = 0;
+
+        bool hitWeakness = false;
+        bool hitResistance = false;
+        for (int i = 0; i < dmgObject.WEAKNESSES.Count; i++)
+        {
+            if (SkillScript.isWeak(attackingElement, dmgObject.WEAKNESSES[i]))
+            {
+                hitWeakness = true;
+            }
+        }
+        if (SkillScript.isResistant(attackingElement, dmgObject.ARMOR.AFINITY))
+        {
+            hitResistance = true;
+        }
+        else if (SkillScript.isResistant(attackingElement, dmgObject.WEAPON.AFINITY))
+        {
+            hitResistance = true;
+        }
+        EType attackType = EType.physical;
+        if (attackingElement == Element.Blunt || attackingElement == Element.Slash || attackingElement == Element.Pierce)
+            attackType = EType.physical;
+        else
+            attackType = EType.magical;
+
+        if (attackType == EType.physical)
+        {
+            float calc = 100 + dmgObject.ARMOR.DEFENSE;
+            calc = 100 / calc;
+            calc = dmg * calc;  
+            returnInt = (Mathf.FloorToInt(calc));
+        }
+        else
+        {
+            float calc = 100 + dmgObject.ARMOR.RESISTANCE;
+            calc = 100 / calc;
+            calc = dmg * calc;
+            returnInt = (Mathf.FloorToInt(calc));
         }
     
-                return result;
+        if (hitWeakness == true)
+        {
+            returnInt = Mathf.FloorToInt(returnInt * 1.5f);
+        }
+        else if (hitResistance == true)
+        {
+            returnInt = Mathf.FloorToInt(returnInt * 0.5f);
+        }
+
+        return returnInt;
     }
 }

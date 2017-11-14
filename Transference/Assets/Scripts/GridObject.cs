@@ -9,8 +9,6 @@ public class GridObject : MonoBehaviour {
     public string FullName;
     private bool hasMoved = false;
     protected int MoveDist = 0;
-    protected int MinAttackDist = 0;
-    protected int MaxAttackDist = 0;
     public bool isSetup = false;
 
 
@@ -24,16 +22,6 @@ public class GridObject : MonoBehaviour {
     {
         get { return MoveDist; }
         set { MoveDist = value; }
-    }
-    public virtual int MIN_ATK_DIST
-    {
-        get { return MinAttackDist; }
-        set { MinAttackDist = value; }
-    }
-    public virtual int MAX_ATK_DIST
-    {
-        get { return MaxAttackDist; }
-        set { MaxAttackDist = value; }
     }
 
     // Use this for initialization

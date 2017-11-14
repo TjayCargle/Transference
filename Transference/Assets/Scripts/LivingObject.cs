@@ -8,6 +8,7 @@ public class LivingObject : GridObject
     private WeaponScript equippedWeapon;
     private ArmorScript equipedArmor;
     private AccessoryScript equippedAccessory;
+    private List<Element> myWeaknesses;
     public StatScript STATS
     {
         get { return myStats; }
@@ -28,6 +29,10 @@ public class LivingObject : GridObject
         get { return equippedAccessory; }
         set { equippedAccessory = value; }
     }
+    public List<Element> WEAKNESSES
+    {
+        get { return myWeaknesses; }
+    }
 
     public override int MOVE_DIST
     {
@@ -35,16 +40,7 @@ public class LivingObject : GridObject
         set { STATS.MOVE_DIST = value; base.MOVE_DIST = value; }
     }
 
-    public override int MIN_ATK_DIST
-    {
-        get { return STATS.Min_Atk_DIST; }
-        set { STATS.Min_Atk_DIST = value; }
-    }
-    public override int MAX_ATK_DIST
-    {
-        get { return STATS.Max_Atk_DIST; }
-        set { STATS.Max_Atk_DIST = value; }
-    }
+  
     protected override void Setup()
     {
        
@@ -72,6 +68,16 @@ public class LivingObject : GridObject
         }
         myStats = GetComponent<StatScript>();
         myStats.USER = this;
+        myWeaknesses = new List<Element>();
+        myWeaknesses.Add(SkillScript.getWeakness(ARMOR.AFINITY));
+        myWeaknesses.Add(SkillScript.getWeakness(WEAPON.AFINITY));
+        if (ACCESSORY.STAT == Stat.Affinity)
+        {
+            for (int i = 0; i < myWeaknesses.Count; i++)
+            {
+
+            }
+        }
         base.Setup();
     }
 

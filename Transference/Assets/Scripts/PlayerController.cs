@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlayerController : LivingObject
 {
+    private enum Facing
+    {
+        North,
+        East,
+        South,
+        West,
+    }
     //public bool canMove = false;
   
     // Use this for initialization
@@ -39,7 +46,11 @@ public class PlayerController : LivingObject
                         myManager.currentMenuitem = 0;
                     }
                 }
-          if(Input.GetKeyDown(KeyCode.Return))
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
+                }
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
                     myManager.SelectMenuItem(this);
                 }
@@ -65,22 +76,53 @@ public class PlayerController : LivingObject
                 {
                     myManager.ComfirmMenuAction(this);
                 }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
+                }
                 break;
             case State.PlayerAttacking:
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
+                    if(myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile) != null)
+                    {
+                        GridObject potentialTarget = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+                        if(potentialTarget.GetComponent<LivingObject>())
+                        {
+                            LivingObject target = potentialTarget.GetComponent<LivingObject>();
+                            int dmg = myManager.CalcDamage(target, WEAPON.AFINITY, WEAPON.ATTACK);
+                            myManager.DamageLivingObject(target, dmg);
+                        }
+                    }
                     myManager.ComfirmMenuAction(this);
+                }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
                 }
                 break;
             case State.PlayerEquipping:
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
+                }
                 break;
             case State.PlayerWait:
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
+                }
                 break;
             case State.FreeCamera:
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     myManager.ComfirmMenuAction(this);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
                 }
                 break;
             case State.EnemyTurn:
@@ -88,6 +130,7 @@ public class PlayerController : LivingObject
             default:
                 break;
         }
+    
 
     }
 }

@@ -7,10 +7,21 @@ public class ArmorScript : MonoBehaviour
     [SerializeField]
     private int myDefense;
     [SerializeField]
+    private int myRes;
+    [SerializeField]
     private int mySpeed;
     [SerializeField]
     private string myName;
+    [SerializeField]
+    private Element myAfinity = Element.Fire;
+
+
     private LivingObject owner;
+    public Element AFINITY
+    {
+        get { return myAfinity; }
+    }
+  
     public LivingObject USER
     {
         get { return owner; }
@@ -20,6 +31,11 @@ public class ArmorScript : MonoBehaviour
     {
         get { return myDefense; }
         set { myDefense = value; }
+    }
+    public int RESISTANCE
+    {
+        get { return myRes; }
+        set { myRes = value; }
     }
     public int SPEED
     {
