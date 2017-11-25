@@ -13,7 +13,7 @@ public enum Stat
     Atk_Dist,
     Affinity
 }
-public class AccessoryScript : MonoBehaviour
+public class AccessoryScript : UsableScript
 {
     [SerializeField]
     private Stat modifier;

@@ -224,8 +224,11 @@
     <Compile Include="Assets\Scripts\ArmorManager.cs" />
     <Compile Include="Assets\Scripts\ArmorScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
+    <Compile Include="Assets\Scripts\CanvasManager.cs" />
+    <Compile Include="Assets\Scripts\CanvasScript.cs" />
     <Compile Include="Assets\Scripts\CommandScript.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
+    <Compile Include="Assets\Scripts\InventoryMangager.cs" />
     <Compile Include="Assets\Scripts\InventoryScript.cs" />
     <Compile Include="Assets\Scripts\ItemManager.cs" />
     <Compile Include="Assets\Scripts\ItemScript.cs" />
@@ -237,6 +240,7 @@
     <Compile Include="Assets\Scripts\SkillScript.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
+    <Compile Include="Assets\Scripts\UsableScript.cs" />
     <Compile Include="Assets\Scripts\WeaponManager.cs" />
     <Compile Include="Assets\Scripts\WeaponScript.cs" />
   </ItemGroup>

@@ -41,7 +41,7 @@ public class LivingObject : GridObject
     }
 
   
-    protected override void Setup()
+    public override void Setup()
     {
        
         if (!GetComponent<WeaponScript>())

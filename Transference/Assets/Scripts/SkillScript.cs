@@ -20,7 +20,7 @@ public enum EType
     physical,
     magical,
 }
-public class SkillScript : MonoBehaviour
+public class SkillScript : UsableScript
 {
     [SerializeField]
     protected string skillName;

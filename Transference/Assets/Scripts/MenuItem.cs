@@ -19,6 +19,7 @@ public class MenuItem : MonoBehaviour
     public int itemType;
     public bool inMenuAction = false;
     public RectTransform myRect;
+    public UsableScript refItem;
     void Start()
     {
         if (GameObject.FindObjectOfType<ManagerScript>())

@@ -26,7 +26,7 @@ public class GridObject : MonoBehaviour {
 
     // Use this for initialization
 
-    protected virtual void Setup()
+    public virtual void Setup()
     {
         if (GameObject.FindObjectOfType<ManagerScript>())
         {

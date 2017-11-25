@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemScript : UsableScript
-{
-
+public class UsableScript : MonoBehaviour {
 
 }

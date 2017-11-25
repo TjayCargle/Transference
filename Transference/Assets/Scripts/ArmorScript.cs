@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmorScript : MonoBehaviour
+public class ArmorScript : UsableScript
 {
     [SerializeField]
     private int myDefense;
