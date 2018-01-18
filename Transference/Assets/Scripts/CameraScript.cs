@@ -54,7 +54,7 @@ public class CameraScript : MonoBehaviour
             camPos.y = 0.0f;
             distance = Mathf.Abs(tilePos.sqrMagnitude - camPos.sqrMagnitude);
             distance = Mathf.Sqrt(distance);
-            if (distance > 2.0f)
+            if (distance > 1.0f)
             {
                 Vector3 directionVector = (currentTile.transform.position - new Vector3(0, -5, 7)) - transform.position;    
                 transform.Translate(directionVector * Time.deltaTime);

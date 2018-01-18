@@ -22,8 +22,7 @@ public enum EType
 }
 public class SkillScript : UsableScript
 {
-    [SerializeField]
-    protected string skillName;
+
     [SerializeField]
     protected string description;
     [SerializeField]
@@ -31,7 +30,7 @@ public class SkillScript : UsableScript
     [SerializeField]
     protected int dmg;
     [SerializeField]
-    private Vector2 myStartkDist;
+    private Vector2[] affecttedTiles;
     [SerializeField]
     private Vector2 myAttackRange;
     [SerializeField]
@@ -40,11 +39,7 @@ public class SkillScript : UsableScript
     protected Element affinity;
 
 
-    public string NAME
-    {
-        get { return skillName; }
-        set {  skillName = value; }
-    }
+  
 
     public string DESC
     {
@@ -61,10 +56,10 @@ public class SkillScript : UsableScript
         get { return dmg; }
         set { dmg = value; }
     }
-    public Vector2 DIST
+    public Vector2[] TILES
     {
-        get { return myStartkDist; }
-        set { myStartkDist = value; }
+        get { return affecttedTiles; }
+        set { affecttedTiles = value; }
     }
     public Vector2 Range
     {

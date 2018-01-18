@@ -14,8 +14,7 @@ public class WeaponScript : UsableScript
     private int myStartkDist;
     [SerializeField]
     private int myAttackRange;
-    [SerializeField]
-    private string myName;
+
     [SerializeField]
     private Element myAfinity = Element.Slash;
 
@@ -92,9 +91,5 @@ public class WeaponScript : UsableScript
         get { return myAttackRange; }
         set { myAttackRange = value; }
     }
-    public string NAME
-    {
-        get { return myName; }
-        set { myName = value; }
-    }
+  
 }

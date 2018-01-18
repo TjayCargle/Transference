@@ -8,18 +8,22 @@ public class MenuItem : MonoBehaviour
     {
         Move = 0,
         Attack,
+        Skill,
         Equip,
         Wait,
         Look,
-        Skill,
-        Inventory,
+        InventoryWeapon,
+        InventoryArmor,
+        InventoryAcc,
 
     }
+ 
     ManagerScript myManager;
-    public int itemType;
+    public int itemType = -1;
     public bool inMenuAction = false;
     public RectTransform myRect;
     public UsableScript refItem;
+
     void Start()
     {
         if (GameObject.FindObjectOfType<ManagerScript>())
@@ -49,32 +53,43 @@ public class MenuItem : MonoBehaviour
                     LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                     myManager.attackableTiles = myManager.GetWeaponAttackableTiles(liveInvokingObject);
                     myManager.ShowWhite();
-                    if (myManager.currentAttackList.Count > 0)
+                    if (myManager.attackableTiles.Count > 0)
                     {
+                        for (int i = 0; i < myManager.attackableTiles.Count; i++)
+                        {
+                            for (int j = 0; j < myManager.attackableTiles[i].Count; j++)
+                            {
+                                myManager.attackableTiles[i][j].myColor = Color.red;
+                            }
+                        }
+                        myManager.currentAttackList = myManager.attackableTiles[0];
                         bool foundSomething = false;
                         for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                        {
+
                             if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
                             {
+
                                 foundSomething = true;
                                 if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[i].transform.position) == true)
                                 {
                                     myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
 
                                 }
-                            myManager.currentAttackList[i].myColor = Color.green;
 
                             }
-                        
+                            myManager.currentAttackList[i].myColor = Color.green;
+                        }
                         if (foundSomething == false)
                         {
                             if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[0].transform.position) == true)
                             {
-                              myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
 
                             }
 
                         }
-                       
+
                     }
                 }
                 else
@@ -86,8 +101,17 @@ public class MenuItem : MonoBehaviour
                 myManager.currentState = State.PlayerAttacking;
                 break;
             case MenuItemType.Equip:
-                myManager.currentState = State.PlayerEquipping;
-                break;
+                {
+                    myManager.currentState = State.PlayerEquippingMenu;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        myMenuManager.ShowInventoryCanvas();
+                        myManager.currentMenuitem = 6;
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    }
+                    break;
+                }
             case MenuItemType.Wait:
                 myManager.currentState = State.PlayerWait;
                 break;
@@ -100,8 +124,55 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.Skill:
                 break;
-            case MenuItemType.Inventory:
-                break;
+            case MenuItemType.InventoryWeapon:
+                {
+                    myManager.currentState = State.PlayerEquipping;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(0, liveInvokingObject);
+                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                        }
+                    }
+                }
+                    break;
+            case MenuItemType.InventoryArmor:
+                {
+                    myManager.currentState = State.PlayerEquipping;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(1, liveInvokingObject);
+                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                        }
+                    }
+                }
+                    break;
+            case MenuItemType.InventoryAcc:
+                {
+                    myManager.currentState = State.PlayerEquipping;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        if(invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                        myMenuManager.ShowItemCanvas(2, liveInvokingObject);
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            
+                        }
+                    }
+                }
+                    break;
+
             default:
                 break;
         }
@@ -114,6 +185,7 @@ public class MenuItem : MonoBehaviour
             case MenuItemType.Move:
                 invokingObject.HASMOVED = true;
                 myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
+                myManager.currentState = State.PlayerInput;
                 break;
             case MenuItemType.Attack:
 
@@ -127,14 +199,45 @@ public class MenuItem : MonoBehaviour
             case MenuItemType.Look:
 
                 break;
+          
             default:
+        myManager.currentState = State.PlayerInput;
                 break;
 
         }
-        myManager.currentState = State.PlayerInput;
     }
     public void CancelAction(GridObject invokingObject)
     {
-        myManager.currentState = State.PlayerInput;
+        switch (myManager.currentState)
+        {
+            case State.PlayerEquippingMenu:
+                {
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        myMenuManager.ShowCommandCanvas();
+                    }
+                    myManager.currentMenuitem = 2;
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    myManager.currentState = State.PlayerInput;
+                }
+                break;
+            case State.PlayerEquipping:
+ 
+                {
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        myMenuManager.ShowInventoryCanvas();
+                    }
+                    myManager.currentMenuitem = 6;
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    myManager.currentState = State.PlayerEquippingMenu;
+                }
+                break;
+            default:
+                myManager.currentState = State.PlayerInput;
+                break;
+        }
     }
 }

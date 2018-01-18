@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StatScript : MonoBehaviour {
+    [SerializeField]
     private int myLevel = 1;
     [SerializeField]
     private int myHealth = 100;
@@ -10,6 +11,8 @@ public class StatScript : MonoBehaviour {
     private int myBaseAttack = 1;
     [SerializeField]
     private int myBaseDefense = 1;
+    [SerializeField]
+    private int myBaseResistance = 1;
     [SerializeField]
     private int myBaseSpeed = 1;
     [SerializeField]
@@ -51,6 +54,11 @@ public class StatScript : MonoBehaviour {
     {
         get { return owner.ACCESSORY.STAT == Stat.Defense ? owner.ACCESSORY.VALUE + myBaseDefense + owner.ARMOR.DEFENSE : myBaseDefense + owner.ARMOR.DEFENSE; }
         set { myBaseDefense = value; }
+    }
+    public int RESIESTANCE
+    {
+        get { return owner.ACCESSORY.STAT == Stat.Defense ? owner.ACCESSORY.VALUE + myBaseDefense + owner.ARMOR.RESISTANCE : myBaseDefense + owner.ARMOR.RESISTANCE; }
+        set { myBaseResistance = value; }
     }
     public int SPEED
     {

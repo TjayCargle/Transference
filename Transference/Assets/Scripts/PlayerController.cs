@@ -34,17 +34,19 @@ public class PlayerController : LivingObject
                     myManager.currentMenuitem--;
                     if (myManager.currentMenuitem < 0)
                     {
-                        myManager.currentMenuitem = 4;
+                        myManager.currentMenuitem = 5;
                     }
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                 }
          
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     myManager.currentMenuitem++;
-                    if (myManager.currentMenuitem > 4)
+                    if (myManager.currentMenuitem > 5)
                     {
                         myManager.currentMenuitem = 0;
                     }
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -85,17 +87,66 @@ public class PlayerController : LivingObject
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    if(myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile) != null)
+                    if(myManager.currentAttackList.Count > 0)
                     {
-                        GridObject potentialTarget = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
-                        if(potentialTarget.GetComponent<LivingObject>())
+                        bool foundSomething = false;
+                        List<int> targetIndicies = new List<int>();
+                        
+                        for (int i = 0; i < myManager.currentAttackList.Count; i++)
                         {
-                            LivingObject target = potentialTarget.GetComponent<LivingObject>();
-                            int dmg = myManager.CalcDamage(target, WEAPON.AFINITY, WEAPON.ATTACK);
-                            myManager.DamageLivingObject(target, dmg);
+                            if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
+                            {
+                                foundSomething = true;
+                                targetIndicies.Add(i);
+                          
+                            }
+                        }
+                        if (foundSomething == true)
+                        {
+                            for (int i = 0; i <targetIndicies.Count; i++)
+                            {
+                                GridObject potentialTarget = myManager.GetObjectAtTile(myManager.currentAttackList[targetIndicies[i]]);
+                                if (potentialTarget.GetComponent<LivingObject>())
+                                {
+                                    LivingObject target = potentialTarget.GetComponent<LivingObject>();
+                                    int dmg = myManager.CalcDamage( this, target, WEAPON.AFINITY, WEAPON.ATTACK);
+                                    myManager.DamageLivingObject(target, dmg);
+                                }
+                            }
+                           
+                             myManager.ComfirmMenuAction(this);
                         }
                     }
-                    myManager.ComfirmMenuAction(this);
+                  
+                }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    myManager.CancelMenuAction(this);
+                }
+                break;
+            case State.PlayerEquippingMenu:
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    myManager.currentMenuitem--;
+                    if (myManager.currentMenuitem < 6)
+                    {
+                        myManager.currentMenuitem = 8;
+                    }
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem );
+                }
+
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    myManager.currentMenuitem++;
+                    if (myManager.currentMenuitem > 8)
+                    {
+                        myManager.currentMenuitem = 6;
+                    }
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem );
+                }
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    myManager.SelectMenuItem(this);
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -103,9 +154,11 @@ public class PlayerController : LivingObject
                 }
                 break;
             case State.PlayerEquipping:
-                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.CancelMenuAction(this);
+                    }
                 }
                 break;
             case State.PlayerWait:

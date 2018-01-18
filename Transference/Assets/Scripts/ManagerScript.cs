@@ -6,7 +6,9 @@ public enum State
     PlayerInput,
     PlayerMove,
     PlayerAttacking,
+    PlayerEquippingMenu,
     PlayerEquipping,
+    PlayerSkillsMenu,
     PlayerWait,
     FreeCamera,
     EnemyTurn
@@ -25,8 +27,9 @@ public class ManagerScript : MonoBehaviour
     public int MapWidth = 0;
     public int MapHeight = 0;
     public State currentState = State.PlayerInput;
-    public Canvas commandCanvas;
+
     public int currentMenuitem = 0;
+    public int itemMenuitem = 0;
     CameraScript myCamera;
     public bool isSetup = false;
     public GridObject currentObject;
@@ -83,6 +86,7 @@ public class ManagerScript : MonoBehaviour
         if (!isSetup)
         {
             Setup();
+            
         }
         //MaxAttackDist = MoveDist + 2;
     }
@@ -98,6 +102,7 @@ public class ManagerScript : MonoBehaviour
                     if (!Input.GetKey(KeyCode.None))
                     {
                         ShowGridObjectAffectArea(currentObject);
+                     
                     }
                     break;
                 case State.PlayerMove:
@@ -111,7 +116,7 @@ public class ManagerScript : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         ShowWhite();
-                            selectedAttackingTile = 0;
+                        selectedAttackingTile = 0;
                         hitkey = true;
                     }
                     if (Input.GetKeyDown(KeyCode.D))
@@ -153,26 +158,40 @@ public class ManagerScript : MonoBehaviour
                                     if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[i].transform.position) == true)
                                     {
                                         ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                              
+
                                     }
-                                 
+
                                 }
-                                    currentAttackList[i].myColor = Color.green;
+                                currentAttackList[i].myColor = Color.green;
                             }
-                            if(foundSomething == false)
+                            if (foundSomething == false)
                             {
-                               if( SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
+                                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
                                 {
                                     ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                                
+
                                 }
-                            
+
                             }
                             //  ShowSelectedTile(tempObject.GetComponent<GridObject>());
                         }
                     }
                     break;
+                case State.PlayerEquippingMenu:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+
+                        updateCurrentMenuPosition(currentMenuitem);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        updateCurrentMenuPosition(currentMenuitem);
+                    }
+                    break;
                 case State.PlayerEquipping:
+                    {
+
+                    }
                     break;
                 case State.PlayerWait:
                     break;
@@ -236,22 +255,28 @@ public class ManagerScript : MonoBehaviour
             //}
 
         }
+
+
+
+    }
+    public void updateCurrentMenuPosition(int currentAnchor)
+    {
         for (int i = 0; i < commandItems.Length; i++)
         {
             if (commandItems[i].myRect)
             {
-                if (commandItems[i].itemType == currentMenuitem)
+
+
+                if (commandItems[i].itemType == currentAnchor)
                 {
-                    commandItems[i].myRect.anchoredPosition = new Vector2(10, commandItems[i].myRect.anchoredPosition.y);
+                    commandItems[i].myRect.anchoredPosition = new Vector2(commandItems[i].myRect.anchoredPosition.x + 10, commandItems[i].myRect.anchoredPosition.y);
                 }
                 else
                 {
-                    commandItems[i].myRect.anchoredPosition = new Vector2(0, commandItems[i].myRect.anchoredPosition.y);
+                    commandItems[i].myRect.anchoredPosition = new Vector2(100, commandItems[i].myRect.anchoredPosition.y);
                 }
             }
         }
-
-
     }
     public void ShowGridObjectAffectArea(GridObject obj)
     {
@@ -392,7 +417,7 @@ public class ManagerScript : MonoBehaviour
     }
     public bool SetGridObjectPosition(GridObject obj, Vector3 newLocation)
     {
-       
+
         Vector3 curPos = GetTile(obj).transform.position;
         int TileIndex = TwoToOneD((int)newLocation.z, MapWidth, (int)newLocation.x);
         if (TileIndex >= MapHeight * MapWidth)
@@ -527,7 +552,8 @@ public class ManagerScript : MonoBehaviour
             return null;
 
         List<List<TileScript>> returnList = new List<List<TileScript>>();
-        Vector2 Dist = skill.DIST;
+        Vector2[] affectedTiles = skill.TILES;
+        Vector2 Dist = affectedTiles[0];
         Vector2 Range = skill.Range;
 
         Vector2 checkDist = Vector2.zero;
@@ -643,12 +669,16 @@ public class ManagerScript : MonoBehaviour
                     break;
             }
             List<TileScript> tiles = new List<TileScript>();
-            for (int j = 1; j < Range + 1; j++)
+            for (int j = 0; j < Range; j++)
             {
                 Vector3 checkPos = liveObj.transform.position;
-                checkPos.x += (checkDist.x * j);
-                checkPos.z += (checkDist.y * j);
+                checkPos.x += (checkDist.x * Dist);
+                checkPos.z += (checkDist.y * Dist);
+
+                checkPos.x -= (checkDist.x * j);
+                checkPos.z -= (checkDist.y * j);
                 int testIndex = GetTileIndex(checkPos);
+
                 if (testIndex >= 0)
                 {
                     TileScript realTile = GetTileAtIndex(testIndex);
@@ -656,8 +686,10 @@ public class ManagerScript : MonoBehaviour
                         tiles.Add(realTile);
                 }
             }
-
-            returnList.Add(tiles);
+            if (tiles.Count > 0)
+            {
+                returnList.Add(tiles);
+            }
         }
         return returnList;
     }
@@ -727,7 +759,7 @@ public class ManagerScript : MonoBehaviour
     {
         dmgObject.STATS.HEALTH -= dmg;
     }
-    public int CalcDamage(LivingObject dmgObject, Element attackingElement, int dmg)
+    public int CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, int dmg)
     {
         int returnInt = 0;
 
@@ -756,25 +788,34 @@ public class ManagerScript : MonoBehaviour
 
         if (attackType == EType.physical)
         {
-            float calc = 100 + dmgObject.ARMOR.DEFENSE;
-            calc = 100 / calc;
-            calc = dmg * calc;  
-            returnInt = (Mathf.FloorToInt(calc));
+            float calc = attackingObject.ATTACK / dmgObject.DEFENSE;
+
+            calc = dmg * calc;
+
+            calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
+
+            calc = Mathf.Sqrt(calc);
+
+            returnInt = (Mathf.RoundToInt(calc));
+
         }
         else
         {
-            float calc = 100 + dmgObject.ARMOR.RESISTANCE;
-            calc = 100 / calc;
-            calc = dmg * calc;
+            float calc = attackingObject.ATTACK / dmgObject.RESIESTANCE;
+            calc = calc * dmg;
+            calc = Mathf.Sqrt(calc);
+            calc = calc + ((dmgObject.LEVEL - attackingObject.LEVEL) * 2);
             returnInt = (Mathf.FloorToInt(calc));
         }
-    
+
         if (hitWeakness == true)
         {
+            Debug.Log("hit a weakness");
             returnInt = Mathf.FloorToInt(returnInt * 1.5f);
         }
         else if (hitResistance == true)
         {
+            Debug.Log("hit a resist");
             returnInt = Mathf.FloorToInt(returnInt * 0.5f);
         }
 

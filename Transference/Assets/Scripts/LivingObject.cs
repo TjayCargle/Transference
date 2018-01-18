@@ -40,28 +40,71 @@ public class LivingObject : GridObject
         set { STATS.MOVE_DIST = value; base.MOVE_DIST = value; }
     }
 
-  
+
+    public int Max_Atk_DIST
+    {
+        get { return STATS.Max_Atk_DIST; }
+    }
+    public int Min_Atk_DIST
+    {
+        get { return STATS.Min_Atk_DIST; }
+    }
+    public int ATTACK
+    {
+        get { return STATS.ATTACK; }
+    }
+    public int DEFENSE
+    {
+        get { return STATS.DEFENSE; }
+    }
+    public int RESIESTANCE
+    {
+        get { return STATS.RESIESTANCE; }
+    }
+    public int SPEED
+    {
+        get { return STATS.SPEED; }
+    }
+    public int LUCK
+    {
+        get { return STATS.LUCK; }
+    }
+    public int HEALTH
+    {
+        get { return STATS.HEALTH; }
+    }
+    public int LEVEL
+    {
+        get { return STATS.LEVEL; }
+    }
     public override void Setup()
     {
        
         if (!GetComponent<WeaponScript>())
         {
             gameObject.AddComponent<WeaponScript>();
+            gameObject.GetComponent<WeaponScript>().NAME = "default weapon";
         }
         equippedWeapon = GetComponent<WeaponScript>();
         equippedWeapon.USER = this;
         if (!GetComponent<ArmorScript>())
         {
             gameObject.AddComponent<ArmorScript>();
+            gameObject.GetComponent<ArmorScript>().NAME = "default armor";
+        
         }
         equipedArmor = GetComponent<ArmorScript>();
         equipedArmor.USER = this;
+
         if (!GetComponent<AccessoryScript>())
         {
             gameObject.AddComponent<AccessoryScript>();
+            gameObject.GetComponent<AccessoryScript>().NAME = "default accessory";
+      
         }
         equippedAccessory = GetComponent<AccessoryScript>();
         equippedAccessory.USER = this;
+
         if (!GetComponent<StatScript>())
         {
             gameObject.AddComponent<StatScript>();

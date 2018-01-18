@@ -11,8 +11,6 @@ public class ArmorScript : UsableScript
     [SerializeField]
     private int mySpeed;
     [SerializeField]
-    private string myName;
-    [SerializeField]
     private Element myAfinity = Element.Fire;
 
 
@@ -42,9 +40,5 @@ public class ArmorScript : UsableScript
         get { return mySpeed; }
         set { mySpeed = value; }
     }
-    public string NAME
-    {
-        get { return myName; }
-        set { myName = value; }
-    }
+  
 }
