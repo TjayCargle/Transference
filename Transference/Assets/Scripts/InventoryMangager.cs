@@ -151,18 +151,23 @@ public class InventoryMangager : MonoBehaviour
         {
             case 0:
                 itemType = new WeaponScript();
+                itemType.TYPE = 0;
                 break;
             case 1:
                 itemType = new ArmorScript();
+                itemType.TYPE = 1;
                 break;
             case 2:
                 itemType = new AccessoryScript();
+                itemType.TYPE = 2;
                 break;
             case 3:
                 itemType = new ItemScript();
+                itemType.TYPE = 3;
                 break;
             case 4:
                 itemType = new SkillScript();
+                itemType.TYPE = 4;
                 break;
         }
         // for (int i = 0; i < 4; i++)
@@ -205,8 +210,9 @@ public class InventoryMangager : MonoBehaviour
                 if (selectableItem.GetComponent<MenuItem>())
                 {
                     MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
+                    item.TYPE = itemType.TYPE;
                     selectedItem.refItem = item;
-
+                    
                     // selectedItem.itemType = itemType;
 
 

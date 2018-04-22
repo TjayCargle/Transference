@@ -217,6 +217,15 @@
     <Reference Include="UnityEngine.Purchasing">
       <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data">
+      <HintPath>Assets\Plugins\System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.OracleClient">
+      <HintPath>Assets\Plugins\System.Data.OracleClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions">
+      <HintPath>Assets\Plugins\System.Transactions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AccessoryManager.cs" />
@@ -227,6 +236,7 @@
     <Compile Include="Assets\Scripts\CanvasManager.cs" />
     <Compile Include="Assets\Scripts\CanvasScript.cs" />
     <Compile Include="Assets\Scripts\CommandScript.cs" />
+    <Compile Include="Assets\Scripts\DatabaseManager.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
     <Compile Include="Assets\Scripts\InventoryMangager.cs" />
     <Compile Include="Assets\Scripts\InventoryScript.cs" />

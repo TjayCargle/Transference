@@ -15,6 +15,7 @@ public class WeaponScript : UsableScript
     [SerializeField]
     private int myAttackRange;
 
+
     [SerializeField]
     private Element myAfinity = Element.Slash;
 

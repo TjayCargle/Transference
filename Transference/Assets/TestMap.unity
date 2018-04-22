@@ -750,6 +750,7 @@ MonoBehaviour:
   MapWidth: 30
   MapHeight: 30
   currentState: 0
+  prevState: 0
   currentMenuitem: 0
   itemMenuitem: 0
   isSetup: 0
@@ -1614,6 +1615,46 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
+--- !u!1 &751661920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 751661922}
+  - component: {fileID: 751661921}
+  m_Layer: 0
+  m_Name: Database
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &751661921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 751661920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7556e05c68cfcaa4e808393c9c896453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &751661922
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 751661920}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 50.64736, y: 116.946396, z: -0.055778503}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &771268293
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,8 +2204,8 @@ MonoBehaviour:
   description: A basic attack with your tail.
   accuraccy: 99
   dmg: 15
-  myStartkDist: {x: 0, y: 0}
-  myAttackRange: {x: 0, y: 0}
+  affecttedTiles:
+  - {x: 0, y: 1}
   critRate: 20
   affinity: 4
 --- !u!114 &952455469
@@ -2182,8 +2223,10 @@ MonoBehaviour:
   description: An Ice attack.
   accuraccy: 99
   dmg: 10
-  myStartkDist: {x: 0, y: 0}
-  myAttackRange: {x: 0, y: 0}
+  affecttedTiles:
+  - {x: 1, y: 2}
+  - {x: 0, y: 2}
+  - {x: -1, y: 2}
   critRate: 10
   affinity: 2
 --- !u!114 &952455470
@@ -2201,7 +2244,7 @@ MonoBehaviour:
   myAttack: 10
   myAccurracy: 0
   myLuck: 0
-  myStartkDist: 2
+  myStartkDist: 3
   myAttackRange: 2
   myAfinity: 4
 --- !u!114 &952455471
@@ -2219,8 +2262,8 @@ MonoBehaviour:
   myAttack: 10
   myAccurracy: 0
   myLuck: 0
-  myStartkDist: 2
-  myAttackRange: 2
+  myStartkDist: 1
+  myAttackRange: 1
   myAfinity: 4
 --- !u!114 &952455472
 MonoBehaviour:
@@ -2237,8 +2280,8 @@ MonoBehaviour:
   myAttack: 10
   myAccurracy: 0
   myLuck: 0
-  myStartkDist: 2
-  myAttackRange: 2
+  myStartkDist: 3
+  myAttackRange: 3
   myAfinity: 1
 --- !u!114 &952455473
 MonoBehaviour:

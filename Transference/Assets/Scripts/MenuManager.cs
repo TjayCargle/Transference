@@ -30,6 +30,21 @@ public class MenuManager : MonoBehaviour
             Setup();
         }
     }
+    public void showNone()
+    {
+        if (commandCanvas)
+        {
+            commandCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas)
+        {
+            inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (itemCanvas)
+        {
+            itemCanvas.gameObject.SetActive(false);
+        }
+    }
     public void ShowCommandCanvas()
     {
         if (commandCanvas)

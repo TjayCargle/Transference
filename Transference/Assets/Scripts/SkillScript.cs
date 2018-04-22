@@ -12,7 +12,8 @@ public enum Element
     Pierce,
     Blunt,
 
-    Neutral
+    Neutral,
+    Passive
 
 }
 public enum EType
@@ -22,7 +23,7 @@ public enum EType
 }
 public class SkillScript : UsableScript
 {
-
+    
     [SerializeField]
     protected string description;
     [SerializeField]
@@ -31,13 +32,12 @@ public class SkillScript : UsableScript
     protected int dmg;
     [SerializeField]
     private Vector2[] affecttedTiles;
-    [SerializeField]
-    private Vector2 myAttackRange;
+
     [SerializeField]
     protected float critRate;
     [SerializeField]
     protected Element affinity;
-
+   
 
   
 
@@ -61,11 +61,7 @@ public class SkillScript : UsableScript
         get { return affecttedTiles; }
         set { affecttedTiles = value; }
     }
-    public Vector2 Range
-    {
-        get { return myAttackRange; }
-        set { myAttackRange = value; }
-    }
+
     public float CRIT_RATE
     {
         get { return critRate; }

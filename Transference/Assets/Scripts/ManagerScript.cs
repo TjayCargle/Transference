@@ -27,7 +27,7 @@ public class ManagerScript : MonoBehaviour
     public int MapWidth = 0;
     public int MapHeight = 0;
     public State currentState = State.PlayerInput;
-
+    public State prevState = State.PlayerInput;
     public int currentMenuitem = 0;
     public int itemMenuitem = 0;
     CameraScript myCamera;
@@ -141,13 +141,7 @@ public class ManagerScript : MonoBehaviour
                     {
                         if (attackableTiles.Count > 0)
                         {
-                            for (int i = 0; i < attackableTiles.Count; i++)
-                            {
-                                for (int j = 0; j < attackableTiles[i].Count; j++)
-                                {
-                                    attackableTiles[i][j].myColor = Color.red;
-                                }
-                            }
+                            showAttackableTiles();
                             currentAttackList = attackableTiles[selectedAttackingTile];
                             bool foundSomething = false;
                             for (int i = 0; i < currentAttackList.Count; i++)
@@ -258,6 +252,17 @@ public class ManagerScript : MonoBehaviour
 
 
 
+    }
+
+    public void showAttackableTiles()
+    {
+        for (int i = 0; i < attackableTiles.Count; i++)
+        {
+            for (int j = 0; j < attackableTiles[i].Count; j++)
+            {
+                attackableTiles[i][j].myColor = Color.red;
+            }
+        }
     }
     public void updateCurrentMenuPosition(int currentAnchor)
     {
@@ -553,82 +558,53 @@ public class ManagerScript : MonoBehaviour
 
         List<List<TileScript>> returnList = new List<List<TileScript>>();
         Vector2[] affectedTiles = skill.TILES;
-        Vector2 Dist = affectedTiles[0];
-        Vector2 Range = skill.Range;
-
+ 
         Vector2 checkDist = Vector2.zero;
-        Vector2 checkRange = Vector2.zero;
         for (int i = 0; i < 4; i++)
         {
-            switch (i)
+                List<TileScript> tiles = new List<TileScript>();
+            for (int j = 0; j < affectedTiles.Length; j++)
             {
-                case 0:
-                    checkDist.x = Dist.x;
-                    checkDist.y = Dist.y;
-
-                    checkRange.x = Range.x;
-                    checkRange.y = Range.y;
-                    break;
-
-                case 1:
-                    checkDist.x = Dist.x * -1;
-                    checkDist.y = Dist.y;
-
-                    checkRange.x = Range.y; //Yes x = y
-                    checkRange.y = Range.x * -1;
-
-
-                    break;
-
-                case 2:
-
-                    checkDist.x = Dist.x * -1;
-                    checkDist.y = Dist.y * -1;
-
-
-
-                    checkRange.x = Range.x * -1;
-                    checkRange.y = Range.y * -1;
-
-                    break;
-
-                case 3:
-
-                    checkDist.x = Dist.x;
-                    checkDist.y = Dist.y * -1;
-
-                    checkRange.x = Range.y * -1; //Yes x = y
-                    checkRange.y = Range.x;
-                    break;
-            }
-            List<TileScript> tiles = new List<TileScript>();
-            for (int j = 0; j < Range.x; j++)
-            {
-                Vector3 checkPos = obj.transform.position;
-                checkPos.x += checkDist.x + j;
-                checkPos.z += checkDist.y;
-                int testIndex = GetTileIndex(checkPos);
-                if (testIndex >= 0)
+                Vector2 Dist = affectedTiles[j];
+                switch (i)
                 {
-                    TileScript realTile = GetTileAtIndex(testIndex);
-                    if (!tiles.Contains(realTile))
-                        tiles.Add(realTile);
+                    case 0:
+                        checkDist.x = Dist.x;
+                        checkDist.y = Dist.y;
+                        break;
+
+                    case 1:
+                        checkDist.x = Dist.y;
+                        checkDist.y = Dist.x * -1;
+                        break;
+
+                    case 2:
+
+                        checkDist.x = Dist.x * -1;
+                        checkDist.y = Dist.y * -1;
+
+                        break;
+
+                    case 3:
+                        checkDist.x = Dist.y * -1; //Yes x = y
+                        checkDist.y = Dist.x;
+                        break;
                 }
-            }
-            for (int j = 0; j < Range.y; j++)
-            {
-                Vector3 checkPos = obj.transform.position;
-                checkPos.x += checkDist.x;
-                checkPos.z = checkDist.y + j;
-                int testIndex = GetTileIndex(checkPos);
-                if (testIndex >= 0)
-                {
-                    TileScript realTile = GetTileAtIndex(testIndex);
-                    if (!tiles.Contains(realTile))
-                        tiles.Add(realTile);
-                }
+               
+              
+                    Vector3 checkPos = obj.transform.position;
+                    checkPos.x += checkDist.x;
+                    checkPos.z += checkDist.y;
+                    int testIndex = GetTileIndex(checkPos);
+                    if (testIndex >= 0)
+                    {
+                        TileScript realTile = GetTileAtIndex(testIndex);
+                        if (!tiles.Contains(realTile))
+                            tiles.Add(realTile);
+                    }
             }
             returnList.Add(tiles);
+          
         }
         return returnList;
     }

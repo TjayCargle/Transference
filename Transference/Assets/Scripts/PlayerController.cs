@@ -12,14 +12,14 @@ public class PlayerController : LivingObject
         West,
     }
     //public bool canMove = false;
-  
+
     // Use this for initialization
     new void Start()
     {
         base.Start();
-       // MoveDist = 1;
-       // MAX_ATK_DIST = 2;
-       // SkillManager.CreateSkill(1);
+        // MoveDist = 1;
+        // MAX_ATK_DIST = 2;
+        // SkillManager.CreateSkill(1);
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class PlayerController : LivingObject
                     }
                     myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                 }
-         
+
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     myManager.currentMenuitem++;
@@ -87,37 +87,37 @@ public class PlayerController : LivingObject
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    if(myManager.currentAttackList.Count > 0)
+                    if (myManager.currentAttackList.Count > 0)
                     {
                         bool foundSomething = false;
                         List<int> targetIndicies = new List<int>();
-                        
+
                         for (int i = 0; i < myManager.currentAttackList.Count; i++)
                         {
                             if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
                             {
                                 foundSomething = true;
                                 targetIndicies.Add(i);
-                          
+
                             }
                         }
                         if (foundSomething == true)
                         {
-                            for (int i = 0; i <targetIndicies.Count; i++)
+                            for (int i = 0; i < targetIndicies.Count; i++)
                             {
                                 GridObject potentialTarget = myManager.GetObjectAtTile(myManager.currentAttackList[targetIndicies[i]]);
                                 if (potentialTarget.GetComponent<LivingObject>())
                                 {
                                     LivingObject target = potentialTarget.GetComponent<LivingObject>();
-                                    int dmg = myManager.CalcDamage( this, target, WEAPON.AFINITY, WEAPON.ATTACK);
+                                    int dmg = myManager.CalcDamage(this, target, WEAPON.AFINITY, WEAPON.ATTACK);
                                     myManager.DamageLivingObject(target, dmg);
                                 }
                             }
-                           
-                             myManager.ComfirmMenuAction(this);
+
+                            myManager.ComfirmMenuAction(this);
                         }
                     }
-                  
+
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -132,7 +132,7 @@ public class PlayerController : LivingObject
                     {
                         myManager.currentMenuitem = 8;
                     }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem );
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                 }
 
                 if (Input.GetKeyDown(KeyCode.S))
@@ -142,7 +142,7 @@ public class PlayerController : LivingObject
                     {
                         myManager.currentMenuitem = 6;
                     }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem );
+                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                 }
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
@@ -155,6 +155,85 @@ public class PlayerController : LivingObject
                 break;
             case State.PlayerEquipping:
                 {
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        InventoryMangager invm = Object.FindObjectOfType<InventoryMangager>();
+
+                        switch (invm.selectedMenuItem.refItem.TYPE)
+                        {
+                            case 0:
+                                if (invm.selectedMenuItem.refItem.GetType() == WEAPON.GetType())
+                                {
+                                    WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
+                                    WEAPON = newWeapon;
+                                }
+                                break;
+                            case 1:
+                                if (invm.selectedMenuItem.refItem.GetType() == ARMOR.GetType())
+                                {
+                                    ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
+                                    ARMOR = newArmor;
+                                }
+                                break;
+                            case 2:
+                                if (invm.selectedMenuItem.refItem.GetType() == ACCESSORY.GetType())
+                                {
+                                    AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                    ACCESSORY = newAcc;
+                                }
+                                break;
+                            case 3:
+                                if (invm.selectedMenuItem.refItem.GetType() == ACCESSORY.GetType())
+                                {
+                                    AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                    ACCESSORY = newAcc;
+                                }
+                                break;
+                            case 4:
+                                {
+
+                                    SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
+
+                                    myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, selectedSkil);
+                                    myManager.ShowWhite();
+                                    if (myManager.attackableTiles.Count > 0)
+                                    {
+                                        for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+                                        {
+                                            for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                                            {
+                                            
+                                                myManager.attackableTiles[i][j].myColor = Color.red;
+                                            }
+                                        }
+                                        myManager.currentAttackList = myManager.attackableTiles[0];
+                                    
+                                        for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                        {
+                                            myManager.currentAttackList[i].myColor = Color.green;
+                                        }                           
+                                        
+
+                                    }
+
+                                    else
+                                    {
+                                        myManager.attackableTiles.Clear();
+                                    }
+                                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                                    MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                                    if (myMenuManager)
+                                    {
+                                        myMenuManager.showNone();
+                                    }
+                                    myManager.prevState = myManager.currentState;
+                                    myManager.currentState = State.PlayerAttacking;
+                                }
+                                break;
+                        }
+
+                    }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         myManager.CancelMenuAction(this);
@@ -183,7 +262,7 @@ public class PlayerController : LivingObject
             default:
                 break;
         }
-    
+
 
     }
 }
