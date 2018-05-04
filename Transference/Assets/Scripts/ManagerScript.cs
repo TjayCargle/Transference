@@ -1,20 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum State
-{
-    PlayerInput,
-    PlayerMove,
-    PlayerAttacking,
-    PlayerEquippingMenu,
-    PlayerEquipping,
-    PlayerSkillsMenu,
-    PlayerWait,
-    FreeCamera,
-    EnemyTurn
 
-
-}
 public class ManagerScript : MonoBehaviour
 {
 
@@ -86,7 +73,7 @@ public class ManagerScript : MonoBehaviour
         if (!isSetup)
         {
             Setup();
-            
+
         }
         //MaxAttackDist = MoveDist + 2;
     }
@@ -102,7 +89,7 @@ public class ManagerScript : MonoBehaviour
                     if (!Input.GetKey(KeyCode.None))
                     {
                         ShowGridObjectAffectArea(currentObject);
-                     
+
                     }
                     break;
                 case State.PlayerMove:
@@ -557,41 +544,43 @@ public class ManagerScript : MonoBehaviour
             return null;
 
         List<List<TileScript>> returnList = new List<List<TileScript>>();
-        Vector2[] affectedTiles = skill.TILES;
- 
+        List<Vector2> affectedTiles = skill.TILES;
+
         Vector2 checkDist = Vector2.zero;
         for (int i = 0; i < 4; i++)
         {
-                List<TileScript> tiles = new List<TileScript>();
-            for (int j = 0; j < affectedTiles.Length; j++)
+            List<TileScript> tiles = new List<TileScript>();
+            if (affectedTiles != null)
             {
-                Vector2 Dist = affectedTiles[j];
-                switch (i)
+                for (int j = 0; j < affectedTiles.Count; j++)
                 {
-                    case 0:
-                        checkDist.x = Dist.x;
-                        checkDist.y = Dist.y;
-                        break;
+                    Vector2 Dist = affectedTiles[j];
+                    switch (i)
+                    {
+                        case 0:
+                            checkDist.x = Dist.x;
+                            checkDist.y = Dist.y;
+                            break;
 
-                    case 1:
-                        checkDist.x = Dist.y;
-                        checkDist.y = Dist.x * -1;
-                        break;
+                        case 1:
+                            checkDist.x = Dist.y;
+                            checkDist.y = Dist.x * -1;
+                            break;
 
-                    case 2:
+                        case 2:
 
-                        checkDist.x = Dist.x * -1;
-                        checkDist.y = Dist.y * -1;
+                            checkDist.x = Dist.x * -1;
+                            checkDist.y = Dist.y * -1;
 
-                        break;
+                            break;
 
-                    case 3:
-                        checkDist.x = Dist.y * -1; //Yes x = y
-                        checkDist.y = Dist.x;
-                        break;
-                }
-               
-              
+                        case 3:
+                            checkDist.x = Dist.y * -1; //Yes x = y
+                            checkDist.y = Dist.x;
+                            break;
+                    }
+
+
                     Vector3 checkPos = obj.transform.position;
                     checkPos.x += checkDist.x;
                     checkPos.z += checkDist.y;
@@ -602,12 +591,35 @@ public class ManagerScript : MonoBehaviour
                         if (!tiles.Contains(realTile))
                             tiles.Add(realTile);
                     }
+                }
             }
+
             returnList.Add(tiles);
-          
+
         }
         return returnList;
     }
+
+    public List<int> GetTargetList()
+    {
+        if (currentAttackList.Count > 0)
+        {
+            
+            List<int> targetIndicies = new List<int>();
+
+            for (int i = 0; i < currentAttackList.Count; i++)
+            {
+                if (GetObjectAtTile(currentAttackList[i]) != null)
+                {
+           
+                    targetIndicies.Add(i);
+
+                }
+            }
+            return targetIndicies;
+        }
+        return null;
+}
     public List<List<TileScript>> GetWeaponAttackableTiles(LivingObject liveObj)
     {
         int checkIndex = GetTileIndex(liveObj);
@@ -735,66 +747,87 @@ public class ManagerScript : MonoBehaviour
     {
         dmgObject.STATS.HEALTH -= dmg;
     }
-    public int CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, int dmg)
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg)
     {
-        int returnInt = 0;
+        DmgReaction react = new DmgReaction();
+        float mod = 0.0f;
+        switch (dmgObject.ARMOR.HITLIST[(int)attackingElement])
+        {
+            case EHitType.normal:
+                mod = 1.0f;
+                react.reaction = Reaction.none;
+                Debug.Log("normal damage");
+                break;
+            case EHitType.resists:
+                mod = 0.5f;
+                react.reaction = Reaction.none;
+                Debug.Log("resists damage");
+                break;
+            case EHitType.nulls:
+                react.damage = 0;
+                react.reaction = Reaction.nulled;
+                Debug.Log("nulls damage");
+                return react;
 
-        bool hitWeakness = false;
-        bool hitResistance = false;
-        for (int i = 0; i < dmgObject.WEAKNESSES.Count; i++)
-        {
-            if (SkillScript.isWeak(attackingElement, dmgObject.WEAKNESSES[i]))
-            {
-                hitWeakness = true;
-            }
+            case EHitType.reflects:
+                react = CalcDamage(dmgObject, attackingObject, attackingElement, attackType, dmg);
+                react.reaction = Reaction.reflected;
+                Debug.Log("reflects damage");
+                return react;
+            case EHitType.absorbs:
+                mod = -1.0f;
+                react.reaction = Reaction.none;
+                Debug.Log("reaction damage");
+                break;
+            case EHitType.weak:
+                mod = 1.5f;
+                react.reaction = Reaction.none;
+                Debug.Log("weak damage");
+                break;
+            case EHitType.snatched:
+                mod = 1.5f;
+                react.reaction = Reaction.snatched;
+                Debug.Log("snatched damage");
+                break;
+            case EHitType.cripples:
+                mod = 1.5f;
+                react.reaction = Reaction.statDrop;
+                Debug.Log("crippling damage");
+                break;
+            case EHitType.knocked:
+                mod = 1.5f;
+                react.reaction = Reaction.knockback;
+                Debug.Log("knockback damage");
+                break;
+            default:
+                break;
         }
-        if (SkillScript.isResistant(attackingElement, dmgObject.ARMOR.AFINITY))
-        {
-            hitResistance = true;
-        }
-        else if (SkillScript.isResistant(attackingElement, dmgObject.WEAPON.AFINITY))
-        {
-            hitResistance = true;
-        }
-        EType attackType = EType.physical;
-        if (attackingElement == Element.Blunt || attackingElement == Element.Slash || attackingElement == Element.Pierce)
-            attackType = EType.physical;
-        else
-            attackType = EType.magical;
+
+        int returnInt = 0;
+        float calc = 0.0f;
 
         if (attackType == EType.physical)
         {
-            float calc = attackingObject.ATTACK / dmgObject.DEFENSE;
-
-            calc = dmg * calc;
-
-            calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
-
-            calc = Mathf.Sqrt(calc);
-
-            returnInt = (Mathf.RoundToInt(calc));
-
+            Debug.Log("physical");
+            calc = (float)attackingObject.ATTACK / (float)dmgObject.DEFENSE;
         }
         else
         {
-            float calc = attackingObject.ATTACK / dmgObject.RESIESTANCE;
-            calc = calc * dmg;
-            calc = Mathf.Sqrt(calc);
-            calc = calc + ((dmgObject.LEVEL - attackingObject.LEVEL) * 2);
-            returnInt = (Mathf.FloorToInt(calc));
+            calc = (float)attackingObject.ATTACK / (float)dmgObject.RESIESTANCE;
+
         }
 
-        if (hitWeakness == true)
-        {
-            Debug.Log("hit a weakness");
-            returnInt = Mathf.FloorToInt(returnInt * 1.5f);
-        }
-        else if (hitResistance == true)
-        {
-            Debug.Log("hit a resist");
-            returnInt = Mathf.FloorToInt(returnInt * 0.5f);
-        }
+        calc = dmg * calc;
 
-        return returnInt;
+        calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
+
+        calc = Mathf.Sqrt(calc);
+
+
+        calc = calc * mod;
+        returnInt = (Mathf.FloorToInt(calc));
+
+        react.damage = returnInt;
+        return react;
     }
 }

@@ -5,26 +5,26 @@ using UnityEngine;
 public class LivingObject : GridObject
 {
     private StatScript myStats;
-    private WeaponScript equippedWeapon;
-    private ArmorScript equipedArmor;
-    private AccessoryScript equippedAccessory;
+    private WeaponEquip equippedWeapon;
+    private ArmorEquip equipedArmor;
+    private AccessoryEquip equippedAccessory;
     private List<Element> myWeaknesses;
     public StatScript STATS
     {
         get { return myStats; }
         set { myStats = value; }
     }
-    public WeaponScript WEAPON
+    public WeaponEquip WEAPON
     {
         get { return equippedWeapon ; }
         set { equippedWeapon = value; }
     }
-    public ArmorScript ARMOR
+    public ArmorEquip ARMOR
     {
         get { return equipedArmor; }
         set { equipedArmor = value; }
     }
-    public AccessoryScript ACCESSORY
+    public AccessoryEquip ACCESSORY
     {
         get { return equippedAccessory; }
         set { equippedAccessory = value; }
@@ -79,30 +79,33 @@ public class LivingObject : GridObject
     }
     public override void Setup()
     {
-       
-        if (!GetComponent<WeaponScript>())
+        if (!GetComponent<InventoryScript>())
         {
-            gameObject.AddComponent<WeaponScript>();
-            gameObject.GetComponent<WeaponScript>().NAME = "default weapon";
+            gameObject.AddComponent<InventoryScript>();
         }
-        equippedWeapon = GetComponent<WeaponScript>();
+        if (!GetComponent<WeaponEquip>())
+        {
+            gameObject.AddComponent<WeaponEquip>();
+            gameObject.GetComponent<WeaponEquip>().NAME = "default weapon";
+        }
+        equippedWeapon = GetComponent<WeaponEquip>();
         equippedWeapon.USER = this;
-        if (!GetComponent<ArmorScript>())
+        if (!GetComponent<ArmorEquip>())
         {
-            gameObject.AddComponent<ArmorScript>();
-            gameObject.GetComponent<ArmorScript>().NAME = "default armor";
-        
+            gameObject.AddComponent<ArmorEquip>();
+            gameObject.GetComponent<ArmorEquip>().NAME = "default armor";
+
         }
-        equipedArmor = GetComponent<ArmorScript>();
+        equipedArmor = GetComponent<ArmorEquip>();
         equipedArmor.USER = this;
 
-        if (!GetComponent<AccessoryScript>())
+        if (!GetComponent<AccessoryEquip>())
         {
-            gameObject.AddComponent<AccessoryScript>();
-            gameObject.GetComponent<AccessoryScript>().NAME = "default accessory";
-      
+            gameObject.AddComponent<AccessoryEquip>();
+            gameObject.GetComponent<AccessoryEquip>().NAME = "default accessory";
+
         }
-        equippedAccessory = GetComponent<AccessoryScript>();
+        equippedAccessory = GetComponent<AccessoryEquip>();
         equippedAccessory.USER = this;
 
         if (!GetComponent<StatScript>())
@@ -111,16 +114,8 @@ public class LivingObject : GridObject
         }
         myStats = GetComponent<StatScript>();
         myStats.USER = this;
-        myWeaknesses = new List<Element>();
-        myWeaknesses.Add(SkillScript.getWeakness(ARMOR.AFINITY));
-        myWeaknesses.Add(SkillScript.getWeakness(WEAPON.AFINITY));
-        if (ACCESSORY.STAT == Stat.Affinity)
-        {
-            for (int i = 0; i < myWeaknesses.Count; i++)
-            {
 
-            }
-        }
+        
         base.Setup();
     }
 

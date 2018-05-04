@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transference.CSharp", "Transference.CSharp.csproj", "{F22C9EC9-C3CA-8CCC-0162-927EFBDE590D}"
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transference", "Transference.csproj", "{B44F20CB-0526-5628-793A-3B661BE6CDA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F22C9EC9-C3CA-8CCC-0162-927EFBDE590D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F22C9EC9-C3CA-8CCC-0162-927EFBDE590D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F22C9EC9-C3CA-8CCC-0162-927EFBDE590D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F22C9EC9-C3CA-8CCC-0162-927EFBDE590D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44F20CB-0526-5628-793A-3B661BE6CDA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44F20CB-0526-5628-793A-3B661BE6CDA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44F20CB-0526-5628-793A-3B661BE6CDA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44F20CB-0526-5628-793A-3B661BE6CDA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,21 +12,11 @@ public class InventoryMangager : MonoBehaviour
     public int currentIndex = 0;
     public MenuItem selectedMenuItem;
     private LivingObject lastObject;
+    private MenuManager menuManager;
     // public int testIndex = 0;
     public void Start()
     {
-
-        //if (testLiveObject)
-        //{
-        //    if (testContent)
-        //    {
-        //        if (!testLiveObject.isSetup)
-        //        {
-        //            testLiveObject.Setup();
-        //        }
-        //    //    loadContents(testContent, testIndex, testLiveObject);
-        //    }
-        //}
+        menuManager = GameObject.FindObjectOfType<MenuManager>();
 
     }
     // Update is called once per frame
@@ -96,6 +86,19 @@ public class InventoryMangager : MonoBehaviour
                 if (newPos.y > 1)
                     newPos.y = 1;
                 currentRect.normalizedPosition = newPos;
+
+                if (menuManager)
+                {
+                    if (menuManager.DESC)
+                    {
+
+
+                        if (selectedMenuItem)
+                        {
+                            menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                        }
+                    }
+                }
             }
         }
     }
@@ -137,6 +140,19 @@ public class InventoryMangager : MonoBehaviour
                 if (newPos.y < 0)
                     newPos.y = 0;
                 currentRect.normalizedPosition = newPos;
+
+                if (menuManager)
+                {
+                    if (menuManager.DESC)
+                    {
+
+
+                        if (selectedMenuItem)
+                        {
+                            menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                        }
+                    }
+                }
             }
         }
     }
@@ -146,40 +162,45 @@ public class InventoryMangager : MonoBehaviour
         lastObject = liveObject;
         currentContent = content;
         currentRect = rect;
-        UsableScript itemType = new UsableScript();
+        //UsableScript itemType = new UsableScript();
+        int useType = -1;
         switch (index)
         {
             case 0:
-                itemType = new WeaponScript();
-                itemType.TYPE = 0;
+                // itemType = ScriptableObject.CreateInstance<WeaponScript>();
+                // itemType.TYPE = 0;
+                useType = 0;
                 break;
             case 1:
-                itemType = new ArmorScript();
-                itemType.TYPE = 1;
+                // itemType = new ArmorScript();
+                // itemType.TYPE = 1;
+                useType = 1;
                 break;
             case 2:
-                itemType = new AccessoryScript();
-                itemType.TYPE = 2;
+                // itemType = new AccessoryScript();
+                // itemType.TYPE = 2;
+                useType = 2;
                 break;
             case 3:
-                itemType = new ItemScript();
-                itemType.TYPE = 3;
+                // itemType = new ItemScript();
+                // itemType.TYPE = 3;
+                useType = 3;
                 break;
             case 4:
-                itemType = new SkillScript();
-                itemType.TYPE = 4;
+                // itemType = new SkillScript();
+                // itemType.TYPE = 4;
+                useType = 4;
                 break;
         }
         // for (int i = 0; i < 4; i++)
         {
 
-            UsableScript[] invokingObjectsUse = liveObject.GetComponents<UsableScript>();
-            for (int useCount = 0; useCount < invokingObjectsUse.Length; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
+            List<UsableScript> invokingObjectsUse = liveObject.GetComponent<InventoryScript>().USEABLES;
+            for (int useCount = 0; useCount < invokingObjectsUse.Count; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
             {
                 UsableScript item = invokingObjectsUse[useCount];
-                if (itemType.GetType() != item.GetType())
+                if (useType != item.TYPE)
                 {
-                    //   Debug.Log("Selected type is not a : " + weapon.GetType().ToString());
                     continue;
                 }
                 if (!item)
@@ -190,8 +211,9 @@ public class InventoryMangager : MonoBehaviour
                 if (tempObjects.ContainsKey(item.NAME))
                 {
                     tempObjects[item.NAME].SetActive(true);
-                    tempObjects[item.NAME].transform.parent = content.transform;
+                    tempObjects[item.NAME].transform.SetParent(content.transform);
                     continue;
+                    //no need to have else if it continues;
                 }
 
                 //  else
@@ -210,9 +232,9 @@ public class InventoryMangager : MonoBehaviour
                 if (selectableItem.GetComponent<MenuItem>())
                 {
                     MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
-                    item.TYPE = itemType.TYPE;
+                    item.TYPE = useType;//itemType.TYPE;
                     selectedItem.refItem = item;
-                    
+
                     // selectedItem.itemType = itemType;
 
 
@@ -231,6 +253,25 @@ public class InventoryMangager : MonoBehaviour
             float newValue = menuItem.GetComponent<RectTransform>().rect.height * content.transform.childCount;
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, newValue);
         }
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+            }
+        }
+        if (menuManager)
+        {
+            if (menuManager.DESC)
+            {
+
+
+                if (selectedMenuItem)
+                {
+                    menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                }
+            }
+        }
 
     }
 
@@ -238,14 +279,14 @@ public class InventoryMangager : MonoBehaviour
     {
         if (lastObject)
         {
-            UsableScript[] invokingObjectsUse = lastObject.GetComponents<UsableScript>();
-            for (int useCount = 0; useCount < invokingObjectsUse.Length; useCount++) 
+            List<UsableScript> invokingObjectsUse = lastObject.GetComponent<InventoryScript>().USEABLES;
+            for (int useCount = 0; useCount < invokingObjectsUse.Count; useCount++)
             {
                 UsableScript item = invokingObjectsUse[useCount];
                 if (tempObjects.ContainsKey(item.NAME))
                 {
                     GameObject obj = tempObjects[item.NAME];
-                    obj.transform.parent = null;
+                    obj.transform.SetParent(null);
                     obj.gameObject.SetActive(false);
                 }
             }

@@ -1,0 +1,3 @@
+id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect
+0,Dragon Scales,Hardened skinned, 10, 8, 50, weak, nulls, cripples, normal, resists, resists, normal
+1,Phoenix Flame,Fire, 10, 8, 50, weak, reflects, cripples, normal, normal, knocked, normal

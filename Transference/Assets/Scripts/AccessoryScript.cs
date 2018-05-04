@@ -15,9 +15,9 @@ public enum Stat
 }
 public class AccessoryScript : UsableScript
 {
-    [SerializeField]
+
     private Stat modifier;
-    [SerializeField]
+
     private int addedValue;
    private LivingObject owner;
     public LivingObject USER

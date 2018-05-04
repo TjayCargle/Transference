@@ -97,7 +97,7 @@ public class MenuItem : MonoBehaviour
                             MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
                             if (myMenuManager)
                             {
-                                myMenuManager.showNone();
+                                myMenuManager.ShowNone();
                             }
                             myManager.prevState = myManager.currentState;
                             myManager.currentState = State.PlayerAttacking;
@@ -263,7 +263,7 @@ public class MenuItem : MonoBehaviour
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
-                        if (myManager.prevState == State.PlayerEquipping)
+                        if (myManager.prevState == State.PlayerEquippingMenu)
                         {
                             myMenuManager.ShowInventoryCanvas();
                             myManager.currentMenuitem = 6;
@@ -280,7 +280,11 @@ public class MenuItem : MonoBehaviour
                             myManager.currentState = State.PlayerInput;
                         }
                     }
-                    myManager.attackableTiles.Clear();
+                    if(myManager.attackableTiles != null)
+                    {
+                        myManager.attackableTiles.Clear();
+                        myManager.ShowWhite();
+                    }
                 }
                 break;
             case State.PlayerAttacking:
@@ -307,6 +311,11 @@ public class MenuItem : MonoBehaviour
                             myMenuManager.ShowCommandCanvas();
                             myManager.currentState = State.PlayerInput;
                         }
+                    }
+                    if (myManager.attackableTiles != null)
+                    {
+                        myManager.attackableTiles.Clear();
+                        myManager.ShowGridObjectAffectArea(myManager.currentObject);
                     }
                 }
                 break;

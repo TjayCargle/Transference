@@ -1,51 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum Element
-{
-    Water,
-    Fire,
-    Ice,
-    Electric,
 
-    Slash,
-    Pierce,
-    Blunt,
-
-    Neutral,
-    Passive
-
-}
-public enum EType
-{
-    physical,
-    magical,
-}
 public class SkillScript : UsableScript
 {
-    
-    [SerializeField]
-    protected string description;
+
     [SerializeField]
     protected int accuraccy;
+
     [SerializeField]
     protected int dmg;
+
     [SerializeField]
-    private Vector2[] affecttedTiles;
+    private List<Vector2> affecttedTiles;
 
     [SerializeField]
     protected float critRate;
+
     [SerializeField]
     protected Element affinity;
-   
 
-  
+    [SerializeField]
+    protected EType eType;
 
-    public string DESC
-    {
-        get { return description; }
-        set { description = value; }
-    }
+
     public int ACCURACY
     {
         get { return accuraccy; }
@@ -56,7 +34,7 @@ public class SkillScript : UsableScript
         get { return dmg; }
         set { dmg = value; }
     }
-    public Vector2[] TILES
+    public List<Vector2> TILES
     {
         get { return affecttedTiles; }
         set { affecttedTiles = value; }
@@ -71,6 +49,11 @@ public class SkillScript : UsableScript
     {
         get { return affinity; }
         set { affinity = value; }
+    }
+    public EType ETYPE
+    {
+        get { return eType; }
+        set { eType = value; }
     }
     public static bool isWeak(Element myAttack, Element Opponent)
     {

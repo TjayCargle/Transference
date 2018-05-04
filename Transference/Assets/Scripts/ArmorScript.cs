@@ -10,16 +10,19 @@ public class ArmorScript : UsableScript
     private int myRes;
     [SerializeField]
     private int mySpeed;
-    [SerializeField]
-    private Element myAfinity = Element.Fire;
 
+    [SerializeField]
+    private List<EHitType> hitList;
 
     private LivingObject owner;
-    public Element AFINITY
+
+
+    public List<EHitType> HITLIST
     {
-        get { return myAfinity; }
+        get { return hitList; }
+        set { hitList = value; }
     }
-  
+
     public LivingObject USER
     {
         get { return owner; }

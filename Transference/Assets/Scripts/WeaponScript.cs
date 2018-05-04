@@ -14,12 +14,13 @@ public class WeaponScript : UsableScript
     private int myStartkDist;
     [SerializeField]
     private int myAttackRange;
-
-
     [SerializeField]
+    private EType eType;
+
     private Element myAfinity = Element.Slash;
 
     private LivingObject owner;
+
     public LivingObject USER
     {
         get { return owner; }
@@ -28,44 +29,13 @@ public class WeaponScript : UsableScript
     public Element AFINITY
     {
         get { return myAfinity; }
+        set { myAfinity = value; }
     }
     public EType ATTACK_TYPE
     {
 
-        get
-        {
-            EType returnType = EType.magical;
-            switch (myAfinity)
-            {
-                case Element.Water:
-                    returnType = EType.magical;
-                    break;
-                case Element.Fire:
-                    returnType = EType.magical;
-                    break;
-                case Element.Ice:
-                    returnType = EType.magical;
-                    break;
-                case Element.Electric:
-                    returnType = EType.magical;
-                    break;
-                case Element.Slash:
-                    returnType = EType.physical;
-                    break;
-                case Element.Pierce:
-                    returnType = EType.physical;
-                    break;
-                case Element.Blunt:
-                    returnType = EType.physical;
-                    break;
-                case Element.Neutral:
-                    returnType = EType.magical;
-                    break;
-
-            }
-            return returnType;
-
-        }
+        get { return eType; }
+        set { eType = value; }
     }
     public int ATTACK
     {

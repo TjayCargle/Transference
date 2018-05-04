@@ -1,0 +1,7 @@
+id,name,element,etype, description, accuraccy, dmg, critRate, affecttedTilesCount, affectedx, affectedy
+0,Lash, Slash,physical,Small Slash based physical damage to 1 foe. 100% accuraccy, 100, 20, 0, 1, 0, 1
+1,Whiplash, Slash,physical,Medium Slash based physical damage to 1 foe. 95% accuraccy, 95, 22, 0,1, 1,1
+2,RazorWhiplash, Slash, physical,Heavy Slash based physical damage to 1 foe. 90% accuraccy, 90, 24, 0, 2, 0,1, 1,1
+46, FireBullet, Fire, physical,Small Fire based physical damage to 1 foe., 99, 15, 1, 1, 0, 2
+47, FireBall, Fire, physical, Medium Fire based physical damage to 1 foe., 99, 18, 1, 0, 2
+48, FireBolt, Fire, physical, Heavy Fire based physical damage to 1 foe., 99, 21, 1, 1, 0, 2

@@ -8,9 +8,16 @@ public class MenuManager : MonoBehaviour
     public Canvas commandCanvas;
     public Canvas inventoryCanvas;
     public Canvas itemCanvas;
+    public Canvas descCanvas;
+    private Text descText;
     public ScrollRect ItemRect;
     public InventoryMangager inManager;
     public bool isSetup = false;
+
+    public Text DESC
+    {
+        get { return descText; }
+    }
     public void Setup()
     {
         if (inventoryCanvas)
@@ -21,6 +28,15 @@ public class MenuManager : MonoBehaviour
         {
             itemCanvas.gameObject.SetActive(false);
         }
+
+        if(descCanvas)
+        {
+            if(descCanvas.GetComponentInChildren<Text>())
+            {
+                descText = descCanvas.GetComponentInChildren<Text>();
+            }
+            descCanvas.gameObject.SetActive(false);
+        }
         isSetup = true;
     }
     void Start()
@@ -30,7 +46,7 @@ public class MenuManager : MonoBehaviour
             Setup();
         }
     }
-    public void showNone()
+    public void ShowNone()
     {
         if (commandCanvas)
         {
@@ -42,7 +58,15 @@ public class MenuManager : MonoBehaviour
         }
         if (itemCanvas)
         {
+            if (inManager)
+            {
+                inManager.unloadContents();
+            }
             itemCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
         }
     }
     public void ShowCommandCanvas()
@@ -57,7 +81,15 @@ public class MenuManager : MonoBehaviour
         }
         if (itemCanvas)
         {
+            if (inManager)
+            {
+                inManager.unloadContents();
+            }
             itemCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
         }
     }
 
@@ -79,6 +111,10 @@ public class MenuManager : MonoBehaviour
             }
             itemCanvas.gameObject.SetActive(false);
         }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void ShowItemCanvas(int index, LivingObject invokingObject)
@@ -90,6 +126,10 @@ public class MenuManager : MonoBehaviour
         if (inventoryCanvas)
         {
             inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(true);
         }
         if (itemCanvas)
         {

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : LivingObject
 {
+    [SerializeField]
+    private SkillScript currentSkill;
     private enum Facing
     {
         North,
@@ -89,19 +91,10 @@ public class PlayerController : LivingObject
                 {
                     if (myManager.currentAttackList.Count > 0)
                     {
-                        bool foundSomething = false;
-                        List<int> targetIndicies = new List<int>();
-
-                        for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                        {
-                            if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
-                            {
-                                foundSomething = true;
-                                targetIndicies.Add(i);
-
-                            }
-                        }
-                        if (foundSomething == true)
+                     
+                        List<int> targetIndicies = myManager.GetTargetList();
+                        
+                        if (targetIndicies != null)
                         {
                             for (int i = 0; i < targetIndicies.Count; i++)
                             {
@@ -109,19 +102,66 @@ public class PlayerController : LivingObject
                                 if (potentialTarget.GetComponent<LivingObject>())
                                 {
                                     LivingObject target = potentialTarget.GetComponent<LivingObject>();
-                                    int dmg = myManager.CalcDamage(this, target, WEAPON.AFINITY, WEAPON.ATTACK);
-                                    myManager.DamageLivingObject(target, dmg);
+
+                                    DmgReaction react;
+                                    if(currentSkill != null)
+                                    {
+                                        react = myManager.CalcDamage(this, target,currentSkill.ELEMENT, currentSkill.ETYPE, currentSkill.DMG);
+                                    }
+                                    else
+                                    {
+                                        react = myManager.CalcDamage(this, target, WEAPON.AFINITY, WEAPON.ATTACK_TYPE, WEAPON.ATTACK);
+                                    }
+
+                                    switch (react.reaction)
+                                    {
+                                        case Reaction.none:
+                                            myManager.DamageLivingObject(target, react.damage);
+                            
+                                            break;
+                                        case Reaction.statDrop:
+                                            break;
+                                        case Reaction.nulled:
+                                            myManager.DamageLivingObject(target, react.damage);
+
+                                            break;
+                                        case Reaction.reflected:
+                                            myManager.DamageLivingObject(this, react.damage);
+                                            break;
+                                        case Reaction.knockback:
+                                            myManager.DamageLivingObject(target, react.damage);
+                                            Vector3 direction = transform.position - target.transform.position;
+                                            myManager.MoveGridObject(target, (-1 * direction));
+                                            myManager.ComfirmMoveGridObject(target, myManager.GetTileIndex(target));
+                                            
+                                            break;
+                                        case Reaction.snatched:
+                                            myManager.DamageLivingObject(target, react.damage);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    if (currentSkill != null)
+                                        currentSkill = null;
                                 }
                             }
 
-                            myManager.ComfirmMenuAction(this);
+
                         }
+                        if (myManager.GetComponent<MenuManager>())
+                        {
+                            myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+                        }
+                        myManager.prevState = myManager.currentState;
+                        myManager.currentState = State.PlayerInput;
                     }
 
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     myManager.CancelMenuAction(this);
+                    currentSkill = null;
                 }
                 break;
             case State.PlayerEquippingMenu:
@@ -162,38 +202,39 @@ public class PlayerController : LivingObject
                         switch (invm.selectedMenuItem.refItem.TYPE)
                         {
                             case 0:
-                                if (invm.selectedMenuItem.refItem.GetType() == WEAPON.GetType())
+                                if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                 {
                                     WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                    WEAPON = newWeapon;
+                                    WEAPON.Equip(newWeapon);
                                 }
                                 break;
                             case 1:
-                                if (invm.selectedMenuItem.refItem.GetType() == ARMOR.GetType())
+                                if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
                                 {
                                     ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                    ARMOR = newArmor;
+                                    ARMOR.Equip(newArmor);
                                 }
                                 break;
                             case 2:
-                                if (invm.selectedMenuItem.refItem.GetType() == ACCESSORY.GetType())
+                                if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
                                 {
                                     AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    ACCESSORY = newAcc;
+                                    ACCESSORY.Equip(newAcc);
                                 }
                                 break;
                             case 3:
                                 if (invm.selectedMenuItem.refItem.GetType() == ACCESSORY.GetType())
                                 {
                                     AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    ACCESSORY = newAcc;
+                                    ACCESSORY.Equip(newAcc);
+
                                 }
                                 break;
                             case 4:
                                 {
 
                                     SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
-
+                                    currentSkill = selectedSkil;
                                     myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, selectedSkil);
                                     myManager.ShowWhite();
                                     if (myManager.attackableTiles.Count > 0)
@@ -202,22 +243,23 @@ public class PlayerController : LivingObject
                                         {
                                             for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
                                             {
-                                            
+
                                                 myManager.attackableTiles[i][j].myColor = Color.red;
                                             }
                                         }
                                         myManager.currentAttackList = myManager.attackableTiles[0];
-                                    
+
                                         for (int i = 0; i < myManager.currentAttackList.Count; i++)
                                         {
                                             myManager.currentAttackList[i].myColor = Color.green;
-                                        }                           
-                                        
+                                        }
+
 
                                     }
 
                                     else
                                     {
+                                        currentSkill = null;
                                         myManager.attackableTiles.Clear();
                                     }
                                     myManager.tempObject.transform.position = myManager.currentObject.transform.position;
@@ -225,7 +267,7 @@ public class PlayerController : LivingObject
                                     MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
                                     if (myMenuManager)
                                     {
-                                        myMenuManager.showNone();
+                                        myMenuManager.ShowNone();
                                     }
                                     myManager.prevState = myManager.currentState;
                                     myManager.currentState = State.PlayerAttacking;
@@ -237,6 +279,7 @@ public class PlayerController : LivingObject
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         myManager.CancelMenuAction(this);
+                        currentSkill = null;
                     }
                 }
                 break;

@@ -10,7 +10,7 @@ public class SkillManager : MonoBehaviour {
 
    public static SkillScript CreateSkill(LivingObject invokingObject, int index)
     {
-        SkillScript newSkill = invokingObject.gameObject.AddComponent<SkillScript>();
+        SkillScript newSkill = new SkillScript();//invokingObject.gameObject.AddComponent<SkillScript>();
 
         return newSkill;
     }
