@@ -23,8 +23,17 @@ public class StatScript : MonoBehaviour {
     private int myMaxAtkDist = 0;
     [SerializeField]
     private int myMinAtkDist = 0;
-
+    [SerializeField]
+    List<string> appliedPassives = new List<string>();
+    public int type = 0;
     private LivingObject owner;
+
+    public List<string> MODS
+    {
+        get { return appliedPassives; }
+        set { appliedPassives = value; }
+    }
+
     public LivingObject USER
     {
         get { return owner; }
@@ -32,42 +41,42 @@ public class StatScript : MonoBehaviour {
     }
     public int MOVE_DIST
     {
-        get { return owner.ACCESSORY.STAT == Stat.Movement? owner.ACCESSORY.VALUE + myMoveDist : myMoveDist; }
+        get { return myMoveDist; }
         set { myMoveDist = value; }
     }
     public int Max_Atk_DIST
     {
-        get { return owner.ACCESSORY.STAT == Stat.Atk_Dist ? owner.ACCESSORY.VALUE + myMaxAtkDist + owner.WEAPON.DIST : myMaxAtkDist; }
+        get { return  myMaxAtkDist; }
         set { myMoveDist = value; }
     }
     public int Min_Atk_DIST
     {
-        get { return owner.ACCESSORY.STAT == Stat.Atk_Dist ? owner.ACCESSORY.VALUE + myMinAtkDist + owner.WEAPON.DIST : myMinAtkDist; }
+        get { return myMinAtkDist; }
         set { myMoveDist = value; }
     }
     public int ATTACK
     {
-        get { return owner.ACCESSORY.STAT == Stat.Attack ? owner.ACCESSORY.VALUE + myBaseAttack + owner.WEAPON.ATTACK : myBaseAttack + owner.WEAPON.ATTACK; }
+        get { return  myBaseAttack + owner.WEAPON.ATTACK; }
         set { myBaseAttack = value; }
     }
     public int DEFENSE
     {
-        get { return owner.ACCESSORY.STAT == Stat.Defense ? owner.ACCESSORY.VALUE + myBaseDefense + owner.ARMOR.DEFENSE : myBaseDefense + owner.ARMOR.DEFENSE; }
+        get { return  myBaseDefense + owner.ARMOR.DEFENSE; }
         set { myBaseDefense = value; }
     }
     public int RESIESTANCE
     {
-        get { return owner.ACCESSORY.STAT == Stat.Defense ? owner.ACCESSORY.VALUE + myBaseDefense + owner.ARMOR.RESISTANCE : myBaseDefense + owner.ARMOR.RESISTANCE; }
+        get { return  myBaseDefense + owner.ARMOR.RESISTANCE; }
         set { myBaseResistance = value; }
     }
     public int SPEED
     {
-        get { return owner.ACCESSORY.STAT == Stat.Speed ? owner.ACCESSORY.VALUE + myBaseSpeed + owner.ARMOR.SPEED : myBaseSpeed + owner.ARMOR.SPEED; }
+        get { return  myBaseSpeed + owner.ARMOR.SPEED; }
         set { myBaseSpeed = value; }
     }
     public int LUCK
     {
-        get { return owner.ACCESSORY.STAT == Stat.Luck ? owner.ACCESSORY.VALUE + myBaseLuck + owner.WEAPON.LUCK : myBaseLuck + owner.WEAPON.LUCK; }
+        get { return myBaseLuck + owner.WEAPON.LUCK; }
         set { myBaseLuck = value; }
     }
     public int HEALTH
@@ -79,5 +88,21 @@ public class StatScript : MonoBehaviour {
     {
         get { return myLevel; }
         set { myLevel = value; }
+    }
+    public void Reset(bool hard = false)
+    {
+        Max_Atk_DIST = 0;
+        Min_Atk_DIST = 0;
+        HEALTH = 0;
+        ATTACK = 0;
+        DEFENSE = 0;
+        RESIESTANCE = 0;
+        SPEED = 0;
+        LUCK = 0;
+        if (hard == false)
+            LEVEL = 1;
+        else
+            LEVEL = 0;
+
     }
 }

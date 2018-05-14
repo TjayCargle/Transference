@@ -2,32 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : LivingObject
+public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private SkillScript currentSkill;
-    private enum Facing
-    {
-        North,
-        East,
-        South,
-        West,
-    }
+
+    [SerializeField]
+    public LivingObject current;
+
+    [SerializeField]
+    protected ManagerScript myManager;
     //public bool canMove = false;
 
     // Use this for initialization
-    new void Start()
+     void Start()
     {
-        base.Start();
+        myManager = GameObject.FindObjectOfType<ManagerScript>();
+        if(!myManager.isSetup)
+        {
+            myManager.Setup();
+        }
+        if(myManager.turnOrder.Count > 0)
+        {
+        current = myManager.turnOrder[0];
+        }
+       // base.Start();
         // MoveDist = 1;
         // MAX_ATK_DIST = 2;
         // SkillManager.CreateSkill(1);
     }
 
     // Update is called once per frame
-    new void Update()
+     void Update()
     {
-        base.Update();
+        //base.Update();
+        if(current)
+        {
+
         switch (myManager.currentState)
         {
             case State.PlayerInput:
@@ -52,37 +63,37 @@ public class PlayerController : LivingObject
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                 }
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    myManager.SelectMenuItem(this);
+                    myManager.SelectMenuItem(current);
                 }
                 break;
             case State.PlayerMove:
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    myManager.MoveGridObject(this, new Vector3(0, 0, 1));
+                    myManager.MoveGridObject(current, new Vector3(0, 0, 1));
                 }
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    myManager.MoveGridObject(this, new Vector3(-1, 0, 0));
+                    myManager.MoveGridObject(current, new Vector3(-1, 0, 0));
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    myManager.MoveGridObject(this, new Vector3(0, 0, -1));
+                    myManager.MoveGridObject(current, new Vector3(0, 0, -1));
                 }
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    myManager.MoveGridObject(this, new Vector3(1, 0, 0));
+                    myManager.MoveGridObject(current, new Vector3(1, 0, 0));
                 }
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    myManager.ComfirmMenuAction(this);
+                    myManager.ComfirmMenuAction(current);
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                 }
                 break;
             case State.PlayerAttacking:
@@ -91,9 +102,9 @@ public class PlayerController : LivingObject
                 {
                     if (myManager.currentAttackList.Count > 0)
                     {
-                     
+
                         List<int> targetIndicies = myManager.GetTargetList();
-                        
+
                         if (targetIndicies != null)
                         {
                             for (int i = 0; i < targetIndicies.Count; i++)
@@ -104,43 +115,21 @@ public class PlayerController : LivingObject
                                     LivingObject target = potentialTarget.GetComponent<LivingObject>();
 
                                     DmgReaction react;
-                                    if(currentSkill != null)
+                                    if (currentSkill != null)
                                     {
-                                        react = myManager.CalcDamage(this, target,currentSkill.ELEMENT, currentSkill.ETYPE, currentSkill.DMG);
+                                        for (int k = 0; k < currentSkill.HITS; k++)
+                                        {
+                                            react = myManager.CalcDamage(current, target, currentSkill);
+                                            myManager.ApplyReaction(current, target, react);
+                                        }
+                                            currentSkill.UseSkill(current);
                                     }
                                     else
                                     {
-                                        react = myManager.CalcDamage(this, target, WEAPON.AFINITY, WEAPON.ATTACK_TYPE, WEAPON.ATTACK);
+                                        react = myManager.CalcDamage(current, target, current.WEAPON);
+                                        myManager.ApplyReaction(current, target, react);
                                     }
 
-                                    switch (react.reaction)
-                                    {
-                                        case Reaction.none:
-                                            myManager.DamageLivingObject(target, react.damage);
-                            
-                                            break;
-                                        case Reaction.statDrop:
-                                            break;
-                                        case Reaction.nulled:
-                                            myManager.DamageLivingObject(target, react.damage);
-
-                                            break;
-                                        case Reaction.reflected:
-                                            myManager.DamageLivingObject(this, react.damage);
-                                            break;
-                                        case Reaction.knockback:
-                                            myManager.DamageLivingObject(target, react.damage);
-                                            Vector3 direction = transform.position - target.transform.position;
-                                            myManager.MoveGridObject(target, (-1 * direction));
-                                            myManager.ComfirmMoveGridObject(target, myManager.GetTileIndex(target));
-                                            
-                                            break;
-                                        case Reaction.snatched:
-                                            myManager.DamageLivingObject(target, react.damage);
-                                            break;
-                                        default:
-                                            break;
-                                    }
 
                                     if (currentSkill != null)
                                         currentSkill = null;
@@ -160,7 +149,7 @@ public class PlayerController : LivingObject
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                     currentSkill = null;
                 }
                 break;
@@ -186,11 +175,11 @@ public class PlayerController : LivingObject
                 }
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    myManager.SelectMenuItem(this);
+                    myManager.SelectMenuItem(current);
                 }
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                 }
                 break;
             case State.PlayerEquipping:
@@ -205,28 +194,28 @@ public class PlayerController : LivingObject
                                 if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                 {
                                     WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                    WEAPON.Equip(newWeapon);
+                                    current.WEAPON.Equip(newWeapon);
                                 }
                                 break;
                             case 1:
                                 if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
                                 {
                                     ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                    ARMOR.Equip(newArmor);
+                                    current.ARMOR.Equip(newArmor);
                                 }
                                 break;
                             case 2:
                                 if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
                                 {
                                     AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    ACCESSORY.Equip(newAcc);
+                                    current.ACCESSORY.Equip(newAcc);
                                 }
                                 break;
                             case 3:
-                                if (invm.selectedMenuItem.refItem.GetType() == ACCESSORY.GetType())
+                                if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
                                 {
                                     AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    ACCESSORY.Equip(newAcc);
+                                    current.ACCESSORY.Equip(newAcc);
 
                                 }
                                 break;
@@ -235,7 +224,7 @@ public class PlayerController : LivingObject
 
                                     SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
                                     currentSkill = selectedSkil;
-                                    myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, selectedSkil);
+                                    myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
                                     myManager.ShowWhite();
                                     if (myManager.attackableTiles.Count > 0)
                                     {
@@ -278,7 +267,7 @@ public class PlayerController : LivingObject
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        myManager.CancelMenuAction(this);
+                        myManager.CancelMenuAction(current);
                         currentSkill = null;
                     }
                 }
@@ -286,18 +275,18 @@ public class PlayerController : LivingObject
             case State.PlayerWait:
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                 }
                 break;
             case State.FreeCamera:
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    myManager.ComfirmMenuAction(this);
+                    myManager.ComfirmMenuAction(current);
                 }
 
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    myManager.CancelMenuAction(this);
+                    myManager.CancelMenuAction(current);
                 }
                 break;
             case State.EnemyTurn:
@@ -307,5 +296,6 @@ public class PlayerController : LivingObject
         }
 
 
+        }
     }
 }

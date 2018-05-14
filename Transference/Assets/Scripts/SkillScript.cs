@@ -9,10 +9,13 @@ public class SkillScript : UsableScript
     protected int accuraccy;
 
     [SerializeField]
-    protected int dmg;
+    protected DMG damage;
 
     [SerializeField]
     private List<Vector2> affecttedTiles;
+
+    [SerializeField]
+    protected RanngeType rType;
 
     [SerializeField]
     protected float critRate;
@@ -23,23 +26,95 @@ public class SkillScript : UsableScript
     [SerializeField]
     protected EType eType;
 
+    [SerializeField]
+    protected int hitCount;
+
+    [SerializeField]
+    protected int next;
+
+    [SerializeField]
+    protected int nextCount;
+
+    [SerializeField]
+    private ModifiedStat modStat;
+    [SerializeField]
+    private List<Element> modElements;
+    [SerializeField]
+    private List<float> modValues;
+
+    public ModifiedStat ModStat
+    {
+        get
+        {
+            return modStat;
+        }
+
+        set
+        {
+            modStat = value;
+        }
+    }
+
+    public List<Element> ModElements
+    {
+        get
+        {
+            return modElements;
+        }
+
+        set
+        {
+            modElements = value;
+        }
+    }
+
+    public List<float> ModValues
+    {
+        get
+        {
+            return modValues;
+        }
+
+        set
+        {
+            modValues = value;
+        }
+    }
 
     public int ACCURACY
     {
         get { return accuraccy; }
         set { accuraccy = value; }
     }
-    public int DMG
+
+    public int NEXT
     {
-        get { return dmg; }
-        set { dmg = value; }
+        get { return next; }
+        set { next = value; }
+    }
+
+    public int NEXTCOUNT
+    {
+        get { return nextCount; }
+        set { nextCount = value; }
+    }
+
+    public int HITS
+    {
+        get { return hitCount; }
+        set { hitCount = value; }
+    }
+    public DMG DAMAGE
+    {
+        get { return damage; }
+        set { damage = value; }
     }
     public List<Vector2> TILES
     {
         get { return affecttedTiles; }
         set { affecttedTiles = value; }
     }
-
+ 
     public float CRIT_RATE
     {
         get { return critRate; }
@@ -54,6 +129,11 @@ public class SkillScript : UsableScript
     {
         get { return eType; }
         set { eType = value; }
+    }
+    public RanngeType RTYPE
+    {
+        get { return rType; }
+        set { rType = value; }
     }
     public static bool isWeak(Element myAttack, Element Opponent)
     {
@@ -170,7 +250,7 @@ public class SkillScript : UsableScript
         {
             case Element.Water:
                 returnedElement = Element.Electric;
-        
+
                 break;
             case Element.Fire:
                 returnedElement = Element.Water;
@@ -191,10 +271,31 @@ public class SkillScript : UsableScript
             case Element.Blunt:
                 returnedElement = Element.Pierce;
                 break;
-           
+
 
         }
         return returnedElement;
+    }
+    public void UseSkill(LivingObject user)
+    {
+        if (NEXT > 0)
+        {
+            if (NEXTCOUNT > 0)
+            {
+                NEXTCOUNT--;
+                if (NEXTCOUNT <= 0)
+                {
+
+                    DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+                    if (database != null)
+                    {
+                        database.LearnSkill(NEXT, user);
+
+                    }
+                }
+            }
+        }
+
     }
 
 }

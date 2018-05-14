@@ -5,7 +5,6 @@ using UnityEngine;
 public class GridObject : MonoBehaviour {
      protected ManagerScript myManager;
     public TileScript currentTile;
-    State currentState;
     public string FullName;
     private bool hasMoved = false;
     protected int MoveDist = 0;
@@ -53,11 +52,7 @@ public class GridObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	protected void Update () {
-		if(!myManager)
-        {
-            return;
-        }
-        currentState = myManager.currentState;
+ 
 	}
     
 

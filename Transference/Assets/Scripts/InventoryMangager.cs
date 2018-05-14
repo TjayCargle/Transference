@@ -227,7 +227,7 @@ public class InventoryMangager : MonoBehaviour
                 {
                     Text selectedText = selectableItem.GetComponentInChildren<Text>();
                     selectedText.text = item.NAME;
-
+                    selectedText.resizeTextForBestFit = true;
                 }
                 if (selectableItem.GetComponent<MenuItem>())
                 {
@@ -235,7 +235,7 @@ public class InventoryMangager : MonoBehaviour
                     item.TYPE = useType;//itemType.TYPE;
                     selectedItem.refItem = item;
 
-                    // selectedItem.itemType = itemType;
+                    
 
 
                     tempObjects.Add(selectedItem.refItem.NAME, selectableItem);

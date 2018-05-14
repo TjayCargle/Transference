@@ -1,7 +1,17 @@
-id,name,element,etype, description, accuraccy, dmg, critRate, affecttedTilesCount, affectedx, affectedy
-0,Lash, Slash,physical,Small Slash based physical damage to 1 foe. 100% accuraccy, 100, 20, 0, 1, 0, 1
-1,Whiplash, Slash,physical,Medium Slash based physical damage to 1 foe. 95% accuraccy, 95, 22, 0,1, 1,1
-2,RazorWhiplash, Slash, physical,Heavy Slash based physical damage to 1 foe. 90% accuraccy, 90, 24, 0, 2, 0,1, 1,1
-46, FireBullet, Fire, physical,Small Fire based physical damage to 1 foe., 99, 15, 1, 1, 0, 2
-47, FireBall, Fire, physical, Medium Fire based physical damage to 1 foe., 99, 18, 1, 0, 2
-48, FireBolt, Fire, physical, Heavy Fire based physical damage to 1 foe., 99, 21, 1, 1, 0, 2
+id,name,element,etype, description,range type, next, next count,  accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy
+0,Whip, Slash,physical,foe,single,1,5, 100, minute, 1, 0, 1, 0, 1
+1,Lash, Slash,physical,foe,single,2,10, 100, small, 1, 0, 1, 0, 1
+2,Whiplash, Slash,physical,foe,single,3,15 95, medium,1, 0,1, 1,1
+3,Razor Whiplashlash, physical,foe,single, 4,20 90, heavy,1, 0, 1, 0,1
+4,Chainlash, Slash, physical,foe,5single,5,25, 90, severe,1, 0, 1, 0,1
+5,Razor Chainlash, Slash, physical,foe,single,-1,0, 90, collassal,1, 0, 1, 0,1
+6,Shallow Slices, Slash,physical,foes,multi,7,5, 100, minute, 2, 0, 2, 0, 1, 0, 2
+7,Deep Cuts, Slash,physical,foes,multi,8,10, 100,minute, 3, 0, 2, 0, 1, 0, 2
+8,Countless Cuts, Slash,physical,foes,multi,9,20, 100, small, 2, 0, 2, 0, 1, 0, 2
+9,Myriad Cuts, Slash,physical,foes,multi,10,40, 100, small, 3, 0, 2, 0, 1, 0, 2
+10,Endless Cuts, Slash,physical,foes,multi,-1,0,100, medium, 3, 0, 2, 0, 1, 0, 2
+46, FireBullet, Fire, physical,foes,multi,47,5,99, minute,2,0, 1, 0, 2
+47, FireBall, Fire, physical, foes,multi,48,10,99, small,2,0, 1, 0, 2
+48, FireBolt, Fire, physical, foes,multi, -1,0, 99, medium, 2, 0, 1, 0, 2
+141,DragonStone,Passive,physical, Fire and Slash attacks do 25% more dmg,single,-1, 0, 1, 0.25, 0,ElementDmg, 2, Fire, Slash  
+142,HP+,Passive,physical, Fire and Slash attacks do 25% more dmg,single,-1, 0, 1, 25, 0,Health, 0 

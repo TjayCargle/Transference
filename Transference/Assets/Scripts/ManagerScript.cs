@@ -8,8 +8,10 @@ public class ManagerScript : MonoBehaviour
     public GameObject Tile;
     public GameObject[] tileMap;
     public List<GridObject> gridObjects;
+    public List<LivingObject> turnOrder;
     public List<TileScript> currentAttackList;
     public List<List<TileScript>> attackableTiles;
+    public PlayerController player;
     int selectedAttackingTile = 0;
     public int MapWidth = 0;
     public int MapHeight = 0;
@@ -17,6 +19,7 @@ public class ManagerScript : MonoBehaviour
     public State prevState = State.PlayerInput;
     public int currentMenuitem = 0;
     public int itemMenuitem = 0;
+    public int turnIndex;
     CameraScript myCamera;
     public bool isSetup = false;
     public GridObject currentObject;
@@ -48,8 +51,19 @@ public class ManagerScript : MonoBehaviour
             myCamera = GameObject.FindObjectOfType<CameraScript>();
         }
         commandItems = GameObject.FindObjectsOfType<MenuItem>();
-        currentObject = GameObject.FindObjectOfType<PlayerController>();
-        currentObject.transform.position = tileMap[TwoToOneD(MapHeight / 2, MapWidth, MapWidth / 2)].transform.position + new Vector3(0, 0.5f, 0);
+        player = GameObject.FindObjectOfType<PlayerController>();
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+        for (int i = livingObjects.Length - 1; i >= 0; i--)
+        {
+            //if(livingObjects[i].IsEnenmy)
+            //{
+            //    continue;
+            //}
+            turnOrder.Add(livingObjects[i]);
+        }
+        //turnOrder.Sort();
+        currentObject = turnOrder[0];
+        // currentObject.transform.position = tileMap[TwoToOneD(MapHeight / 2, MapWidth, MapWidth / 2)].transform.position + new Vector3(0, 0.5f, 0);
         tempObject = new GameObject();
         tempObject.AddComponent<GridObject>();
         tempObject.GetComponent<GridObject>().MOVE_DIST = 10000;
@@ -103,31 +117,35 @@ public class ManagerScript : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         ShowWhite();
-                        selectedAttackingTile = 0;
+                        selectedAttackingTile += 1;
                         hitkey = true;
                     }
                     if (Input.GetKeyDown(KeyCode.D))
                     {
                         ShowWhite();
-                        selectedAttackingTile = 1;
+                        selectedAttackingTile += 1;
                         hitkey = true;
                     }
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         ShowWhite();
-                        selectedAttackingTile = 2;
+                        selectedAttackingTile -= 1;
                         hitkey = true;
                     }
                     if (Input.GetKeyDown(KeyCode.A))
                     {
                         ShowWhite();
-                        selectedAttackingTile = 3;
+                        selectedAttackingTile -= 1;
                         hitkey = true;
                     }
                     if (hitkey == true)
                     {
                         if (attackableTiles.Count > 0)
                         {
+                            if (selectedAttackingTile >= attackableTiles.Count)
+                                selectedAttackingTile = 0;
+                            if (selectedAttackingTile < 0)
+                                selectedAttackingTile = attackableTiles.Count - 1;
                             showAttackableTiles();
                             currentAttackList = attackableTiles[selectedAttackingTile];
                             bool foundSomething = false;
@@ -240,7 +258,24 @@ public class ManagerScript : MonoBehaviour
 
 
     }
-
+    public void NextRound()
+    {
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+        for (int i = livingObjects.Length - 1; i >= 0; i--)
+        {
+            turnOrder.Add(livingObjects[i]);
+        }
+    }
+    public void NextTurn()
+    {
+        turnOrder.RemoveAt(0);
+        if (turnOrder.Count <= 0)
+        {
+            NextRound();
+        }
+        currentObject = turnOrder[0];
+        player.current = turnOrder[0];
+    }
     public void showAttackableTiles()
     {
         for (int i = 0; i < attackableTiles.Count; i++)
@@ -545,58 +580,117 @@ public class ManagerScript : MonoBehaviour
 
         List<List<TileScript>> returnList = new List<List<TileScript>>();
         List<Vector2> affectedTiles = skill.TILES;
-
         Vector2 checkDist = Vector2.zero;
-        for (int i = 0; i < 4; i++)
+        switch (skill.RTYPE)
         {
-            List<TileScript> tiles = new List<TileScript>();
-            if (affectedTiles != null)
-            {
-                for (int j = 0; j < affectedTiles.Count; j++)
+            case RanngeType.single:
+                for (int i = 0; i < 4; i++)
                 {
-                    Vector2 Dist = affectedTiles[j];
-                    switch (i)
+                    List<TileScript> tiles = new List<TileScript>();
+                    if (affectedTiles != null)
                     {
-                        case 0:
-                            checkDist.x = Dist.x;
-                            checkDist.y = Dist.y;
-                            break;
+                        for (int j = 0; j < affectedTiles.Count; j++)
+                        {
+                            Vector2 Dist = affectedTiles[j];
+                            switch (i)
+                            {
+                                case 0:
+                                    checkDist.x = Dist.x;
+                                    checkDist.y = Dist.y;
+                                    break;
 
-                        case 1:
-                            checkDist.x = Dist.y;
-                            checkDist.y = Dist.x * -1;
-                            break;
+                                case 1:
+                                    checkDist.x = Dist.y;
+                                    checkDist.y = Dist.x * -1;
+                                    break;
 
-                        case 2:
+                                case 2:
 
-                            checkDist.x = Dist.x * -1;
-                            checkDist.y = Dist.y * -1;
+                                    checkDist.x = Dist.x * -1;
+                                    checkDist.y = Dist.y * -1;
 
-                            break;
+                                    break;
 
-                        case 3:
-                            checkDist.x = Dist.y * -1; //Yes x = y
-                            checkDist.y = Dist.x;
-                            break;
+                                case 3:
+                                    checkDist.x = Dist.y * -1; //Yes x = y
+                                    checkDist.y = Dist.x;
+                                    break;
+                            }
+
+
+                            Vector3 checkPos = obj.transform.position;
+                            checkPos.x += checkDist.x;
+                            checkPos.z += checkDist.y;
+                            int testIndex = GetTileIndex(checkPos);
+                            if (testIndex >= 0)
+                            {
+                                TileScript realTile = GetTileAtIndex(testIndex);
+                                if (!tiles.Contains(realTile))
+                                    tiles.Add(realTile);
+                            }
+                        }
                     }
 
+                    returnList.Add(tiles);
 
-                    Vector3 checkPos = obj.transform.position;
-                    checkPos.x += checkDist.x;
-                    checkPos.z += checkDist.y;
-                    int testIndex = GetTileIndex(checkPos);
-                    if (testIndex >= 0)
-                    {
-                        TileScript realTile = GetTileAtIndex(testIndex);
-                        if (!tiles.Contains(realTile))
-                            tiles.Add(realTile);
-                    }
                 }
-            }
+                break;
+            case RanngeType.multi:
+                for (int i = 0; i < 4; i++)
+                {
+                    if (affectedTiles != null)
+                    {
+                        for (int j = 0; j < affectedTiles.Count; j++)
+                        {
+                            List<TileScript> tiles = new List<TileScript>();
+                            Vector2 Dist = affectedTiles[j];
+                            switch (i)
+                            {
+                                case 0:
+                                    checkDist.x = Dist.x;
+                                    checkDist.y = Dist.y;
+                                    break;
 
-            returnList.Add(tiles);
+                                case 1:
+                                    checkDist.x = Dist.y;
+                                    checkDist.y = Dist.x * -1;
+                                    break;
 
+                                case 2:
+
+                                    checkDist.x = Dist.x * -1;
+                                    checkDist.y = Dist.y * -1;
+
+                                    break;
+
+                                case 3:
+                                    checkDist.x = Dist.y * -1; //Yes x = y
+                                    checkDist.y = Dist.x;
+                                    break;
+                            }
+
+
+                            Vector3 checkPos = obj.transform.position;
+                            checkPos.x += checkDist.x;
+                            checkPos.z += checkDist.y;
+                            int testIndex = GetTileIndex(checkPos);
+                            if (testIndex >= 0)
+                            {
+                                TileScript realTile = GetTileAtIndex(testIndex);
+                                if (!tiles.Contains(realTile))
+                                    tiles.Add(realTile);
+                            }
+                            returnList.Add(tiles);
+                        }
+                    }
+
+
+                }
+                break;
+            default:
+                break;
         }
+
         return returnList;
     }
 
@@ -604,14 +698,14 @@ public class ManagerScript : MonoBehaviour
     {
         if (currentAttackList.Count > 0)
         {
-            
+
             List<int> targetIndicies = new List<int>();
 
             for (int i = 0; i < currentAttackList.Count; i++)
             {
                 if (GetObjectAtTile(currentAttackList[i]) != null)
                 {
-           
+
                     targetIndicies.Add(i);
 
                 }
@@ -619,7 +713,7 @@ public class ManagerScript : MonoBehaviour
             return targetIndicies;
         }
         return null;
-}
+    }
     public List<List<TileScript>> GetWeaponAttackableTiles(LivingObject liveObj)
     {
         int checkIndex = GetTileIndex(liveObj);
@@ -756,48 +850,58 @@ public class ManagerScript : MonoBehaviour
             case EHitType.normal:
                 mod = 1.0f;
                 react.reaction = Reaction.none;
-                Debug.Log("normal damage");
+
                 break;
             case EHitType.resists:
                 mod = 0.5f;
                 react.reaction = Reaction.none;
-                Debug.Log("resists damage");
+
                 break;
             case EHitType.nulls:
                 react.damage = 0;
                 react.reaction = Reaction.nulled;
-                Debug.Log("nulls damage");
+
                 return react;
 
             case EHitType.reflects:
-                react = CalcDamage(dmgObject, attackingObject, attackingElement, attackType, dmg);
-                react.reaction = Reaction.reflected;
-                Debug.Log("reflects damage");
+                if (dmgObject.ARMOR.HITLIST[(int)attackingElement] != EHitType.reflects)
+                {
+
+                    react = CalcDamage(dmgObject, attackingObject, attackingElement, attackType, dmg);
+                    react.reaction = Reaction.reflected;
+                }
+                else
+                {
+                    Debug.Log("Reflects would cause infinate");
+                    react.damage = 0;
+                    react.reaction = Reaction.nulled;
+                }
+
                 return react;
             case EHitType.absorbs:
                 mod = -1.0f;
                 react.reaction = Reaction.none;
-                Debug.Log("reaction damage");
+
                 break;
             case EHitType.weak:
                 mod = 1.5f;
                 react.reaction = Reaction.none;
-                Debug.Log("weak damage");
+
                 break;
             case EHitType.snatched:
                 mod = 1.5f;
                 react.reaction = Reaction.snatched;
-                Debug.Log("snatched damage");
+
                 break;
             case EHitType.cripples:
                 mod = 1.5f;
                 react.reaction = Reaction.statDrop;
-                Debug.Log("crippling damage");
+
                 break;
             case EHitType.knocked:
                 mod = 1.5f;
                 react.reaction = Reaction.knockback;
-                Debug.Log("knockback damage");
+
                 break;
             default:
                 break;
@@ -805,29 +909,114 @@ public class ManagerScript : MonoBehaviour
 
         int returnInt = 0;
         float calc = 0.0f;
-
+        float reduction = 0;
         if (attackType == EType.physical)
         {
-            Debug.Log("physical");
-            calc = (float)attackingObject.ATTACK / (float)dmgObject.DEFENSE;
+            reduction = dmgObject.DEFENSE;
         }
         else
         {
-            calc = (float)attackingObject.ATTACK / (float)dmgObject.RESIESTANCE;
-
+            reduction = dmgObject.RESIESTANCE;
+        }
+        if (dmgObject.PSTATUS == PrimaryStatus.tired)
+        {
+            reduction = reduction * 0.8f;
+        }
+        if (dmgObject.PSTATUS == PrimaryStatus.crippled)
+        {
+            reduction = reduction * 0.5f;
         }
 
+        calc = (float)attackingObject.ATTACK / reduction;
         calc = dmg * calc;
 
         calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
 
         calc = Mathf.Sqrt(calc);
 
-
+        mod = ApplyDmgMods(attackingObject, mod, attackingElement);
+        mod = ApplyDmgMods(dmgObject, mod, attackingElement);
         calc = calc * mod;
+        if(calc < 0)
+        {
+            calc = 0;
+        }
         returnInt = (Mathf.FloorToInt(calc));
 
         react.damage = returnInt;
         return react;
     }
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, SkillScript skill)
+    {
+        return CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+    }
+
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon)
+    {
+        return CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK);
+    }
+
+    public float ApplyDmgMods(LivingObject living, float dmg, Element atkAffinity)
+    {
+        List<SkillScript> passives = living.GetComponent<InventoryScript>().PASSIVES;
+        for (int i = 0; i < passives.Count; i++)
+        {
+            if(passives[i].ModStat == ModifiedStat.ElementDmg)
+            {
+                for (int k = 0; k < passives[i].ModElements.Count; k++)
+                {
+                    if(passives[i].ModElements[k] == atkAffinity)
+                    {
+                        dmg += (float)passives[i].ModValues[k];
+                    }
+                }
+            }
+        }
+        return dmg;
+    }
+    public void ApplyReaction(LivingObject attackingObject, LivingObject target, DmgReaction react)
+    {
+        Debug.Log(react.damage);
+        switch (react.reaction)
+        {
+            case Reaction.none:
+                DamageLivingObject(target, react.damage);
+
+                break;
+            case Reaction.statDrop:
+                DamageLivingObject(target, react.damage);
+                target.PSTATUS = PrimaryStatus.crippled;
+                break;
+            case Reaction.nulled:
+                DamageLivingObject(target, react.damage);
+
+                break;
+            case Reaction.reflected:
+                DamageLivingObject(attackingObject, react.damage);
+                break;
+            case Reaction.knockback:
+                DamageLivingObject(target, react.damage);
+                Vector3 direction = attackingObject.transform.position - target.transform.position;
+                MoveGridObject(target, (-1 * direction));
+                ComfirmMoveGridObject(target, GetTileIndex(target));
+
+                break;
+            case Reaction.snatched:
+                DamageLivingObject(target, react.damage);
+                //TODO lose random item
+                break;
+            default:
+                break;
+        }
+
+        if (target.HEALTH <= 0)
+        {
+            if (turnOrder.Contains(target))
+            {
+                turnOrder.Remove(target);
+            }
+            target.gameObject.SetActive(false);
+        }
+    }
+
 }

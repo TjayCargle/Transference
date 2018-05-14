@@ -8,6 +8,8 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<SkillScript> skills;
     [SerializeField]
+    List<SkillScript> passives;
+    [SerializeField]
     List<WeaponScript> weapons;
     [SerializeField]
     List<ArmorScript> armor;
@@ -39,6 +41,11 @@ public class InventoryScript : MonoBehaviour {
     {
         get { return skills; }
         set { skills = value; }
+    }
+    public List<SkillScript> PASSIVES
+    {
+        get { return passives; }
+        set { passives = value; }
     }
 
 

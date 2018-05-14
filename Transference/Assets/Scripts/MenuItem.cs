@@ -127,7 +127,7 @@ public class MenuItem : MonoBehaviour
                     break;
                 }
             case MenuItemType.Wait:
-                //  myManager.currentState = State.PlayerWait;
+                 myManager.NextTurn();
                 break;
             case MenuItemType.Look:
                 myManager.prevState = myManager.currentState;

@@ -32,7 +32,12 @@ public class CameraScript : MonoBehaviour
                         if (infoObject)
                         {
                             infoText.text = infoObject.FullName;
-                            if(infoObject.GetComponent<StatScript>())
+                            if(infoObject.GetComponent<LivingObject>())
+                            {
+
+                                infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString() + " HP:" + infoObject.GetComponent<LivingObject>().HEALTH.ToString();
+                            }
+                            else if (infoObject.GetComponent<StatScript>())
                             {
 
                                 infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString() + " HP:" + infoObject.GetComponent<StatScript>().HEALTH.ToString();
