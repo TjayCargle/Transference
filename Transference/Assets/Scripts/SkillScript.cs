@@ -6,6 +6,12 @@ public class SkillScript : UsableScript
 {
 
     [SerializeField]
+    protected int cost;
+
+    [SerializeField]
+    protected LivingObject owner;
+
+    [SerializeField]
     protected int accuraccy;
 
     [SerializeField]
@@ -34,7 +40,8 @@ public class SkillScript : UsableScript
 
     [SerializeField]
     protected int nextCount;
-
+    [SerializeField]
+    private BuffType buff;
     [SerializeField]
     private ModifiedStat modStat;
     [SerializeField]
@@ -44,15 +51,8 @@ public class SkillScript : UsableScript
 
     public ModifiedStat ModStat
     {
-        get
-        {
-            return modStat;
-        }
-
-        set
-        {
-            modStat = value;
-        }
+        get { return modStat; }
+        set { modStat = value; }
     }
 
     public List<Element> ModElements
@@ -80,7 +80,27 @@ public class SkillScript : UsableScript
             modValues = value;
         }
     }
-
+    public int COST
+    {
+        get
+        {
+            switch (ETYPE)
+            {
+                case EType.physical:
+                    return Mathf.RoundToInt(((cost * owner.MAX_HEALTH) / 100));
+                case EType.magical:
+                    return cost;
+                default:
+                    return cost;
+            }
+        }
+        set { cost = value; }
+    }
+    public LivingObject OWNER
+    {
+        get { return owner; }
+        set { owner = value; }
+    }
     public int ACCURACY
     {
         get { return accuraccy; }
@@ -114,7 +134,7 @@ public class SkillScript : UsableScript
         get { return affecttedTiles; }
         set { affecttedTiles = value; }
     }
- 
+
     public float CRIT_RATE
     {
         get { return critRate; }
@@ -135,6 +155,20 @@ public class SkillScript : UsableScript
         get { return rType; }
         set { rType = value; }
     }
+
+    public BuffType Buff
+    {
+        get
+        {
+            return buff;
+        }
+
+        set
+        {
+            buff = value;
+        }
+    }
+
     public static bool isWeak(Element myAttack, Element Opponent)
     {
         bool result = false;
@@ -278,6 +312,15 @@ public class SkillScript : UsableScript
     }
     public void UseSkill(LivingObject user)
     {
+
+        if(ETYPE == EType.magical)
+        {
+            OWNER.STATS.MANA -= COST;
+        }
+        else
+        {
+            OWNER.STATS.HEALTH -= COST;
+        }
         if (NEXT > 0)
         {
             if (NEXTCOUNT > 0)
@@ -296,6 +339,26 @@ public class SkillScript : UsableScript
             }
         }
 
+    }
+    public bool CanUse()
+    {
+        bool can = false;
+        switch (ETYPE)
+        {
+            case EType.physical:
+                if(owner.HEALTH - COST > 0)
+                {
+                    can = true;
+                }
+                break;
+            case EType.magical:
+                if (owner.MANA - COST >= 0)
+                {
+                    can = true;
+                }
+                break;
+        }
+        return can;
     }
 
 }

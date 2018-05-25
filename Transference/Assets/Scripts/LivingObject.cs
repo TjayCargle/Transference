@@ -17,6 +17,8 @@ public class LivingObject : GridObject
     private PrimaryStatus pStatus = PrimaryStatus.normal;
     [SerializeField]
     private SecondaryStatus sStatus = SecondaryStatus.normal;
+    [SerializeField]
+    private StatusEffect eStatus = StatusEffect.none;
 
     public PrimaryStatus PSTATUS
     {
@@ -28,6 +30,11 @@ public class LivingObject : GridObject
     {
         get { return sStatus; }
         set { sStatus = value; }
+    }
+    public StatusEffect ESTATUS
+    {
+        get { return eStatus; }
+        set { eStatus = value; }
     }
     public StatScript BASE_STATS
     {
@@ -90,9 +97,21 @@ public class LivingObject : GridObject
     {
         get { return STATS.LUCK + BASE_STATS.LUCK; }
     }
+    public int MAX_HEALTH
+    {
+        get { return STATS.MAX_HEALTH + BASE_STATS.MAX_HEALTH; }
+    }
+    public int MAX_MANA
+    {
+        get { return STATS.MAX_MANA + BASE_STATS.MAX_MANA; }
+    }
     public int HEALTH
     {
         get { return STATS.HEALTH + BASE_STATS.HEALTH; }
+    }
+    public int MANA
+    {
+        get { return STATS.MANA + BASE_STATS.MANA; }
     }
     public int LEVEL
     {
@@ -168,6 +187,9 @@ public class LivingObject : GridObject
                 modifiedStats.USER = this;
                 }
             }
+
+            this.baseStats.HEALTH = this.baseStats.MAX_HEALTH;
+            this.baseStats.MANA = this.baseStats.MAX_MANA;
         }
 
 
@@ -175,47 +197,55 @@ public class LivingObject : GridObject
         base.Setup();
     }
 
-    public void ApplyPassives(LivingObject invokingObj)
+    public void ApplyPassives()
     {
-        List<SkillScript> atkPassives = invokingObj.GetComponent<InventoryScript>().PASSIVES;
-        StatScript modStats = invokingObj.STATS;
-        modStats.MODS.Clear();
-        modStats.Reset();
+        List<SkillScript> atkPassives = GetComponent<InventoryScript>().PASSIVES;
+        modifiedStats.MODS.Clear();
+        modifiedStats.Reset(true);
+
         if (atkPassives.Count > 0)
         {
             for (int i = 0; i < atkPassives.Count; i++)
             {
+                float mod = 0.0f;
                 switch (atkPassives[i].ModStat)
                 {
                     case ModifiedStat.Health:
-                        modStats.HEALTH += (int)atkPassives[i].ModValues[0];
+                        modifiedStats.MAX_HEALTH += (int)atkPassives[i].ModValues[0];
+                        if(modifiedStats.HEALTH == modifiedStats.MAX_HEALTH - (int)atkPassives[i].ModValues[0])
+                        {
+                            modifiedStats.HEALTH = modifiedStats.MAX_HEALTH;
+                        }
                         break;
                     case ModifiedStat.ElementDmg:
                         break;
                     case ModifiedStat.Movement:
-                        modStats.MOVE_DIST += (int)atkPassives[i].ModValues[0];
+
+                        modifiedStats.MOVE_DIST += (int)atkPassives[i].ModValues[0];
                         break;
                     case ModifiedStat.Atk:
-                        modStats.ATTACK +=(int)atkPassives[i].ModValues[0];
+                        mod = atkPassives[i].ModValues[0];
+                        modifiedStats.ATTACK +=(int)atkPassives[i].ModValues[0] - WEAPON.ATTACK;
                         break;
                     case ModifiedStat.Def:
-                        modStats.DEFENSE += (int)atkPassives[i].ModValues[0];
+                        modifiedStats.DEFENSE += (int)atkPassives[i].ModValues[0] - ARMOR.DEFENSE;
                         break;
                     case ModifiedStat.Res:
 
-                        modStats.RESIESTANCE += (int)atkPassives[i].ModValues[0];
+                        modifiedStats.RESIESTANCE += (int)atkPassives[i].ModValues[0] - ARMOR.RESISTANCE;
                         break;
                     case ModifiedStat.Speed:
 
-                        modStats.SPEED += (int)atkPassives[i].ModValues[0];
+                        modifiedStats.SPEED += (int)atkPassives[i].ModValues[0] - ARMOR.SPEED;
                         break;
                     case ModifiedStat.Luck:
 
-                        modStats.LUCK += (int)atkPassives[i].ModValues[0];
+                        modifiedStats.LUCK += (int)atkPassives[i].ModValues[0] - WEAPON.LUCK;
                         break;
                     default:
                         break;
                 }
+        Debug.Log("Post atk "+ i+ " = " + modifiedStats.ATTACK);
             }
 
 

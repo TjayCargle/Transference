@@ -212,6 +212,16 @@ public class InventoryMangager : MonoBehaviour
                 {
                     tempObjects[item.NAME].SetActive(true);
                     tempObjects[item.NAME].transform.SetParent(content.transform);
+                    if (item.TYPE == 4)
+                    {
+                        string extraText = "";
+                        if (((SkillScript)item).ETYPE == EType.physical)
+                            extraText = " " + "HP";
+                        else
+                            extraText = " " + "SP";
+
+                        tempObjects[item.NAME].GetComponentInChildren<Text>().text = item.NAME + " " + ((SkillScript)item).COST.ToString() + extraText; ;
+                    }
                     continue;
                     //no need to have else if it continues;
                 }
@@ -226,7 +236,19 @@ public class InventoryMangager : MonoBehaviour
                 if (selectableItem.GetComponentInChildren<Text>())
                 {
                     Text selectedText = selectableItem.GetComponentInChildren<Text>();
-                    selectedText.text = item.NAME;
+                    if (item.TYPE != 4)
+                    {
+                        selectedText.text = item.NAME;
+                    }
+                    else
+                    {
+                        string extraText = "";
+                        if (((SkillScript)item).ETYPE == EType.physical)
+                            extraText = " " + "HP";
+                        else
+                            extraText = " " + "SP";
+                        selectedText.text = item.NAME + " " + ((SkillScript)item).COST.ToString() + extraText;
+                    }
                     selectedText.resizeTextForBestFit = true;
                 }
                 if (selectableItem.GetComponent<MenuItem>())
@@ -235,7 +257,7 @@ public class InventoryMangager : MonoBehaviour
                     item.TYPE = useType;//itemType.TYPE;
                     selectedItem.refItem = item;
 
-                    
+
 
 
                     tempObjects.Add(selectedItem.refItem.NAME, selectableItem);

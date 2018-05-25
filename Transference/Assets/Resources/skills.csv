@@ -1,17 +1,41 @@
 id,name,element,etype, description,range type, next, next count,  accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy
-0,Whip, Slash,physical,foe,single,1,5, 100, minute, 1, 0, 1, 0, 1
-1,Lash, Slash,physical,foe,single,2,10, 100, small, 1, 0, 1, 0, 1
-2,Whiplash, Slash,physical,foe,single,3,15 95, medium,1, 0,1, 1,1
-3,Razor Whiplashlash, physical,foe,single, 4,20 90, heavy,1, 0, 1, 0,1
-4,Chainlash, Slash, physical,foe,5single,5,25, 90, severe,1, 0, 1, 0,1
-5,Razor Chainlash, Slash, physical,foe,single,-1,0, 90, collassal,1, 0, 1, 0,1
-6,Shallow Slices, Slash,physical,foes,multi,7,5, 100, minute, 2, 0, 2, 0, 1, 0, 2
-7,Deep Cuts, Slash,physical,foes,multi,8,10, 100,minute, 3, 0, 2, 0, 1, 0, 2
-8,Countless Cuts, Slash,physical,foes,multi,9,20, 100, small, 2, 0, 2, 0, 1, 0, 2
-9,Myriad Cuts, Slash,physical,foes,multi,10,40, 100, small, 3, 0, 2, 0, 1, 0, 2
-10,Endless Cuts, Slash,physical,foes,multi,-1,0,100, medium, 3, 0, 2, 0, 1, 0, 2
-46, FireBullet, Fire, physical,foes,multi,47,5,99, minute,2,0, 1, 0, 2
-47, FireBall, Fire, physical, foes,multi,48,10,99, small,2,0, 1, 0, 2
-48, FireBolt, Fire, physical, foes,multi, -1,0, 99, medium, 2, 0, 1, 0, 2
-141,DragonStone,Passive,physical, Fire and Slash attacks do 25% more dmg,single,-1, 0, 1, 0.25, 0,ElementDmg, 2, Fire, Slash  
-142,HP+,Passive,physical, Fire and Slash attacks do 25% more dmg,single,-1, 0, 1, 25, 0,Health, 0 
+0,Whip, Slash,physical,foe,single,1,5,100, minute,1,0,1,0,1
+1,Lash, Slash,physical,foe,single,2,10,100, small,1,0,1,0,1
+2,Whiplash, Slash,physical,foe,single,3,15,95, medium,1,0,1,1,1
+3,Razor Whiplashlash, Slash,physical,foe,single,4,20,90, heavy,1,0,1,0,1
+4,Chainlash, Slash, physical,foe,single,5,25,90, severe,1,0,1,0,1
+5,Razor Chainlash, Slash, physical,foe,single,-1,0,90, collassal,1,0,1,0,1
+
+6,Shallow Slices, Slash,physical,foes,multi,7,5,100, minute,2,0,2,0,1,0,2
+7,Deep Cuts, Slash,physical,foes,multi,8,10,100,minute,3,0,2,0,1,0,2
+8,Countless Cuts, Slash,physical,foes,multi,9,20,100, small,2,0,2,0,1,0,2
+9,Myriad Cuts, Slash,physical,foes,multi,10,40,100, small,3,0,2,0,1,0,2
+10,Endless Cuts, Slash,physical,foes,multi,-1,0,100, medium,3,0,2,0,1,0,2
+
+46, FireBullet, Fire, physical,foes,multi,47,5,99, minute,2,0,1,0,2
+47, FireBall, Fire, physical, foes,multi,48,10,99, small,2,0,1,0,2,,,,,,,,,,,,,,,,,,,,,,,,,,
+48, FireBolt, Fire, physical, foes,multi,-1,0,99, medium,2,0,1,0,2,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+143,Ralli Atk,Buff,magical, Increases Atk by 30% for 3 turns, single,144,5,1,30,1, attack,1,0,1,,,,,,,,,,,,,,,,,,,,,,,,,,
+144,MeRali Atk,Buff,magical, Increases Atk by 30% for 3 turns in range, area,145,5,1,30,1, attack,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+145,Rallia Atk,Buff,magical, Increases Atk by 40% for 3 turns, multi,146,15,1,40,1, attack,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+146,MeRalia Atk,Buff,magical, Increases Atk by 40% for 3 turns in range, area,147,5,1,40,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+147,Rallidye Atk,Buff,magical, Increases Atk by 50% for 3 turns, multi,148,15,1,50,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+148,MeRalidye Invoke Atk,Buff,magical, Increases Atk by 50% for 3 turns in range, area,-1,5,1,50,1, attack,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+
+149,Lesser Rally Def,Buff,magical, Increases Def by 30% for 3 turns, single,150,5,1,30,1, defense,1,0,1,,,,,,,,,,,,,,,,,,,,,,,,,,
+150,Lesser Invoke Def,Buff,magical, Increases Def by 30% for 3 turns in range, area,151,5,1,30,1, defense,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+151,Rally Def,Buff,magical, Increases Def by 40% for 3 turns, multi,152,15,1,40,1, defense,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+152,Invoke Def,Buff,magical, Increases Def by 40% for 3 turns in range, area,153,5,1,40,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+153,Grand Rally Def,Buff,magical, Increases Def by 50% for 3 turns, multi,154,15,1,50,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+154,Grand Invoke Def,Buff,magical, Increases Def by 50% for 3 turns in range, area,-1,5,1,50,1, defense,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+
+155,Lesser Rally Speed,Buff,magical, Increases Speed by 30% for 3 turns, single,156,5,1,30,1, speed,1,0,1,,,,,,,,,,,,,,,,,,,,,,,,,,
+156,Lesser Invoke Speed,Buff,magical, Increases Speed by 30% for 3 turns in range, area,157,5,1,30,1, speed,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+157,Rally Speed,Buff,magical, Increases Speed by 40% for 3 turns, multi,158,15,1,40,1, speed,4,0,1,1,1,-1,1,0,2,,,,,,,,,,,,,,,,,,,,
+158,Invoke Speed,Buff,magical, Increases Speed by 40% for 3 turns in range, area,159,5,1,40,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+159,Grand Rally Speed,Buff,magical, Increases Speed by 50% for 3 turns, multi,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,,,,,,,,,,
+160,Grand Invoke Speed,Buff,magical, Increases Speed by 50% for 3 turns in range, area,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+
+174,DragonStone,Passive,physical, Fire and Slash attacks do 25% more dmg,single,-1,0,1,0.25,0,ElementDmg,2, Fire, Slash
+175,HP+,Passive,physical, Increases max hp by 25,single,-1,0,1,25,0,Health,0

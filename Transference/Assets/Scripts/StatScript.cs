@@ -6,7 +6,13 @@ public class StatScript : MonoBehaviour {
     [SerializeField]
     private int myLevel = 1;
     [SerializeField]
-    private int myHealth = 100;
+    private int myMaxHealth = 100;
+    [SerializeField]
+    private int myHealth;
+    [SerializeField]
+    private int myMaxMana = 100;
+    [SerializeField]
+    private int myMana;
     [SerializeField]
     private int myBaseAttack = 1;
     [SerializeField]
@@ -66,7 +72,7 @@ public class StatScript : MonoBehaviour {
     }
     public int RESIESTANCE
     {
-        get { return  myBaseDefense + owner.ARMOR.RESISTANCE; }
+        get { return  myBaseResistance + owner.ARMOR.RESISTANCE; }
         set { myBaseResistance = value; }
     }
     public int SPEED
@@ -79,10 +85,25 @@ public class StatScript : MonoBehaviour {
         get { return myBaseLuck + owner.WEAPON.LUCK; }
         set { myBaseLuck = value; }
     }
+    public int MAX_HEALTH
+    {
+        get { return myMaxHealth; }
+        set { myMaxHealth = value; }
+    }
     public int HEALTH
     {
         get { return myHealth; }
         set { myHealth = value; }
+    }
+    public int MAX_MANA
+    {
+        get { return myMaxMana; }
+        set { myMaxMana = value; }
+    }
+    public int MANA
+    {
+        get { return myMana; }
+        set { myMana = value; }
     }
     public int LEVEL
     {
@@ -91,18 +112,23 @@ public class StatScript : MonoBehaviour {
     }
     public void Reset(bool hard = false)
     {
+
         Max_Atk_DIST = 0;
         Min_Atk_DIST = 0;
         HEALTH = 0;
+        MANA = 0;
         ATTACK = 0;
         DEFENSE = 0;
         RESIESTANCE = 0;
         SPEED = 0;
         LUCK = 0;
-        if (hard == false)
-            LEVEL = 1;
-        else
+        if (hard == true)
+        {
             LEVEL = 0;
+            MAX_HEALTH = 0;
+            MAX_MANA = 0;
 
+        }
+      
     }
 }

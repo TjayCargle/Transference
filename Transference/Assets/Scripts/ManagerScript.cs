@@ -268,6 +268,15 @@ public class ManagerScript : MonoBehaviour
     }
     public void NextTurn()
     {
+        if (currentObject.GetComponent<BuffScript>())
+        {
+            BuffScript[] buffs = currentObject.GetComponents<BuffScript>();
+
+            for (int i = 0; i < buffs.Length; i++)
+            {
+                buffs[i].UpdateCount(currentObject.GetComponent<LivingObject>());
+            }
+        }
         turnOrder.RemoveAt(0);
         if (turnOrder.Count <= 0)
         {
@@ -275,6 +284,12 @@ public class ManagerScript : MonoBehaviour
         }
         currentObject = turnOrder[0];
         player.current = turnOrder[0];
+
+        if (currentObject.GetComponent<EffectScript>())
+        {
+            currentObject.GetComponent<EffectScript>().ApplyReaction(this, currentObject.GetComponent<LivingObject>());
+        }
+
     }
     public void showAttackableTiles()
     {
@@ -687,6 +702,59 @@ public class ManagerScript : MonoBehaviour
 
                 }
                 break;
+            case RanngeType.area:
+                {
+                    List<TileScript> tiles = new List<TileScript>();
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (affectedTiles != null)
+                        {
+                            for (int j = 0; j < affectedTiles.Count; j++)
+                            {
+                                Vector2 Dist = affectedTiles[j];
+                                switch (i)
+                                {
+                                    case 0:
+                                        checkDist.x = Dist.x;
+                                        checkDist.y = Dist.y;
+                                        break;
+
+                                    case 1:
+                                        checkDist.x = Dist.y;
+                                        checkDist.y = Dist.x * -1;
+                                        break;
+
+                                    case 2:
+
+                                        checkDist.x = Dist.x * -1;
+                                        checkDist.y = Dist.y * -1;
+
+                                        break;
+
+                                    case 3:
+                                        checkDist.x = Dist.y * -1; //Yes x = y
+                                        checkDist.y = Dist.x;
+                                        break;
+                                }
+
+
+                                Vector3 checkPos = obj.transform.position;
+                                checkPos.x += checkDist.x;
+                                checkPos.z += checkDist.y;
+                                int testIndex = GetTileIndex(checkPos);
+                                if (testIndex >= 0)
+                                {
+                                    TileScript realTile = GetTileAtIndex(testIndex);
+                                    if (!tiles.Contains(realTile))
+                                        tiles.Add(realTile);
+                                }
+                            }
+                        }
+
+                    }
+                    returnList.Add(tiles);
+                }
+                break;
             default:
                 break;
         }
@@ -844,6 +912,7 @@ public class ManagerScript : MonoBehaviour
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg)
     {
         DmgReaction react = new DmgReaction();
+
         float mod = 0.0f;
         switch (dmgObject.ARMOR.HITLIST[(int)attackingElement])
         {
@@ -937,7 +1006,7 @@ public class ManagerScript : MonoBehaviour
         mod = ApplyDmgMods(attackingObject, mod, attackingElement);
         mod = ApplyDmgMods(dmgObject, mod, attackingElement);
         calc = calc * mod;
-        if(calc < 0)
+        if (calc < 0)
         {
             calc = 0;
         }
@@ -948,7 +1017,36 @@ public class ManagerScript : MonoBehaviour
     }
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, SkillScript skill)
     {
-        return CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+        if (skill.ELEMENT == Element.Buff)
+        {
+            List<SkillScript> passives = dmgObject.GetComponent<InventoryScript>().PASSIVES;
+            if (!passives.Contains(skill))
+            {
+                bool sameType = false;
+                for (int i = 0; i < passives.Count; i++)
+                {
+                    if (passives[i].ModStat == skill.ModStat && passives[i].ModValues[0] == skill.ModValues[0])
+                    {
+                        sameType = true;
+                        break;
+                    }
+                }
+                if (sameType == false)
+                {
+                    dmgObject.GetComponent<InventoryScript>().PASSIVES.Add(skill);
+                    BuffScript buff = dmgObject.gameObject.AddComponent<BuffScript>();
+                    buff.SKILL = skill;
+                    buff.BUFF = skill.Buff;
+                    buff.COUNT = 3;
+                    dmgObject.ApplyPassives();
+                }
+            }
+            return new DmgReaction() { damage = 0, reaction = Reaction.none };
+        }
+        else
+        {
+            return CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+        }
     }
 
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon)
@@ -961,11 +1059,11 @@ public class ManagerScript : MonoBehaviour
         List<SkillScript> passives = living.GetComponent<InventoryScript>().PASSIVES;
         for (int i = 0; i < passives.Count; i++)
         {
-            if(passives[i].ModStat == ModifiedStat.ElementDmg)
+            if (passives[i].ModStat == ModifiedStat.ElementDmg)
             {
                 for (int k = 0; k < passives[i].ModElements.Count; k++)
                 {
-                    if(passives[i].ModElements[k] == atkAffinity)
+                    if (passives[i].ModElements[k] == atkAffinity)
                     {
                         dmg += (float)passives[i].ModValues[k];
                     }
@@ -976,7 +1074,7 @@ public class ManagerScript : MonoBehaviour
     }
     public void ApplyReaction(LivingObject attackingObject, LivingObject target, DmgReaction react)
     {
-        Debug.Log(react.damage);
+     
         switch (react.reaction)
         {
             case Reaction.none:
@@ -1018,5 +1116,87 @@ public class ManagerScript : MonoBehaviour
             target.gameObject.SetActive(false);
         }
     }
+    public bool AttackTargets(LivingObject invokingObject, SkillScript skill)
+    {
+        bool hitSomething = false;
+        if (currentAttackList.Count > 0)
+        {
 
+            List<int> targetIndicies = GetTargetList();
+
+            if (targetIndicies != null)
+            {
+                if (targetIndicies.Count > 0)
+                {
+                    hitSomething = true;
+                 
+                    for (int i = 0; i < targetIndicies.Count; i++)
+                    {
+                        GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
+                        if (potentialTarget.GetComponent<LivingObject>())
+                        {
+                            LivingObject target = potentialTarget.GetComponent<LivingObject>();
+
+                            DmgReaction react;
+
+                            if (skill != null)
+                            {
+                                for (int k = 0; k < skill.HITS; k++)
+                                {
+                                    react = CalcDamage(invokingObject, target, skill);
+                                    ApplyReaction(invokingObject, target, react);
+                                }
+                                skill.UseSkill(invokingObject);
+                            }
+
+
+                        }
+                    }
+                }
+
+            }
+        }
+        return hitSomething;
+    }
+
+    public bool AttackTargets(LivingObject invokingObject, WeaponEquip weapon)
+    {
+        bool hitSomething = false;
+        if (currentAttackList.Count > 0)
+        {
+
+            List<int> targetIndicies = GetTargetList();
+
+            if (targetIndicies != null)
+            {
+                if (targetIndicies.Count > 0)
+                {
+
+                    hitSomething = true;
+                    Debug.Log("Targets: " + targetIndicies.Count);
+                    for (int i = 0; i < targetIndicies.Count; i++)
+                    {
+                        GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
+                        if (potentialTarget.GetComponent<LivingObject>())
+                        {
+                            LivingObject target = potentialTarget.GetComponent<LivingObject>();
+
+                            DmgReaction react;
+
+                            if (weapon != null)
+                            {
+                                react = CalcDamage(invokingObject, target, weapon);
+                                ApplyReaction(invokingObject, target, react);
+                            }
+
+
+                        }
+                    }
+                }
+
+
+            }
+        }
+        return hitSomething;
+    }
 }

@@ -15,253 +15,117 @@ public class PlayerController : MonoBehaviour
     //public bool canMove = false;
 
     // Use this for initialization
-     void Start()
+    void Start()
     {
         myManager = GameObject.FindObjectOfType<ManagerScript>();
-        if(!myManager.isSetup)
+        if (!myManager.isSetup)
         {
             myManager.Setup();
         }
-        if(myManager.turnOrder.Count > 0)
+        if (myManager.turnOrder.Count > 0)
         {
-        current = myManager.turnOrder[0];
+            current = myManager.turnOrder[0];
         }
-       // base.Start();
+        // base.Start();
         // MoveDist = 1;
         // MAX_ATK_DIST = 2;
         // SkillManager.CreateSkill(1);
     }
 
     // Update is called once per frame
-     void Update()
+    void Update()
     {
         //base.Update();
-        if(current)
+        if (current)
         {
 
-        switch (myManager.currentState)
-        {
-            case State.PlayerInput:
-                if (Input.GetKeyDown(KeyCode.W))
-                {
-                    myManager.currentMenuitem--;
-                    if (myManager.currentMenuitem < 0)
+            switch (myManager.currentState)
+            {
+                case State.PlayerInput:
+                    if (Input.GetKeyDown(KeyCode.W))
                     {
-                        myManager.currentMenuitem = 5;
-                    }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                }
-
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    myManager.currentMenuitem++;
-                    if (myManager.currentMenuitem > 5)
-                    {
-                        myManager.currentMenuitem = 0;
-                    }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                }
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                }
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    myManager.SelectMenuItem(current);
-                }
-                break;
-            case State.PlayerMove:
-                if (Input.GetKeyDown(KeyCode.W))
-                {
-                    myManager.MoveGridObject(current, new Vector3(0, 0, 1));
-                }
-                if (Input.GetKeyDown(KeyCode.A))
-                {
-                    myManager.MoveGridObject(current, new Vector3(-1, 0, 0));
-                }
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    myManager.MoveGridObject(current, new Vector3(0, 0, -1));
-                }
-                if (Input.GetKeyDown(KeyCode.D))
-                {
-                    myManager.MoveGridObject(current, new Vector3(1, 0, 0));
-                }
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    myManager.ComfirmMenuAction(current);
-                }
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                }
-                break;
-            case State.PlayerAttacking:
-
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    if (myManager.currentAttackList.Count > 0)
-                    {
-
-                        List<int> targetIndicies = myManager.GetTargetList();
-
-                        if (targetIndicies != null)
+                        myManager.currentMenuitem--;
+                        if (myManager.currentMenuitem < 0)
                         {
-                            for (int i = 0; i < targetIndicies.Count; i++)
-                            {
-                                GridObject potentialTarget = myManager.GetObjectAtTile(myManager.currentAttackList[targetIndicies[i]]);
-                                if (potentialTarget.GetComponent<LivingObject>())
-                                {
-                                    LivingObject target = potentialTarget.GetComponent<LivingObject>();
-
-                                    DmgReaction react;
-                                    if (currentSkill != null)
-                                    {
-                                        for (int k = 0; k < currentSkill.HITS; k++)
-                                        {
-                                            react = myManager.CalcDamage(current, target, currentSkill);
-                                            myManager.ApplyReaction(current, target, react);
-                                        }
-                                            currentSkill.UseSkill(current);
-                                    }
-                                    else
-                                    {
-                                        react = myManager.CalcDamage(current, target, current.WEAPON);
-                                        myManager.ApplyReaction(current, target, react);
-                                    }
-
-
-                                    if (currentSkill != null)
-                                        currentSkill = null;
-                                }
-                            }
-
-
+                            myManager.currentMenuitem = 5;
                         }
-                        if (myManager.GetComponent<MenuManager>())
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        myManager.currentMenuitem++;
+                        if (myManager.currentMenuitem > 5)
                         {
-                            myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+                            myManager.currentMenuitem = 0;
                         }
-                        myManager.prevState = myManager.currentState;
-                        myManager.currentState = State.PlayerInput;
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     }
-
-                }
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                    currentSkill = null;
-                }
-                break;
-            case State.PlayerEquippingMenu:
-                if (Input.GetKeyDown(KeyCode.W))
-                {
-                    myManager.currentMenuitem--;
-                    if (myManager.currentMenuitem < 6)
+                    if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        myManager.currentMenuitem = 8;
+                        myManager.CancelMenuAction(current);
                     }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                }
-
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    myManager.currentMenuitem++;
-                    if (myManager.currentMenuitem > 8)
-                    {
-                        myManager.currentMenuitem = 6;
-                    }
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                }
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    myManager.SelectMenuItem(current);
-                }
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                }
-                break;
-            case State.PlayerEquipping:
-                {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        InventoryMangager invm = Object.FindObjectOfType<InventoryMangager>();
+                        myManager.SelectMenuItem(current);
+                    }
+                    break;
+                case State.PlayerMove:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        myManager.MoveGridObject(current, new Vector3(0, 0, 1));
+                    }
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        myManager.MoveGridObject(current, new Vector3(-1, 0, 0));
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        myManager.MoveGridObject(current, new Vector3(0, 0, -1));
+                    }
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        myManager.MoveGridObject(current, new Vector3(1, 0, 0));
+                    }
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        myManager.ComfirmMenuAction(current);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.CancelMenuAction(current);
+                    }
+                    break;
+                case State.PlayerAttacking:
 
-                        switch (invm.selectedMenuItem.refItem.TYPE)
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        bool check = false;
+                        if (currentSkill != null)
                         {
-                            case 0:
-                                if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
-                                {
-                                    WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                    current.WEAPON.Equip(newWeapon);
-                                }
-                                break;
-                            case 1:
-                                if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
-                                {
-                                    ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                    current.ARMOR.Equip(newArmor);
-                                }
-                                break;
-                            case 2:
-                                if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
-                                {
-                                    AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    current.ACCESSORY.Equip(newAcc);
-                                }
-                                break;
-                            case 3:
-                                if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
-                                {
-                                    AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                    current.ACCESSORY.Equip(newAcc);
-
-                                }
-                                break;
-                            case 4:
-                                {
-
-                                    SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
-                                    currentSkill = selectedSkil;
-                                    myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
-                                    myManager.ShowWhite();
-                                    if (myManager.attackableTiles.Count > 0)
-                                    {
-                                        for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
-                                        {
-                                            for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
-                                            {
-
-                                                myManager.attackableTiles[i][j].myColor = Color.red;
-                                            }
-                                        }
-                                        myManager.currentAttackList = myManager.attackableTiles[0];
-
-                                        for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                                        {
-                                            myManager.currentAttackList[i].myColor = Color.green;
-                                        }
+                            if (currentSkill.CanUse())
+                            {
+                                check = myManager.AttackTargets(current, currentSkill);
+                                if (currentSkill != null)
+                                    currentSkill = null;
+                            }
+                        }
+                        else
+                        {
+                            check = myManager.AttackTargets(current, current.WEAPON);
+                        }
 
 
-                                    }
 
-                                    else
-                                    {
-                                        currentSkill = null;
-                                        myManager.attackableTiles.Clear();
-                                    }
-                                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                    MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                                    if (myMenuManager)
-                                    {
-                                        myMenuManager.ShowNone();
-                                    }
-                                    myManager.prevState = myManager.currentState;
-                                    myManager.currentState = State.PlayerAttacking;
-                                }
-                                break;
+                        if (check == true)
+                        {
+
+                            if (myManager.GetComponent<MenuManager>())
+                            {
+                                myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+                            }
+                            myManager.prevState = myManager.currentState;
+                            myManager.currentState = State.PlayerInput;
                         }
 
                     }
@@ -270,30 +134,152 @@ public class PlayerController : MonoBehaviour
                         myManager.CancelMenuAction(current);
                         currentSkill = null;
                     }
-                }
-                break;
-            case State.PlayerWait:
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                }
-                break;
-            case State.FreeCamera:
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    myManager.ComfirmMenuAction(current);
-                }
+                    break;
+                case State.PlayerEquippingMenu:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        myManager.currentMenuitem--;
+                        if (myManager.currentMenuitem < 6)
+                        {
+                            myManager.currentMenuitem = 8;
+                        }
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    }
 
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    myManager.CancelMenuAction(current);
-                }
-                break;
-            case State.EnemyTurn:
-                break;
-            default:
-                break;
-        }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        myManager.currentMenuitem++;
+                        if (myManager.currentMenuitem > 8)
+                        {
+                            myManager.currentMenuitem = 6;
+                        }
+                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        myManager.SelectMenuItem(current);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.CancelMenuAction(current);
+                    }
+                    break;
+                case State.PlayerEquipping:
+                    {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            InventoryMangager invm = Object.FindObjectOfType<InventoryMangager>();
+
+                            switch (invm.selectedMenuItem.refItem.TYPE)
+                            {
+                                case 0:
+                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
+                                    {
+                                        WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
+                                        current.WEAPON.Equip(newWeapon);
+                                    }
+                                    break;
+                                case 1:
+                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
+                                    {
+                                        ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
+                                        current.ARMOR.Equip(newArmor);
+                                    }
+                                    break;
+                                case 2:
+                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
+                                    {
+                                        AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                        current.ACCESSORY.Equip(newAcc);
+                                    }
+                                    break;
+                                case 3:
+                                    if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
+                                    {
+                                        AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                        current.ACCESSORY.Equip(newAcc);
+
+                                    }
+                                    break;
+                                case 4:
+                                    {
+
+                                        SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
+                                        if (selectedSkil.CanUse() == false)
+                                        {
+                                            break;
+                                        }
+                                        currentSkill = selectedSkil;
+                                        myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
+                                        myManager.ShowWhite();
+                                        if (myManager.attackableTiles.Count > 0)
+                                        {
+                                            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+                                            {
+                                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                                                {
+
+                                                    myManager.attackableTiles[i][j].myColor = Color.red;
+                                                }
+                                            }
+                                            myManager.currentAttackList = myManager.attackableTiles[0];
+
+                                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                            {
+                                                myManager.currentAttackList[i].myColor = Color.green;
+                                            }
+
+
+                                        }
+
+                                        else
+                                        {
+                                            currentSkill = null;
+                                            myManager.attackableTiles.Clear();
+                                        }
+                                        myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                                        myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                                        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                                        if (myMenuManager)
+                                        {
+                                            myMenuManager.ShowNone();
+                                        }
+                                        myManager.prevState = myManager.currentState;
+                                        myManager.currentState = State.PlayerAttacking;
+                                    }
+                                    break;
+                            }
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            myManager.CancelMenuAction(current);
+                            currentSkill = null;
+                        }
+                    }
+                    break;
+                case State.PlayerWait:
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.CancelMenuAction(current);
+                    }
+                    break;
+                case State.FreeCamera:
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        myManager.ComfirmMenuAction(current);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.CancelMenuAction(current);
+                    }
+                    break;
+                case State.EnemyTurn:
+                    break;
+                default:
+                    break;
+            }
 
 
         }

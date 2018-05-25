@@ -53,6 +53,19 @@ public enum RanngeType
 {
     single,
     multi,
+    area
+}
+public enum BuffType
+{
+    none,
+    attack,
+    speed,
+    defense,
+    resistance,
+    luck,
+    all
+
+
 }
 public enum Element
 {
@@ -66,7 +79,9 @@ public enum Element
     Blunt,
 
     Neutral,
-    Passive
+    Passive,
+    Buff, 
+    Ailment
 
 }
 public enum EType
@@ -118,15 +133,22 @@ public enum PrimaryStatus
 public enum SecondaryStatus
 {
     normal,
-    poisoned,
-    stunned,
-    sleep,
-    frozen,
-    burned,
     slow,
     rage,
     charm,
+    seal,
+    poisoned,
     confusion
+}
+
+public enum StatusEffect
+{
+    none,
+    paralyzed,
+    sleep,
+    frozen,
+    burned,
+
 }
 public struct DmgReaction
 {
