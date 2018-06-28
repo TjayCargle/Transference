@@ -27,6 +27,8 @@ public class ManagerScript : MonoBehaviour
     MenuItem[] commandItems;
     public bool freeCamera = false;
     public int testShow = 0;
+    public MenuManager menuManager;
+    public InventoryMangager invManager;
     float xDist = 0.0f;
     float yDist = 0.0f;
     public int TwoToOneD(int y, int width, int x)
@@ -36,6 +38,8 @@ public class ManagerScript : MonoBehaviour
     // Use this for initialization
     public void Setup()
     {
+        menuManager = GetComponent<MenuManager>();
+        invManager = GetComponent<InventoryMangager>();
         tileMap = new GameObject[MapWidth * MapHeight];
         for (int i = 0; i < MapHeight; i++)
         {
@@ -91,7 +95,7 @@ public class ManagerScript : MonoBehaviour
         }
         //MaxAttackDist = MoveDist + 2;
     }
-    // Update is called once per frame
+
     //DMG * (100/100+DEF)
     void Update()
     {
@@ -177,20 +181,10 @@ public class ManagerScript : MonoBehaviour
                     }
                     break;
                 case State.PlayerEquippingMenu:
-                    if (Input.GetKeyDown(KeyCode.W))
-                    {
 
-                        updateCurrentMenuPosition(currentMenuitem);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        updateCurrentMenuPosition(currentMenuitem);
-                    }
                     break;
                 case State.PlayerEquipping:
-                    {
 
-                    }
                     break;
                 case State.PlayerWait:
                     break;
@@ -240,19 +234,6 @@ public class ManagerScript : MonoBehaviour
                     break;
             }
 
-            //switch (testShow)
-            //{
-            //    case 2:
-            //        ShowGridObjectAttackArea(currentObject.GetComponent<GridObject>());
-            //        break;
-            //    case 1:
-            //        ShowGridObjectMoveArea(currentObject.GetComponent<GridObject>());
-            //        break;
-            //    default:
-            //        ShowGridObjectAffectArea(currentObject.GetComponent<GridObject>());
-            //        break;
-            //}
-
         }
 
 
@@ -289,6 +270,11 @@ public class ManagerScript : MonoBehaviour
         {
             currentObject.GetComponent<EffectScript>().ApplyReaction(this, currentObject.GetComponent<LivingObject>());
         }
+        if (currentObject.GetComponent<SecondStatusScript>())
+        {
+            currentObject.GetComponent<SecondStatusScript>().ReduceCount(this, currentObject.GetComponent<LivingObject>());
+        }
+
 
     }
     public void showAttackableTiles()
@@ -587,7 +573,7 @@ public class ManagerScript : MonoBehaviour
         }
         return returnedObject;
     }
-    public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, SkillScript skill)
+    public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, CommandSkill skill)
     {
         int checkIndex = GetTileIndex(obj);
         if (checkIndex == -1)
@@ -755,6 +741,60 @@ public class ManagerScript : MonoBehaviour
                     returnList.Add(tiles);
                 }
                 break;
+            case RanngeType.any:
+                for (int i = 0; i < 4; i++)
+                {
+                    List<TileScript> tiles = new List<TileScript>();
+                    if (affectedTiles != null)
+                    {
+                        for (int j = 0; j < affectedTiles.Count; j++)
+                        {
+                            Vector2 Dist = affectedTiles[j];
+                            switch (i)
+                            {
+                                case 0:
+                                    checkDist.x = Dist.x;
+                                    checkDist.y = Dist.y;
+                                    break;
+
+                                case 1:
+                                    checkDist.x = Dist.y;
+                                    checkDist.y = Dist.x * -1;
+                                    break;
+
+                                case 2:
+
+                                    checkDist.x = Dist.x * -1;
+                                    checkDist.y = Dist.y * -1;
+
+                                    break;
+
+                                case 3:
+                                    checkDist.x = Dist.y * -1; //Yes x = y
+                                    checkDist.y = Dist.x;
+                                    break;
+                            }
+
+
+                            Vector3 checkPos = obj.transform.position;
+                            checkPos.x += checkDist.x;
+                            checkPos.z += checkDist.y;
+                            int testIndex = GetTileIndex(checkPos);
+                            if (testIndex >= 0)
+                            {
+                                TileScript realTile = GetTileAtIndex(testIndex);
+                                if (!tiles.Contains(realTile))
+                                    tiles.Add(realTile);
+                            }
+                        }
+                    }
+
+                    returnList.Add(tiles);
+                }
+                List<TileScript> mytile = new List<TileScript>();
+                mytile.Add(GetTileAtIndex(checkIndex));
+                returnList.Add(mytile);
+                break;
             default:
                 break;
         }
@@ -781,6 +821,18 @@ public class ManagerScript : MonoBehaviour
             return targetIndicies;
         }
         return null;
+    }
+
+    public void SetTargetList(List<TileScript> newTargets)
+    {
+
+        currentAttackList.Clear();
+        for (int i = 0; i < newTargets.Count; i++)
+        {
+            currentAttackList.Add(newTargets[i]);
+        }
+
+
     }
     public List<List<TileScript>> GetWeaponAttackableTiles(LivingObject liveObj)
     {
@@ -845,16 +897,20 @@ public class ManagerScript : MonoBehaviour
     }
     public void SelectMenuItem(GridObject invokingObject)
     {
-        for (int i = 0; i < commandItems.Length; i++)
+        //for (int i = 0; i < commandItems.Length; i++)
+        //{
+
+        //    if (commandItems[i].itemType == currentMenuitem)
+        //    {
+        //        commandItems[i].ApplyAction(invokingObject);
+        //        break;
+        //    }
+
+
+        //}
+        if (invManager)
         {
-
-            if (commandItems[i].itemType == currentMenuitem)
-            {
-                commandItems[i].ApplyAction(invokingObject);
-                break;
-            }
-
-
+            invManager.selectedMenuItem.ApplyAction(invokingObject);
         }
 
     }
@@ -989,43 +1045,55 @@ public class ManagerScript : MonoBehaviour
         }
         if (dmgObject.PSTATUS == PrimaryStatus.tired)
         {
-            reduction = reduction * 0.8f;
+            reduction = reduction * 1.2f;
         }
         if (dmgObject.PSTATUS == PrimaryStatus.crippled)
         {
-            reduction = reduction * 0.5f;
+            reduction = reduction * 1.5f;
         }
 
-        calc = (float)attackingObject.ATTACK / reduction;
+        if (attackType == EType.physical)
+        {
+            calc = (float)attackingObject.STRENGTH / reduction;
+        }
+        else
+        {
+            calc = (float)attackingObject.MAGIC / reduction;
+        }
+        //    Debug.Log("Calc1:" + calc);
+
         calc = dmg * calc;
-
+        //   Debug.Log("Calc2:" + calc);
         calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
-
+        //    Debug.Log("Calc3:" + calc);
         calc = Mathf.Sqrt(calc);
-
+        //     Debug.Log("Calc4:" + calc);
         mod = ApplyDmgMods(attackingObject, mod, attackingElement);
         mod = ApplyDmgMods(dmgObject, mod, attackingElement);
+        //   Debug.Log("Mod: " + mod);
         calc = calc * mod;
+        //   Debug.Log("Calc final: " + calc);
         if (calc < 0)
         {
             calc = 0;
         }
-        returnInt = (Mathf.FloorToInt(calc));
-
+        returnInt = (Mathf.RoundToInt(calc));
+        Debug.Log("FInal:" + returnInt);
         react.damage = returnInt;
+
         return react;
     }
-    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, SkillScript skill)
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, CommandSkill skill)
     {
         if (skill.ELEMENT == Element.Buff)
         {
-            List<SkillScript> passives = dmgObject.GetComponent<InventoryScript>().PASSIVES;
+            List<CommandSkill> passives = dmgObject.GetComponent<InventoryScript>().BUFFS;
             if (!passives.Contains(skill))
             {
                 bool sameType = false;
                 for (int i = 0; i < passives.Count; i++)
                 {
-                    if (passives[i].ModStat == skill.ModStat && passives[i].ModValues[0] == skill.ModValues[0])
+                    if (passives[i].BUFFEDSTAT == skill.BUFFEDSTAT && passives[i].BUFFVAL == skill.BUFFVAL)
                     {
                         sameType = true;
                         break;
@@ -1033,10 +1101,10 @@ public class ManagerScript : MonoBehaviour
                 }
                 if (sameType == false)
                 {
-                    dmgObject.GetComponent<InventoryScript>().PASSIVES.Add(skill);
+                    dmgObject.GetComponent<InventoryScript>().BUFFS.Add(skill);
                     BuffScript buff = dmgObject.gameObject.AddComponent<BuffScript>();
                     buff.SKILL = skill;
-                    buff.BUFF = skill.Buff;
+                    buff.BUFF = skill.BUFF;
                     buff.COUNT = 3;
                     dmgObject.ApplyPassives();
                 }
@@ -1045,9 +1113,17 @@ public class ManagerScript : MonoBehaviour
         }
         else
         {
-            return CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+            DmgReaction react = CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+            if (skill.EFFECT != SideEffect.none)
+            {
+                Debug.Log("Applying effect");
+                ApplyEffect(dmgObject, skill.EFFECT);
+            }
+            return react;
         }
     }
+
+
 
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon)
     {
@@ -1056,7 +1132,7 @@ public class ManagerScript : MonoBehaviour
 
     public float ApplyDmgMods(LivingObject living, float dmg, Element atkAffinity)
     {
-        List<SkillScript> passives = living.GetComponent<InventoryScript>().PASSIVES;
+        List<PassiveSkill> passives = living.GetComponent<InventoryScript>().PASSIVES;
         for (int i = 0; i < passives.Count; i++)
         {
             if (passives[i].ModStat == ModifiedStat.ElementDmg)
@@ -1074,7 +1150,7 @@ public class ManagerScript : MonoBehaviour
     }
     public void ApplyReaction(LivingObject attackingObject, LivingObject target, DmgReaction react)
     {
-     
+
         switch (react.reaction)
         {
             case Reaction.none:
@@ -1116,7 +1192,7 @@ public class ManagerScript : MonoBehaviour
             target.gameObject.SetActive(false);
         }
     }
-    public bool AttackTargets(LivingObject invokingObject, SkillScript skill)
+    public bool AttackTargets(LivingObject invokingObject, CommandSkill skill)
     {
         bool hitSomething = false;
         if (currentAttackList.Count > 0)
@@ -1129,7 +1205,7 @@ public class ManagerScript : MonoBehaviour
                 if (targetIndicies.Count > 0)
                 {
                     hitSomething = true;
-                 
+
                     for (int i = 0; i < targetIndicies.Count; i++)
                     {
                         GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
@@ -1198,5 +1274,125 @@ public class ManagerScript : MonoBehaviour
             }
         }
         return hitSomething;
+    }
+
+    public void ApplyEffect(LivingObject target, SideEffect effect)
+    {
+        switch (effect)
+        {
+            case SideEffect.slow:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.slow;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.slow;
+                        sf.Activate();
+                    }
+                }
+                break;
+            case SideEffect.rage:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.rage;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.rage;
+                    }
+                }
+                break;
+            case SideEffect.charm:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.charm;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.charm;
+                    }
+                }
+                break;
+            case SideEffect.seal:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.seal;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.seal;
+                    }
+                }
+                break;
+            case SideEffect.poison:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.poisoned;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.poisoned;
+                    }
+                }
+                break;
+            case SideEffect.confusion:
+                {
+                    if (target.SSTATUS == SecondaryStatus.normal)
+                    {
+
+                        target.SSTATUS = SecondaryStatus.confusion;
+                    SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                    sf.COUNTDOWN = 3;
+                    sf.STATUS = SecondaryStatus.confusion;
+                    }
+                }
+                break;
+            case SideEffect.paralyze:
+                {
+                    if (!target.GetComponent<EffectScript>())
+                    {
+
+                        EffectScript ef = target.gameObject.AddComponent<EffectScript>();
+                        ef.EFFECT = StatusEffect.paralyzed;
+                    }
+                }
+                break;
+            case SideEffect.sleep:
+                {
+                    if (!target.GetComponent<EffectScript>())
+                    {
+
+                        EffectScript ef = target.gameObject.AddComponent<EffectScript>();
+                        ef.EFFECT = StatusEffect.sleep;
+                    }
+                }
+                break;
+            case SideEffect.freeze:
+                {
+                    if (!target.GetComponent<EffectScript>())
+                    {
+
+                        EffectScript ef = target.gameObject.AddComponent<EffectScript>();
+                        ef.EFFECT = StatusEffect.frozen;
+                    }
+                }
+                break;
+            case SideEffect.burn:
+                {
+                    if (!target.GetComponent<EffectScript>())
+                    {
+
+                        EffectScript ef = target.gameObject.AddComponent<EffectScript>();
+                        ef.EFFECT = StatusEffect.burned;
+                    }
+                }
+                break;
+        }
     }
 }

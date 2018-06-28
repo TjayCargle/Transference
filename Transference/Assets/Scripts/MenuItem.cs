@@ -4,21 +4,7 @@ using UnityEngine;
 
 public class MenuItem : MonoBehaviour
 {
-    private enum MenuItemType
-    {
-        Move = 0,
-        Attack,
-        chooseSkill,
-        Equip,
-        Wait,
-        Look,
-        InventoryWeapon,
-        InventoryArmor,
-        InventoryAcc,
-        useSkill
-
-
-    }
+ 
 
     ManagerScript myManager;
     public int itemType = -1;
@@ -44,6 +30,7 @@ public class MenuItem : MonoBehaviour
     public void ApplyAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
+        Debug.Log("Menu item :" + item);
         switch (item)
         {
             case MenuItemType.Move:
@@ -121,25 +108,28 @@ public class MenuItem : MonoBehaviour
                     if (myMenuManager)
                     {
                         myMenuManager.ShowInventoryCanvas();
-                        myManager.currentMenuitem = 6;
-                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                       myManager.invManager.currentIndex = 0;
+                       //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     }
                     break;
                 }
             case MenuItemType.Wait:
-                 myManager.NextTurn();
+                if(invokingObject.GetComponent<LivingObject>())
+                {
+                    invokingObject.GetComponent<LivingObject>().Wait();
+                }
+                myManager.NextTurn();
                 break;
             case MenuItemType.Look:
                 myManager.prevState = myManager.currentState;
                 myManager.tempObject.transform.position = myManager.currentObject.transform.position;
                 myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-
+                myManager.GetComponent<MenuManager>().ShowNone();
                 myManager.currentState = State.FreeCamera;
-                break;
-            case MenuItemType.useSkill:
                 break;
             case MenuItemType.InventoryWeapon:
                 {
+        
                     myManager.prevState = myManager.currentState;
                     myManager.currentState = State.PlayerEquipping;
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
@@ -149,7 +139,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(0, liveInvokingObject);
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
@@ -157,17 +147,16 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.chooseSkill:
                 {
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+                    Debug.Log("going into select skill");
+                  //  myManager.prevState = myManager.currentState;
+                  //  myManager.currentState = State.PlayerEquipping;
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
 
                         if (invokingObject.GetComponent<LivingObject>())
                         {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(4, liveInvokingObject);
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            myMenuManager.ShowSkillCanvas();
 
                         }
                     }
@@ -184,7 +173,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(1, liveInvokingObject);
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
@@ -201,13 +190,71 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(2, liveInvokingObject);
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
                 }
                 break;
+            case MenuItemType.equipSkill:
+                {
+                    Debug.Log("equip skill");
+                    myManager.prevState = myManager.currentState;
+                    myManager.currentState = State.PlayerEquippingSkills;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
 
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(4, liveInvokingObject);
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.selectBS:
+                {
+                    Debug.Log("select battle skill");
+                    myManager.prevState = myManager.currentState;
+                    myManager.currentState = State.PlayerEquipping;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(4, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.selectAS:
+                break;
+            case MenuItemType.selectPS:
+                {
+                    Debug.Log("select passive skill");
+                    myManager.prevState = myManager.currentState;
+                    myManager.currentState = State.PlayerEquipping;
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(5, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.selectOS:
+                break;
             default:
                 break;
         }
@@ -252,8 +299,11 @@ public class MenuItem : MonoBehaviour
                     {
                         myMenuManager.ShowCommandCanvas();
                     }
-                    myManager.currentMenuitem = 2;
-                    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    if(myManager.prevState == State.PlayerEquippingMenu)
+                    myManager.invManager.currentIndex = 3;
+                    if (myManager.prevState == State.PlayerEquipping)
+                        myManager.invManager.currentIndex = 2;
+                    //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     myManager.currentState = State.PlayerInput;
                 }
                 break;
@@ -266,16 +316,18 @@ public class MenuItem : MonoBehaviour
                         if (myManager.prevState == State.PlayerEquippingMenu)
                         {
                             myMenuManager.ShowInventoryCanvas();
-                            myManager.currentMenuitem = 6;
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            //myManager.invManager.currentIndex = 6;
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                            myManager.invManager.prevIndex = 3;
                             myManager.prevState = myManager.currentState;
                             myManager.currentState = State.PlayerEquippingMenu;
                         }
                         else
                         {
                             myMenuManager.ShowCommandCanvas();
-                            myManager.currentMenuitem = 2;
-                            myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            myManager.invManager.currentIndex = 2;
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                             myManager.prevState = myManager.currentState;
                             myManager.currentState = State.PlayerInput;
                         }
@@ -301,7 +353,7 @@ public class MenuItem : MonoBehaviour
                             {
                                 LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                                 myMenuManager.ShowItemCanvas(4, liveInvokingObject);
-                                myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                               ////myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                             }
                         }
@@ -321,6 +373,7 @@ public class MenuItem : MonoBehaviour
                 break;
             default:
                 {
+                    Debug.Log("Default");
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     myMenuManager.ShowCommandCanvas();
                     myManager.currentState = State.PlayerInput;

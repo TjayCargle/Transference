@@ -9,6 +9,7 @@ public enum State
     PlayerAttacking,
     PlayerEquippingMenu,
     PlayerEquipping,
+    PlayerEquippingSkills,
     PlayerSkillsMenu,
     PlayerWait,
     FreeCamera,
@@ -42,19 +43,34 @@ public enum ModifiedStat
     Health,
     ElementDmg,
     Movement,
+    Str,
+    Mag,
     Atk,
     Def,
     Res,
+    Guard,
     Speed,
-    Luck
+    Luck,
+    dmg
 
 }
 public enum RanngeType
 {
     single,
     multi,
-    area
+    area,
+    any
 }
+
+public enum TargetType
+{
+    enemy,
+    ally,
+    alliesInRange,
+    EnemiesInRange,
+    any
+}
+
 public enum BuffType
 {
     none,
@@ -81,7 +97,10 @@ public enum Element
     Neutral,
     Passive,
     Buff, 
-    Ailment
+    Opp,
+    Ailment,
+    Auto,
+    Heal
 
 }
 public enum EType
@@ -110,7 +129,12 @@ public enum DMG
 public enum ItemType
 {
     healthPotion,
-    fatiguePotion
+    manaPotion,
+    fatiguePotion,
+    cure,
+    buff,
+    atk
+    
 }
 public enum ItemTarget
 {
@@ -119,6 +143,46 @@ public enum ItemTarget
     any,
     enemy,
     enemies
+}
+
+public enum WepSkillType
+{
+    none,
+    boostDmg,
+    lifesteal,
+    weaken,
+    instaKill,
+    bonusAction,
+    chngHits,
+    ailment,
+    
+
+}
+public enum MenuItemType
+{
+    Move = 0,
+    Attack,
+    chooseSkill,
+    Equip,
+    Wait,
+    Look,
+    InventoryWeapon,
+    InventoryArmor,
+    InventoryAcc,
+    equipSkill,
+    selectBS,
+    selectAS,
+    selectPS,
+    selectOS
+}
+public enum AutoActType
+{
+    afterAttacking,
+    afterKilling,
+    beforeDeath,
+    afterOpp,
+    afterSkill
+
 }
 public enum PrimaryStatus
 {
@@ -150,6 +214,21 @@ public enum StatusEffect
     burned,
 
 }
+public enum SideEffect
+{
+    none,
+    slow,
+    rage,
+    charm,
+    seal,
+    poison,
+    confusion,
+    paralyze,
+    sleep,
+    freeze,
+    burn,
+}
+
 public struct DmgReaction
 {
    public int damage;
@@ -161,6 +240,7 @@ public struct Modification
     public Element affectedElement;
     public float editValue;
 }
+
 public class Common : ScriptableObject {
 
 	

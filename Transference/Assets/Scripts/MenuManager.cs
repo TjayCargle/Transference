@@ -9,6 +9,8 @@ public class MenuManager : MonoBehaviour
     public Canvas inventoryCanvas;
     public Canvas itemCanvas;
     public Canvas descCanvas;
+    public Canvas skillCanvas;
+    public Canvas extraCanvas;
     private Text descText;
     public ScrollRect ItemRect;
     public InventoryMangager inManager;
@@ -20,23 +22,16 @@ public class MenuManager : MonoBehaviour
     }
     public void Setup()
     {
-        if (inventoryCanvas)
-        {
-            inventoryCanvas.gameObject.SetActive(false);
-        }
-        if (itemCanvas)
-        {
-            itemCanvas.gameObject.SetActive(false);
-        }
 
-        if(descCanvas)
+        if (descCanvas)
         {
-            if(descCanvas.GetComponentInChildren<Text>())
+            if (descCanvas.GetComponentInChildren<Text>())
             {
                 descText = descCanvas.GetComponentInChildren<Text>();
             }
             descCanvas.gameObject.SetActive(false);
         }
+        ShowCommandCanvas();
         isSetup = true;
     }
     void Start()
@@ -68,12 +63,37 @@ public class MenuManager : MonoBehaviour
         {
             descCanvas.gameObject.SetActive(false);
         }
+
+        if (inManager)
+        {
+            inManager.setContentAndScroll(null, null, 0, null);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
     }
     public void ShowCommandCanvas()
     {
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(true);
+
+            if (inManager)
+            {
+                if (commandCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                {
+                    if (commandCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.setContentAndScroll(commandCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, commandCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        inManager.ForceSelect();
+                    }
+                }
+            }
         }
         if (inventoryCanvas)
         {
@@ -91,6 +111,14 @@ public class MenuManager : MonoBehaviour
         {
             descCanvas.gameObject.SetActive(false);
         }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void ShowInventoryCanvas()
@@ -99,13 +127,9 @@ public class MenuManager : MonoBehaviour
         {
             commandCanvas.gameObject.SetActive(false);
         }
-        if (inventoryCanvas)
-        {
-            inventoryCanvas.gameObject.SetActive(true);
-        }
         if (itemCanvas)
         {
-            if(inManager)
+            if (inManager)
             {
                 inManager.unloadContents();
             }
@@ -114,6 +138,29 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(false);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas)
+        {
+            inventoryCanvas.gameObject.SetActive(true);
+            if (inManager)
+            {
+                if (inventoryCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                {
+                    if (inventoryCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.setContentAndScroll(inventoryCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, inventoryCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        inManager.ForceSelect();
+                    }
+                }
+            }
         }
     }
 
@@ -131,22 +178,126 @@ public class MenuManager : MonoBehaviour
         {
             descCanvas.gameObject.SetActive(true);
         }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
         if (itemCanvas)
         {
             itemCanvas.gameObject.SetActive(true);
             if (inManager)
             {
+                inManager.unloadContents();
                 if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
                 {
-                    if(itemCanvas.GetComponentInChildren<ScrollRect>())
+                    if (itemCanvas.GetComponentInChildren<ScrollRect>())
                     {
-
-                    inManager.loadContents(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(),  index, invokingObject);
+                        inManager.loadContents(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), index, invokingObject);
+                        inManager.ForceSelect();
                     }
                 }
             }
         }
     }
 
+    public void ShowSkillCanvas()
+    {
+        if (commandCanvas)
+        {
+            commandCanvas.gameObject.SetActive(false);
+        }
+        if (itemCanvas)
+        {
+            if (inManager)
+            {
+                inManager.unloadContents();
+            }
+            itemCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas )
+        {
+            inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(true);
+            if (inManager)
+            {
+                if (skillCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                {
+                    if (skillCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.setContentAndScroll(skillCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, skillCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        inManager.ForceSelect();
+                    }
+                }
+            }
+        }
+    }
+
+    public void ShowExtraCanvas()
+    {
+
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(true);
+            if (inManager)
+            {
+                if (extraCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                {
+                    if (extraCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.setContentAndScroll(extraCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, extraCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        inManager.ForceSelect();
+                    }
+                }
+            }
+        }
+    }
+
+    public void switchToEquiped()
+    {
+        if (inManager)
+        {
+            if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+            {
+                if (itemCanvas.GetComponentInChildren<ScrollRect>())
+                {
+                    inManager.setContentAndScroll(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                    inManager.ForceSelect();
+                    inManager.menuSide = -1;
+                }
+            }
+        }
+    }
+
+    public void switchToExtra()
+    {
+        if (inManager)
+        {
+            if (extraCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+            {
+                if (extraCanvas.GetComponentInChildren<ScrollRect>())
+                {
+                    inManager.setContentAndScroll(extraCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, extraCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                    inManager.ForceSelect();
+                    inManager.menuSide = 1;
+
+                }
+            }
+        }
+    }
 
 }

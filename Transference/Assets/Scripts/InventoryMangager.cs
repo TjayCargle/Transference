@@ -10,48 +10,84 @@ public class InventoryMangager : MonoBehaviour
     public GameObject currentContent;
     public ScrollRect currentRect;
     public int currentIndex = 0;
+    public int prevIndex = 0;
     public MenuItem selectedMenuItem;
     private LivingObject lastObject;
     private MenuManager menuManager;
-    // public int testIndex = 0;
+    private ManagerScript manager;
+    public GameObject extraContent;
+    public ScrollRect extraRect;
+    public int menuSide = -1;
     public void Start()
     {
         menuManager = GameObject.FindObjectOfType<MenuManager>();
-
+        manager = GetComponent<ManagerScript>();
     }
     // Update is called once per frame
     void Update()
     {
         if (currentRect)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            switch (manager.currentState)
             {
-                IncreaseScroll();
+                case State.PlayerInput:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        IncreaseScroll();
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        DecreaseScroll();
+                    }
+                    break;
+                case State.PlayerEquippingMenu:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        IncreaseScroll();
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        DecreaseScroll();
+                    }
+                    break;
+                case State.PlayerEquipping:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        IncreaseScroll();
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        DecreaseScroll();
+                    }
+                    if (extraContent)
+                    {
+                        if (extraRect)
+                        {
+                            if (Input.GetKeyDown(KeyCode.A))
+                            {
+                                menuManager.switchToEquiped();
+                            }
+                            if (Input.GetKeyDown(KeyCode.D))
+                            {
+                                menuManager.switchToExtra();
+                            }
+                        }
+                    }
+                    break;
+                case State.PlayerSkillsMenu:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        IncreaseScroll();
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        DecreaseScroll();
+                    }
+                    break;
+            }
 
-                // Debug.Log(testRect.normalizedPosition);
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                DecreaseScroll();
-                //  Debug.Log(testRect.normalizedPosition);
-            }
         }
-        //if (selectedMenuItem)
-        //{
-        //    if (selectedMenuItem.refItem)
-        //    {
-        //        if (Input.GetKeyDown(KeyCode.Space))
-        //        {
-        //            if (selectedMenuItem.refItem.GetType() == testLiveObject.WEAPON.GetType())
-        //            {
-        //                testLiveObject.WEAPON = (WeaponScript)selectedMenuItem.refItem;
-        //                Debug.Log(testLiveObject.WEAPON);
-        //                Debug.Log(testLiveObject.WEAPON.NAME);
-        //                Debug.Log(testLiveObject.WEAPON.GetType());
-        //            }
-        //        }
-        //    }
-        //}
+
     }
     public void IncreaseScroll()
     {
@@ -64,6 +100,7 @@ public class InventoryMangager : MonoBehaviour
 
                 if (currentContent.transform.childCount > 0)
                 {
+
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
@@ -71,7 +108,7 @@ public class InventoryMangager : MonoBehaviour
                     currentIndex--;
                     if (currentIndex < 0)
                     {
-                        currentIndex = 0;
+                        currentIndex = currentContent.transform.childCount - 1;
                     }
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     if (selectedMenuItem)
@@ -95,7 +132,11 @@ public class InventoryMangager : MonoBehaviour
 
                         if (selectedMenuItem)
                         {
-                            menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                            if (selectedMenuItem.refItem)
+                            {
+                                menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+
+                            }
                         }
                     }
                 }
@@ -124,7 +165,7 @@ public class InventoryMangager : MonoBehaviour
                     currentIndex++;
                     if (currentIndex >= currentContent.transform.childCount)
                     {
-                        currentIndex = currentContent.transform.childCount - 1;
+                        currentIndex = 0;
                     }
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
 
@@ -149,14 +190,45 @@ public class InventoryMangager : MonoBehaviour
 
                         if (selectedMenuItem)
                         {
-                            menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                            if (selectedMenuItem.refItem)
+                            {
+                                menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+
+                            }
                         }
                     }
                 }
             }
         }
     }
-    // Use this for initialization
+    public void ForceSelect()
+    {
+        if (selectedMenuItem)
+        {
+            selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+            if (prevIndex < currentContent.transform.childCount)
+                selectedMenuItem = currentContent.transform.GetChild(prevIndex).GetComponent<MenuItem>();
+            selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+
+        }
+        if (currentContent.transform.childCount > 0)
+        {
+
+            selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+            selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+        }
+
+    }
+
+    public void setContentAndScroll(GameObject content, ScrollRect rect, int index, LivingObject liveObject)
+    {
+        if (liveObject != null)
+        {
+            lastObject = liveObject;
+        }
+        currentContent = content;
+        currentRect = rect;
+    }
     public void loadContents(GameObject content, ScrollRect rect, int index, LivingObject liveObject)
     {
         lastObject = liveObject;
@@ -164,8 +236,11 @@ public class InventoryMangager : MonoBehaviour
         currentRect = rect;
         //UsableScript itemType = new UsableScript();
         int useType = -1;
+        int windowType = -1;
+        Debug.Log("index = " + index);
         switch (index)
         {
+
             case 0:
                 // itemType = ScriptableObject.CreateInstance<WeaponScript>();
                 // itemType.TYPE = 0;
@@ -187,9 +262,33 @@ public class InventoryMangager : MonoBehaviour
                 useType = 3;
                 break;
             case 4:
-                // itemType = new SkillScript();
+                // itemType = new SkillScript(); 
                 // itemType.TYPE = 4;
                 useType = 4;
+                windowType = 1; //all usable skills
+                break;
+
+            case 5:
+                useType = 4;
+                windowType = 2; //all passive skills
+                break;
+
+            case 6:
+                useType = 4;
+                windowType = 3; // useable skill slots
+                break;
+
+            case 7:
+                useType = 4;
+                windowType = 4; // passive skill slots
+                break;
+            case 8:
+                useType = 4;
+                windowType = 5; // weapon skill slots
+                break;
+            case 9:
+                useType = 4;
+                windowType = 5; // all weapon skills
                 break;
         }
         // for (int i = 0; i < 4; i++)
@@ -207,20 +306,94 @@ public class InventoryMangager : MonoBehaviour
                 {
                     continue;
                 }
+                if (useType == 4)
+                {
+                    switch (windowType)
+                    {
+                        case 1:
+                            break;
 
+                        case 2:
+                            Debug.Log("yo");
+                            Debug.Log(((SkillScript)item).ELEMENT);
+                            if (((SkillScript)item).ELEMENT != Element.Passive)
+                            {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            if (((SkillScript)item).ELEMENT != Element.Auto)
+                            {
+                                continue;
+                            }
+                            break;
+
+                    }
+                    Debug.Log("yosef");
+                }
                 if (tempObjects.ContainsKey(item.NAME))
                 {
-                    tempObjects[item.NAME].SetActive(true);
-                    tempObjects[item.NAME].transform.SetParent(content.transform);
+
                     if (item.TYPE == 4)
                     {
-                        string extraText = "";
-                        if (((SkillScript)item).ETYPE == EType.physical)
-                            extraText = " " + "HP";
-                        else
-                            extraText = " " + "SP";
+                        switch (windowType)
+                        {
+                            case 1:
+                                if (!liveObject.GetComponent<InventoryScript>().USEABLES.Contains(((SkillScript)item)))
+                                {
+                                    continue;
+                                }
+                                break;
 
-                        tempObjects[item.NAME].GetComponentInChildren<Text>().text = item.NAME + " " + ((SkillScript)item).COST.ToString() + extraText; ;
+                            case 2:
+
+                                if (!liveObject.GetComponent<InventoryScript>().SKILLS.Contains(((SkillScript)item)))
+                                {
+                                    continue;
+                                }
+                                Debug.Log(1);
+                                if (((SkillScript)item).ELEMENT != Element.Passive)
+                                {
+                                    continue;
+                                }
+                                Debug.Log(2);
+                                if (!liveObject.GetComponent<InventoryScript>().PASSIVES.Contains(((PassiveSkill)item)))
+                                {
+                                    continue;
+                                }
+                                Debug.Log(3);
+                                Debug.Log(item.NAME);
+                                break;
+
+                            case 3:
+                                if (!liveObject.GetComponent<InventoryScript>().SKILLS.Contains(((SkillScript)item)))
+                                {
+                                    continue;
+                                }
+
+                                if (((SkillScript)item).ELEMENT != Element.Auto)
+                                {
+                                    continue;
+                                }
+                                if (!liveObject.BATTLE_SLOTS.Contains(((SkillScript)item)))
+                                {
+                                    continue;
+                                }
+                                break;
+
+                            case 4:
+
+                                if (!liveObject.PASSIVE_SLOTS.Contains(((SkillScript)item)))
+                                {
+                                    continue;
+                                }
+                                break;
+                        }
+                        tempObjects[item.NAME].SetActive(true);
+                        tempObjects[item.NAME].transform.SetParent(content.transform);
+
+
+
                     }
                     continue;
                     //no need to have else if it continues;
@@ -242,12 +415,17 @@ public class InventoryMangager : MonoBehaviour
                     }
                     else
                     {
-                        string extraText = "";
-                        if (((SkillScript)item).ETYPE == EType.physical)
-                            extraText = " " + "HP";
-                        else
-                            extraText = " " + "SP";
-                        selectedText.text = item.NAME + " " + ((SkillScript)item).COST.ToString() + extraText;
+                        selectedText.text = item.NAME;
+                        if (windowType == 1)
+                        {
+
+                            string extraText = "";
+                            if (((CommandSkill)item).ETYPE == EType.physical)
+                                extraText = " " + "HP";
+                            else
+                                extraText = " " + "SP";
+                            selectedText.text += " " + ((CommandSkill)item).COST.ToString() + extraText;
+                        }
                     }
                     selectedText.resizeTextForBestFit = true;
                 }
@@ -279,7 +457,8 @@ public class InventoryMangager : MonoBehaviour
         {
             if (currentContent)
             {
-                selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                if (currentContent.transform.childCount > 0)
+                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
             }
         }
         if (menuManager)
@@ -290,17 +469,32 @@ public class InventoryMangager : MonoBehaviour
 
                 if (selectedMenuItem)
                 {
-                    menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                    if (selectedMenuItem.refItem)
+                    {
+                        menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+
+                    }
                 }
             }
         }
 
     }
 
+    public void EquipSkill(GameObject target)
+    {
+        if (currentContent)
+        {
+            if (extraContent)
+            {
+
+            }
+        }
+    }
     public void unloadContents()
     {
         if (lastObject)
         {
+            Debug.Log(lastObject.FullName);
             List<UsableScript> invokingObjectsUse = lastObject.GetComponent<InventoryScript>().USEABLES;
             for (int useCount = 0; useCount < invokingObjectsUse.Count; useCount++)
             {

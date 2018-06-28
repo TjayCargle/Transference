@@ -14,15 +14,21 @@ public class StatScript : MonoBehaviour {
     [SerializeField]
     private int myMana;
     [SerializeField]
-    private int myBaseAttack = 1;
+    private int myMaxFatigue = 100;
     [SerializeField]
-    private int myBaseDefense = 1;
+    private int myFatigue;
     [SerializeField]
-    private int myBaseResistance = 1;
+    private int myBaseStr;
     [SerializeField]
-    private int myBaseSpeed = 1;
+    private int myBaseMag;
     [SerializeField]
-    private int myBaseLuck = 1;
+    private int myBaseDefense;
+    [SerializeField]
+    private int myBaseResistance;
+    [SerializeField]
+    private int myBaseSpeed;
+    [SerializeField]
+    private int myBaseLuck;
     [SerializeField]
     private int myMoveDist = 0;
     [SerializeField]
@@ -60,10 +66,15 @@ public class StatScript : MonoBehaviour {
         get { return myMinAtkDist; }
         set { myMoveDist = value; }
     }
-    public int ATTACK
+    public int STRENGTH
     {
-        get { return  myBaseAttack + owner.WEAPON.ATTACK; }
-        set { myBaseAttack = value; }
+        get { return  myBaseStr ; }
+        set { myBaseStr = value; }
+    }
+    public int MAGIC
+    {
+        get { return myBaseMag; }
+        set { myBaseMag = value; }
     }
     public int DEFENSE
     {
@@ -105,6 +116,16 @@ public class StatScript : MonoBehaviour {
         get { return myMana; }
         set { myMana = value; }
     }
+    public int MAX_FATIGUE
+    {
+        get { return myMaxFatigue; }
+        set { myMaxFatigue = value; }
+    }
+    public int FATIGUE
+    {
+        get { return myFatigue; }
+        set { myFatigue = value; }
+    }
     public int LEVEL
     {
         get { return myLevel; }
@@ -117,16 +138,19 @@ public class StatScript : MonoBehaviour {
         Min_Atk_DIST = 0;
         HEALTH = 0;
         MANA = 0;
-        ATTACK = 0;
+        STRENGTH = 0;
+        MAGIC = 0;
         DEFENSE = 0;
         RESIESTANCE = 0;
         SPEED = 0;
         LUCK = 0;
+        FATIGUE = 0;
         if (hard == true)
         {
             LEVEL = 0;
             MAX_HEALTH = 0;
             MAX_MANA = 0;
+            MAX_FATIGUE = 0;
 
         }
       

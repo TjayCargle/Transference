@@ -19,6 +19,10 @@ public class LivingObject : GridObject
     private SecondaryStatus sStatus = SecondaryStatus.normal;
     [SerializeField]
     private StatusEffect eStatus = StatusEffect.none;
+    [SerializeField]
+    private skillSlots battleSlots;
+    [SerializeField]
+    private skillSlots passiveSlots;
 
     public PrimaryStatus PSTATUS
     {
@@ -35,6 +39,16 @@ public class LivingObject : GridObject
     {
         get { return eStatus; }
         set { eStatus = value; }
+    }
+    public skillSlots BATTLE_SLOTS
+    {
+        get { return battleSlots; }
+        set { battleSlots = value; }
+    }
+    public skillSlots PASSIVE_SLOTS
+    {
+        get { return passiveSlots; }
+        set { passiveSlots = value; }
     }
     public StatScript BASE_STATS
     {
@@ -77,9 +91,13 @@ public class LivingObject : GridObject
     {
         get { return STATS.Min_Atk_DIST + BASE_STATS.Min_Atk_DIST; }
     }
-    public int ATTACK
+    public int STRENGTH
     {
-        get { return STATS.ATTACK + BASE_STATS.ATTACK; }
+        get { return STATS.STRENGTH + BASE_STATS.STRENGTH; }
+    }
+    public int MAGIC
+    {
+        get { return STATS.MAGIC + BASE_STATS.MAGIC; }
     }
     public int DEFENSE
     {
@@ -112,6 +130,14 @@ public class LivingObject : GridObject
     public int MANA
     {
         get { return STATS.MANA + BASE_STATS.MANA; }
+    }
+    public int MAX_FATIGUE
+    {
+        get { return STATS.MAX_FATIGUE + BASE_STATS.MAX_FATIGUE; }
+    }
+    public int FATIGUE
+    {
+        get { return STATS.FATIGUE + BASE_STATS.FATIGUE; }
     }
     public int LEVEL
     {
@@ -192,6 +218,33 @@ public class LivingObject : GridObject
             this.baseStats.MANA = this.baseStats.MAX_MANA;
         }
 
+        if (!GetComponent<skillSlots>())
+        {
+            battleSlots = gameObject.AddComponent<skillSlots>();
+            passiveSlots = gameObject.AddComponent<skillSlots>();
+            passiveSlots.TYPE = 1;
+        }
+        else
+        {
+            skillSlots[] slots = GetComponents<skillSlots>();
+            if (slots.Length == 1)
+            {
+                battleSlots = gameObject.AddComponent<skillSlots>();
+            }
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (slots[i].TYPE == 0)
+                {
+                    battleSlots = slots[i];
+                }
+                else
+                {
+                    passiveSlots = slots[i];
+                    passiveSlots.TYPE = 1;
+                }
+            }
+
+        }
 
 
         base.Setup();
@@ -199,7 +252,7 @@ public class LivingObject : GridObject
 
     public void ApplyPassives()
     {
-        List<SkillScript> atkPassives = GetComponent<InventoryScript>().PASSIVES;
+        List<PassiveSkill> atkPassives = GetComponent<InventoryScript>().PASSIVES;
         modifiedStats.MODS.Clear();
         modifiedStats.Reset(true);
 
@@ -223,29 +276,46 @@ public class LivingObject : GridObject
 
                         modifiedStats.MOVE_DIST += (int)atkPassives[i].ModValues[0];
                         break;
+                    case ModifiedStat.Str:
+                        mod = atkPassives[i].ModValues[0];
+                        mod = (mod / 100) * modifiedStats.STRENGTH;
+                        modifiedStats.STRENGTH += (int)mod;
+                        break;
+                    case ModifiedStat.Mag:
+                        mod = atkPassives[i].ModValues[0];
+                        mod = (mod / 100) * modifiedStats.MAGIC;
+                        modifiedStats.MAGIC += (int)mod;
+                        break;
                     case ModifiedStat.Atk:
                         mod = atkPassives[i].ModValues[0];
-                        modifiedStats.ATTACK +=(int)atkPassives[i].ModValues[0] - WEAPON.ATTACK;
+                        mod = (mod / 100) * BASE_STATS.STRENGTH;
+                        modifiedStats.STRENGTH += (int)mod;
+                        mod = atkPassives[i].ModValues[0];
+                        mod = (mod / 100) * BASE_STATS.MAGIC;
+                        modifiedStats.MAGIC += (int)mod;
                         break;
                     case ModifiedStat.Def:
-                        modifiedStats.DEFENSE += (int)atkPassives[i].ModValues[0] - ARMOR.DEFENSE;
+                        modifiedStats.DEFENSE += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.DEFENSE);
                         break;
                     case ModifiedStat.Res:
-
-                        modifiedStats.RESIESTANCE += (int)atkPassives[i].ModValues[0] - ARMOR.RESISTANCE;
+                        modifiedStats.RESIESTANCE += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.RESISTANCE);
+                        break;
+                    case ModifiedStat.Guard:
+                        modifiedStats.RESIESTANCE += ((((int)atkPassives[i].ModValues[0]) / 100) * ARMOR.RESISTANCE);
                         break;
                     case ModifiedStat.Speed:
 
-                        modifiedStats.SPEED += (int)atkPassives[i].ModValues[0] - ARMOR.SPEED;
+                        modifiedStats.SPEED += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.SPEED);
                         break;
                     case ModifiedStat.Luck:
 
-                        modifiedStats.LUCK += (int)atkPassives[i].ModValues[0] - WEAPON.LUCK;
+                        modifiedStats.LUCK += ((((int)atkPassives[i].ModValues[0] ) / 100) * WEAPON.LUCK);
                         break;
                     default:
                         break;
                 }
-        Debug.Log("Post atk "+ i+ " = " + modifiedStats.ATTACK);
+               // Debug.Log("Post atk " + i + " = " + modifiedStats.STRENGTH);
+
             }
 
 
@@ -253,4 +323,16 @@ public class LivingObject : GridObject
 
     }
 
+    public void Wait()
+    {
+        STATS.HEALTH += 2;
+        STATS.MANA += 2;
+        STATS.FATIGUE -= 2;
+        if (HEALTH > MAX_HEALTH)
+            STATS.HEALTH = MAX_HEALTH;
+        if (MANA > MAX_MANA)
+            STATS.MANA = MAX_MANA;
+        if (FATIGUE < 0)
+            STATS.FATIGUE = 0;
+    }
 }

@@ -120,6 +120,7 @@ MonoBehaviour:
   itemType: 0
   inMenuAction: 0
   myRect: {fileID: 0}
+  refItem: {fileID: 0}
 --- !u!222 &222025261922885700
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -139,7 +140,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1709796919655114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -25, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224498783522571878}

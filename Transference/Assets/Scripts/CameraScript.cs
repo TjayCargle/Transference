@@ -10,8 +10,10 @@ public class CameraScript : MonoBehaviour
     public Text infoText;
     public Slider healthSlider;
     public Slider mansSlider;
+    public Slider fatigueSlider;
     public Text healthText;
     public Text manaText;
+    public Text fatigueText;
     public GridObject infoObject;
     float distance = 0;
 
@@ -50,6 +52,11 @@ public class CameraScript : MonoBehaviour
                                 {
                                     mansSlider.value = (float)infoObject.GetComponent<LivingObject>().MANA / (float)infoObject.GetComponent<LivingObject>().MAX_MANA;
                                    manaText.text = infoObject.GetComponent<LivingObject>().MANA.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_MANA.ToString();
+                                }
+                                if (fatigueSlider)
+                                {
+                                    fatigueSlider.value = (float)infoObject.GetComponent<LivingObject>().FATIGUE / (float)infoObject.GetComponent<LivingObject>().MAX_FATIGUE;
+                                    fatigueText.text = infoObject.GetComponent<LivingObject>().FATIGUE.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_FATIGUE.ToString();
                                 }
 
                             }

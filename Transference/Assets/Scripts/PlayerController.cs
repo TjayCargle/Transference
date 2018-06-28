@@ -5,19 +5,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private SkillScript currentSkill;
+    private CommandSkill currentSkill;
 
     [SerializeField]
     public LivingObject current;
 
     [SerializeField]
     protected ManagerScript myManager;
-    //public bool canMove = false;
 
+    [SerializeField]
+    InventoryMangager invm;
+    //public bool canMove = false;
+    private List<TileScript> newTarget = new List<TileScript>();
     // Use this for initialization
     void Start()
     {
         myManager = GameObject.FindObjectOfType<ManagerScript>();
+        invm = myManager.GetComponent<InventoryMangager>();
         if (!myManager.isSetup)
         {
             myManager.Setup();
@@ -42,31 +46,35 @@ public class PlayerController : MonoBehaviour
             switch (myManager.currentState)
             {
                 case State.PlayerInput:
-                    if (Input.GetKeyDown(KeyCode.W))
-                    {
-                        myManager.currentMenuitem--;
-                        if (myManager.currentMenuitem < 0)
-                        {
-                            myManager.currentMenuitem = 5;
-                        }
-                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                    }
+                    //if (Input.GetKeyDown(KeyCode.W))
+                    //{
+                    //    myManager.currentMenuitem--;
+                    //    if (myManager.currentMenuitem < 0)
+                    //    {
+                    //        myManager.currentMenuitem = 5;
+                    //    }
+                    //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    //}
 
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        myManager.currentMenuitem++;
-                        if (myManager.currentMenuitem > 5)
-                        {
-                            myManager.currentMenuitem = 0;
-                        }
-                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                    }
+                    //if (Input.GetKeyDown(KeyCode.S))
+                    //{
+                    //    myManager.currentMenuitem++;
+                    //    if (myManager.currentMenuitem > 5)
+                    //    {
+                    //        myManager.currentMenuitem = 0;
+                    //    }
+                    //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    //}
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                         myManager.CancelMenuAction(current);
+
                     }
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
+                        myManager.invManager.prevIndex = myManager.invManager.currentIndex;
+                        myManager.invManager.currentIndex = 0;
                         myManager.SelectMenuItem(current);
                     }
                     break;
@@ -103,16 +111,60 @@ public class PlayerController : MonoBehaviour
                         bool check = false;
                         if (currentSkill != null)
                         {
-                            if (currentSkill.CanUse())
+                            if (current.SSTATUS != SecondaryStatus.seal)
                             {
-                                check = myManager.AttackTargets(current, currentSkill);
-                                if (currentSkill != null)
-                                    currentSkill = null;
+                                if (currentSkill.CanUse())
+                                {
+                                    if (current.SSTATUS == SecondaryStatus.confusion)
+                                    {
+                                        int chance = Random.Range(0, 2);
+                                        if (chance <= 0)
+                                        {
+                                            Debug.Log("They hit themselves");
+                                            newTarget.Clear();
+                                            newTarget.Add(current.currentTile);
+                                            myManager.SetTargetList(newTarget);
+                                            check = myManager.AttackTargets(current, currentSkill);
+                                        }
+                                        else
+                                        {
+                                            check = myManager.AttackTargets(current, currentSkill);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        check = myManager.AttackTargets(current, currentSkill);
+
+                                    }
+                                    if (check == true)
+                                        myManager.invManager.currentIndex = 2;
+                                    else
+                                        myManager.invManager.currentIndex = 0;
+                                    if (currentSkill != null)
+                                        currentSkill = null;
+                                }
                             }
                         }
                         else
                         {
-                            check = myManager.AttackTargets(current, current.WEAPON);
+                            if (current.SSTATUS == SecondaryStatus.confusion)
+                            {
+                                int chance = Random.Range(0, 2);
+
+                                if (chance <= 0)
+                                {
+                                    Debug.Log("They hit themselves");
+                                    newTarget.Clear();
+                                    newTarget.Add(current.currentTile);
+                                    myManager.SetTargetList(newTarget);
+                                    check = myManager.AttackTargets(current, currentSkill);
+                                }
+                            }
+                            else
+                            {
+                                check = myManager.AttackTargets(current, current.WEAPON);
+
+                            }
                         }
 
 
@@ -120,55 +172,59 @@ public class PlayerController : MonoBehaviour
                         if (check == true)
                         {
 
+                            myManager.prevState = myManager.currentState;
+                            myManager.currentState = State.PlayerInput;
                             if (myManager.GetComponent<MenuManager>())
                             {
                                 myManager.GetComponent<MenuManager>().ShowCommandCanvas();
                             }
-                            myManager.prevState = myManager.currentState;
-                            myManager.currentState = State.PlayerInput;
                         }
 
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                         myManager.CancelMenuAction(current);
                         currentSkill = null;
                     }
                     break;
                 case State.PlayerEquippingMenu:
-                    if (Input.GetKeyDown(KeyCode.W))
-                    {
-                        myManager.currentMenuitem--;
-                        if (myManager.currentMenuitem < 6)
-                        {
-                            myManager.currentMenuitem = 8;
-                        }
-                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                    }
+                    //if (Input.GetKeyDown(KeyCode.W))
+                    //{
+                    //    myManager.currentMenuitem--;
+                    //    if (myManager.currentMenuitem < 6)
+                    //    {
+                    //        myManager.currentMenuitem = 8;
+                    //    }
+                    //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    //}
 
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        myManager.currentMenuitem++;
-                        if (myManager.currentMenuitem > 8)
-                        {
-                            myManager.currentMenuitem = 6;
-                        }
-                        myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                    }
+                    //if (Input.GetKeyDown(KeyCode.S))
+                    //{
+                    //    myManager.currentMenuitem++;
+                    //    if (myManager.currentMenuitem > 8)
+                    //    {
+                    //        myManager.currentMenuitem = 6;
+                    //    }
+                    //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                    //}
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
+                        myManager.invManager.prevIndex = myManager.invManager.currentIndex;
+                        myManager.invManager.currentIndex = 0;
                         myManager.SelectMenuItem(current);
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                         myManager.CancelMenuAction(current);
                     }
                     break;
+
                 case State.PlayerEquipping:
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
-                            InventoryMangager invm = Object.FindObjectOfType<InventoryMangager>();
 
                             switch (invm.selectedMenuItem.refItem.TYPE)
                             {
@@ -203,8 +259,24 @@ public class PlayerController : MonoBehaviour
                                     break;
                                 case 4:
                                     {
-
-                                        SkillScript selectedSkil = (SkillScript)invm.selectedMenuItem.refItem;
+                                        if(((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
+                                        {
+                                            break;
+                                        }
+                                        if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Auto)
+                                        {
+                                            break;
+                                        }
+                                        if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Opp)
+                                        {
+                                            break;
+                                        }
+                                        CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
+                                        if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
+                                        {
+                                            Debug.Log("Got it");
+                                            selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
+                                        }
                                         if (selectedSkil.CanUse() == false)
                                         {
                                             break;
@@ -253,12 +325,20 @@ public class PlayerController : MonoBehaviour
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
+                            myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                             myManager.CancelMenuAction(current);
                             currentSkill = null;
+
                         }
+
                     }
                     break;
                 case State.PlayerWait:
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        current.Wait();
+                        myManager.ComfirmMenuAction(current);
+                    }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         myManager.CancelMenuAction(current);
@@ -272,8 +352,13 @@ public class PlayerController : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                         myManager.CancelMenuAction(current);
                     }
+                    break;
+                case State.PlayerEquippingSkills:
+                    break;
+                case State.PlayerSkillsMenu:
                     break;
                 case State.EnemyTurn:
                     break;
