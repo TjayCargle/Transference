@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManagerScript : MonoBehaviour
+public class ManagerScript : EventRunner
 {
-
     public GameObject Tile;
     public GameObject[] tileMap;
     public List<GridObject> gridObjects;
@@ -31,6 +30,12 @@ public class ManagerScript : MonoBehaviour
     public InventoryMangager invManager;
     float xDist = 0.0f;
     float yDist = 0.0f;
+    public GameObject dmgPrefab;
+    public List<DmgTextObj> dmgText;
+    public int dmgRequest = 0;
+    public EventManager eventManager;
+    public List<menuStackEntry> menuStack;
+    public int menuStackCount = 0;
     public int TwoToOneD(int y, int width, int x)
     {
         return y * width + x;
@@ -38,53 +43,85 @@ public class ManagerScript : MonoBehaviour
     // Use this for initialization
     public void Setup()
     {
-        menuManager = GetComponent<MenuManager>();
-        invManager = GetComponent<InventoryMangager>();
-        tileMap = new GameObject[MapWidth * MapHeight];
-        for (int i = 0; i < MapHeight; i++)
+        if (!isSetup)
         {
-            for (int j = 0; j < MapWidth; j++)
-            {
-                GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)] = Instantiate(Tile, new Vector3(i, 0, j), Quaternion.identity);
-                temp.AddComponent<TileScript>();
-                temp.GetComponent<TileScript>().Setup();
-            }
-        }
-        if (GameObject.FindObjectOfType<CameraScript>())
-        {
-            myCamera = GameObject.FindObjectOfType<CameraScript>();
-        }
-        commandItems = GameObject.FindObjectsOfType<MenuItem>();
-        player = GameObject.FindObjectOfType<PlayerController>();
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
-        for (int i = livingObjects.Length - 1; i >= 0; i--)
-        {
-            //if(livingObjects[i].IsEnenmy)
+
+            menuManager = GetComponent<MenuManager>();
+            invManager = GetComponent<InventoryMangager>();
+            eventManager = GetComponent<EventManager>();
+            eventManager.Setup();
+            //dmgText = GameObject.FindObjectOfType<DmgTextObj>();
+            //if (dmgText)
             //{
-            //    continue;
+            //    if (!dmgText.isSetup)
+            //    {
+            //        dmgText.Setup();
+            //    }
+            //    dmgText.gameObject.SetActive(false);
             //}
-            turnOrder.Add(livingObjects[i]);
-        }
-        //turnOrder.Sort();
-        currentObject = turnOrder[0];
-        // currentObject.transform.position = tileMap[TwoToOneD(MapHeight / 2, MapWidth, MapWidth / 2)].transform.position + new Vector3(0, 0.5f, 0);
-        tempObject = new GameObject();
-        tempObject.AddComponent<GridObject>();
-        tempObject.GetComponent<GridObject>().MOVE_DIST = 10000;
-        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
-        for (int i = 0; i < objs.Length; i++)
-        {
-            if (objs[i].gameObject == tempObject)
+            menuStack = new List<menuStackEntry>();
+            menuStackEntry defaultEntry = new menuStackEntry();
+            defaultEntry.state = State.PlayerInput;
+            defaultEntry.index = 0;
+            menuStack.Add(defaultEntry);
+            dmgText = new List<DmgTextObj>();
+            tileMap = new GameObject[MapWidth * MapHeight];
+            for (int i = 0; i < MapHeight; i++)
             {
-                continue;
+                for (int j = 0; j < MapWidth; j++)
+                {
+                    GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)] = Instantiate(Tile, new Vector3(i, 0, j), Quaternion.identity);
+                    temp.AddComponent<TileScript>();
+                    temp.GetComponent<TileScript>().Setup();
+                }
             }
-            gridObjects.Add(objs[i]);
-            objs[i].currentTile = GetTile(objs[i]);
-            objs[i].currentTile.isOccupied = true;
+            if (GameObject.FindObjectOfType<CameraScript>())
+            {
+                myCamera = GameObject.FindObjectOfType<CameraScript>();
+            }
+            commandItems = GameObject.FindObjectsOfType<MenuItem>();
+            player = GameObject.FindObjectOfType<PlayerController>();
+            LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+            for (int i = livingObjects.Length - 1; i >= 0; i--)
+            {
+                if (livingObjects[i].IsEnenmy)
+                {
+                    continue;
+                }
+                turnOrder.Add(livingObjects[i]);
+            }
+            //turnOrder.Sort();
+            currentObject = turnOrder[0];
+            // currentObject.transform.position = tileMap[TwoToOneD(MapHeight / 2, MapWidth, MapWidth / 2)].transform.position + new Vector3(0, 0.5f, 0);
+            tempObject = new GameObject();
+            tempObject.AddComponent<GridObject>();
+            tempObject.GetComponent<GridObject>().MOVE_DIST = 10000;
+            GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
+            for (int i = 0; i < objs.Length; i++)
+            {
+                if (objs[i].gameObject == tempObject)
+                {
+                    continue;
+                }
+                gridObjects.Add(objs[i]);
+                objs[i].currentTile = GetTile(objs[i]);
+                objs[i].currentTile.isOccupied = true;
+            }
+            currentState = State.EnemyTurn;
+            NextRound();
+            //if (myCamera)
+            //{
+            //    myCamera.currentTile = currentObject.currentTile;
+            //    myCamera.infoObject = currentObject;
+            //}
+            GridEvent CamEvent = new GridEvent();
+            CamEvent.RUNABLE = CameraEvent;
+            CamEvent.data = currentObject;
+            CamEvent.caller = this;
+            CamEvent.name = "Initial Camera Event";
+            eventManager.gridEvents.Add(CamEvent);
+            isSetup = true;
         }
-
-
-        isSetup = true;
     }
     void Start()
     {
@@ -97,18 +134,80 @@ public class ManagerScript : MonoBehaviour
     }
 
     //DMG * (100/100+DEF)
+
+
+    public void enterState(menuStackEntry entry)
+    {
+        prevState = currentState;
+        currentState = entry.state;
+        menuStack.Add(entry);
+        invManager.currentIndex = 0;
+        invManager.Validate();
+    }
+    public void returnState()
+    {
+        if (menuStack.Count > 1)
+        {
+            menuStackEntry currEntry = menuStack[menuStack.Count - 1];
+            menuStackEntry prevEntry = menuStack[menuStack.Count - 2];
+            currentState = prevEntry.state;
+            MenuManager menuManager = GetComponent<MenuManager>();
+
+            switch (currEntry.menu)
+            {
+                case currentMenu.command:
+                    {
+                        ShowGridObjectAffectArea(currentObject);
+                        menuManager.ShowCommandCanvas();
+                    }
+                    break;
+                case currentMenu.invMain:
+                    {
+                        Debug.Log("Going to inv,");
+                        menuManager.ShowInventoryCanvas();
+                    }
+                    break;
+                case currentMenu.skillsMain:
+                    {
+                        menuManager.ShowSkillCanvas();
+                    }
+                    break;
+                case currentMenu.CmdSkills:
+                    {
+                        menuManager.ShowItemCanvas(7, currentObject.GetComponent<LivingObject>());
+                    }
+                    break;
+            }
+            GetComponent<InventoryMangager>().currentIndex = currEntry.index;
+            GetComponent<InventoryMangager>().ForceSelect();
+            menuStack.Remove(menuStack[menuStack.Count - 1]);
+        }
+        else if (menuStack.Count == 1)
+        {
+
+        }
+        else
+        {
+            Debug.Log("error tjay, do the stuff");
+        }
+
+    }
+    public void CleanMenuStack()
+    {
+        while (menuStack.Count > 1)
+        {
+            menuStack.Remove(menuStack[menuStack.Count - 1]);
+        }
+    }
     void Update()
     {
+        menuStackCount = menuStack.Count;
         if (currentObject)
         {
             switch (currentState)
             {
                 case State.PlayerInput:
-                    if (!Input.GetKey(KeyCode.None))
-                    {
-                        ShowGridObjectAffectArea(currentObject);
 
-                    }
                     break;
                 case State.PlayerMove:
                     if (!Input.GetKey(KeyCode.None))
@@ -151,6 +250,7 @@ public class ManagerScript : MonoBehaviour
                             if (selectedAttackingTile < 0)
                                 selectedAttackingTile = attackableTiles.Count - 1;
                             showAttackableTiles();
+
                             currentAttackList = attackableTiles[selectedAttackingTile];
                             bool foundSomething = false;
                             for (int i = 0; i < currentAttackList.Count; i++)
@@ -236,16 +336,72 @@ public class ManagerScript : MonoBehaviour
 
         }
 
-
-
     }
     public void NextRound()
     {
         LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+        if (currentState == State.EnemyTurn)
+        {
+            currentState = State.PlayerInput;
+        }
+        else
+        {
+            currentState = State.EnemyTurn;
+        }
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
-            turnOrder.Add(livingObjects[i]);
+            if (!turnOrder.Contains(livingObjects[i]))
+            {
+
+                if (currentState == State.EnemyTurn)
+                {
+                    if (livingObjects[i].IsEnenmy)
+                    {
+                        livingObjects[i].ACTIONS = 2;
+                        turnOrder.Add(livingObjects[i]);
+                    }
+                }
+                else
+                {
+                    if (!livingObjects[i].IsEnenmy)
+                    {
+                        livingObjects[i].ACTIONS = 2;
+                        turnOrder.Add(livingObjects[i]);
+
+                    }
+
+                }
+            }
+       
         }
+
+        if (currentState == State.EnemyTurn)
+        {
+            for (int i = 0; i < turnOrder.Count; i++)
+            {
+                if (turnOrder[i].GetComponent<EnemyScript>())
+                {
+                    EnemyScript anEnemy = turnOrder[i].GetComponent<EnemyScript>();
+                    anEnemy.DetermineActions();
+                }
+            }
+        }
+    }
+    public bool CameraEvent(Object data)
+    {
+        bool result = false;
+        GridObject obj = data as GridObject;
+        if(obj.isSetup)
+        {
+            ShowGridObjectAffectArea(obj);
+            if (myCamera)
+            {
+                myCamera.currentTile = obj.currentTile;
+                myCamera.infoObject = obj;
+            }
+            result = true;
+        }
+        return result;
     }
     public void NextTurn()
     {
@@ -275,6 +431,8 @@ public class ManagerScript : MonoBehaviour
             currentObject.GetComponent<SecondStatusScript>().ReduceCount(this, currentObject.GetComponent<LivingObject>());
         }
 
+        CleanMenuStack();
+        ShowGridObjectAffectArea(currentObject);
 
     }
     public void showAttackableTiles()
@@ -306,8 +464,10 @@ public class ManagerScript : MonoBehaviour
             }
         }
     }
+
     public void ShowGridObjectAffectArea(GridObject obj)
     {
+
         for (int i = 0; i < MapHeight; i++)
         {
             for (int j = 0; j < MapWidth; j++)
@@ -321,11 +481,17 @@ public class ManagerScript : MonoBehaviour
 
                 int MoveDist = 0;
                 int attackDist = 0;
+                int actionsRemaining = 1;
                 if (obj.GetComponent<LivingObject>())
                 {
                     LivingObject liveObj = obj.GetComponent<LivingObject>();
+                    if (!liveObj.isSetup)
+                    {
+                        liveObj.Setup();
+                    }
                     MoveDist = liveObj.MOVE_DIST;
                     attackDist = liveObj.WEAPON.DIST;
+                    actionsRemaining = liveObj.ACTIONS;
                 }
                 xDist = Mathf.Abs(tempX - objX);
                 yDist = Mathf.Abs(tempY - objY);
@@ -346,6 +512,7 @@ public class ManagerScript : MonoBehaviour
                 else
                 {
                     temp.GetComponent<TileScript>().myColor = Color.white;
+
                 }
             }
         }
@@ -367,6 +534,91 @@ public class ManagerScript : MonoBehaviour
         TileScript theTile = GetTile(obj);
         theTile.myColor = Color.grey;
 
+    }
+    public List<TileScript> GetMoveAbleTiles(LivingObject target)
+    {
+        List<TileScript> returnedTiles = new List<TileScript>();
+        for (int i = 0; i < MapHeight; i++)
+        {
+            for (int j = 0; j < MapWidth; j++)
+            {
+                GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)];
+                float tempX = temp.transform.position.x;
+                float tempY = temp.transform.position.z;
+
+                float objX = target.currentTile.transform.position.x;
+                float objY = target.currentTile.transform.position.z;
+
+                int MoveDist = target.MOVE_DIST;
+
+
+                xDist = Mathf.Abs(tempX - objX);
+                yDist = Mathf.Abs(tempY - objY);
+                if (temp.GetComponent<TileScript>())
+                {
+
+                    TileScript tempTile = temp.GetComponent<TileScript>();
+                    if (GetObjectAtTile(tempTile) == null)
+                    {
+
+                        if (tempTile != target.currentTile)
+                        {
+
+                            if (xDist + yDist <= MoveDist)
+                            {
+                                returnedTiles.Add(tempTile);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return returnedTiles;
+    }
+
+    public List<TileScript> GetMoveAbleTiles(Vector3 target, int MOVE_DIST)
+    {
+        List<TileScript> returnedTiles = new List<TileScript>();
+        for (int i = 0; i < MapHeight; i++)
+        {
+            for (int j = 0; j < MapWidth; j++)
+            {
+                GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)];
+                float tempX = temp.transform.position.x;
+                float tempY = temp.transform.position.z;
+
+                float objX = target.x;
+                float objY = target.z;
+
+                int MoveDist = MOVE_DIST;
+
+
+                xDist = Mathf.Abs(tempX - objX);
+                yDist = Mathf.Abs(tempY - objY);
+                if (temp.GetComponent<TileScript>())
+                {
+
+                    TileScript tempTile = temp.GetComponent<TileScript>();
+                    if (GetObjectAtTile(tempTile) == null)
+                    {
+
+                        if (tempTile != GetTileAtIndex(GetTileIndex(target)))
+                        {
+
+                            if (xDist + yDist <= MoveDist)
+                            {
+                                returnedTiles.Add(tempTile);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return returnedTiles;
     }
     public void ShowGridObjectMoveArea(GridObject obj)
     {
@@ -573,6 +825,85 @@ public class ManagerScript : MonoBehaviour
         }
         return returnedObject;
     }
+    public List<TileScript> GetAdjecentTiles(LivingObject origin)
+    {
+        List<TileScript> tiles = new List<TileScript>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+        v1.z += 1;
+
+        v2.x += 1;
+
+        v3.z -= 1;
+
+        v4.x -= 1;
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = GetTileIndex(possiblePossitions[i]);
+            if (index > 0)
+            {
+                TileScript newTile = GetTileAtIndex(index);
+                tiles.Add(newTile);
+            }
+        }
+
+        return tiles;
+    }
+
+    public List<TileScript> GetAdjecentTiles(TileScript origin)
+    {
+        List<TileScript> tiles = new List<TileScript>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+        v1.z += 1;
+
+        v2.x += 1;
+
+        v3.z -= 1;
+
+        v4.x -= 1;
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = GetTileIndex(possiblePossitions[i]);
+            if (index > 0)
+            {
+                TileScript newTile = GetTileAtIndex(index);
+                tiles.Add(newTile);
+            }
+        }
+
+        return tiles;
+    }
+    public List<TileScript> GetDoubleAdjecentTiles(LivingObject origin)
+    {
+        List<TileScript> tiles = new List<TileScript>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+        Vector3 v5 = origin.transform.position;
+        Vector3 v6 = origin.transform.position;
+
+        v1.x += 1;
+        return tiles;
+    }
     public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, CommandSkill skill)
     {
         int checkIndex = GetTileIndex(obj);
@@ -582,6 +913,18 @@ public class ManagerScript : MonoBehaviour
         List<List<TileScript>> returnList = new List<List<TileScript>>();
         List<Vector2> affectedTiles = skill.TILES;
         Vector2 checkDist = Vector2.zero;
+        float dist = 0;
+        for (int j = 0; j < affectedTiles.Count; j++)
+        {
+            if (dist < affectedTiles[j].x)
+            {
+                dist = affectedTiles[j].x;
+            }
+            if (dist < affectedTiles[j].y)
+            {
+                dist = affectedTiles[j].y;
+            }
+        }
         switch (skill.RTYPE)
         {
             case RanngeType.single:
@@ -623,16 +966,22 @@ public class ManagerScript : MonoBehaviour
                             checkPos.x += checkDist.x;
                             checkPos.z += checkDist.y;
                             int testIndex = GetTileIndex(checkPos);
-                            if (testIndex >= 0)
+                            TileScript t = GetTileAtIndex(testIndex);
+                            float checkX = Mathf.Abs(t.transform.position.x - checkPos.x);
+                            float checkY = Mathf.Abs(t.transform.position.z - checkPos.z);
+                            if (checkX + checkY <= dist)
                             {
-                                TileScript realTile = GetTileAtIndex(testIndex);
-                                if (!tiles.Contains(realTile))
-                                    tiles.Add(realTile);
+                                if (testIndex >= 0)
+                                {
+                                    TileScript realTile = GetTileAtIndex(testIndex);
+                                    if (!tiles.Contains(realTile))
+                                        tiles.Add(realTile);
+                                }
                             }
                         }
                     }
-
-                    returnList.Add(tiles);
+                    if (tiles.Count > 0)
+                        returnList.Add(tiles);
 
                 }
                 break;
@@ -675,13 +1024,20 @@ public class ManagerScript : MonoBehaviour
                             checkPos.x += checkDist.x;
                             checkPos.z += checkDist.y;
                             int testIndex = GetTileIndex(checkPos);
-                            if (testIndex >= 0)
+                            TileScript t = GetTileAtIndex(testIndex);
+                            float checkX = Mathf.Abs(t.transform.position.x - checkPos.x);
+                            float checkY = Mathf.Abs(t.transform.position.z - checkPos.z);
+                            if (checkX + checkY <= dist)
                             {
-                                TileScript realTile = GetTileAtIndex(testIndex);
-                                if (!tiles.Contains(realTile))
-                                    tiles.Add(realTile);
+                                if (testIndex >= 0)
+                                {
+                                    TileScript realTile = GetTileAtIndex(testIndex);
+                                    if (!tiles.Contains(realTile))
+                                        tiles.Add(realTile);
+                                }
                             }
-                            returnList.Add(tiles);
+                            if (tiles.Count > 0)
+                                returnList.Add(tiles);
                         }
                     }
 
@@ -728,17 +1084,24 @@ public class ManagerScript : MonoBehaviour
                                 checkPos.x += checkDist.x;
                                 checkPos.z += checkDist.y;
                                 int testIndex = GetTileIndex(checkPos);
-                                if (testIndex >= 0)
+                                TileScript t = GetTileAtIndex(testIndex);
+                                float checkX = Mathf.Abs(t.transform.position.x - checkPos.x);
+                                float checkY = Mathf.Abs(t.transform.position.z - checkPos.z);
+                                if (checkX + checkY <= dist)
                                 {
-                                    TileScript realTile = GetTileAtIndex(testIndex);
-                                    if (!tiles.Contains(realTile))
-                                        tiles.Add(realTile);
+                                    if (testIndex >= 0)
+                                    {
+                                        TileScript realTile = GetTileAtIndex(testIndex);
+                                        if (!tiles.Contains(realTile))
+                                            tiles.Add(realTile);
+                                    }
                                 }
                             }
                         }
 
                     }
-                    returnList.Add(tiles);
+                    if (tiles.Count > 0)
+                        returnList.Add(tiles);
                 }
                 break;
             case RanngeType.any:
@@ -780,16 +1143,22 @@ public class ManagerScript : MonoBehaviour
                             checkPos.x += checkDist.x;
                             checkPos.z += checkDist.y;
                             int testIndex = GetTileIndex(checkPos);
-                            if (testIndex >= 0)
+                            TileScript t = GetTileAtIndex(testIndex);
+                            float checkX = Mathf.Abs(t.transform.position.x - checkPos.x);
+                            float checkY = Mathf.Abs(t.transform.position.z - checkPos.z);
+                            if (checkX + checkY <= dist)
                             {
-                                TileScript realTile = GetTileAtIndex(testIndex);
-                                if (!tiles.Contains(realTile))
-                                    tiles.Add(realTile);
+                                if (testIndex >= 0)
+                                {
+                                    TileScript realTile = GetTileAtIndex(testIndex);
+                                    if (!tiles.Contains(realTile))
+                                        tiles.Add(realTile);
+                                }
                             }
                         }
                     }
-
-                    returnList.Add(tiles);
+                    if (tiles.Count > 0)
+                        returnList.Add(tiles);
                 }
                 List<TileScript> mytile = new List<TileScript>();
                 mytile.Add(GetTileAtIndex(checkIndex));
@@ -870,6 +1239,7 @@ public class ManagerScript : MonoBehaviour
                     checkDist.y = 0;
                     break;
             }
+
             List<TileScript> tiles = new List<TileScript>();
             for (int j = 0; j < Range; j++)
             {
@@ -879,13 +1249,19 @@ public class ManagerScript : MonoBehaviour
 
                 checkPos.x -= (checkDist.x * j);
                 checkPos.z -= (checkDist.y * j);
-                int testIndex = GetTileIndex(checkPos);
 
-                if (testIndex >= 0)
+                int testIndex = GetTileIndex(checkPos);
+                TileScript t = GetTileAtIndex(testIndex);
+                float checkX = Mathf.Abs(t.transform.position.x - liveObj.transform.position.x);
+                float checkY = Mathf.Abs(t.transform.position.z - liveObj.transform.position.z);
+                if (checkX + checkY <= Range)
                 {
-                    TileScript realTile = GetTileAtIndex(testIndex);
-                    if (!tiles.Contains(realTile))
-                        tiles.Add(realTile);
+                    if (testIndex >= 0)
+                    {
+                        TileScript realTile = GetTileAtIndex(testIndex);
+                        if (!tiles.Contains(realTile))
+                            tiles.Add(realTile);
+                    }
                 }
             }
             if (tiles.Count > 0)
@@ -964,8 +1340,9 @@ public class ManagerScript : MonoBehaviour
     public void DamageLivingObject(LivingObject dmgObject, int dmg)
     {
         dmgObject.STATS.HEALTH -= dmg;
+
     }
-    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg)
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg, Reaction alteration = Reaction.none)
     {
         DmgReaction react = new DmgReaction();
 
@@ -1034,39 +1411,50 @@ public class ManagerScript : MonoBehaviour
 
         int returnInt = 0;
         float calc = 0.0f;
-        float reduction = 0;
+        float reduction = 1.0f;
+        float resist = 0.0f;
         if (attackType == EType.physical)
         {
-            reduction = dmgObject.DEFENSE;
+            resist = dmgObject.DEFENSE;
+            if (alteration == Reaction.reduceDef)
+            {
+                resist = resist * 0.5f;
+            }
         }
         else
         {
-            reduction = dmgObject.RESIESTANCE;
+            resist = dmgObject.RESIESTANCE;
+            if (alteration == Reaction.reduceRes)
+            {
+                resist = resist * 0.5f;
+            }
         }
         if (dmgObject.PSTATUS == PrimaryStatus.tired)
         {
-            reduction = reduction * 1.2f;
+            reduction = 0.8f;
+
         }
         if (dmgObject.PSTATUS == PrimaryStatus.crippled)
         {
-            reduction = reduction * 1.5f;
+            reduction = 0.5f;
         }
 
         if (attackType == EType.physical)
         {
-            calc = (float)attackingObject.STRENGTH / reduction;
+            calc = ((float)attackingObject.STRENGTH * reduction) / (resist * 0.1f);
         }
         else
         {
-            calc = (float)attackingObject.MAGIC / reduction;
+            calc = ((float)attackingObject.MAGIC * reduction) / (resist * 0.1f);
         }
-        //    Debug.Log("Calc1:" + calc);
-
+        Debug.Log("Calc: " + calc);
+        Debug.Log("DMG: " + dmg);
         calc = dmg * calc;
+        Debug.Log("Combined: " + calc);
         //   Debug.Log("Calc2:" + calc);
         calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
         //    Debug.Log("Calc3:" + calc);
-        calc = Mathf.Sqrt(calc);
+        calc = Mathf.Sqrt(calc * 2);
         //     Debug.Log("Calc4:" + calc);
         mod = ApplyDmgMods(attackingObject, mod, attackingElement);
         mod = ApplyDmgMods(dmgObject, mod, attackingElement);
@@ -1081,9 +1469,68 @@ public class ManagerScript : MonoBehaviour
         Debug.Log("FInal:" + returnInt);
         react.damage = returnInt;
 
+        DmgTextObj dto = null;
+        dmgRequest++;
+        if (dmgRequest <= dmgText.Count)
+        {
+            Debug.Log("count text > 0");
+            for (int i = 0; i < dmgText.Count; i++)
+            {
+                if (!dmgText[i].isShowing)
+                {
+                    dto = dmgText[i];
+                    dto.gameObject.SetActive(true);
+                    dto.text.text = returnInt.ToString();
+                    dto.border.text = returnInt.ToString();
+                    Vector3 v3 = new Vector3(dmgObject.transform.position.x, 1, dmgObject.transform.position.z);
+                    v3.z -= 0.1f;
+                    dto.transform.position = v3;
+                    dto.text.color = new Color(Mathf.Min(255, returnInt), 0, 0);
+                    dto.StartCountDown();
+                    break;
+                }
+            }
+        }
+
+        else
+        {
+            Debug.Log("new dmg text");
+            GameObject tjObject = Instantiate(dmgPrefab);
+            if (tjObject != null)
+            {
+                Debug.Log("found  text");
+            }
+            else
+            {
+                Debug.Log("no text");
+            }
+            dto = tjObject.GetComponent<DmgTextObj>();
+            dmgText.Add(dto);
+            dto.manager = this;
+            dto.Setup();
+            dto.gameObject.SetActive(true);
+            dto.text.text = returnInt.ToString();
+            dto.border.text = returnInt.ToString();
+            Vector3 v3 = new Vector3(dmgObject.transform.position.x, 1, dmgObject.transform.position.z);
+            v3.z -= 0.1f;
+            dto.transform.position = v3;
+            dto.text.color = new Color(Mathf.Min(255, returnInt), 0, 0);
+            dto.StartCountDown();
+
+
+        }
+
+        if (eventManager)
+        {
+            GridEvent grid = new GridEvent();
+            grid.RUNABLE = CheckDmgText;
+            grid.data = dto;
+            eventManager.gridEvents.Add(grid);
+        }
+
         return react;
     }
-    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, CommandSkill skill)
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, CommandSkill skill, Reaction alteration = Reaction.none)
     {
         if (skill.ELEMENT == Element.Buff)
         {
@@ -1113,7 +1560,7 @@ public class ManagerScript : MonoBehaviour
         }
         else
         {
-            DmgReaction react = CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE);
+            DmgReaction react = CalcDamage(attackingObject, dmgObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE, alteration);
             if (skill.EFFECT != SideEffect.none)
             {
                 Debug.Log("Applying effect");
@@ -1125,9 +1572,9 @@ public class ManagerScript : MonoBehaviour
 
 
 
-    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon)
+    public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon, Reaction alteration = Reaction.none)
     {
-        return CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK);
+        return CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
     }
 
     public float ApplyDmgMods(LivingObject living, float dmg, Element atkAffinity)
@@ -1222,7 +1669,12 @@ public class ManagerScript : MonoBehaviour
                                     react = CalcDamage(invokingObject, target, skill);
                                     ApplyReaction(invokingObject, target, react);
                                 }
-                                skill.UseSkill(invokingObject);
+                                float modification = 1.0f;
+                                if (skill.ETYPE == EType.magical)
+                                    modification = invokingObject.STATS.SPCHANGE;
+                                if (skill.ETYPE == EType.physical)
+                                    modification = invokingObject.STATS.FTCHANGE;
+                                skill.UseSkill(invokingObject, modification);
                             }
 
 
@@ -1250,6 +1702,7 @@ public class ManagerScript : MonoBehaviour
 
                     hitSomething = true;
                     Debug.Log("Targets: " + targetIndicies.Count);
+
                     for (int i = 0; i < targetIndicies.Count; i++)
                     {
                         GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
@@ -1258,10 +1711,40 @@ public class ManagerScript : MonoBehaviour
                             LivingObject target = potentialTarget.GetComponent<LivingObject>();
 
                             DmgReaction react;
-
+                            Reaction atkReaction = Reaction.none;
                             if (weapon != null)
                             {
-                                react = CalcDamage(invokingObject, target, weapon);
+                                for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+                                {
+                                    if ((invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill).ACT == AutoAct.beforeDmg)
+                                    {
+                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill);
+                                        float chance = auto.CHANCE;
+                                        float result = Random.value * 100;
+                                        if (chance < result)
+                                        {
+                                            Debug.Log("Auto skill : " + auto.NAME + "has gone off");
+                                            atkReaction = auto.Activate(0);
+                                        }
+                                    }
+                                }
+                                react = CalcDamage(invokingObject, target, weapon, atkReaction);
+                                for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+                                {
+                                    if ((invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill).ACT == AutoAct.afterDmg)
+                                    {
+                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill);
+                                        float chance = auto.CHANCE;
+                                        float result = Random.value * 100;
+                                        if (chance > result)
+                                        {
+                                            Debug.Log("Auto skill : " + auto.NAME + "has gone off");
+                                            Debug.Log("chance= " + auto.CHANCE);
+                                            Debug.Log("result= " + result);
+                                            auto.Activate(react.damage);
+                                        }
+                                    }
+                                }
                                 ApplyReaction(invokingObject, target, react);
                             }
 
@@ -1347,9 +1830,9 @@ public class ManagerScript : MonoBehaviour
                     {
 
                         target.SSTATUS = SecondaryStatus.confusion;
-                    SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
-                    sf.COUNTDOWN = 3;
-                    sf.STATUS = SecondaryStatus.confusion;
+                        SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                        sf.COUNTDOWN = 3;
+                        sf.STATUS = SecondaryStatus.confusion;
                     }
                 }
                 break;
@@ -1394,5 +1877,16 @@ public class ManagerScript : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public bool CheckDmgText(Object data)
+    {
+        DmgTextObj dto = data as DmgTextObj;
+        return !dto.isShowing;
+    }
+
+    public bool moveObject(Object data)
+    {
+        return false;
     }
 }

@@ -107,41 +107,41 @@ public class DatabaseManager : MonoBehaviour
         //    }
     }
 
-    public void LearnSkill(int id, LivingObject livingObject)
+    public void LearnSkill(int id, LivingObject livingObject, bool equip = false)
     {
-        if(skill == null)
+        if (skill == null)
         {
-         skill = ScriptableObject.CreateInstance<SkillScript>();
+            skill = ScriptableObject.CreateInstance<SkillScript>();
         }
-        
-      //  test =  Resources.Load("skills.csv") as TextAsset;
 
-   
+        //  test =  Resources.Load("skills.csv") as TextAsset;
+
+
 
         int total = skillLines.Length;
         int currIndex = 1;
-       // string path =  "Assets/Resources/skills.csv";
+        // string path =  "Assets/Resources/skills.csv";
 
         if (livingObject.GetComponent<InventoryScript>())
         {
 
             //Read the text from directly from the test.txt file
-         //  StreamReader reader = new StreamReader(path);
+            //  StreamReader reader = new StreamReader(path);
 
             string lines = "";
-           // reader.ReadLine();
+            // reader.ReadLine();
             while (currIndex < total)
             {
                 lines = skillLines[currIndex];
                 currIndex++;
-                
+
                 if (lines != null)
                 {
                     if (lines == "")
                     {
                         continue;
                     }
-                    if(lines[0] == '-')
+                    if (lines[0] == '-')
                     {
                         continue;
                     }
@@ -154,29 +154,50 @@ public class DatabaseManager : MonoBehaviour
                         skill.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[3]);
                         //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                         skill.TYPE = 4;
-                        int index = 15;
-                        int count = Int32.Parse(parsed[14]);
 
-                        if(skill.ELEMENT == Element.Auto)
+
+                        if (skill.ELEMENT == Element.Auto)
                         {
                             AutoSkill auto = ScriptableObject.CreateInstance<AutoSkill>();
+                            skill.Transfer(auto);
+
+                            auto.CHANCE = (float)Double.Parse(parsed[4]);
+                            auto.ACT = (AutoAct)Enum.Parse(typeof(AutoAct), parsed[5]);
+                            auto.REACT = (AutoReact)Enum.Parse(typeof(AutoReact), parsed[6]);
+
+                            auto.NEXT = Int32.Parse(parsed[7]);
+                            auto.NEXTCOUNT = Int32.Parse(parsed[8]);
 
                             livingObject.GetComponent<InventoryScript>().USEABLES.Add(auto);
                             livingObject.GetComponent<InventoryScript>().AUTOS.Add(auto);
                             livingObject.GetComponent<InventoryScript>().SKILLS.Add(auto);
-
+                            if (equip == true)
+                            {
+                                if (livingObject.AUTO_SLOTS.CanAdd())
+                                    livingObject.AUTO_SLOTS.SKILLS.Add(auto);
+                            }
                         }
                         else if (skill.ELEMENT == Element.Opp)
                         {
                             OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
+                            skill.Transfer(opp);
+                            opp.TRIGGER = (Element)Enum.Parse(typeof(Element), parsed[4]);
+                            opp.MOD = (float)Double.Parse(parsed[5]);
 
                             livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
                             livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
                             livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
-
+                            if (equip == true)
+                            {
+                                if (livingObject.OPP_SLOTS.CanAdd())
+                                    livingObject.OPP_SLOTS.SKILLS.Add(opp);
+                            }
                         }
                         else if (skill.ELEMENT == Element.Buff)
                         {
+                            int index = 15;
+                            int count = Int32.Parse(parsed[14]);
+
                             CommandSkill buff = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(buff);
                             buff.NEXT = Int32.Parse(parsed[8]);
@@ -223,14 +244,21 @@ public class DatabaseManager : MonoBehaviour
                             livingObject.GetComponent<InventoryScript>().CSKILLS.Add(buff);
                             livingObject.GetComponent<InventoryScript>().USEABLES.Add(buff);
                             livingObject.GetComponent<InventoryScript>().SKILLS.Add(buff);
-
+                            if (equip == true)
+                            {
+                                if (livingObject.BATTLE_SLOTS.CanAdd())
+                                    livingObject.BATTLE_SLOTS.SKILLS.Add(buff);
+                            }
                         }
                         else if (skill.ELEMENT == Element.Passive)
                         {
+                            int index = 9;
+                            int count = Int32.Parse(parsed[8]);
+
                             PassiveSkill passive = ScriptableObject.CreateInstance<PassiveSkill>();
                             skill.Transfer(passive);
                             passive.ModElements = new List<Element>();
-                            passive.PERCENT = (float)Double.Parse(parsed[10]);
+                            passive.PERCENT = (float)Double.Parse(parsed[4]);
                             passive.ModValues = new List<float>();
                             if (count > 0)
                             {
@@ -238,9 +266,9 @@ public class DatabaseManager : MonoBehaviour
                                 for (int i = 0; i < count; i++)
                                 {
                                     Modification mod = new Modification();
-                                    mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[12]);
+                                    mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[7]);
                                     mod.affectedElement = (Element)Enum.Parse(typeof(Element), parsed[index]);
-                                    mod.editValue = (float)Double.Parse(parsed[11]) * passive.PERCENT;
+                                    mod.editValue = (float)Double.Parse(parsed[5]) * passive.PERCENT;
                                     index++;
                                     passive.ModStat = mod.affectedStat;
                                     passive.ModValues.Add(mod.editValue);
@@ -250,8 +278,8 @@ public class DatabaseManager : MonoBehaviour
                             else
                             {
                                 Modification mod = new Modification();
-                                mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[12]);
-                                mod.editValue = (float)Double.Parse(parsed[11]) * passive.PERCENT;
+                                mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[7]);
+                                mod.editValue = (float)Double.Parse(parsed[5]) * passive.PERCENT;
                                 passive.ModStat = mod.affectedStat;
                                 passive.ModValues.Add(mod.editValue);
                                 passive.ModElements.Add(mod.affectedElement);
@@ -260,9 +288,17 @@ public class DatabaseManager : MonoBehaviour
                             livingObject.GetComponent<InventoryScript>().PASSIVES.Add(passive);
                             livingObject.GetComponent<InventoryScript>().SKILLS.Add(passive);
                             livingObject.ApplyPassives();
+
+                            if (equip == true)
+                            {
+                                if (livingObject.PASSIVE_SLOTS.CanAdd())
+                                    livingObject.PASSIVE_SLOTS.SKILLS.Add(passive);
+                            }
                         }
                         else
                         {
+                            int index = 15;
+                            int count = Int32.Parse(parsed[14]);
                             CommandSkill command = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(command);
                             command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
@@ -290,14 +326,19 @@ public class DatabaseManager : MonoBehaviour
                                 command.TILES.Add(v);
                             }
                             command.DESC = "Deals " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
-                         
+
 
                             livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);
                             livingObject.GetComponent<InventoryScript>().USEABLES.Add(command);
-                        livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
+                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
+                            if (equip == true)
+                            {
+                                if (livingObject.BATTLE_SLOTS.CanAdd())
+                                    livingObject.BATTLE_SLOTS.SKILLS.Add(command);
+                            }
                         }
                         skill.OWNER = livingObject;
-                       
+
                     }
                 }
 
@@ -310,7 +351,7 @@ public class DatabaseManager : MonoBehaviour
 
     public void GetWeapon(int id, LivingObject livingObject)
     {
-       // string path = "Assets/Resources/weapons.csv";
+        // string path = "Assets/Resources/weapons.csv";
 
         int total = weaponLines.Length;
         int currIndex = 1;
@@ -354,13 +395,13 @@ public class DatabaseManager : MonoBehaviour
 
             }
 
-         //   reader.Close();
+            //   reader.Close();
         }
     }
 
     public void GetArmor(int id, LivingObject livingObject)
     {
-      //  string path = "Assets/Resources/armor.csv";
+        //  string path = "Assets/Resources/armor.csv";
 
         int total = armorLines.Length;
         int currIndex = 1;
@@ -413,7 +454,7 @@ public class DatabaseManager : MonoBehaviour
 
             }
 
-           // reader.Close();
+            // reader.Close();
         }
     }
 }

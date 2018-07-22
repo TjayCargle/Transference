@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class MenuItem : MonoBehaviour
 {
- 
+
 
     ManagerScript myManager;
     public int itemType = -1;
     public bool inMenuAction = false;
     public RectTransform myRect;
     public UsableScript refItem;
-
     void Start()
     {
         if (GameObject.FindObjectOfType<ManagerScript>())
@@ -34,8 +33,21 @@ public class MenuItem : MonoBehaviour
         switch (item)
         {
             case MenuItemType.Move:
-                myManager.prevState = myManager.currentState;
-                myManager.currentState = State.PlayerMove;
+                {
+
+                    //myManager.prevState = myManager.currentState;
+                    //myManager.currentState = State.PlayerMove
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerMove;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.command;
+                    myManager.enterState(entry);
+                    MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                    if (myMenuManager)
+                    {
+                        myMenuManager.ShowNone();
+                    }
+                }
                 break;
             case MenuItemType.Attack:
                 {
@@ -86,8 +98,11 @@ public class MenuItem : MonoBehaviour
                             {
                                 myMenuManager.ShowNone();
                             }
-                            myManager.prevState = myManager.currentState;
-                            myManager.currentState = State.PlayerAttacking;
+                            menuStackEntry entry = new menuStackEntry();
+                            entry.state = State.PlayerAttacking;
+                            entry.index = myManager.invManager.currentIndex;
+                            entry.menu = currentMenu.command;
+                            myManager.enterState(entry);
                         }
 
                     }
@@ -102,36 +117,50 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.Equip:
                 {
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquippingMenu;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquippingMenu;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.command;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
                         myMenuManager.ShowInventoryCanvas();
-                       myManager.invManager.currentIndex = 0;
-                       //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                        myManager.invManager.currentIndex = 0;
+                        //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     }
                     break;
                 }
             case MenuItemType.Wait:
-                if(invokingObject.GetComponent<LivingObject>())
+                if (invokingObject.GetComponent<LivingObject>())
                 {
                     invokingObject.GetComponent<LivingObject>().Wait();
                 }
                 myManager.NextTurn();
+                myManager.GetComponent<InventoryMangager>().Validate();
                 break;
             case MenuItemType.Look:
-                myManager.prevState = myManager.currentState;
-                myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                myManager.GetComponent<MenuManager>().ShowNone();
-                myManager.currentState = State.FreeCamera;
+                {
+
+                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                    myManager.GetComponent<MenuManager>().ShowNone();
+
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.FreeCamera;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.command;
+                    myManager.enterState(entry);
+                }
                 break;
             case MenuItemType.InventoryWeapon:
                 {
-        
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.invMain;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -139,7 +168,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(0, liveInvokingObject);
-                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
@@ -148,8 +177,13 @@ public class MenuItem : MonoBehaviour
             case MenuItemType.chooseSkill:
                 {
                     Debug.Log("going into select skill");
-                  //  myManager.prevState = myManager.currentState;
-                  //  myManager.currentState = State.PlayerEquipping;
+                    //  myManager.prevState = myManager.currentState;
+                    //  myManager.currentState = State.PlayerEquipping;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquippingMenu;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.command;
+                   myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -164,8 +198,12 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.InventoryArmor:
                 {
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    Debug.Log("curr index = " + myManager.invManager.currentIndex);
+                    entry.menu = currentMenu.invMain;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -173,7 +211,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(1, liveInvokingObject);
-                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
@@ -181,8 +219,12 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.InventoryAcc:
                 {
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.invMain;
+                    myManager.enterState(entry);
+              
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -190,7 +232,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(2, liveInvokingObject);
-                           //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
                     }
@@ -199,8 +241,11 @@ public class MenuItem : MonoBehaviour
             case MenuItemType.equipSkill:
                 {
                     Debug.Log("equip skill");
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquippingSkills;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquippingSkills;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.invMain;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -209,6 +254,7 @@ public class MenuItem : MonoBehaviour
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(4, liveInvokingObject);
+                            myMenuManager.ShowExtraCanvas(0, invokingObject.GetComponent<LivingObject>());
                             //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
@@ -218,8 +264,11 @@ public class MenuItem : MonoBehaviour
             case MenuItemType.selectBS:
                 {
                     Debug.Log("select battle skill");
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.skillsMain;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -227,19 +276,20 @@ public class MenuItem : MonoBehaviour
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(4, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(7, liveInvokingObject);
 
                         }
                     }
                 }
                 break;
             case MenuItemType.selectAS:
-                break;
-            case MenuItemType.selectPS:
                 {
-                    Debug.Log("select passive skill");
-                    myManager.prevState = myManager.currentState;
-                    myManager.currentState = State.PlayerEquipping;
+                    Debug.Log("select auto skill");
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.skillsMain;
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -247,13 +297,55 @@ public class MenuItem : MonoBehaviour
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(5, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(9, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.selectPS:
+                {
+                    Debug.Log("select passive skill");
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.skillsMain;
+                    myManager.enterState(entry);
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(8, liveInvokingObject);
 
                         }
                     }
                 }
                 break;
             case MenuItemType.selectOS:
+                {
+                    Debug.Log("select opp skill");
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerEquipping;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.skillsMain;
+                    myManager.enterState(entry);
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(10, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.equipOS:
                 break;
             default:
                 break;
@@ -262,12 +354,18 @@ public class MenuItem : MonoBehaviour
     public void ComfirmAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
+        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
         switch (item)
         {
             case MenuItemType.Move:
                 invokingObject.HASMOVED = true;
                 myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
-                myManager.currentState = State.PlayerInput;
+                // myManager.currentState = State.PlayerInput;
+                myManager.returnState();
+                if (myMenuManager)
+                {
+                    myMenuManager.ShowCommandCanvas();
+                }
                 break;
             case MenuItemType.Attack:
 
@@ -283,7 +381,7 @@ public class MenuItem : MonoBehaviour
                 break;
 
             default:
-                myManager.currentState = State.PlayerInput;
+                myManager.returnState();// myManager.currentState = State.PlayerInput;
                 break;
 
         }
@@ -292,91 +390,18 @@ public class MenuItem : MonoBehaviour
     {
         switch (myManager.currentState)
         {
-            case State.PlayerEquippingMenu:
+            default:
                 {
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        myMenuManager.ShowCommandCanvas();
-                    }
-                    if(myManager.prevState == State.PlayerEquippingMenu)
-                    myManager.invManager.currentIndex = 3;
-                    if (myManager.prevState == State.PlayerEquipping)
-                        myManager.invManager.currentIndex = 2;
-                    //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                    myManager.currentState = State.PlayerInput;
-                }
-                break;
-            case State.PlayerEquipping:
 
-                {
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        if (myManager.prevState == State.PlayerEquippingMenu)
-                        {
-                            myMenuManager.ShowInventoryCanvas();
-                            //myManager.invManager.currentIndex = 6;
-                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                            myManager.invManager.currentIndex = myManager.invManager.prevIndex;
-                            myManager.invManager.prevIndex = 3;
-                            myManager.prevState = myManager.currentState;
-                            myManager.currentState = State.PlayerEquippingMenu;
-                        }
-                        else
-                        {
-                            myMenuManager.ShowCommandCanvas();
-                            myManager.invManager.currentIndex = 2;
-                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-                            myManager.prevState = myManager.currentState;
-                            myManager.currentState = State.PlayerInput;
-                        }
-                    }
-                    if(myManager.attackableTiles != null)
+                    Debug.Log("Default");
+                    if (myManager.attackableTiles != null)
                     {
                         myManager.attackableTiles.Clear();
                         myManager.ShowWhite();
                     }
-                }
-                break;
-            case State.PlayerAttacking:
-                {
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        if (myManager.prevState == State.PlayerEquipping)
-                        {
-                            myManager.prevState = State.PlayerInput;
-                            myManager.currentState = State.PlayerEquipping;
-
-                            if (invokingObject.GetComponent<LivingObject>())
-                            {
-                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                                myMenuManager.ShowItemCanvas(4, liveInvokingObject);
-                               ////myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-
-                            }
-                        }
-                        else
-                        {
-                            myManager.prevState = State.PlayerInput;
-                            myMenuManager.ShowCommandCanvas();
-                            myManager.currentState = State.PlayerInput;
-                        }
-                    }
-                    if (myManager.attackableTiles != null)
-                    {
-                        myManager.attackableTiles.Clear();
-                        myManager.ShowGridObjectAffectArea(myManager.currentObject);
-                    }
-                }
-                break;
-            default:
-                {
-                    Debug.Log("Default");
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    myMenuManager.ShowCommandCanvas();
-                    myManager.currentState = State.PlayerInput;
+                    // myMenuManager.ShowCommandCanvas();
+                    myManager.returnState();
+                    // myManager.currentState = State.PlayerInput;
                 }
                 break;
         }

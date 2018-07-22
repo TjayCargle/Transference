@@ -38,6 +38,11 @@ public class StatScript : MonoBehaviour {
     [SerializeField]
     List<string> appliedPassives = new List<string>();
     public int type = 0;
+
+    [SerializeField]
+    private float manaCostChange = 1.0f;
+    [SerializeField]
+    private float fatigueCostChange = 1.0f;
     private LivingObject owner;
 
     public List<string> MODS
@@ -103,8 +108,15 @@ public class StatScript : MonoBehaviour {
     }
     public int HEALTH
     {
-        get { return myHealth; }
-        set { myHealth = value; }
+        get {return myHealth; }
+        set
+        {
+            myHealth = value;
+            if (myHealth > myMaxHealth)
+            {
+                myHealth = myMaxHealth;
+            }
+          }
     }
     public int MAX_MANA
     {
@@ -114,7 +126,12 @@ public class StatScript : MonoBehaviour {
     public int MANA
     {
         get { return myMana; }
-        set { myMana = value; }
+        set { myMana = value;
+            if (myMana > MAX_MANA)
+            {
+                myMana = MAX_MANA;
+            }
+        }
     }
     public int MAX_FATIGUE
     {
@@ -131,6 +148,102 @@ public class StatScript : MonoBehaviour {
         get { return myLevel; }
         set { myLevel = value; }
     }
+
+    public float SPCHANGE
+    {
+        get { return manaCostChange; }
+        set { manaCostChange = value; }
+    }
+    public float FTCHANGE
+    {
+        get { return fatigueCostChange; }
+        set { fatigueCostChange = value; }
+    }
+
+    public void IncreaseStat(ModifiedStat mod, int val)
+    {
+        float modification = val;
+        switch (mod)
+        {
+            case ModifiedStat.Health:
+                MAX_HEALTH += val;
+                if (HEALTH == MAX_HEALTH - val)
+                {
+                   HEALTH = MAX_HEALTH;
+                }
+                break;
+            case ModifiedStat.ElementDmg:
+                break;
+            case ModifiedStat.Movement:
+
+               MOVE_DIST += val;
+                break;
+            case ModifiedStat.Str:
+                modification = ((float)val / 100) * STRENGTH;
+                STRENGTH += (int)modification;
+                break;
+            case ModifiedStat.Mag:
+                modification = ((float)val / 100) * MAGIC;
+                MAGIC += (int)modification;
+                break;
+            case ModifiedStat.Atk:
+                modification = ((float)val / 100) * STRENGTH;
+                STRENGTH += (int)modification;
+                modification = ((float)val / 100) * MAGIC;
+                MAGIC += (int)modification;
+                break;
+            case ModifiedStat.Def:
+                modification = ((float)val / 100) * DEFENSE;
+                DEFENSE += (int)modification;
+                break;
+            case ModifiedStat.Res:
+                modification = ((float)val / 100) * RESIESTANCE;
+                RESIESTANCE += (int)modification;
+                break;
+            case ModifiedStat.Guard:
+                modification = ((float)val / 100) * DEFENSE;
+                DEFENSE += (int)modification;
+                modification = ((float)val / 100) * RESIESTANCE;
+                RESIESTANCE += (int)modification;
+                break;
+            case ModifiedStat.Speed:
+                modification = ((float)val / 100) * SPEED;
+                SPEED += (int)modification;
+                break;
+            case ModifiedStat.Luck:
+                modification = ((float)val / 100) * LUCK;
+                LUCK += (int)modification;
+                break;
+            case ModifiedStat.SP:
+                MAX_MANA += val;
+                if (MANA == MAX_MANA - val)
+                {
+                    MANA = MAX_MANA;
+                }
+                break;
+            case ModifiedStat.FT:
+                break;
+            case ModifiedStat.FTCost:
+                Debug.Log("v = " +val);
+                modification = ((float)val / 100);
+                Debug.Log("m = "+modification);
+                FTCHANGE -= modification;
+                Debug.Log("FT = " +FTCHANGE);
+                if (FTCHANGE < 0.1)
+                    FTCHANGE = 0.1f;
+                break;
+            case ModifiedStat.SPCost:
+                modification = ((float)val / 100);
+                SPCHANGE -= modification;
+                if (SPCHANGE < 0.1)
+                    SPCHANGE = 0.1f;
+                break;
+            case ModifiedStat.dmg:
+                break;
+            default:
+                break;
+        }
+    }
     public void Reset(bool hard = false)
     {
 
@@ -145,6 +258,9 @@ public class StatScript : MonoBehaviour {
         SPEED = 0;
         LUCK = 0;
         FATIGUE = 0;
+        FTCHANGE = 1.0f;
+        SPCHANGE = 1.0f;
+       
         if (hard == true)
         {
             LEVEL = 0;

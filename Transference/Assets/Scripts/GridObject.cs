@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridObject : MonoBehaviour {
-     protected ManagerScript myManager;
+public class GridObject : MonoBehaviour
+{
+    protected ManagerScript myManager;
     public TileScript currentTile;
     public string FullName;
     private bool hasMoved = false;
@@ -27,33 +28,38 @@ public class GridObject : MonoBehaviour {
 
     public virtual void Setup()
     {
-        if (GameObject.FindObjectOfType<ManagerScript>())
+        if (!isSetup)
         {
-            myManager = GameObject.FindObjectOfType<ManagerScript>();
-        }
-        if (myManager)
-        {
-            if (!myManager.isSetup)
-            {
-                myManager.Setup();
-            }
 
+            if (GameObject.FindObjectOfType<ManagerScript>())
+            {
+                myManager = GameObject.FindObjectOfType<ManagerScript>();
+            }
+            if (myManager)
+            {
+                if (!myManager.isSetup)
+                {
+                    myManager.Setup();
+                }
+
+            }
         }
         isSetup = true;
     }
-    protected void Start ()
+    protected void Start()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
             Setup();
         }
 
-	}
-	
-	// Update is called once per frame
-	protected void Update () {
- 
-	}
-    
+    }
+
+    // Update is called once per frame
+    protected void Update()
+    {
+
+    }
+
 
 }

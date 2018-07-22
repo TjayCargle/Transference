@@ -73,8 +73,8 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        myManager.invManager.prevIndex = myManager.invManager.currentIndex;
-                        myManager.invManager.currentIndex = 0;
+                        //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
+                        //myManager.invManager.currentIndex = 0;
                         myManager.SelectMenuItem(current);
                     }
                     break;
@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
                         myManager.ComfirmMenuAction(current);
+                        current.TakeAction();
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
@@ -111,9 +112,14 @@ public class PlayerController : MonoBehaviour
                         bool check = false;
                         if (currentSkill != null)
                         {
+                            float modification = 1.0f;
+                            if (currentSkill.ETYPE == EType.magical)
+                                modification = current.STATS.SPCHANGE;
+                            if (currentSkill.ETYPE == EType.physical)
+                                modification = current.STATS.FTCHANGE;
                             if (current.SSTATUS != SecondaryStatus.seal)
                             {
-                                if (currentSkill.CanUse())
+                                if (currentSkill.CanUse(modification))
                                 {
                                     if (current.SSTATUS == SecondaryStatus.confusion)
                                     {
@@ -136,10 +142,17 @@ public class PlayerController : MonoBehaviour
                                         check = myManager.AttackTargets(current, currentSkill);
 
                                     }
+
                                     if (check == true)
+                                    {
                                         myManager.invManager.currentIndex = 2;
+                                        //current.TakeAction();
+                                    }
                                     else
+                                    {
                                         myManager.invManager.currentIndex = 0;
+
+                                    }
                                     if (currentSkill != null)
                                         currentSkill = null;
                                 }
@@ -171,19 +184,22 @@ public class PlayerController : MonoBehaviour
 
                         if (check == true)
                         {
-
-                            myManager.prevState = myManager.currentState;
-                            myManager.currentState = State.PlayerInput;
-                            if (myManager.GetComponent<MenuManager>())
+                            current.TakeAction();
+                            EventManager eventManager = GameObject.FindObjectOfType<EventManager>();
+                            if (eventManager)
                             {
-                                myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+                                GridEvent grid = new GridEvent();
+                                grid.RUNABLE = ShowCmd;
+                                eventManager.gridEvents.Add(grid);
                             }
+                            myManager.CleanMenuStack();
                         }
 
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        myManager.returnState();
                         myManager.CancelMenuAction(current);
                         currentSkill = null;
                     }
@@ -210,8 +226,8 @@ public class PlayerController : MonoBehaviour
                     //}
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        myManager.invManager.prevIndex = myManager.invManager.currentIndex;
-                        myManager.invManager.currentIndex = 0;
+                        //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
+                       // myManager.invManager.currentIndex = 0;
                         myManager.SelectMenuItem(current);
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
@@ -225,107 +241,119 @@ public class PlayerController : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
-
-                            switch (invm.selectedMenuItem.refItem.TYPE)
+                            if (invm.selectedMenuItem)
                             {
-                                case 0:
-                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
-                                    {
-                                        WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                        current.WEAPON.Equip(newWeapon);
-                                    }
-                                    break;
-                                case 1:
-                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
-                                    {
-                                        ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                        current.ARMOR.Equip(newArmor);
-                                    }
-                                    break;
-                                case 2:
-                                    if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
-                                    {
-                                        AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                        current.ACCESSORY.Equip(newAcc);
-                                    }
-                                    break;
-                                case 3:
-                                    if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
-                                    {
-                                        AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                        current.ACCESSORY.Equip(newAcc);
 
-                                    }
-                                    break;
-                                case 4:
-                                    {
-                                        if(((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
+                                switch (invm.selectedMenuItem.refItem.TYPE)
+                                {
+                                    case 0:
+                                        if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                         {
-                                            break;
+                                            WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
+                                            current.WEAPON.Equip(newWeapon);
                                         }
-                                        if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Auto)
+                                        break;
+                                    case 1:
+                                        if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
                                         {
-                                            break;
+                                            ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
+                                            current.ARMOR.Equip(newArmor);
                                         }
-                                        if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Opp)
+                                        break;
+                                    case 2:
+                                        if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
                                         {
-                                            break;
+                                            AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                            current.ACCESSORY.Equip(newAcc);
                                         }
-                                        CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
-                                        if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
+                                        break;
+                                    case 3:
+                                        if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
                                         {
-                                            Debug.Log("Got it");
-                                            selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
+                                            AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
+                                            current.ACCESSORY.Equip(newAcc);
+
                                         }
-                                        if (selectedSkil.CanUse() == false)
+                                        break;
+                                    case 4:
                                         {
-                                            break;
-                                        }
-                                        currentSkill = selectedSkil;
-                                        myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
-                                        myManager.ShowWhite();
-                                        if (myManager.attackableTiles.Count > 0)
-                                        {
-                                            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+                                            if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
                                             {
-                                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                                                break;
+                                            }
+                                            if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Auto)
+                                            {
+                                                break;
+                                            }
+                                            if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Opp)
+                                            {
+                                                break;
+                                            }
+                                            CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
+                                            if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
+                                            {
+                                                Debug.Log("Got it");
+                                                selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
+                                            }
+                                            float modification = 1.0f;
+                                            if (selectedSkil.ETYPE == EType.magical)
+                                                modification = current.STATS.SPCHANGE;
+                                            if (selectedSkil.ETYPE == EType.physical)
+                                                modification = current.STATS.FTCHANGE;
+                                            if (selectedSkil.CanUse(modification) == false)
+                                            {
+                                                break;
+                                            }
+                                            currentSkill = selectedSkil;
+                                            myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
+                                            myManager.ShowWhite();
+                                            if (myManager.attackableTiles.Count > 0)
+                                            {
+                                                for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
                                                 {
+                                                    for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                                                    {
 
-                                                    myManager.attackableTiles[i][j].myColor = Color.red;
+                                                        myManager.attackableTiles[i][j].myColor = Color.red;
+                                                    }
                                                 }
-                                            }
-                                            myManager.currentAttackList = myManager.attackableTiles[0];
+                                                myManager.currentAttackList = myManager.attackableTiles[0];
 
-                                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                                for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                                {
+                                                    myManager.currentAttackList[i].myColor = Color.green;
+                                                }
+
+
+                                            }
+
+                                            else
                                             {
-                                                myManager.currentAttackList[i].myColor = Color.green;
+                                                currentSkill = null;
+                                                myManager.attackableTiles.Clear();
                                             }
-
-
+                                            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                                            MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                                            if (myMenuManager)
+                                            {
+                                                myMenuManager.ShowNone();
+                                            }
+                                            menuStackEntry entry = new menuStackEntry();
+                                            entry.state = State.PlayerAttacking;
+                                            entry.index = invm.currentIndex;
+                                            entry.menu = currentMenu.CmdSkills;
+                                            myManager.enterState(entry);
                                         }
+                                        break;
+                                }
 
-                                        else
-                                        {
-                                            currentSkill = null;
-                                            myManager.attackableTiles.Clear();
-                                        }
-                                        myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                                        myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                                        if (myMenuManager)
-                                        {
-                                            myMenuManager.ShowNone();
-                                        }
-                                        myManager.prevState = myManager.currentState;
-                                        myManager.currentState = State.PlayerAttacking;
-                                    }
-                                    break;
                             }
-
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
-                            myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                            Debug.Log("hit escape");
+                           // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                             myManager.CancelMenuAction(current);
                             currentSkill = null;
 
@@ -357,6 +385,11 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 case State.PlayerEquippingSkills:
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        myManager.CancelMenuAction(current);
+                    }
                     break;
                 case State.PlayerSkillsMenu:
                     break;
@@ -368,5 +401,16 @@ public class PlayerController : MonoBehaviour
 
 
         }
+    }
+
+    public bool ShowCmd(Object data)
+    {
+        myManager.prevState = myManager.currentState;
+        myManager.currentState = State.PlayerInput;
+        if (myManager.GetComponent<MenuManager>())
+        {
+            myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+        }
+        return true;
     }
 }

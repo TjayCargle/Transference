@@ -79,6 +79,11 @@ public class MenuManager : MonoBehaviour
     }
     public void ShowCommandCanvas()
     {
+        //ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+        //if(manager)
+        //{
+        //    manager.ShowGridObjectAffectArea(manager.currentObject);
+        //}
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(true);
@@ -222,7 +227,7 @@ public class MenuManager : MonoBehaviour
         {
             descCanvas.gameObject.SetActive(false);
         }
-        if (inventoryCanvas )
+        if (inventoryCanvas)
         {
             inventoryCanvas.gameObject.SetActive(false);
         }
@@ -247,7 +252,7 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void ShowExtraCanvas()
+    public void ShowExtraCanvas(int index, LivingObject invokingObject)
     {
 
         if (extraCanvas)
@@ -259,8 +264,9 @@ public class MenuManager : MonoBehaviour
                 {
                     if (extraCanvas.GetComponentInChildren<ScrollRect>())
                     {
-                        inManager.setContentAndScroll(extraCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, extraCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
-                        inManager.ForceSelect();
+                        inManager.loadExtra(index, invokingObject);
+                        //inManager.setContentAndScroll(extraCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, extraCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        //inManager.ForceSelect();
                     }
                 }
             }
@@ -271,13 +277,17 @@ public class MenuManager : MonoBehaviour
     {
         if (inManager)
         {
-            if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+            if (extraCanvas)
             {
-                if (itemCanvas.GetComponentInChildren<ScrollRect>())
+
+                if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
                 {
-                    inManager.setContentAndScroll(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
-                    inManager.ForceSelect();
-                    inManager.menuSide = -1;
+                    if (itemCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.setContentAndScroll(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+                        inManager.ForceSelect();
+                        inManager.menuSide = -1;
+                    }
                 }
             }
         }

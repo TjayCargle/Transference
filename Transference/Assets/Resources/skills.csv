@@ -46,5 +46,15 @@
 159,Rallega Spd,Increases Speed by 50% for 3 turns,Buff,none,8,magical,multi,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
 160,ZeRallega Spd,Increases Speed by 50% for 3 turns in range,Buff,none,12,magical,area,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
 -
-174,DragonStone,Fire and Slash attacks do 25% more dmg,Passive,none,0,physical,single,-1,0,1,0.25,0,ElementDmg,2, Fire, Slash
-175,HP+,Increases max hp by 25,Passive,none,0,physical,single,-1,0,1,25,0,Health,0
+174,DragonStone,Fire and Slash attacks do 25% more dmg,Passive,1,0.25,0,ElementDmg,2, Fire, Slash
+175,HP+,Increases max hp by 25,Passive,1,25,0,Health,0
+176,SP+,Increases max sp by 25,Passive,1,25,0,SP,0
+177,FT Cost-,Decreases fatigue cost by 50%,Passive,1,50,0,FTCost,0
+-
+181,Slash Opportunity σ,Follow up action from a Slash weakness.,Opp,Slash,1.0
+182,Slash Opportunity φ,Follow up action from a Slash weakness with extra damage.,Opp,Slash,1.5
+182,Slash Opportunity ω,Follow up action from a Slash weakness with double damage.,Opp,Slash,2.0
+-
+209,Lifestrip,20% chance to heal the damage you delt.,Auto,20.0,afterDmg,healByDmg,210,5
+210,Lifelift,40% chance to heal the damage you delt.,Auto,40.0,afterDmg,healByDmg,211,10
+211,Lifesteal,60% chance to heal the damage you delt.,Auto,60.0,afterDmg,healByDmg,-1,0

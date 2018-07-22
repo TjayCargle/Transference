@@ -243,6 +243,7 @@
     <Compile Include="Assets\Scripts\ArmorEquip.cs" />
     <Compile Include="Assets\Scripts\ArmorManager.cs" />
     <Compile Include="Assets\Scripts\ArmorScript.cs" />
+    <Compile Include="Assets\Scripts\AutoSkill.cs" />
     <Compile Include="Assets\Scripts\BuffScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\CanvasManager.cs" />
@@ -251,8 +252,10 @@
     <Compile Include="Assets\Scripts\CommandSkill.cs" />
     <Compile Include="Assets\Scripts\Common.cs" />
     <Compile Include="Assets\Scripts\DatabaseManager.cs" />
+    <Compile Include="Assets\Scripts\DmgTextObj.cs" />
     <Compile Include="Assets\Scripts\EffectScript.cs" />
     <Compile Include="Assets\Scripts\Equipable.cs" />
+    <Compile Include="Assets\Scripts\EventRunner.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
     <Compile Include="Assets\Scripts\Healthbar.cs" />
     <Compile Include="Assets\Scripts\InventoryMangager.cs" />
@@ -274,11 +277,11 @@
     <Compile Include="Assets\Scripts\skillSlots.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
+    <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\UsableScript.cs" />
     <Compile Include="Assets\Scripts\WeaponEquip.cs" />
     <Compile Include="Assets\Scripts\WeaponManager.cs" />
     <Compile Include="Assets\Scripts\WeaponScript.cs" />
-    <Compile Include="Assets\Scripts\AutoSkill.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

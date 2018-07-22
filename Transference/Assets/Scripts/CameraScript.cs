@@ -51,7 +51,7 @@ public class CameraScript : MonoBehaviour
                                 if (mansSlider)
                                 {
                                     mansSlider.value = (float)infoObject.GetComponent<LivingObject>().MANA / (float)infoObject.GetComponent<LivingObject>().MAX_MANA;
-                                   manaText.text = infoObject.GetComponent<LivingObject>().MANA.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_MANA.ToString();
+                                    manaText.text = infoObject.GetComponent<LivingObject>().MANA.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_MANA.ToString();
                                 }
                                 if (fatigueSlider)
                                 {
@@ -82,16 +82,20 @@ public class CameraScript : MonoBehaviour
             }
         }
 
-        Vector3 tilePos = currentTile.transform.position;
-        Vector3 camPos = transform.position;
-        tilePos.y = 0.0f;
-        camPos.y = 0.0f;
-        distance = Mathf.Abs(tilePos.sqrMagnitude - camPos.sqrMagnitude);
-        distance = Mathf.Sqrt(distance);
-        if (distance > 1.0f)
+        if (currentTile)
         {
-            Vector3 directionVector = (currentTile.transform.position - new Vector3(0, -5, 7)) - transform.position;
-            transform.Translate(directionVector * Time.deltaTime);
+
+            Vector3 tilePos = currentTile.transform.position;
+            Vector3 camPos = transform.position;
+            tilePos.y = 0.0f;
+            camPos.y = 0.0f;
+            distance = Vector3.Distance(tilePos, camPos);// Mathf.Abs(tilePos.sqrMagnitude - camPos.sqrMagnitude);
+            //distance = Mathf.Sqrt(distance);
+            if (distance > 0.2f)
+            {
+                Vector3 directionVector = (currentTile.transform.position - new Vector3(0, -5, 7)) - transform.position;
+                transform.Translate(directionVector * Time.deltaTime);
+            }
         }
 
     }

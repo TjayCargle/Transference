@@ -41,6 +41,10 @@ public enum EHitType
 public enum ModifiedStat
 {
     Health,
+    SP,
+    FT,
+    FTCost,
+    SPCost,
     ElementDmg,
     Movement,
     Str,
@@ -96,7 +100,7 @@ public enum Element
 
     Neutral,
     Passive,
-    Buff, 
+    Buff,
     Opp,
     Ailment,
     Auto,
@@ -115,7 +119,13 @@ public enum Reaction
     nulled,
     reflected,
     knockback,
-    snatched
+    snatched,
+    reduceAtk,
+    reduceDef,
+    reduceSpd,
+    reduceMag,
+    reduceRes,
+    reduceLuck
 }
 public enum DMG
 {
@@ -134,7 +144,7 @@ public enum ItemType
     cure,
     buff,
     atk
-    
+
 }
 public enum ItemTarget
 {
@@ -155,7 +165,7 @@ public enum WepSkillType
     bonusAction,
     chngHits,
     ailment,
-    
+
 
 }
 public enum MenuItemType
@@ -173,17 +183,33 @@ public enum MenuItemType
     selectBS,
     selectAS,
     selectPS,
-    selectOS
+    selectOS,
+    equipOS
 }
-public enum AutoActType
+public enum AutoAct
 {
-    afterAttacking,
+    beforeDmg,
+    afterDmg,
     afterKilling,
-    beforeDeath,
-    afterOpp,
-    afterSkill
 
 }
+
+public enum AutoReact
+{
+    healByDmg,
+    healAmount,
+    extraAction,
+    recoverSP,
+    reduceFT,
+    reduceDef,
+    reduceAtk,
+    reduceSpd,
+    reduceMag,
+    reduceRes,
+    reduceLuck
+
+}
+
 public enum PrimaryStatus
 {
     normal,
@@ -231,8 +257,8 @@ public enum SideEffect
 
 public struct DmgReaction
 {
-   public int damage;
-   public Reaction reaction;
+    public int damage;
+    public Reaction reaction;
 }
 public struct Modification
 {
@@ -240,8 +266,39 @@ public struct Modification
     public Element affectedElement;
     public float editValue;
 }
+public enum currentMenu
+{
+    command,
+    invMain,
+    skillsMain,
+    CmdSkills
+}
+public struct menuStackEntry
+{
+    public State state;
+    public int index;
+    public currentMenu menu;
+}
+public delegate bool RunableEvent(Object data);
 
-public class Common : ScriptableObject {
+public struct GridEvent
+{
+    public string name;
+    public Object caller;
+    public Object data;
+    public bool isRunning;
+    RunableEvent runable;
 
-	
+    public RunableEvent RUNABLE
+    {
+        get { return runable; }
+
+        set { runable = value; }
+    }
+}
+
+public class Common : ScriptableObject
+{
+
+
 }

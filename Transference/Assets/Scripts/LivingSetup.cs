@@ -13,7 +13,7 @@ public class LivingSetup : MonoBehaviour {
     [SerializeField]
     int[] startingAccessories;
     bool isSetup = false;
-    public void Setup()
+    public virtual void Setup()
     {
         if(!isSetup)
         {
@@ -24,7 +24,7 @@ public class LivingSetup : MonoBehaviour {
                 {
                     for (int i = 0; i < startingSkills.Length; i++)
                     {
-                        dm.LearnSkill(startingSkills[i], GetComponent<LivingObject>());
+                        dm.LearnSkill(startingSkills[i], GetComponent<LivingObject>(),true);
                     }
                     for (int i = 0; i < startingWeapons.Length; i++)
                     {

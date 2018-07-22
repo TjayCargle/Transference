@@ -14,6 +14,8 @@ public class LivingObject : GridObject
     [SerializeField]
     private bool isEnenmy;
     [SerializeField]
+    private int actions;
+    [SerializeField]
     private PrimaryStatus pStatus = PrimaryStatus.normal;
     [SerializeField]
     private SecondaryStatus sStatus = SecondaryStatus.normal;
@@ -23,6 +25,10 @@ public class LivingObject : GridObject
     private skillSlots battleSlots;
     [SerializeField]
     private skillSlots passiveSlots;
+    [SerializeField]
+    private skillSlots oppSlots;
+    [SerializeField]
+    private skillSlots autoSlots;
 
     public PrimaryStatus PSTATUS
     {
@@ -49,6 +55,18 @@ public class LivingObject : GridObject
     {
         get { return passiveSlots; }
         set { passiveSlots = value; }
+    }
+
+    public skillSlots OPP_SLOTS
+    {
+        get { return oppSlots; }
+        set { oppSlots = value; }
+    }
+
+    public skillSlots AUTO_SLOTS
+    {
+        get { return autoSlots; }
+        set { autoSlots = value; }
     }
     public StatScript BASE_STATS
     {
@@ -82,6 +100,11 @@ public class LivingObject : GridObject
         set { STATS.MOVE_DIST = value; base.MOVE_DIST = value; }
     }
 
+    public int ACTIONS
+    {
+        get { return actions; }
+        set { actions = value; }
+    }
 
     public int Max_Atk_DIST
     {
@@ -152,107 +175,134 @@ public class LivingObject : GridObject
 
     public override void Setup()
     {
-        if (!GetComponent<InventoryScript>())
+        if (!isSetup)
         {
-            gameObject.AddComponent<InventoryScript>();
-        }
-        if (!GetComponent<WeaponEquip>())
-        {
-            gameObject.AddComponent<WeaponEquip>();
-            gameObject.GetComponent<WeaponEquip>().NAME = "default weapon";
-        }
-        equippedWeapon = GetComponent<WeaponEquip>();
-        equippedWeapon.USER = this;
-        if (!GetComponent<ArmorEquip>())
-        {
-            gameObject.AddComponent<ArmorEquip>();
-            gameObject.GetComponent<ArmorEquip>().NAME = "default armor";
-
-        }
-        equipedArmor = GetComponent<ArmorEquip>();
-        equipedArmor.USER = this;
-
-        if (!GetComponent<AccessoryEquip>())
-        {
-            gameObject.AddComponent<AccessoryEquip>();
-            gameObject.GetComponent<AccessoryEquip>().NAME = "default accessory";
-
-        }
-        equippedAccessory = GetComponent<AccessoryEquip>();
-        equippedAccessory.USER = this;
-
-        if (!GetComponent<StatScript>())
-        {
-            baseStats = gameObject.AddComponent<StatScript>();
-            modifiedStats = gameObject.AddComponent<StatScript>();
-        baseStats.USER = this;
-            modifiedStats.USER = this;
-            modifiedStats.Reset(true);
-        }
-        else
-        {
-            StatScript[] statsScripts = GetComponents<StatScript>();
-            if(statsScripts.Length == 1)
+            Debug.Log("Living setup " + FullName);
+            if (!GetComponent<InventoryScript>())
             {
+                gameObject.AddComponent<InventoryScript>();
+            }
+            if (!GetComponent<WeaponEquip>())
+            {
+                gameObject.AddComponent<WeaponEquip>();
+                gameObject.GetComponent<WeaponEquip>().NAME = "default weapon";
+            }
+            equippedWeapon = GetComponent<WeaponEquip>();
+            equippedWeapon.USER = this;
+            if (!GetComponent<ArmorEquip>())
+            {
+                gameObject.AddComponent<ArmorEquip>();
+                gameObject.GetComponent<ArmorEquip>().NAME = "default armor";
+
+            }
+            equipedArmor = GetComponent<ArmorEquip>();
+            equipedArmor.USER = this;
+
+            if (!GetComponent<AccessoryEquip>())
+            {
+                gameObject.AddComponent<AccessoryEquip>();
+                gameObject.GetComponent<AccessoryEquip>().NAME = "default accessory";
+
+            }
+            equippedAccessory = GetComponent<AccessoryEquip>();
+            equippedAccessory.USER = this;
+
+            if (!GetComponent<StatScript>())
+            {
+                baseStats = gameObject.AddComponent<StatScript>();
                 modifiedStats = gameObject.AddComponent<StatScript>();
-                modifiedStats.type = 1;
-                modifiedStats.Reset(true);
-                modifiedStats.USER = this;
-            }
-            for (int i = 0; i < statsScripts.Length; i++)
-            {
-                if(statsScripts[i].type == 0)
-                {
-                    baseStats = statsScripts[i];
                 baseStats.USER = this;
-                }
-                else
-                {
-                    modifiedStats = statsScripts[i];
-                    modifiedStats.Reset(true);
                 modifiedStats.USER = this;
+                modifiedStats.Reset(true);
+            }
+            else
+            {
+                StatScript[] statsScripts = GetComponents<StatScript>();
+                if (statsScripts.Length == 1)
+                {
+                    modifiedStats = gameObject.AddComponent<StatScript>();
+                    modifiedStats.type = 1;
+                    modifiedStats.Reset(true);
+                    modifiedStats.USER = this;
                 }
+                for (int i = 0; i < statsScripts.Length; i++)
+                {
+                    if (statsScripts[i].type == 0)
+                    {
+                        baseStats = statsScripts[i];
+                        baseStats.USER = this;
+                    }
+                    else
+                    {
+                        modifiedStats = statsScripts[i];
+                        modifiedStats.Reset(true);
+                        modifiedStats.USER = this;
+                    }
+                }
+
+                this.baseStats.HEALTH = this.baseStats.MAX_HEALTH;
+                this.baseStats.MANA = this.baseStats.MAX_MANA;
             }
 
-            this.baseStats.HEALTH = this.baseStats.MAX_HEALTH;
-            this.baseStats.MANA = this.baseStats.MAX_MANA;
-        }
-
-        if (!GetComponent<skillSlots>())
-        {
-            battleSlots = gameObject.AddComponent<skillSlots>();
-            passiveSlots = gameObject.AddComponent<skillSlots>();
-            passiveSlots.TYPE = 1;
-        }
-        else
-        {
-            skillSlots[] slots = GetComponents<skillSlots>();
-            if (slots.Length == 1)
+            if (!GetComponent<skillSlots>())
             {
                 battleSlots = gameObject.AddComponent<skillSlots>();
+                passiveSlots = gameObject.AddComponent<skillSlots>();
+                oppSlots = gameObject.AddComponent<skillSlots>();
+                autoSlots = gameObject.AddComponent<skillSlots>();
+                passiveSlots.TYPE = 1;
+                autoSlots.TYPE = 2;
+                oppSlots.TYPE = 3;
             }
-            for (int i = 0; i < slots.Length; i++)
+            else
             {
-                if (slots[i].TYPE == 0)
+                skillSlots[] slots = GetComponents<skillSlots>();
+                if (slots.Length < 4)
                 {
-                    battleSlots = slots[i];
+                    while (slots.Length < 4)
+                    {
+                        gameObject.AddComponent<skillSlots>();
+                        slots = GetComponents<skillSlots>();
+                    }
                 }
-                else
+
+                for (int i = 0; i < slots.Length; i++)
                 {
-                    passiveSlots = slots[i];
-                    passiveSlots.TYPE = 1;
+                    switch (slots[i].TYPE)
+                    {
+                        case 0:
+                            battleSlots = slots[i];
+                            break;
+
+                        case 1:
+                            passiveSlots = slots[i];
+                            break;
+
+                        case 2:
+                            autoSlots = slots[i];
+                            break;
+
+                        case 3:
+                            oppSlots = slots[i];
+                            break;
+                    }
+
                 }
+                passiveSlots.TYPE = 1;
+                autoSlots.TYPE = 2;
+                oppSlots.TYPE = 3;
+
             }
 
+            ACTIONS = 2;
+            base.Setup();
         }
-
-
-        base.Setup();
+        isSetup = true;
     }
 
     public void ApplyPassives()
     {
-        List<PassiveSkill> atkPassives = GetComponent<InventoryScript>().PASSIVES;
+        List<PassiveSkill> atkPassives = PASSIVE_SLOTS.ConvertToPassives();
         modifiedStats.MODS.Clear();
         modifiedStats.Reset(true);
 
@@ -260,62 +310,7 @@ public class LivingObject : GridObject
         {
             for (int i = 0; i < atkPassives.Count; i++)
             {
-                float mod = 0.0f;
-                switch (atkPassives[i].ModStat)
-                {
-                    case ModifiedStat.Health:
-                        modifiedStats.MAX_HEALTH += (int)atkPassives[i].ModValues[0];
-                        if(modifiedStats.HEALTH == modifiedStats.MAX_HEALTH - (int)atkPassives[i].ModValues[0])
-                        {
-                            modifiedStats.HEALTH = modifiedStats.MAX_HEALTH;
-                        }
-                        break;
-                    case ModifiedStat.ElementDmg:
-                        break;
-                    case ModifiedStat.Movement:
-
-                        modifiedStats.MOVE_DIST += (int)atkPassives[i].ModValues[0];
-                        break;
-                    case ModifiedStat.Str:
-                        mod = atkPassives[i].ModValues[0];
-                        mod = (mod / 100) * modifiedStats.STRENGTH;
-                        modifiedStats.STRENGTH += (int)mod;
-                        break;
-                    case ModifiedStat.Mag:
-                        mod = atkPassives[i].ModValues[0];
-                        mod = (mod / 100) * modifiedStats.MAGIC;
-                        modifiedStats.MAGIC += (int)mod;
-                        break;
-                    case ModifiedStat.Atk:
-                        mod = atkPassives[i].ModValues[0];
-                        mod = (mod / 100) * BASE_STATS.STRENGTH;
-                        modifiedStats.STRENGTH += (int)mod;
-                        mod = atkPassives[i].ModValues[0];
-                        mod = (mod / 100) * BASE_STATS.MAGIC;
-                        modifiedStats.MAGIC += (int)mod;
-                        break;
-                    case ModifiedStat.Def:
-                        modifiedStats.DEFENSE += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.DEFENSE);
-                        break;
-                    case ModifiedStat.Res:
-                        modifiedStats.RESIESTANCE += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.RESISTANCE);
-                        break;
-                    case ModifiedStat.Guard:
-                        modifiedStats.RESIESTANCE += ((((int)atkPassives[i].ModValues[0]) / 100) * ARMOR.RESISTANCE);
-                        break;
-                    case ModifiedStat.Speed:
-
-                        modifiedStats.SPEED += ((((int)atkPassives[i].ModValues[0] ) / 100) * ARMOR.SPEED);
-                        break;
-                    case ModifiedStat.Luck:
-
-                        modifiedStats.LUCK += ((((int)atkPassives[i].ModValues[0] ) / 100) * WEAPON.LUCK);
-                        break;
-                    default:
-                        break;
-                }
-               // Debug.Log("Post atk " + i + " = " + modifiedStats.STRENGTH);
-
+                modifiedStats.IncreaseStat(atkPassives[i].ModStat, (int)atkPassives[i].ModValues[0]);
             }
 
 
@@ -323,8 +318,22 @@ public class LivingObject : GridObject
 
     }
 
+    public void TakeAction()
+    {
+        ACTIONS--;
+        if (myManager)
+        {
+            if (ACTIONS <= 0)
+            {
+
+                myManager.NextTurn();
+                myManager.GetComponent<InventoryMangager>().Validate();
+            }
+        }
+    }
     public void Wait()
     {
+        ACTIONS = 0;
         STATS.HEALTH += 2;
         STATS.MANA += 2;
         STATS.FATIGUE -= 2;
