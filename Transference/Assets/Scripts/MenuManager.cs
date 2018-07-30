@@ -41,6 +41,7 @@ public class MenuManager : MonoBehaviour
             Setup();
         }
     }
+    
     public void ShowNone()
     {
         if (commandCanvas)

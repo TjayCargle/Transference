@@ -29,7 +29,14 @@ public class LivingObject : GridObject
     private skillSlots oppSlots;
     [SerializeField]
     private skillSlots autoSlots;
+    [SerializeField]
+    private bool isDead;
 
+    public bool DEAD
+    {
+        get { return isDead; }
+        set { isDead = value; }
+    }
     public PrimaryStatus PSTATUS
     {
         get { return pStatus; }
@@ -297,6 +304,7 @@ public class LivingObject : GridObject
             ACTIONS = 2;
             base.Setup();
         }
+        Debug.Log("Setup done");
         isSetup = true;
     }
 
@@ -320,23 +328,24 @@ public class LivingObject : GridObject
 
     public void TakeAction()
     {
+        Debug.Log(FullName + " took an action");
         ACTIONS--;
         if (myManager)
         {
             if (ACTIONS <= 0)
             {
 
-                myManager.NextTurn();
+                myManager.NextTurn(FullName);
                 myManager.GetComponent<InventoryMangager>().Validate();
             }
         }
     }
     public void Wait()
     {
+       // STATS.HEALTH += 5;
+       // STATS.MANA += 2;
+        STATS.FATIGUE -= 2 * (actions + 1);
         ACTIONS = 0;
-        STATS.HEALTH += 2;
-        STATS.MANA += 2;
-        STATS.FATIGUE -= 2;
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;
         if (MANA > MAX_MANA)

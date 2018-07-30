@@ -16,7 +16,7 @@
 12,DumbStrike,foes,Pierce,confusion,7,physical,single,13,10,100,small,1,0,1,0,1
 13,BlazingStrike,foes,Pierce,burn,6,physical,single,14,20,100, small,1,0,1,0,1
 14,ScorchStrike,foes,Pierce,burn,12,physical,single,15,20,100, medium,1,0,1,0,1
-15,PoisonStrike,foes,Pierce,poison,10,physical,single,16,40,100, medium,1,0,1,0,1
+15,PoisonStrike,foes,Pierce,poison,10,physical,single,16,0,100, small,1,0,1,0,1
 16,VenomStrike,foes,Pierce,poison,16,physical,single,-1,0,100, heavy,1,0,1,0,1
 -
 46, Pyr,foes,Fire,burn,5, magical,multi,47,5,99, minute,2,0,1,0,2
@@ -51,9 +51,9 @@
 176,SP+,Increases max sp by 25,Passive,1,25,0,SP,0
 177,FT Cost-,Decreases fatigue cost by 50%,Passive,1,50,0,FTCost,0
 -
-181,Slash Opportunity σ,Follow up action from a Slash weakness.,Opp,Slash,1.0
-182,Slash Opportunity φ,Follow up action from a Slash weakness with extra damage.,Opp,Slash,1.5
-182,Slash Opportunity ω,Follow up action from a Slash weakness with double damage.,Opp,Slash,2.0
+181,Slash Opportunity σ,Follow up action from a Slash attack.,Opp,Slash,1.0
+182,Slash Opportunity φ,Follow up action from a Slash attack with extra damage.,Opp,Slash,1.5
+182,Slash Opportunity ω,Follow up action from a Slash attack with double damage.,Opp,Slash,2.0
 -
 209,Lifestrip,20% chance to heal the damage you delt.,Auto,20.0,afterDmg,healByDmg,210,5
 210,Lifelift,40% chance to heal the damage you delt.,Auto,40.0,afterDmg,healByDmg,211,10

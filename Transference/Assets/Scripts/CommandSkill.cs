@@ -40,6 +40,8 @@ public class CommandSkill : SkillScript {
     [SerializeField]
     protected EType eType;
 
+    [SerializeField]
+    protected Reaction reaction;
 
     [SerializeField]
     protected int next;
@@ -87,7 +89,11 @@ public class CommandSkill : SkillScript {
         get { return rType; }
         set { rType = value; }
     }
-
+    public Reaction REACTION
+    {
+        get { return reaction; }
+        set { reaction = value; }
+    }
     public int HITS
     {
         get { return hitCount; }
@@ -143,7 +149,7 @@ public class CommandSkill : SkillScript {
         {
             OWNER.STATS.FATIGUE += (int)(COST * modification);
         }
-        OWNER.TakeAction();
+       // OWNER.TakeAction();
         if (NEXT > 0)
         {
             if (NEXTCOUNT > 0)

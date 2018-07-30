@@ -21,15 +21,16 @@ public class DmgTextObj : MonoBehaviour {
         {
         text = GetComponentsInChildren<TextMesh>()[0];
         border = GetComponentsInChildren<TextMesh>()[1];
-        }
         isSetup = true;
+        }
     }
     public void StartCountDown()
     {
         if(isShowing == false)
         {
+            gameObject.SetActive(true);
             isShowing = true;
-            time = 1.05f;
+            time = 1.00f;
         }
     }
 

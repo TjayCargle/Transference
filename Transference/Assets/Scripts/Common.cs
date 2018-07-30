@@ -26,16 +26,16 @@ public enum Facing
 }
 public enum EHitType
 {
-    normal,
-    resists,
+    absorbs,
     nulls,
     reflects,
-    absorbs,
+    resists,
+    normal,
 
-    weak,
-    snatched,
-    cripples,
-    knocked
+    weak, //dmg x2
+    knocked, // dmg x2 + lose a turn
+    cripples, // dmg x4 + stats halved
+    leathal // dmg x4 + lose a turn + stats halved
 
 }
 public enum ModifiedStat
@@ -184,7 +184,8 @@ public enum MenuItemType
     selectAS,
     selectPS,
     selectOS,
-    equipOS
+    equipOS,
+    generated
 }
 public enum AutoAct
 {
@@ -255,10 +256,22 @@ public enum SideEffect
     burn,
 }
 
+
+public class AtkConatiner : ScriptableObject
+{
+    public LivingObject attackingObject;
+    public LivingObject dmgObject;
+    public Element attackingElement;
+    public EType attackType;
+    public int dmg;
+    public Reaction alteration;
+    public CommandSkill command;
+}
 public struct DmgReaction
 {
     public int damage;
     public Reaction reaction;
+    public string atkName;
 }
 public struct Modification
 {
@@ -273,6 +286,28 @@ public enum currentMenu
     skillsMain,
     CmdSkills
 }
+public class tjCompare : ScriptableObject, IComparer<pathNode>
+{
+
+    public int Compare(pathNode x, pathNode y)
+    {
+        return x.gcost.CompareTo(y.gcost) + x.hcost.CompareTo(y.hcost);
+    }
+}
+public class pathNode : ScriptableObject
+{
+    public TileScript tile;
+    public int gcost;
+    public int hcost;
+
+}
+
+public class path : ScriptableObject
+{
+    public Queue<TileScript> currentPath;
+   public  TileScript realTarget;
+
+}
 public struct menuStackEntry
 {
     public State state;
@@ -280,7 +315,16 @@ public struct menuStackEntry
     public currentMenu menu;
 }
 public delegate bool RunableEvent(Object data);
-
+public delegate void StartupEvent();
+public enum descState
+{
+    stats,
+    skills,
+    equipped,
+    affinities,
+    status,
+    none
+}
 public struct GridEvent
 {
     public string name;
@@ -288,12 +332,19 @@ public struct GridEvent
     public Object data;
     public bool isRunning;
     RunableEvent runable;
-
+    StartupEvent start;
     public RunableEvent RUNABLE
     {
         get { return runable; }
 
         set { runable = value; }
+    }
+
+    public StartupEvent START
+    {
+        get { return start; }
+
+        set { start = value; }
     }
 }
 

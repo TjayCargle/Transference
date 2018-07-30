@@ -6,6 +6,7 @@ public class TileScript : MonoBehaviour {
     public Color myColor;
     public bool isOccupied;
     MeshRenderer myRender;
+
 	// Use this for initialization
 	public void Setup () {
 		if(GetComponent<MeshRenderer>())

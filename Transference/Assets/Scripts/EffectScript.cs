@@ -25,7 +25,7 @@ public class EffectScript : MonoBehaviour {
                     Debug.Log("Player is stunned");
                     manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
 
-                    manager.NextTurn();
+                    manager.NextTurn("effectScript");
                     return;
                 }
                 Debug.Log(living.FullName + " is no longer paralyzed");
@@ -38,7 +38,7 @@ public class EffectScript : MonoBehaviour {
                     Debug.Log(living.FullName + " is sleeping");
                     manager.DamageLivingObject(living, -(int)(living.HEALTH * 0.1));
 
-                    manager.NextTurn();
+                    manager.NextTurn("effectScript");
                     return;
                 }
                 Debug.Log(living.FullName + " woke up");
@@ -49,7 +49,7 @@ public class EffectScript : MonoBehaviour {
                 if (chance <= 0)
                 {
                     Debug.Log(living.FullName + " is frozen solid");
-                    manager.NextTurn();
+                    manager.NextTurn("effectScript");
                     return;
                 }
                 Debug.Log(living.FullName + " thawed out");

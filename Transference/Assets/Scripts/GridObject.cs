@@ -55,11 +55,5 @@ public class GridObject : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    protected void Update()
-    {
-
-    }
-
 
 }

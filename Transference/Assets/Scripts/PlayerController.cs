@@ -109,91 +109,7 @@ public class PlayerController : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        bool check = false;
-                        if (currentSkill != null)
-                        {
-                            float modification = 1.0f;
-                            if (currentSkill.ETYPE == EType.magical)
-                                modification = current.STATS.SPCHANGE;
-                            if (currentSkill.ETYPE == EType.physical)
-                                modification = current.STATS.FTCHANGE;
-                            if (current.SSTATUS != SecondaryStatus.seal)
-                            {
-                                if (currentSkill.CanUse(modification))
-                                {
-                                    if (current.SSTATUS == SecondaryStatus.confusion)
-                                    {
-                                        int chance = Random.Range(0, 2);
-                                        if (chance <= 0)
-                                        {
-                                            Debug.Log("They hit themselves");
-                                            newTarget.Clear();
-                                            newTarget.Add(current.currentTile);
-                                            myManager.SetTargetList(newTarget);
-                                            check = myManager.AttackTargets(current, currentSkill);
-                                        }
-                                        else
-                                        {
-                                            check = myManager.AttackTargets(current, currentSkill);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        check = myManager.AttackTargets(current, currentSkill);
-
-                                    }
-
-                                    if (check == true)
-                                    {
-                                        myManager.invManager.currentIndex = 2;
-                                        //current.TakeAction();
-                                    }
-                                    else
-                                    {
-                                        myManager.invManager.currentIndex = 0;
-
-                                    }
-                                    if (currentSkill != null)
-                                        currentSkill = null;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (current.SSTATUS == SecondaryStatus.confusion)
-                            {
-                                int chance = Random.Range(0, 2);
-
-                                if (chance <= 0)
-                                {
-                                    Debug.Log("They hit themselves");
-                                    newTarget.Clear();
-                                    newTarget.Add(current.currentTile);
-                                    myManager.SetTargetList(newTarget);
-                                    check = myManager.AttackTargets(current, currentSkill);
-                                }
-                            }
-                            else
-                            {
-                                check = myManager.AttackTargets(current, current.WEAPON);
-
-                            }
-                        }
-
-
-
-                        if (check == true)
-                        {
-                            current.TakeAction();
-                            EventManager eventManager = GameObject.FindObjectOfType<EventManager>();
-                            if (eventManager)
-                            {
-                                GridEvent grid = new GridEvent();
-                                grid.RUNABLE = ShowCmd;
-                                eventManager.gridEvents.Add(grid);
-                            }
-                            myManager.CleanMenuStack();
-                        }
+                        UseOrEquip();
 
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
@@ -227,7 +143,7 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
                         //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
-                       // myManager.invManager.currentIndex = 0;
+                        // myManager.invManager.currentIndex = 0;
                         myManager.SelectMenuItem(current);
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
@@ -251,6 +167,7 @@ public class PlayerController : MonoBehaviour
                                         {
                                             WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
                                             current.WEAPON.Equip(newWeapon);
+                                            myManager.CleanMenuStack();
                                         }
                                         break;
                                     case 1:
@@ -258,6 +175,7 @@ public class PlayerController : MonoBehaviour
                                         {
                                             ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
                                             current.ARMOR.Equip(newArmor);
+                                            myManager.CleanMenuStack();
                                         }
                                         break;
                                     case 2:
@@ -265,6 +183,7 @@ public class PlayerController : MonoBehaviour
                                         {
                                             AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
                                             current.ACCESSORY.Equip(newAcc);
+                                            myManager.CleanMenuStack();
                                         }
                                         break;
                                     case 3:
@@ -272,7 +191,7 @@ public class PlayerController : MonoBehaviour
                                         {
                                             AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
                                             current.ACCESSORY.Equip(newAcc);
-
+                                            myManager.CleanMenuStack();
                                         }
                                         break;
                                     case 4:
@@ -353,7 +272,7 @@ public class PlayerController : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
                             Debug.Log("hit escape");
-                           // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                            // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                             myManager.CancelMenuAction(current);
                             currentSkill = null;
 
@@ -403,14 +322,107 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void UseOrEquip()
+    {
+        bool check = false;
+        if (currentSkill != null)
+        {
+            float modification = 1.0f;
+            if (currentSkill.ETYPE == EType.magical)
+                modification = current.STATS.SPCHANGE;
+            if (currentSkill.ETYPE == EType.physical)
+                modification = current.STATS.FTCHANGE;
+            if (current.SSTATUS != SecondaryStatus.seal)
+            {
+                if (currentSkill.CanUse(modification))
+                {
+                    if (current.SSTATUS == SecondaryStatus.confusion)
+                    {
+                        int chance = Random.Range(0, 2);
+                        if (chance <= 0)
+                        {
+                            Debug.Log("They hit themselves");
+                            newTarget.Clear();
+                            newTarget.Add(current.currentTile);
+                            myManager.SetTargetList(newTarget);
+                            check = myManager.AttackTargets(current, currentSkill);
+                        }
+                        else
+                        {
+                            check = myManager.AttackTargets(current, currentSkill);
+                        }
+                    }
+                    else
+                    {
+                        check = myManager.AttackTargets(current, currentSkill);
+
+                    }
+
+                    if (check == true)
+                    {
+                        myManager.invManager.currentIndex = 2;
+                        //current.TakeAction();
+                    }
+                    else
+                    {
+                        myManager.invManager.currentIndex = 0;
+
+                    }
+                    if (currentSkill != null)
+                        currentSkill = null;
+                }
+            }
+        }
+        else
+        {
+            if (current.SSTATUS == SecondaryStatus.confusion)
+            {
+                int chance = Random.Range(0, 2);
+
+                if (chance <= 0)
+                {
+                    Debug.Log("They hit themselves");
+                    newTarget.Clear();
+                    newTarget.Add(current.currentTile);
+                    myManager.SetTargetList(newTarget);
+                    check = myManager.AttackTargets(current, currentSkill);
+                }
+            }
+            else
+            {
+                check = myManager.AttackTargets(current, current.WEAPON);
+
+            }
+        }
+
+
+
+        if (check == true)
+        {
+            current.TakeAction();
+            EventManager eventManager = GameObject.FindObjectOfType<EventManager>();
+            if (eventManager)
+            {
+                //GridEvent grid = new GridEvent();
+                //grid.RUNABLE = ShowCmd;
+                //grid.caller = this;
+                //eventManager.gridEvents.Add(grid);
+                myManager.CreateEvent(this, null, "Show Command", ShowCmd);
+            }
+           // myManager.menuManager.ShowNone();
+        }
+    }
+
     public bool ShowCmd(Object data)
     {
-        myManager.prevState = myManager.currentState;
-        myManager.currentState = State.PlayerInput;
-        if (myManager.GetComponent<MenuManager>())
-        {
-            myManager.GetComponent<MenuManager>().ShowCommandCanvas();
-        }
+        // myManager.prevState = myManager.currentState;
+        // myManager.currentState = State.PlayerInput;
+
+        //if (myManager.GetComponent<MenuManager>())
+        //{
+        //    myManager.GetComponent<MenuManager>().ShowCommandCanvas();
+        //}
+        myManager.CleanMenuStack();
         return true;
     }
 }

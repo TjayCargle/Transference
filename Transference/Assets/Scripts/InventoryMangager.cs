@@ -467,18 +467,19 @@ public class InventoryMangager : MonoBehaviour
         }
         if (currentContent.transform.childCount > 0)
         {
-            if (currentContent.transform.GetChild(currentIndex).gameObject.activeInHierarchy)
-            {
+            if (currentIndex < currentContent.transform.childCount)
+                if (currentContent.transform.GetChild(currentIndex).gameObject.activeInHierarchy)
+                {
 
-                selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-            }
-            else
-            {
-                currentIndex = 0;
-                selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-            }
+                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                }
+                else
+                {
+                    currentIndex = 0;
+                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                }
         }
 
         Validate();
@@ -650,6 +651,7 @@ public class InventoryMangager : MonoBehaviour
         for (int useCount = 0; useCount < 6; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
         {
             MenuItem selectableItem = itemSlots[useCount];
+            selectableItem.itemType = 15;
             if (useCount < currentList.Count)
             {
                 UsableScript item = currentList[useCount];

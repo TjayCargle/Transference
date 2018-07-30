@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class MenuItem : MonoBehaviour
+public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
 
 
@@ -11,21 +13,50 @@ public class MenuItem : MonoBehaviour
     public bool inMenuAction = false;
     public RectTransform myRect;
     public UsableScript refItem;
-    void Start()
+    public bool isSetup = false;
+
+
+    public void OnPointerDown(PointerEventData eventData)
     {
-        if (GameObject.FindObjectOfType<ManagerScript>())
+        myManager.SelectMenuItem(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        myManager.HoverMenuItem(this);
+    }
+
+    public void Setup()
+    {
+        if (!isSetup)
         {
-            myManager = GameObject.FindObjectOfType<ManagerScript>();
-            if (!myManager.isSetup)
+            if (GameObject.FindObjectOfType<ManagerScript>())
             {
-                myManager.Setup();
+                myManager = GameObject.FindObjectOfType<ManagerScript>();
+                if (!myManager.isSetup)
+                {
+                    myManager.Setup();
+                }
             }
-        }
-        if (GetComponent<RectTransform>())
-        {
-            myRect = GetComponent<RectTransform>();
+            if (GetComponent<RectTransform>())
+            {
+                myRect = GetComponent<RectTransform>();
+            }
+            if (!GetComponent<Button>())
+            {
+              //  gameObject.AddComponent<Button>();
+              //  EventTrigger trigger = gameObject.AddComponent<EventTrigger>();
+
+
+            }
+            isSetup = true;
         }
     }
+    void Start()
+    {
+        Setup();
+    }
+
     public void ApplyAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
@@ -104,6 +135,10 @@ public class MenuItem : MonoBehaviour
                             entry.menu = currentMenu.command;
                             myManager.enterState(entry);
                         }
+                        else
+                        {
+                            Debug.Log("Couldnt find tiles");
+                        }
 
                     }
                     else
@@ -136,7 +171,7 @@ public class MenuItem : MonoBehaviour
                 {
                     invokingObject.GetComponent<LivingObject>().Wait();
                 }
-                myManager.NextTurn();
+                myManager.NextTurn(invokingObject.FullName);
                 myManager.GetComponent<InventoryMangager>().Validate();
                 break;
             case MenuItemType.Look:
@@ -183,7 +218,7 @@ public class MenuItem : MonoBehaviour
                     entry.state = State.PlayerEquippingMenu;
                     entry.index = myManager.invManager.currentIndex;
                     entry.menu = currentMenu.command;
-                   myManager.enterState(entry);
+                    myManager.enterState(entry);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -224,7 +259,7 @@ public class MenuItem : MonoBehaviour
                     entry.index = myManager.invManager.currentIndex;
                     entry.menu = currentMenu.invMain;
                     myManager.enterState(entry);
-              
+
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -347,6 +382,10 @@ public class MenuItem : MonoBehaviour
                 break;
             case MenuItemType.equipOS:
                 break;
+
+            case MenuItemType.generated:
+                myManager.player.UseOrEquip();
+                break;
             default:
                 break;
         }
@@ -392,7 +431,9 @@ public class MenuItem : MonoBehaviour
         {
             default:
                 {
-
+                    Vector3 resetPos = invokingObject.currentTile.transform.position;
+                    resetPos.y = 0.5f;
+                    invokingObject.transform.position = resetPos;
                     Debug.Log("Default");
                     if (myManager.attackableTiles != null)
                     {
@@ -406,4 +447,6 @@ public class MenuItem : MonoBehaviour
                 break;
         }
     }
+
+
 }

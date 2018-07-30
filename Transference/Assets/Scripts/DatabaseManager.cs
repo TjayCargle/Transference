@@ -31,8 +31,12 @@ public class DatabaseManager : MonoBehaviour
 
     [SerializeField]
     string[] accLines;
-    void Start()
+    public bool isSetup = false;
+    public void Setup()
     {
+        if(!isSetup)
+        {
+
         string file = skillFile.text;
         skillLines = file.Split('\n');
 
@@ -44,6 +48,12 @@ public class DatabaseManager : MonoBehaviour
 
         file = accFile.text;
         accLines = file.Split('\n');
+            isSetup = true;
+        }
+    }
+    public void Start()
+    {
+        Setup();
     }
     static void WriteString()
     {

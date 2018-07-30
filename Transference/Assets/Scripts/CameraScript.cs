@@ -15,12 +15,20 @@ public class CameraScript : MonoBehaviour
     public Text manaText;
     public Text fatigueText;
     public GridObject infoObject;
+    public Text actionText;
+    public CanvasRenderer test;
+    public Canvas DescriptionCanvas;
     float distance = 0;
-
+    ManagerScript manager;
     // Use this for initialization
     void Start()
     {
         transform.Rotate(new Vector3(35, 5, 0));
+        manager = GameObject.FindObjectOfType<ManagerScript>();
+        if (manager)
+        {
+            manager.Setup();
+        }
     }
 
     // Update is called once per frame
@@ -34,52 +42,135 @@ public class CameraScript : MonoBehaviour
                 {
                     if (currentTile.isOccupied)
                     {
-                        infoCanvas.gameObject.SetActive(true);
-                        if (infoObject)
+                       // infoCanvas.gameObject.SetActive(true);
+                        if (infoObject != null)
                         {
-                            infoText.text = infoObject.FullName;
-                            if (infoObject.GetComponent<LivingObject>())
-                            {
+                           // if (infoCanvas.gameObject.activeInHierarchy == false)
+                            //{
 
-                                infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString();
+                                infoCanvas.gameObject.SetActive(true);
+                                infoObject.gameObject.SetActive(true);
+                                infoText.text = infoObject.FullName;
+                                if (infoObject.GetComponent<LivingObject>())
+                                {
+                                    LivingObject liver = infoObject.GetComponent<LivingObject>();
+                                    if (actionText)
+                                    {
 
-                                if (healthSlider)
-                                {
-                                    healthSlider.value = (float)infoObject.GetComponent<LivingObject>().HEALTH / (float)infoObject.GetComponent<LivingObject>().MAX_HEALTH;
-                                    healthText.text = infoObject.GetComponent<LivingObject>().HEALTH.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_HEALTH.ToString();
-                                }
-                                if (mansSlider)
-                                {
-                                    mansSlider.value = (float)infoObject.GetComponent<LivingObject>().MANA / (float)infoObject.GetComponent<LivingObject>().MAX_MANA;
-                                    manaText.text = infoObject.GetComponent<LivingObject>().MANA.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_MANA.ToString();
-                                }
-                                if (fatigueSlider)
-                                {
-                                    fatigueSlider.value = (float)infoObject.GetComponent<LivingObject>().FATIGUE / (float)infoObject.GetComponent<LivingObject>().MAX_FATIGUE;
-                                    fatigueText.text = infoObject.GetComponent<LivingObject>().FATIGUE.ToString() + "/" + infoObject.GetComponent<LivingObject>().MAX_FATIGUE.ToString();
-                                }
+                                        actionText.text = "Actions: " + liver.ACTIONS;
+                                    }
+                                    infoText.text = infoText.text + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString();
 
-                            }
+                                    if (healthSlider)
+                                    {
+                                        healthSlider.value = (float)liver.HEALTH / (float)liver.MAX_HEALTH;
+                                        healthText.text = liver.HEALTH.ToString() + "/" + liver.MAX_HEALTH.ToString();
+                                    }
+                                    if (mansSlider)
+                                    {
+                                        mansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
+                                        manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
+                                    }
+                                    if (fatigueSlider)
+                                    {
+                                        fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
+                                        fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
+                                    }
+
+
+                                    if (manager.currentState == State.FreeCamera)
+                                    {
+                                        if (DescriptionCanvas)
+                                        {
+
+                                            if (manager.descriptionState != descState.none)
+                                            {
+                                                DescriptionCanvas.gameObject.SetActive(true);
+                                                Text txt = DescriptionCanvas.GetComponentInChildren<Text>();
+                                                string newText = "";
+                                                switch (manager.descriptionState)
+                                                {
+                                                    case descState.stats:
+                                                        newText = "Stats \n";
+                                                        newText += "Str: " + liver.STRENGTH + "  \t Def: " + liver.DEFENSE + "\n";
+                                                        newText += "Mag: " + liver.MAGIC + " \t Res: " + liver.RESIESTANCE + "\n";
+                                                        newText += "Spd: " + liver.SPEED + " \t LUK: " + liver.LUCK + "\n";
+                                                        break;
+                                                    case descState.skills:
+                                                        newText = "Skills: \n";
+                                                        for (int i = 0; i < liver.BATTLE_SLOTS.SKILLS.Count; i++)
+                                                        {
+                                                            newText += liver.BATTLE_SLOTS.SKILLS[i].NAME + "\n";
+                                                        }
+                                                        break;
+                                                    case descState.equipped:
+                                                        newText += "Weapon: " + liver.WEAPON.NAME + "\n";
+                                                        newText += "Armor: " + liver.ARMOR.NAME;
+                                                        break;
+                                                    case descState.affinities:
+                                                        newText = "Armor Afinities: \n";
+                                                        Element el = Element.Water;
+
+                                                        for (int i = 0; i < liver.ARMOR.HITLIST.Count; i++)
+                                                        {
+                                                            el = (Element)i;
+                                                            newText += el.ToString() + ": " + liver.ARMOR.HITLIST[i].ToString() + " \t ";
+                                                            if (i % 2 != 0)
+                                                            {
+                                                                newText += "\n";
+                                                            }
+                                                        }
+                                                        break;
+                                                    case descState.status:
+                                                        newText = "Status: \n";
+                                                        newText += "Primary: " + liver.PSTATUS + "\n";
+                                                        newText += "Secondary: " + liver.SSTATUS + "\n";
+                                                        newText += "Ailments: " + liver.ESTATUS;
+                                                        break;
+                                                }
+                                                txt.text = newText;
+                                                txt.resizeTextForBestFit = true;
+                                            }
+                                            else
+                                            {
+                                                DescriptionCanvas.gameObject.SetActive(false);
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                                else if (infoObject.GetComponent<StatScript>())
+                                {
+                                    if (healthSlider)
+                                    {
+                                        healthSlider.value = infoObject.GetComponent<StatScript>().HEALTH / infoObject.GetComponent<StatScript>().MAX_HEALTH;
+                                        healthText.text = infoObject.GetComponent<StatScript>().HEALTH.ToString() + "/" + infoObject.GetComponent<StatScript>().MAX_HEALTH.ToString();
+                                    }
+
+                                }
+                            //}
+
                         }
-                        else if (infoObject.GetComponent<StatScript>())
+                        else if (infoObject == null)
                         {
-                            if (healthSlider)
+                            if (infoCanvas.gameObject.activeInHierarchy)
                             {
-                                healthSlider.value = infoObject.GetComponent<StatScript>().HEALTH / infoObject.GetComponent<StatScript>().MAX_HEALTH;
-                                healthText.text = infoObject.GetComponent<StatScript>().HEALTH.ToString() + "/" + infoObject.GetComponent<StatScript>().MAX_HEALTH.ToString();
+
+                                infoObject = null;
+                                infoText.text = "";
+                                infoCanvas.gameObject.SetActive(false);
                             }
 
                         }
                     }
+                  
                 }
-            }
-            else
-            {
-                infoObject = null;
-                infoText.text = "";
-                infoCanvas.gameObject.SetActive(false);
 
             }
+
+
+
         }
 
         if (currentTile)
