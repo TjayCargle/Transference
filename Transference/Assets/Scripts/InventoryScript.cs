@@ -33,7 +33,6 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<AccessoryScript> accessories;
 
-
     public List<UsableScript> USEABLES
     {
         get { return usables; }

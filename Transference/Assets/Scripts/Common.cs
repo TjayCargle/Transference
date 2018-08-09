@@ -13,6 +13,9 @@ public enum State
     PlayerSkillsMenu,
     PlayerWait,
     FreeCamera,
+    PlayerOppSelecting,
+    PlayerOppOptions,
+    PlayerOppMove,
     EnemyTurn
 
 
@@ -115,9 +118,6 @@ public enum EType
 public enum Reaction
 {
     none,
-    statDrop,
-    nulled,
-    reflected,
     knockback,
     snatched,
     reduceAtk,
@@ -125,7 +125,11 @@ public enum Reaction
     reduceSpd,
     reduceMag,
     reduceRes,
-    reduceLuck
+    reduceLuck,
+    cripple,
+    nulled,
+    reflected,
+    absorb
 }
 public enum DMG
 {
@@ -284,7 +288,10 @@ public enum currentMenu
     command,
     invMain,
     skillsMain,
-    CmdSkills
+    CmdSkills,
+    OppSelection,
+    OppOptions,
+    OppMove
 }
 public class tjCompare : ScriptableObject, IComparer<pathNode>
 {
@@ -305,7 +312,7 @@ public class pathNode : ScriptableObject
 public class path : ScriptableObject
 {
     public Queue<TileScript> currentPath;
-   public  TileScript realTarget;
+    public TileScript realTarget;
 
 }
 public struct menuStackEntry
@@ -316,6 +323,8 @@ public struct menuStackEntry
 }
 public delegate bool RunableEvent(Object data);
 public delegate void StartupEvent();
+public delegate void StartupWResourcesEvent(Object data);
+
 public enum descState
 {
     stats,
@@ -333,6 +342,7 @@ public struct GridEvent
     public bool isRunning;
     RunableEvent runable;
     StartupEvent start;
+    StartupWResourcesEvent startw;
     public RunableEvent RUNABLE
     {
         get { return runable; }
@@ -346,10 +356,70 @@ public struct GridEvent
 
         set { start = value; }
     }
+
+
+    public StartupWResourcesEvent STARTW
+    {
+        get { return startw; }
+
+        set { startw = value; }
+    }
 }
+public enum STATICVAR
+{
+    minActions = 1,
+    maxActions = 5
+}
+
+public class test
+{
+    public string name;
+    public static bool Check(test one, test two)
+    {
+        if (!System.Object.Equals(one, null))
+        {
+            //one is not null
+            if (!System.Object.Equals(two, null))
+            {
+                // two is not null, so now compare names.
+                return one.name.Equals(two.name);
+            }
+        }
+        else if (System.Object.Equals(two, null))
+        {
+            //both objects are null so return true;
+            return true;
+        }
+        //one object is null and the other isn't, return false
+        return false;
+    }
+    public override bool Equals(object obj)
+    {
+        if (obj != null)
+        {
+
+            if (obj.GetType() == typeof(test))
+            {
+                return Check(this, obj as test);
+            }
+            else
+                return base.Equals(obj);
+        }
+        else
+            return base.Equals(obj);
+    }
+    public static bool operator ==(test one, test two)
+    {
+        return Check(one, two);
+    }
+    public static bool operator !=(test one, test two)
+    {
+        return Check(one, two);
+    }
+}
+
 
 public class Common : ScriptableObject
 {
-
 
 }

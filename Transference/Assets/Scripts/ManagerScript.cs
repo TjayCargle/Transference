@@ -12,7 +12,7 @@ public class ManagerScript : EventRunner
     public List<TileScript> currentAttackList;
     public List<List<TileScript>> attackableTiles;
     public PlayerController player;
-    int selectedAttackingTile = 0;
+    Vector2 selectedAttackingTile = Vector2.up;
     public int MapWidth = 0;
     public int MapHeight = 0;
     public State currentState = State.PlayerInput;
@@ -41,11 +41,20 @@ public class ManagerScript : EventRunner
     public List<menuStackEntry> menuStack;
     public int menuStackCount = 0;
     public descState descriptionState = descState.stats;
-
+    private int skipCount = 0;
+    public SFXManager sfx;
+    public ImgObj oppImage;
     public int TwoToOneD(int y, int width, int x)
     {
         return y * width + x;
     }
+    public List<LivingObject> currOppList;
+    public List<TileScript> doubleAdjOppTiles;
+    LivingObject oppObj;
+    public int targetIndex = 0;
+    public GridEvent oppEvent;
+    public List<LivingObject> targets;
+    menuStackEntry defaultEntry;
     // Use this for initialization
     public void Setup()
     {
@@ -55,6 +64,7 @@ public class ManagerScript : EventRunner
             menuManager = GetComponent<MenuManager>();
             invManager = GetComponent<InventoryMangager>();
             eventManager = GetComponent<EventManager>();
+            sfx = GameObject.FindObjectOfType<SFXManager>();
             eventManager.Setup();
             //dmgText = GameObject.FindObjectOfType<DmgTextObj>();
             //if (dmgText)
@@ -66,11 +76,13 @@ public class ManagerScript : EventRunner
             //    dmgText.gameObject.SetActive(false);
             //}
             menuStack = new List<menuStackEntry>();
-            menuStackEntry defaultEntry = new menuStackEntry();
+            defaultEntry = new menuStackEntry();
             defaultEntry.state = State.PlayerInput;
             defaultEntry.index = 0;
+            oppEvent = new GridEvent();
             menuStack.Add(defaultEntry);
             dmgText = new List<DmgTextObj>();
+            targets = new List<LivingObject>();
             tileMap = new GameObject[MapWidth * MapHeight];
             for (int i = 0; i < MapHeight; i++)
             {
@@ -150,7 +162,11 @@ public class ManagerScript : EventRunner
         currentState = entry.state;
         menuStack.Add(entry);
         invManager.currentIndex = 0;
-        invManager.Validate();
+        invManager.Validate("manager, enter state");
+        if (currentState == State.PlayerMove)
+        {
+            ShowGridObjectMoveArea(currentObject);
+        }
     }
     public void returnState()
     {
@@ -171,7 +187,7 @@ public class ManagerScript : EventRunner
                     break;
                 case currentMenu.invMain:
                     {
-                        Debug.Log("Going to inv,");
+
                         menuManager.ShowInventoryCanvas();
                     }
                     break;
@@ -184,6 +200,21 @@ public class ManagerScript : EventRunner
                     {
                         menuManager.ShowItemCanvas(7, currentObject.GetComponent<LivingObject>());
                     }
+                    break;
+                case currentMenu.OppSelection:
+                    {
+                        showOppAdjTiles();
+                    }
+                    break;
+                case currentMenu.OppOptions:
+                    {
+                        menuManager.ShowItemCanvas(3, currentObject.GetComponent<LivingObject>());
+                    }
+                    break;
+                default:
+                    ShowGridObjectAffectArea(currentObject);
+                    menuManager.ShowCommandCanvas();
+                    currentState = State.PlayerInput;
                     break;
             }
             GetComponent<InventoryMangager>().currentIndex = currEntry.index;
@@ -206,7 +237,17 @@ public class ManagerScript : EventRunner
         while (menuStack.Count > 1)
         {
             //   menuStack.Remove(menuStack[menuStack.Count - 1]);
+            menuStackEntry currEntry = menuStack[menuStack.Count - 1];
+            menuStackEntry prevEntry = menuStack[menuStack.Count - 2];
+
             returnState();
+        }
+        if (currentState != State.PlayerInput)
+        {
+            menuStack.Remove(menuStack[0]);
+            menuStack.Add(defaultEntry);
+            ShowGridObjectAffectArea(currentObject);
+            menuManager.ShowCommandCanvas();
         }
         if (prevst == State.EnemyTurn)
         {
@@ -219,7 +260,7 @@ public class ManagerScript : EventRunner
         currentObject = turnOrder[0];
         ShowGridObjectAffectArea(currentObject);
     }
-    public void CreateEvent(Object caller, Object data, string name, RunableEvent run, StartupEvent start = null)
+    public GridEvent CreateEvent(Object caller, Object data, string name, RunableEvent run, StartupEvent start = null, int index = -1, StartupWResourcesEvent startupW = null)
     {
         GridEvent newEvent = new GridEvent();
         newEvent.RUNABLE = run;
@@ -227,10 +268,24 @@ public class ManagerScript : EventRunner
         newEvent.caller = caller;
         newEvent.name = name;
         newEvent.START = start;
-        eventManager.gridEvents.Enqueue(newEvent);
+        newEvent.STARTW = startupW;
+        if (index >= 0)
+        {
+            eventManager.gridEvents.Insert(index, newEvent);
+
+        }
+        else
+        {
+            eventManager.gridEvents.Add(newEvent);
+
+        }
+        return newEvent;
     }
+
+
     void Update()
     {
+
         menuStackCount = menuStack.Count;
         if (Input.GetKey(KeyCode.N))
         {
@@ -244,78 +299,257 @@ public class ManagerScript : EventRunner
 
                     break;
                 case State.PlayerMove:
-                    if (!Input.GetKey(KeyCode.None))
-                    {
-                        ShowGridObjectMoveArea(currentObject);
-                    }
+
                     break;
                 case State.PlayerAttacking:
-                    bool hitkey = false;
-                    if (Input.GetKeyDown(KeyCode.W))
                     {
-                        ShowWhite();
-                        selectedAttackingTile += 1;
-                        hitkey = true;
-                    }
-                    if (Input.GetKeyDown(KeyCode.D))
-                    {
-                        ShowWhite();
-                        selectedAttackingTile += 1;
-                        hitkey = true;
-                    }
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        ShowWhite();
-                        selectedAttackingTile -= 1;
-                        hitkey = true;
-                    }
-                    if (Input.GetKeyDown(KeyCode.A))
-                    {
-                        ShowWhite();
-                        selectedAttackingTile -= 1;
-                        hitkey = true;
-                    }
-                    if (hitkey == true)
-                    {
-                        if (attackableTiles.Count > 0)
-                        {
-                            if (selectedAttackingTile >= attackableTiles.Count)
-                                selectedAttackingTile = 0;
-                            if (selectedAttackingTile < 0)
-                                selectedAttackingTile = attackableTiles.Count - 1;
-                            showAttackableTiles();
 
-                            currentAttackList = attackableTiles[selectedAttackingTile];
-                            bool foundSomething = false;
-                            for (int i = 0; i < currentAttackList.Count; i++)
+                        bool hitkey = false;
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.up)
+                                skipCount++;
+                            else
                             {
-                                if (GetObjectAtTile(currentAttackList[i]) != null)
+                                selectedAttackingTile = Vector2.up;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.right)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.right;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.down)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.down;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.A))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.left)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.left;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (hitkey == true)
+                        {
+
+                            if (attackableTiles.Count > 0)
+                            {
+                                int realAmt = attackableTiles.Count / 4;
+                                if (skipCount >= realAmt)
                                 {
-                                    foundSomething = true;
-                                    if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[i].transform.position) == true)
+                                    skipCount = realAmt - 1;
+                                    selectedAttackingTile = selectedAttackingTile * new Vector2(-1, -1);
+                                }
+                                int loopSkipCount = skipCount;
+                                int index = 0;
+
+                                for (int i = 0; i < attackableTiles.Count; i++)
+                                {
+                                    Vector3 dir = attackableTiles[i][0].transform.position - player.current.transform.position;
+                                    Vector2 trueDir = new Vector2(dir.x, dir.z);
+                                    trueDir.Normalize();
+                                    if (selectedAttackingTile == trueDir)
+                                    {
+                                        if (loopSkipCount > 0)
+                                        {
+                                            loopSkipCount--;
+                                        }
+                                        else
+                                        {
+                                            index = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                                showAttackableTiles();
+
+                                currentAttackList = attackableTiles[index];
+                                bool foundSomething = false;
+                                for (int i = 0; i < currentAttackList.Count; i++)
+                                {
+                                    if (GetObjectAtTile(currentAttackList[i]) != null)
+                                    {
+                                        foundSomething = true;
+                                        if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[i].transform.position) == true)
+                                        {
+                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+
+                                        }
+
+                                    }
+                                    currentAttackList[i].myColor = Color.green;
+                                }
+                                if (foundSomething == false)
+                                {
+                                    if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
                                     {
                                         ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
 
                                     }
 
                                 }
-                                currentAttackList[i].myColor = Color.green;
+                                //  ShowSelectedTile(tempObject.GetComponent<GridObject>());
                             }
-                            if (foundSomething == false)
-                            {
-                                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
-                                {
-                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-
-                                }
-
-                            }
-                            //  ShowSelectedTile(tempObject.GetComponent<GridObject>());
                         }
                     }
                     break;
-                case State.PlayerEquippingMenu:
+                case State.PlayerOppSelecting:
+                    {
+                        bool hitkey = false;
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.up)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.up;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.right)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.right;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.down)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.down;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (Input.GetKeyDown(KeyCode.A))
+                        {
+                            ShowWhite();
+                            if (selectedAttackingTile == Vector2.left)
+                                skipCount++;
+                            else
+                            {
+                                selectedAttackingTile = Vector2.left;
+                                skipCount = 0;
+                            }
+                            hitkey = true;
+                        }
+                        if (hitkey == true)
+                        {
 
+                            if (doubleAdjOppTiles.Count > 0)
+                            {
+                                int realAmt = doubleAdjOppTiles.Count;
+                                if (skipCount >= realAmt)
+                                {
+                                    skipCount = realAmt - 1;
+                                    selectedAttackingTile = selectedAttackingTile * new Vector2(-1, -1);
+                                }
+                                int loopSkipCount = skipCount;
+                                int index = 0;
+
+                                for (int i = 0; i < doubleAdjOppTiles.Count; i++)
+                                {
+                                    Vector3 dir = doubleAdjOppTiles[i].transform.position - player.current.transform.position;
+                                    Vector2 trueDir = new Vector2(dir.x, dir.z);
+                                    trueDir.Normalize();
+                                    if (selectedAttackingTile == trueDir)
+                                    {
+                                        if (loopSkipCount > 0)
+                                        {
+                                            loopSkipCount--;
+                                        }
+                                        else
+                                        {
+                                            index = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                                targetIndex = index;
+                                showOppAdjTiles();
+                                TileScript targetTile = doubleAdjOppTiles[targetIndex];
+                                if (GetObjectAtTile(targetTile) != null)
+                                {
+                                    targetTile.myColor = Color.green;
+
+                                }
+                                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), targetTile.transform.position) == true)
+                                {
+                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                                }
+
+
+
+                            }
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            TileScript targetTile = doubleAdjOppTiles[targetIndex];
+                            if (GetObjectAtTile(targetTile) != null)
+                            {
+                                oppObj = GetObjectAtTile(targetTile) as LivingObject;
+                                targetTile.myColor = Color.green;
+                                menuStackEntry entry = new menuStackEntry();
+                                entry.state = State.PlayerOppOptions;
+                                entry.index = invManager.currentIndex;
+                                entry.menu = currentMenu.OppSelection;
+
+                                enterState(entry);
+                                menuManager.showOpportunityOptions(oppObj);
+                            }
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            oppEvent.caller = null;
+                            CleanMenuStack();
+                        }
+                    }
+                    break;
+                case State.PlayerOppOptions:
+                    {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            player.useOppAction(oppObj);
+                        }
+
+
+                    }
                     break;
                 case State.PlayerEquipping:
 
@@ -374,6 +608,37 @@ public class ManagerScript : EventRunner
                     break;
                 case State.EnemyTurn:
                     break;
+                case State.PlayerOppMove:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        MoveGridObject(oppObj, new Vector3(0, 0, 1));
+                    }
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        MoveGridObject(oppObj, new Vector3(-1, 0, 0));
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        MoveGridObject(oppObj, new Vector3(0, 0, -1));
+                    }
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        MoveGridObject(oppObj, new Vector3(1, 0, 0));
+                    }
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        ComfirmMenuAction(oppObj);
+                        oppEvent.caller = null;
+                        CleanMenuStack();
+                     
+                    }
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        CancelMenuAction(oppObj);
+                        oppEvent.caller = null;
+                        CleanMenuStack();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -388,10 +653,12 @@ public class ManagerScript : EventRunner
         if (currentState == State.EnemyTurn)
         {
             currentState = State.PlayerInput;
+
         }
         else
         {
             currentState = State.EnemyTurn;
+            menuManager.ShowNone();
         }
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
@@ -450,12 +717,17 @@ public class ManagerScript : EventRunner
                 myCamera.infoObject = obj;
             }
             result = true;
+            if (currentState != State.EnemyTurn)
+            {
+                menuManager.ShowCommandCanvas();
+            }
         }
         return result;
     }
     public void NextTurn(string invokingObj)
     {
- 
+        currOppList.Clear();
+        doubleAdjOppTiles.Clear();
         Debug.Log(invokingObj + " is done with their turn, moving on ");
         if (currentObject.GetComponent<BuffScript>())
         {
@@ -485,8 +757,7 @@ public class ManagerScript : EventRunner
             currentObject.GetComponent<SecondStatusScript>().ReduceCount(this, currentObject.GetComponent<LivingObject>());
         }
 
-        CleanMenuStack();
-        ShowGridObjectAffectArea(currentObject);
+
         CreateEvent(this, turnOrder[0], "Initial Camera Event", CameraEvent);
 
     }
@@ -498,6 +769,34 @@ public class ManagerScript : EventRunner
             {
                 attackableTiles[i][j].myColor = Color.red;
             }
+        }
+    }
+    public void loadTargets()
+    {
+        targets.Clear();
+        for (int i = 0; i < attackableTiles.Count; i++)
+        {
+            for (int j = 0; j < attackableTiles[i].Count; j++)
+            {
+                GridObject obj = GetObjectAtTile(attackableTiles[i][j]);
+                if (obj)
+                {
+                    if (obj.GetComponent<LivingObject>())
+                    {
+                        targets.Add(obj.GetComponent<LivingObject>());
+                    }
+                }
+            }
+        }
+    }
+    public void showOppAdjTiles()
+    {
+        Color orange = new Color(1.0f, 0.369f, 0.0f);
+        for (int i = 0; i < doubleAdjOppTiles.Count; i++)
+        {
+
+            doubleAdjOppTiles[i].myColor = orange;
+
         }
     }
     public void updateCurrentMenuPosition(int currentAnchor)
@@ -867,14 +1166,18 @@ public class ManagerScript : EventRunner
         {
             for (int i = 0; i < gridObjects.Count; i++)
             {
-                if (gridObjects[i].gameObject == tempObject)
+                if (gridObjects[i])
                 {
-                    continue;
-                }
-                if (gridObjects[i].currentTile == checkTile)
-                {
-                    returnedObject = gridObjects[i];
-                    break;
+
+                    if (gridObjects[i].gameObject == tempObject)
+                    {
+                        continue;
+                    }
+                    if (gridObjects[i].currentTile == checkTile)
+                    {
+                        returnedObject = gridObjects[i];
+                        break;
+                    }
                 }
             }
         }
@@ -953,12 +1256,154 @@ public class ManagerScript : EventRunner
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
+
         Vector3 v5 = origin.transform.position;
         Vector3 v6 = origin.transform.position;
+        Vector3 v7 = origin.transform.position;
+        Vector3 v8 = origin.transform.position;
 
-        v1.x += 1;
+        Vector3 v9 = origin.transform.position;
+        Vector3 v10 = origin.transform.position;
+        Vector3 v11 = origin.transform.position;
+        Vector3 v12 = origin.transform.position;
+
+        v1.z += 1;
+        v2.x += 1;
+        v3.z -= 1;
+        v4.x -= 1;
+
+        v5.x += 2;
+        v6.z += 2;
+        v7.z -= 2;
+        v8.x -= 2;
+
+        v9.x -= 1;
+        v9.z += 1;
+
+        v10.x += 1;
+        v10.z += 1;
+
+        v11.x -= 1;
+        v11.z -= 1;
+
+        v12.x += 1;
+        v12.z -= 1;
+
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+        possiblePossitions.Add(v5);
+        possiblePossitions.Add(v6);
+        possiblePossitions.Add(v7);
+        possiblePossitions.Add(v8);
+        possiblePossitions.Add(v9);
+        possiblePossitions.Add(v10);
+        possiblePossitions.Add(v11);
+        possiblePossitions.Add(v12);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = GetTileIndex(possiblePossitions[i]);
+            if (index > 0)
+            {
+                TileScript newTile = GetTileAtIndex(index);
+                tiles.Add(newTile);
+            }
+        }
         return tiles;
     }
+
+    public List<TileScript> GetOppViaDoubleAdjecentTiles(LivingObject origin, Element trigger)
+    {
+        Debug.Log("checking for adj");
+        Debug.Log("Trigger Element");
+        List<TileScript> tiles = new List<TileScript>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+
+        Vector3 v5 = origin.transform.position;
+        Vector3 v6 = origin.transform.position;
+        Vector3 v7 = origin.transform.position;
+        Vector3 v8 = origin.transform.position;
+
+        Vector3 v9 = origin.transform.position;
+        Vector3 v10 = origin.transform.position;
+        Vector3 v11 = origin.transform.position;
+        Vector3 v12 = origin.transform.position;
+
+        v1.z += 1;
+        v2.x += 1;
+        v3.z -= 1;
+        v4.x -= 1;
+
+        v5.x += 2;
+        v6.z += 2;
+        v7.z -= 2;
+        v8.x -= 2;
+
+        v9.x -= 1;
+        v9.z += 1;
+
+        v10.x += 1;
+        v10.z += 1;
+
+        v11.x -= 1;
+        v11.z -= 1;
+
+        v12.x += 1;
+        v12.z -= 1;
+
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+        possiblePossitions.Add(v5);
+        possiblePossitions.Add(v6);
+        possiblePossitions.Add(v7);
+        possiblePossitions.Add(v8);
+        possiblePossitions.Add(v9);
+        possiblePossitions.Add(v10);
+        possiblePossitions.Add(v11);
+        possiblePossitions.Add(v12);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = GetTileIndex(possiblePossitions[i]);
+            if (index > 0)
+            {
+                TileScript newTile = GetTileAtIndex(index);
+                if (newTile.isOccupied)
+                {
+                    GridObject obj = GetObjectAtTile(newTile);
+                    if (obj.GetComponent<LivingObject>())
+                    {
+                        LivingObject liveObj = obj.GetComponent<LivingObject>();
+                        if (!currOppList.Contains(liveObj))
+                        {
+
+                            if (liveObj.OPP_SLOTS.SKILLS.Count > 0)
+                            {
+                                for (int k = 0; k < liveObj.OPP_SLOTS.SKILLS.Count; k++)
+                                {
+                                    if ((liveObj.OPP_SLOTS.SKILLS[k] as OppSkill).TRIGGER == trigger)
+                                    {
+                                        tiles.Add(newTile);
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return tiles;
+    }
+
     public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, CommandSkill skill)
     {
         int checkIndex = GetTileIndex(obj);
@@ -1357,7 +1802,7 @@ public class ManagerScript : EventRunner
         {
             invManager.currentIndex = selectedItem.transform.GetSiblingIndex();
             invManager.ForceSelect();
-            invManager.Validate();
+            invManager.Validate("Manager hover");
         }
 
     }
@@ -1462,19 +1907,20 @@ public class ManagerScript : EventRunner
                 break;
 
             case EHitType.knocked:
-                mod = 2.0f;
+
                 react.reaction = Reaction.knockback;
                 //todo add lose a action
                 break;
 
             case EHitType.cripples:
                 mod = 4.0f;
-                react.reaction = Reaction.statDrop;
+                react.reaction = Reaction.cripple;
                 break;
 
             case EHitType.leathal:
-                mod = 5.0f;
-                react.reaction = Reaction.statDrop;
+                mod = 6.0f;
+                react.reaction = Reaction.cripple;
+                dmgObject.GENERATED = 0;
                 //todo add lose a action
                 break;
             default:
@@ -1485,10 +1931,10 @@ public class ManagerScript : EventRunner
         float calc = 0.0f;
         float reduction = 1.0f;
         float increasedDmg = 1.0f;
-        float resist = 0.0f;
+        float resist = 1.0f;
         if (attackType == EType.physical)
         {
-            resist = dmgObject.DEFENSE;
+            resist = dmgObject.DEFENSE + dmgObject.ARMOR.DEFENSE;
             if (alteration == Reaction.reduceDef)
             {
                 resist = resist * 0.5f;
@@ -1496,7 +1942,7 @@ public class ManagerScript : EventRunner
         }
         else
         {
-            resist = dmgObject.RESIESTANCE;
+            resist = dmgObject.RESIESTANCE + dmgObject.ARMOR.RESISTANCE;
             if (alteration == Reaction.reduceRes)
             {
                 resist = resist * 0.5f;
@@ -1521,28 +1967,35 @@ public class ManagerScript : EventRunner
         {
             increasedDmg = 2.0f;
         }
+        // Debug.Log("Str: " + attackingObject.STRENGTH);
+        // Debug.Log("E Def: " + (dmgObject.DEFENSE + dmgObject.ARMOR.DEFENSE));
+        // Debug.Log("red: " + reduction);
+        // Debug.Log("IncDmg: " + increasedDmg);
+        // Debug.Log("Resist: " + resist);
+
         if (attackType == EType.physical)
         {
-            calc = ((float)attackingObject.STRENGTH * reduction * increasedDmg) / (resist * 0.1f);
+            calc = ((float)attackingObject.STRENGTH * reduction * increasedDmg) * (attackingObject.STRENGTH / resist);
         }
         else
         {
-            calc = ((float)attackingObject.MAGIC * reduction * increasedDmg) / (resist * 0.1f);
+            calc = ((float)attackingObject.MAGIC * reduction * increasedDmg) * (attackingObject.MAGIC / resist);
         }
+        mod = ApplyDmgMods(attackingObject, mod, attackingElement);
+        mod = ApplyDmgMods(dmgObject, mod, attackingElement);
+        // Debug.Log("Mod: " + mod);
+        calc = calc * mod;
         // Debug.Log("Calc: " + calc);
         // Debug.Log("DMG: " + dmg);
         calc = dmg * calc;
-        //  Debug.Log("Combined: " + calc);
+        Debug.Log("Combined: " + calc);
         //   Debug.Log("Calc2:" + calc);
         calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
-        //    Debug.Log("Calc3:" + calc);
+        // Debug.Log("Calc with levels:" + calc);
         calc = Mathf.Sqrt(calc * 2);
-        //     Debug.Log("Calc4:" + calc);
-        mod = ApplyDmgMods(attackingObject, mod, attackingElement);
-        mod = ApplyDmgMods(dmgObject, mod, attackingElement);
-        //   Debug.Log("Mod: " + mod);
-        calc = calc * mod;
-        //   Debug.Log("Calc final: " + calc);
+        // Debug.Log("Calc4:" + calc);
+
+        // Debug.Log("Calc final: " + calc);
         if (calc < 0)
         {
             calc = 0;
@@ -1600,7 +2053,7 @@ public class ManagerScript : EventRunner
         if (conatiner.command)
             return CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.attackingElement, conatiner.attackType, conatiner.dmg, conatiner.alteration);
         else
-            return CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.command, conatiner.alteration);
+            return CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.attackingObject.WEAPON, conatiner.alteration);
 
     }
 
@@ -1636,7 +2089,7 @@ public class ManagerScript : EventRunner
                 DamageLivingObject(target, react.damage);
 
                 break;
-            case Reaction.statDrop:
+            case Reaction.cripple:
                 DamageLivingObject(target, react.damage);
                 target.PSTATUS = PrimaryStatus.crippled;
                 break;
@@ -1686,16 +2139,16 @@ public class ManagerScript : EventRunner
 
         else
         {
-            Debug.Log("new dmg text");
+            //  Debug.Log("new dmg text");
             GameObject tjObject = Instantiate(dmgPrefab);
             tjObject.SetActive(false);
             if (tjObject != null)
             {
-                Debug.Log("found  text");
+                //  Debug.Log("found  text");
             }
             else
             {
-                Debug.Log("no text");
+                //  Debug.Log("no text");
             }
             dto = tjObject.GetComponent<DmgTextObj>();
             dmgText.Add(dto);
@@ -1749,8 +2202,8 @@ public class ManagerScript : EventRunner
         if (eventManager)
         {
 
-            CreateEvent(this, gao, "Animation request: " + AnimationRequests + "", CheckAnimation, gao.StartCountDown);
-            CreateEvent(this, dto, "DmgText request: " + dmgRequest + "", CheckDmgText, dto.StartCountDown);
+            CreateEvent(this, dto, "DmgText request: " + dmgRequest + "", CheckDmgText, dto.StartCountDown, 0);
+            CreateEvent(this, gao, "Animation request: " + AnimationRequests + "", CheckAnimation, gao.StartCountDown, 0);
         }
         if (target.HEALTH <= 0)
         {
@@ -1762,6 +2215,7 @@ public class ManagerScript : EventRunner
             if (target.IsEnenmy)
             {
                 target.gameObject.SetActive(false);
+                Destroy(target);
             }
             LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
             bool winner = true;
@@ -1879,36 +2333,29 @@ public class ManagerScript : EventRunner
                             {
                                 for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
                                 {
-                                    if ((invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill).ACT == AutoAct.beforeDmg)
+                                    if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == AutoAct.beforeDmg)
                                     {
-                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill);
+                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
                                         float chance = auto.CHANCE;
                                         float result = Random.value * 100;
                                         if (chance < result)
                                         {
                                             Debug.Log("Auto skill : " + auto.NAME + "has gone off");
                                             atkReaction = auto.Activate(0);
+                                            break;
                                         }
                                     }
                                 }
-                                react = CalcDamage(invokingObject, target, weapon, atkReaction);
-                                for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
-                                {
-                                    if ((invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill).ACT == AutoAct.afterDmg)
-                                    {
-                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[i] as AutoSkill);
-                                        float chance = auto.CHANCE;
-                                        float result = Random.value * 100;
-                                        if (chance > result)
-                                        {
-                                            Debug.Log("Auto skill : " + auto.NAME + "has gone off");
-                                            Debug.Log("chance= " + auto.CHANCE);
-                                            Debug.Log("result= " + result);
-                                            auto.Activate(react.damage);
-                                        }
-                                    }
-                                }
-                                ApplyReaction(invokingObject, target, react);
+                                AtkConatiner conatiner = new AtkConatiner();
+                                conatiner.alteration = atkReaction;
+                                conatiner.attackingElement = weapon.AFINITY;
+                                conatiner.attackType = weapon.ATTACK_TYPE;
+                                conatiner.attackingObject = invokingObject;
+                                conatiner.command = null;
+                                conatiner.dmg = weapon.ATTACK;
+                                conatiner.dmgObject = target;
+                                CreateEvent(this, conatiner, "Skill use event", WeaponAttackEvent);
+
                             }
 
 
@@ -2043,11 +2490,73 @@ public class ManagerScript : EventRunner
     }
     public bool AttackEvent(Object data)
     {
+        loadTargets();
         AtkConatiner container = data as AtkConatiner;
         DmgReaction react = CalcDamage(container);
         ApplyReaction(container.attackingObject, container.dmgObject, react);
+        if (react.reaction < Reaction.nulled)
+        {
+            if (!currOppList.Contains(container.attackingObject))
+            {
+                currOppList.Add(container.attackingObject);
+                doubleAdjOppTiles = GetOppViaDoubleAdjecentTiles(container.attackingObject, container.attackingElement);
+                if (doubleAdjOppTiles.Count > 0)
+                {
+                    for (int i = 0; i < doubleAdjOppTiles.Count; i++)
+                    {
+
+                        CreateEvent(this, GetObjectAtTile(doubleAdjOppTiles[i]) as LivingObject, "Opp Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
+                    }
+                    oppEvent = CreateEvent(this, null, "Opp Event", CheckOppEvent, OppStart);
+                }
+            }
+        }
         return true;
     }
+    public bool WeaponAttackEvent(Object data)
+    {
+        loadTargets();
+        AtkConatiner container = data as AtkConatiner;
+        DmgReaction react = CalcDamage(container);
+        LivingObject invokingObject = container.attackingObject;
+        for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+        {
+            if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == AutoAct.afterDmg)
+            {
+                AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
+                float chance = auto.CHANCE;
+                float result = Random.value * 100;
+                if (chance > result)
+                {
+                    Debug.Log("Auto skill : " + auto.NAME + "has gone off");
+                    Debug.Log("chance= " + auto.CHANCE);
+                    Debug.Log("result= " + result);
+                    auto.Activate(react.damage);
+                }
+            }
+        }
+        ApplyReaction(container.attackingObject, container.dmgObject, react);
+        if (react.reaction < Reaction.nulled)
+        {
+            if (!currOppList.Contains(container.attackingObject))
+            {
+                currOppList.Add(container.attackingObject);
+                doubleAdjOppTiles = GetOppViaDoubleAdjecentTiles(container.attackingObject, container.attackingElement);
+                if (doubleAdjOppTiles.Count > 0)
+                {
+                    for (int i = 0; i < doubleAdjOppTiles.Count; i++)
+                    {
+
+                        CreateEvent(this, GetObjectAtTile(doubleAdjOppTiles[i]) as LivingObject, "Opp Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
+                    }
+                    Debug.Log("found opp skill user");
+                    oppEvent = CreateEvent(this, null, "Opp Event", CheckOppEvent, OppStart);
+                }
+            }
+        }
+        return true;
+    }
+
     public bool CheckAnimation(Object data)
     {
         GridAnimationObj gao = data as GridAnimationObj;
@@ -2064,13 +2573,57 @@ public class ManagerScript : EventRunner
         }
     }
 
+    public void OppStart()
+    {
+        menuStackEntry entry = new menuStackEntry();
+        entry.state = State.PlayerOppSelecting;
+        entry.menu = currentMenu.command;
+        enterState(entry);
+        menuManager.ShowNone();
+        showOppAdjTiles();
+    }
     public bool CheckDmgText(Object data)
     {
         DmgTextObj dto = data as DmgTextObj;
         return !dto.isShowing;
     }
+    public void OppAnnounceStart(Object data)
+    {
+        LivingObject invokingObj = data as LivingObject;
 
-    public bool moveObject(Object data)
+
+        AudioClip audio = Resources.LoadAll<AudioClip>(invokingObj.FullName + "/Opp/")[0];
+        if (audio)
+        {
+            Debug.Log("found audio");
+        }
+        sfx.loadAudio(audio);
+        sfx.playSound();
+
+        if (oppImage)
+        {
+            oppImage.gameObject.SetActive(true);
+            oppImage.myImage.sprite = Resources.LoadAll<Sprite>(invokingObj.FullName + "/Opp/")[0];
+            oppImage.StartCountDown(audio.length);
+        }
+    }
+    public bool OppAnnounceEvent(Object data)
+    {
+
+        return !sfx.SOURCE.isPlaying;
+    }
+
+    public bool CheckOppEvent(Object data)
+    {
+
+        if (oppEvent.caller)
+        {
+            return false;
+
+        }
+        return true;
+    }
+    public bool NextTurnEvent(Object data)
     {
         return false;
     }

@@ -115,7 +115,6 @@ public class EnemyScript : LivingObject
                 //}
             }
         }
-        Debug.Log("curr count = " + pathTarget.currentPath.Count);
  
         return pathTarget.currentPath;
     }

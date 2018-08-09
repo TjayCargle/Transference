@@ -10,7 +10,7 @@ public class NonCombatButton : MonoBehaviour {
     public void PressStart()
     {
    
-        SceneManager.LoadScene("DemoMap");
+        SceneManager.LoadSceneAsync("DemoMap");
 
     
     }

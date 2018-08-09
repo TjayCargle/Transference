@@ -335,7 +335,13 @@ public class DatabaseManager : MonoBehaviour
                                 index++;
                                 command.TILES.Add(v);
                             }
-                            command.DESC = "Deals " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
+                            if(command.HITS == 1)
+                            command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
+                            else
+                            {
+                                command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + skill.DESC + " " + command.HITS + " times";
+
+                            }
 
 
                             livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);

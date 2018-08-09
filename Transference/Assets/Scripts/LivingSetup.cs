@@ -33,7 +33,7 @@ public class LivingSetup : MonoBehaviour
             {
 
 
-                Debug.Log(me.FullName + " is setting up");
+               // Debug.Log(me.FullName + " is setting up");
                 if (dm != null)
                 {
                     if (me)

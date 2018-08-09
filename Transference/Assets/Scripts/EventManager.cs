@@ -6,7 +6,7 @@ public class EventManager : EventRunner
 {
 
     // public delegate bool RunEvent();
-    public Queue<GridEvent> gridEvents;
+    public List<GridEvent> gridEvents;
     public bool ir = false;
     // float time = 1.0f;
     public int activeEvents = 0;
@@ -18,7 +18,7 @@ public class EventManager : EventRunner
     {
         if (!isSetup)
         {
-            gridEvents = new Queue<GridEvent>();
+            gridEvents = new List<GridEvent>();
             currentEvent.data = null;
             isSetup = true;
         }
@@ -45,11 +45,13 @@ public class EventManager : EventRunner
 
                 if (currentEvent.isRunning == false)
                 {
-                    currentEvent = gridEvents.Dequeue();
+                    currentEvent = gridEvents[0];//Dequeue();
+                    gridEvents.Remove(gridEvents[0]);
                     currentEvent.isRunning = true;
                     if (currentEvent.START != null)
                         currentEvent.START();
-
+                    if (currentEvent.STARTW != null)
+                        currentEvent.STARTW(currentEvent.data);
                     Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 
                 }

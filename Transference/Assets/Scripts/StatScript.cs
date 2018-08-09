@@ -83,22 +83,22 @@ public class StatScript : MonoBehaviour {
     }
     public int DEFENSE
     {
-        get { return  myBaseDefense + owner.ARMOR.DEFENSE; }
+        get { return  myBaseDefense; }
         set { myBaseDefense = value; }
     }
     public int RESIESTANCE
     {
-        get { return  myBaseResistance + owner.ARMOR.RESISTANCE; }
+        get { return  myBaseResistance ; }
         set { myBaseResistance = value; }
     }
     public int SPEED
     {
-        get { return  myBaseSpeed + owner.ARMOR.SPEED; }
+        get { return  myBaseSpeed ; }
         set { myBaseSpeed = value; }
     }
     public int LUCK
     {
-        get { return myBaseLuck + owner.WEAPON.LUCK; }
+        get { return myBaseLuck ; }
         set { myBaseLuck = value; }
     }
     public int MAX_HEALTH

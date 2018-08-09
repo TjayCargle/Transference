@@ -15,7 +15,7 @@ public class AnimationScript : MonoBehaviour {
         {
             obj = GetComponent<GridObject>();
             render = GetComponent<SpriteRenderer>();
-            Debug.Log("InitialList");
+           // Debug.Log("InitialList");
             currentList = Resources.LoadAll<Sprite>("" + obj.FullName + "/Idle/"); //obj.FullName + "/Idle/");
             index = 0;
             isSetup = true;

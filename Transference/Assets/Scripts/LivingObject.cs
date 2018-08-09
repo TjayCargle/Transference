@@ -16,6 +16,8 @@ public class LivingObject : GridObject
     [SerializeField]
     private int actions;
     [SerializeField]
+    private int generatedActions;
+    [SerializeField]
     private PrimaryStatus pStatus = PrimaryStatus.normal;
     [SerializeField]
     private SecondaryStatus sStatus = SecondaryStatus.normal;
@@ -112,6 +114,11 @@ public class LivingObject : GridObject
         get { return actions; }
         set { actions = value; }
     }
+    public int GENERATED
+    {
+        get { return generatedActions; }
+        set { generatedActions = value; }
+    }
 
     public int Max_Atk_DIST
     {
@@ -182,9 +189,10 @@ public class LivingObject : GridObject
 
     public override void Setup()
     {
+    
         if (!isSetup)
         {
-            Debug.Log("Living setup " + FullName);
+           // Debug.Log("Living setup " + FullName);
             if (!GetComponent<InventoryScript>())
             {
                 gameObject.AddComponent<InventoryScript>();
@@ -304,7 +312,7 @@ public class LivingObject : GridObject
             ACTIONS = 2;
             base.Setup();
         }
-        Debug.Log("Setup done");
+      //  Debug.Log("Setup done");
         isSetup = true;
     }
 
@@ -336,7 +344,7 @@ public class LivingObject : GridObject
             {
 
                 myManager.NextTurn(FullName);
-                myManager.GetComponent<InventoryMangager>().Validate();
+                myManager.GetComponent<InventoryMangager>().Validate("living obj, action taken");
             }
         }
     }
@@ -344,7 +352,7 @@ public class LivingObject : GridObject
     {
        // STATS.HEALTH += 5;
        // STATS.MANA += 2;
-        STATS.FATIGUE -= 2 * (actions + 1);
+        STATS.FATIGUE -= (int)(0.2 * STATS.MAX_FATIGUE) * (actions + 1);
         ACTIONS = 0;
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;

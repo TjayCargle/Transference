@@ -21,16 +21,37 @@ public class InventoryMangager : MonoBehaviour
     public int menuSide = -1;
     public MenuItem[] itemSlots;
     public MenuItem[] extraSlots;
+    UsableScript genericMove;
+    UsableScript genericAtk;
+  
     public List<UsableScript> currentList = null;
     public List<UsableScript> extraList = null;
     public int slotIndex;
     [SerializeField]
     private Sprite[] imgTypes;
-    public void Start()
+    public bool isSetup = false;
+    public void Setup()
     {
-        menuManager = GameObject.FindObjectOfType<MenuManager>();
-        manager = GetComponent<ManagerScript>();
-        imgTypes = Resources.LoadAll<Sprite>("Buttons/");
+        if (!isSetup)
+        {
+            menuManager = GameObject.FindObjectOfType<MenuManager>();
+            manager = GetComponent<ManagerScript>();
+            imgTypes = Resources.LoadAll<Sprite>("Buttons2/");
+            genericMove = ScriptableObject.CreateInstance<UsableScript>();
+            genericAtk = ScriptableObject.CreateInstance<UsableScript>();
+            //genericWait = ScriptableObject.CreateInstance<UsableScript>();
+            genericMove.NAME = "MOVE";
+            genericAtk.NAME = "ATTACK";
+            //genericWait.name = "WAIT";
+            genericMove.DESC = "Allows unit to move.";
+            genericAtk.DESC = "Use equipped weapon to attack enemy";
+        }
+        isSetup = true;
+    }
+
+    private void Start()
+    {
+        Setup();
     }
 
 
@@ -149,6 +170,29 @@ public class InventoryMangager : MonoBehaviour
                     {
                         DecreaseScroll();
 
+                    }
+                    break;
+
+                case State.PlayerOppOptions:
+                    {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            IncreaseScroll();
+                            if (extraContent)
+                            {
+                                DetermineAndFillExtra();
+                            }
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();
+                            if (extraContent)
+                            {
+                                DetermineAndFillExtra();
+                            }
+
+                        }
                     }
                     break;
             }
@@ -423,19 +467,35 @@ public class InventoryMangager : MonoBehaviour
         UpdateColors(extraSlots);
     }
 
-    public void Validate()
+    public void Validate(string caller)
     {
         if (currentRect)
         {
             if (currentContent)
             {
+                //Debug.Log("validating from " + caller);
 
                 if (currentContent.transform.childCount > 0)
                 {
                     for (int i = 0; i < currentContent.transform.childCount; i++)
                     {
-                        MenuItem temp = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                        MenuItem temp = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
                         temp.GetComponentInChildren<Text>().color = Color.white;
+                        temp.GetComponent<Image>().sprite = imgTypes[0];
+
+
+                        if (temp.refItem)
+                        {
+                            if (lastObject.WEAPON.NAME == temp.refItem.NAME || lastObject.ARMOR.NAME == temp.refItem.NAME || lastObject.ACCESSORY.NAME == temp.refItem.NAME)
+                            {
+
+
+                                temp.GetComponent<Image>().sprite = imgTypes[5];
+                            }
+
+
+
+                        }
                     }
                     if (selectedMenuItem)
                     {
@@ -447,7 +507,6 @@ public class InventoryMangager : MonoBehaviour
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
                     }
-
 
                 }
             }
@@ -482,7 +541,7 @@ public class InventoryMangager : MonoBehaviour
                 }
         }
 
-        Validate();
+        Validate("inv manager for force select");
 
     }
     private void UpdateColors(MenuItem[] items)
@@ -501,6 +560,7 @@ public class InventoryMangager : MonoBehaviour
                         Image selectedImg = selectableItem.GetComponent<Image>();
                         if (selectableItem.refItem)
                         {
+                            if(selectableItem.refItem.GetType() != typeof(UsableScript))
                             switch (((SkillScript)selectableItem.refItem).ELEMENT)
                             {
                                 case Element.Passive:
@@ -542,7 +602,7 @@ public class InventoryMangager : MonoBehaviour
         //UsableScript itemType = new UsableScript();
         int useType = -1;
         int windowType = -1;
-        Debug.Log("index = " + index);
+      //  Debug.Log("index = " + index);
         switch (index)
         {
 
@@ -577,7 +637,12 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = new ItemScript();
                 // itemType.TYPE = 3;
                 useType = 3;
-
+                currentList.Add(genericMove);
+                currentList.Add(genericAtk);
+                for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
+                {
+                    currentList.Add(liveObject.GetComponent<InventoryScript>().CSKILLS[i]);
+                }
                 break;
             case 4:
                 // itemType = new SkillScript(); 
@@ -593,7 +658,7 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = new SkillScript(); 
                 // itemType.TYPE = 4;
                 useType = 4;
-                windowType = 1; //all usable skills
+                windowType = 1; //all command skills
                 for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
                 {
                     currentList.Add(liveObject.GetComponent<InventoryScript>().CSKILLS[i]);
@@ -686,7 +751,17 @@ public class InventoryMangager : MonoBehaviour
                     //  MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
                     item.TYPE = useType;//itemType.TYPE;
                     selectableItem.refItem = item;
+                    if (index == 3)
+                    {
+                        if (item == genericMove)
+                        {
+                            selectableItem.itemType = 0;
+                            selectableItem.refItem.DESC = "Move a number of tiles";
 
+                        }
+                      
+                    
+                    }
                 }
 
 
@@ -699,10 +774,10 @@ public class InventoryMangager : MonoBehaviour
 
 
         }
+
         slotIndex = 5;
 
         UpdateColors(itemSlots);
-
         if (content.GetComponent<RectTransform>())
         {
 
@@ -716,6 +791,7 @@ public class InventoryMangager : MonoBehaviour
             {
                 if (currentContent.transform.childCount > 0)
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                Validate("inv manager for loading");
             }
         }
         if (menuManager)
@@ -734,6 +810,7 @@ public class InventoryMangager : MonoBehaviour
                 }
             }
         }
+
 
     }
 
@@ -837,25 +914,28 @@ public class InventoryMangager : MonoBehaviour
         if (menuSide == -1)
             if (currentIndex < currentList.Count)
             {
-
-                if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
+                if (selectedMenuItem.refItem)
                 {
-                    loadExtra(0, lastObject);
-                }
 
-                if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
-                {
-                    loadExtra(1, lastObject);
-                }
+                    if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
+                    {
+                        loadExtra(0, lastObject);
+                    }
 
-                if (selectedMenuItem.refItem.GetType() == typeof(AutoSkill))
-                {
-                    loadExtra(2, lastObject);
-                }
+                    if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
+                    {
+                        loadExtra(1, lastObject);
+                    }
 
-                if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
-                {
-                    loadExtra(3, lastObject);
+                    if (selectedMenuItem.refItem.GetType() == typeof(AutoSkill))
+                    {
+                        loadExtra(2, lastObject);
+                    }
+
+                    if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
+                    {
+                        loadExtra(3, lastObject);
+                    }
                 }
             }
         UpdateColors(itemSlots);

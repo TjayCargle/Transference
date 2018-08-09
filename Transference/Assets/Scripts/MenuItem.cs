@@ -60,7 +60,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     public void ApplyAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
-        Debug.Log("Menu item :" + item);
+        //Debug.Log("Menu item :" + item);
         switch (item)
         {
             case MenuItemType.Move:
@@ -172,7 +172,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     invokingObject.GetComponent<LivingObject>().Wait();
                 }
                 myManager.NextTurn(invokingObject.FullName);
-                myManager.GetComponent<InventoryMangager>().Validate();
+                myManager.GetComponent<InventoryMangager>().Validate("menu item, waiting");
                 break;
             case MenuItemType.Look:
                 {
@@ -211,7 +211,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.chooseSkill:
                 {
-                    Debug.Log("going into select skill");
+                   // Debug.Log("going into select skill");
                     //  myManager.prevState = myManager.currentState;
                     //  myManager.currentState = State.PlayerEquipping;
                     menuStackEntry entry = new menuStackEntry();
@@ -298,7 +298,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectBS:
                 {
-                    Debug.Log("select battle skill");
+                 //   Debug.Log("select battle skill");
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerEquipping;
                     entry.index = myManager.invManager.currentIndex;
@@ -319,7 +319,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectAS:
                 {
-                    Debug.Log("select auto skill");
+                   // Debug.Log("select auto skill");
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerEquipping;
                     entry.index = myManager.invManager.currentIndex;
@@ -340,7 +340,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectPS:
                 {
-                    Debug.Log("select passive skill");
+                    //Debug.Log("select passive skill");
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerEquipping;
                     entry.index = myManager.invManager.currentIndex;
@@ -384,7 +384,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
 
             case MenuItemType.generated:
-                myManager.player.UseOrEquip();
+                myManager.player.useOrEquip();
                 break;
             default:
                 break;

@@ -15,6 +15,7 @@ public class MenuManager : MonoBehaviour
     public ScrollRect ItemRect;
     public InventoryMangager inManager;
     public bool isSetup = false;
+    public CameraScript myCamera;
 
     public Text DESC
     {
@@ -44,6 +45,10 @@ public class MenuManager : MonoBehaviour
     
     public void ShowNone()
     {
+     if(myCamera)
+        {
+            myCamera.showActions = false;
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -85,6 +90,10 @@ public class MenuManager : MonoBehaviour
         //{
         //    manager.ShowGridObjectAffectArea(manager.currentObject);
         //}
+        if (myCamera)
+        {
+            myCamera.showActions = true;
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(true);
@@ -209,7 +218,45 @@ public class MenuManager : MonoBehaviour
             }
         }
     }
-
+    public void showOpportunityOptions(LivingObject invokingObject)
+    {
+        if (commandCanvas)
+        {
+            commandCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas)
+        {
+            inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(true);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
+        if (itemCanvas)
+        {
+            itemCanvas.gameObject.SetActive(true);
+            if (inManager)
+            {
+                inManager.unloadContents();
+                if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                {
+                    if (itemCanvas.GetComponentInChildren<ScrollRect>())
+                    {
+                        inManager.loadContents(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), 3, invokingObject);
+                        inManager.ForceSelect();
+                    }
+                }
+            }
+        }
+    }
     public void ShowSkillCanvas()
     {
         if (commandCanvas)

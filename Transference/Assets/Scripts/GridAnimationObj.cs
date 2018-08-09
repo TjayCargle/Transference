@@ -40,7 +40,7 @@ public class GridAnimationObj : GridObject
     public void StopCountDown()
     {
         //time = 0;
-        Debug.Log("Countdown finished.");
+       // Debug.Log("Countdown finished.");
         isShowing = false;
         manager.AnimationRequests--;
         gameObject.SetActive(false);
