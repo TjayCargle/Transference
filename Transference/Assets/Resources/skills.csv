@@ -1,21 +1,21 @@
 -id,name,description,element,effect,cost,etype,range type, next, next count,  accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy
-0,Whip,foe,Slash,none,2,physical,single,1,5,100, minute,1,0,1,0,1
-1,Lash,foe,Slash,none,3,physical,single,2,10,100, small,1,0,1,0,1
-2,Whiplash,foe,Slash,none,4,physical,single,3,15,95, medium,1,0,1,1,1
-3,Razorlash,foe,Slash,none,5,physical,single,4,20,90, heavy,1,0,1,0,1
-4,Chainlash,foe,Slash,none,6, physical,single,5,25,90, severe,1,0,1,0,1
-5,ChainSlash,foe,Slash,none,7, physical,single,-1,0,90, collassal,1,0,1,0,1
+0,Whip,foe,Slash,none,3,physical,single,1,5,100, minute,1,0,1,0,1
+1,Lash,foe,Slash,none,6,physical,single,2,10,100, small,1,0,1,0,1
+2,Whiplash,foe,Slash,none,9,physical,single,3,15,95, medium,1,0,1,1,1
+3,Razorlash,foe,Slash,none,12,physical,single,4,20,90, heavy,1,0,1,0,1
+4,Chainlash,foe,Slash,none,15, physical,single,5,25,90, severe,1,0,1,0,1
+5,ChainSlash,foe,Slash,none,18, physical,single,-1,0,90, collassal,1,0,1,0,1
 -
-6,Cuts,foes,Slash,none,2,physical,multi,7,5,100, minute,2,0,2,0,1,0,2
-7,Chops,foes,Slash,none,4,physical,multi,8,10,100,minute,3,0,2,0,1,0,2
-8,Slice,foes,Slash,none,6,physical,multi,9,20,100, small,2,0,2,0,1,0,2
-9,Dice,foes,Slash,none,8,physical,multi,10,40,100, small,3,0,2,0,1,0,2
-10,Mince,foes,Slash,none,10,physical,multi,-1,0,100, medium,3,0,2,0,1,0,2
+6,Cuts,foe,Slash,none,5,physical,multi,7,5,100, minute,2,0,2,0,1,0,2
+7,Chops,foe,Slash,none,10,physical,multi,8,10,100,minute,3,0,2,0,1,0,2
+8,Slice,foe,Slash,none,15,physical,multi,9,20,100, small,2,0,2,0,1,0,2
+9,Dice,foe,Slash,none,20,physical,multi,10,40,100, small,3,0,2,0,1,0,2
+10,Mince,foe,Slash,none,25,physical,multi,-1,0,100, medium,3,0,2,0,1,0,2
 -
 11,ConfuStrike,foes,Pierce,confusion,5,physical,single,12,5,100, minute,1,0,1,0,1
 12,DumbStrike,foes,Pierce,confusion,7,physical,single,13,10,100,small,1,0,1,0,1
-13,BlazingStrike,foes,Pierce,burn,6,physical,single,14,20,100, small,1,0,1,0,1
-14,ScorchStrike,foes,Pierce,burn,12,physical,single,15,20,100, medium,1,0,1,0,1
+13,BlazingStrike,foes,Pierce,burn,-6,physical,single,14,20,100, small,1,0,1,0,1
+14,ScorchStrike,foes,Pierce,burn,-12,physical,single,15,20,100, medium,1,0,1,0,1
 15,PoisonStrike,foes,Pierce,poison,10,physical,single,16,0,100, small,1,0,1,0,1
 16,VenomStrike,foes,Pierce,poison,16,physical,single,-1,0,100, heavy,1,0,1,0,1
 -

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DatabaseManager : MonoBehaviour
 {
-    [SerializeField]
+
     private SkillScript skill;
 
     [SerializeField]
@@ -21,6 +21,9 @@ public class DatabaseManager : MonoBehaviour
     TextAsset accFile;
 
     [SerializeField]
+    TextAsset itemFile;
+
+    [SerializeField]
     string[] skillLines;
 
     [SerializeField]
@@ -31,23 +34,30 @@ public class DatabaseManager : MonoBehaviour
 
     [SerializeField]
     string[] accLines;
+
+    [SerializeField]
+    string[] itemLines;
     public bool isSetup = false;
     public void Setup()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
 
-        string file = skillFile.text;
-        skillLines = file.Split('\n');
+            string file = skillFile.text;
+            skillLines = file.Split('\n');
 
-        file = weaponFile.text;
-        weaponLines = file.Split('\n');
+            file = weaponFile.text;
+            weaponLines = file.Split('\n');
 
-        file = armorFile.text;
-        armorLines = file.Split('\n');
+            file = armorFile.text;
+            armorLines = file.Split('\n');
 
-        file = accFile.text;
-        accLines = file.Split('\n');
+            file = accFile.text;
+            accLines = file.Split('\n');
+
+            file = itemFile.text;
+            itemLines = file.Split('\n');
+
             isSetup = true;
         }
     }
@@ -210,10 +220,13 @@ public class DatabaseManager : MonoBehaviour
 
                             CommandSkill buff = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(buff);
+                            buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
+                            buff.COST = Int32.Parse(parsed[5]);
+                            buff.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
+                            buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
                             buff.NEXT = Int32.Parse(parsed[8]);
                             buff.NEXTCOUNT = Int32.Parse(parsed[9]);
-                            buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
-                            buff.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
+                           // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
                             buff.HITS = Int32.Parse(parsed[12]);
                             buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[13]);
                             buff.TILES = new System.Collections.Generic.List<Vector2>();
@@ -237,7 +250,7 @@ public class DatabaseManager : MonoBehaviour
                                     mod.affectedStat = ModifiedStat.Luck;
                                     break;
                             }
-                            mod.editValue = (float)Double.Parse(parsed[10]) * buff.ACCURACY;
+                            mod.editValue = (float)Double.Parse(parsed[11]);
 
                             buff.BUFFEDSTAT = mod.affectedStat;
                             buff.BUFFVAL = mod.editValue;
@@ -335,8 +348,8 @@ public class DatabaseManager : MonoBehaviour
                                 index++;
                                 command.TILES.Add(v);
                             }
-                            if(command.HITS == 1)
-                            command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
+                            if (command.HITS == 1)
+                                command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
                             else
                             {
                                 command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + skill.DESC + " " + command.HITS + " times";
@@ -464,6 +477,50 @@ public class DatabaseManager : MonoBehaviour
 
                         livingObject.GetComponent<InventoryScript>().ARMOR.Add(armor);
                         livingObject.GetComponent<InventoryScript>().USEABLES.Add(armor);
+                    }
+                }
+
+
+            }
+
+            // reader.Close();
+        }
+    }
+
+    public void GetItem(int id, LivingObject livingObject)
+    {
+
+
+
+        int total = itemLines.Length;
+        int currIndex = 1;
+
+
+        if (livingObject.GetComponent<InventoryScript>())
+        {
+
+            string lines = "";
+            while (currIndex < total)
+            {
+                lines = itemLines[currIndex];
+                currIndex++;
+
+                if (lines != null)
+                {
+                    string[] parsed = lines.Split(',');
+                    if (Int32.Parse(parsed[0]) == id)
+                    {
+                        ItemScript item = ScriptableObject.CreateInstance<ItemScript>();
+                        item.NAME = parsed[1];
+                        item.DESC = parsed[2];
+                        item.ITYPE = (ItemType)Enum.Parse(typeof(ItemType), parsed[3]);
+                        item.TTYPE = (TargetType)Enum.Parse(typeof(TargetType), parsed[4]);
+                        item.VALUE = (float)Double.Parse(parsed[5]);
+                        item.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[6]);
+                        item.STAT = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[7]);
+                        item.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[8]);
+                        livingObject.GetComponent<InventoryScript>().ITEMS.Add(item);
+                        livingObject.GetComponent<InventoryScript>().USEABLES.Add(item);
                     }
                 }
 

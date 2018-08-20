@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandSkill : SkillScript {
+public class CommandSkill : SkillScript
+{
 
     [SerializeField]
     protected int cost;
@@ -149,7 +150,7 @@ public class CommandSkill : SkillScript {
         {
             OWNER.STATS.FATIGUE += (int)(COST * modification);
         }
-       // OWNER.TakeAction();
+        // OWNER.TakeAction();
         if (NEXT > 0)
         {
             if (NEXTCOUNT > 0)
@@ -169,19 +170,27 @@ public class CommandSkill : SkillScript {
         }
 
     }
-    public bool CanUse( float modification = 1.0f)
+    public bool CanUse(float modification = 1.0f)
     {
         bool can = false;
+        int amt = 0;
         switch (ETYPE)
         {
             case EType.physical:
-                if (owner.FATIGUE + (int)(COST * modification) < owner.MAX_FATIGUE)
+                amt = owner.FATIGUE + (int)(COST * modification);
+                if (amt < owner.MAX_FATIGUE)
                 {
-                    can = true;
+                    if (amt >= 0)
+                    {
+
+                        can = true;
+                    }
                 }
                 break;
             case EType.magical:
-                if (owner.MANA - (int)(COST * modification) >= 0)
+                amt = owner.MANA + (int)(COST * modification);
+
+                if (amt >= 0)
                 {
                     can = true;
                 }

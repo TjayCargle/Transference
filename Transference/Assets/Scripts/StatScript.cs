@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatScript : MonoBehaviour {
+public class StatScript : MonoBehaviour
+{
     [SerializeField]
     private int myLevel = 1;
     [SerializeField]
@@ -63,7 +64,7 @@ public class StatScript : MonoBehaviour {
     }
     public int Max_Atk_DIST
     {
-        get { return  myMaxAtkDist; }
+        get { return myMaxAtkDist; }
         set { myMoveDist = value; }
     }
     public int Min_Atk_DIST
@@ -73,7 +74,7 @@ public class StatScript : MonoBehaviour {
     }
     public int STRENGTH
     {
-        get { return  myBaseStr ; }
+        get { return myBaseStr; }
         set { myBaseStr = value; }
     }
     public int MAGIC
@@ -83,22 +84,22 @@ public class StatScript : MonoBehaviour {
     }
     public int DEFENSE
     {
-        get { return  myBaseDefense; }
+        get { return myBaseDefense; }
         set { myBaseDefense = value; }
     }
     public int RESIESTANCE
     {
-        get { return  myBaseResistance ; }
+        get { return myBaseResistance; }
         set { myBaseResistance = value; }
     }
     public int SPEED
     {
-        get { return  myBaseSpeed ; }
+        get { return myBaseSpeed; }
         set { myBaseSpeed = value; }
     }
     public int LUCK
     {
-        get { return myBaseLuck ; }
+        get { return myBaseLuck; }
         set { myBaseLuck = value; }
     }
     public int MAX_HEALTH
@@ -108,15 +109,8 @@ public class StatScript : MonoBehaviour {
     }
     public int HEALTH
     {
-        get {return myHealth; }
-        set
-        {
-            myHealth = value;
-            if (myHealth > myMaxHealth)
-            {
-                myHealth = myMaxHealth;
-            }
-          }
+        get { return myHealth; }
+        set { myHealth = value; }
     }
     public int MAX_MANA
     {
@@ -126,7 +120,9 @@ public class StatScript : MonoBehaviour {
     public int MANA
     {
         get { return myMana; }
-        set { myMana = value;
+        set
+        {
+            myMana = value;
             if (myMana > MAX_MANA)
             {
                 myMana = MAX_MANA;
@@ -141,7 +137,14 @@ public class StatScript : MonoBehaviour {
     public int FATIGUE
     {
         get { return myFatigue; }
-        set { myFatigue = value; }
+        set
+        {
+            myFatigue = value;
+            if (myFatigue < 0)
+            {
+                myFatigue = 0;
+            }
+        }
     }
     public int LEVEL
     {
@@ -160,7 +163,7 @@ public class StatScript : MonoBehaviour {
         set { fatigueCostChange = value; }
     }
 
-    public void IncreaseStat(ModifiedStat mod, int val)
+    public void IncreaseStat(ModifiedStat mod, int val, LivingObject baseObj)
     {
         float modification = val;
         switch (mod)
@@ -169,49 +172,49 @@ public class StatScript : MonoBehaviour {
                 MAX_HEALTH += val;
                 if (HEALTH == MAX_HEALTH - val)
                 {
-                   HEALTH = MAX_HEALTH;
+                    HEALTH = MAX_HEALTH;
                 }
                 break;
             case ModifiedStat.ElementDmg:
                 break;
             case ModifiedStat.Movement:
 
-               MOVE_DIST += val;
+                MOVE_DIST += val;
                 break;
             case ModifiedStat.Str:
-                modification = ((float)val / 100) * STRENGTH;
+                modification = ((float)val / 100);
                 STRENGTH += (int)modification;
                 break;
             case ModifiedStat.Mag:
-                modification = ((float)val / 100) * MAGIC;
+                modification = ((float)val / 100) ;
                 MAGIC += (int)modification;
                 break;
             case ModifiedStat.Atk:
-                modification = ((float)val / 100) * STRENGTH;
+                modification = ((float)val / 100) * baseObj.STRENGTH;
                 STRENGTH += (int)modification;
-                modification = ((float)val / 100) * MAGIC;
+                modification = ((float)val / 100) * baseObj.MAGIC;
                 MAGIC += (int)modification;
                 break;
             case ModifiedStat.Def:
-                modification = ((float)val / 100) * DEFENSE;
+                modification = ((float)val / 100) * baseObj.DEFENSE;
                 DEFENSE += (int)modification;
                 break;
             case ModifiedStat.Res:
-                modification = ((float)val / 100) * RESIESTANCE;
+                modification = ((float)val / 100) * baseObj.RESIESTANCE;
                 RESIESTANCE += (int)modification;
                 break;
             case ModifiedStat.Guard:
-                modification = ((float)val / 100) * DEFENSE;
+                modification = ((float)val / 100) * baseObj.DEFENSE;
                 DEFENSE += (int)modification;
-                modification = ((float)val / 100) * RESIESTANCE;
+                modification = ((float)val / 100) * baseObj.RESIESTANCE;
                 RESIESTANCE += (int)modification;
                 break;
             case ModifiedStat.Speed:
-                modification = ((float)val / 100) * SPEED;
+                modification = ((float)val / 100) * baseObj.SPEED;
                 SPEED += (int)modification;
                 break;
             case ModifiedStat.Luck:
-                modification = ((float)val / 100) * LUCK;
+                modification = ((float)val / 100) * baseObj.LUCK;
                 LUCK += (int)modification;
                 break;
             case ModifiedStat.SP:
@@ -224,11 +227,11 @@ public class StatScript : MonoBehaviour {
             case ModifiedStat.FT:
                 break;
             case ModifiedStat.FTCost:
-                Debug.Log("v = " +val);
+                Debug.Log("v = " + val);
                 modification = ((float)val / 100);
-                Debug.Log("m = "+modification);
+                Debug.Log("m = " + modification);
                 FTCHANGE -= modification;
-                Debug.Log("FT = " +FTCHANGE);
+                Debug.Log("FT = " + FTCHANGE);
                 if (FTCHANGE < 0.1)
                     FTCHANGE = 0.1f;
                 break;
@@ -260,7 +263,7 @@ public class StatScript : MonoBehaviour {
         FATIGUE = 0;
         FTCHANGE = 1.0f;
         SPCHANGE = 1.0f;
-       
+
         if (hard == true)
         {
             LEVEL = 0;
@@ -269,6 +272,6 @@ public class StatScript : MonoBehaviour {
             MAX_FATIGUE = 0;
 
         }
-      
+
     }
 }

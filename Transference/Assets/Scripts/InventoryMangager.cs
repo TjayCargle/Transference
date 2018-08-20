@@ -178,19 +178,26 @@ public class InventoryMangager : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.W))
                         {
                             IncreaseScroll();
-                            if (extraContent)
-                            {
-                                DetermineAndFillExtra();
-                            }
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();        
+                        }
+                    }
+                    break;
+
+                case State.PlayerSelectItem:
+                    {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            IncreaseScroll();
+
 
                         }
                         if (Input.GetKeyDown(KeyCode.S))
                         {
                             DecreaseScroll();
-                            if (extraContent)
-                            {
-                                DetermineAndFillExtra();
-                            }
 
                         }
                     }
@@ -708,6 +715,15 @@ public class InventoryMangager : MonoBehaviour
                     currentList.Add(liveObject.OPP_SLOTS.SKILLS[i]);
                 }
                 break;
+            case 11:
+                useType = 5;
+              // items
+
+                for (int i = 0; i < liveObject.INVENTORY.ITEMS.Count; i++)
+                {
+                    currentList.Add(liveObject.INVENTORY.ITEMS[i]);
+                }
+                break;
         }
         // for (int i = 0; i < 4; i++)
         //{
@@ -734,13 +750,29 @@ public class InventoryMangager : MonoBehaviour
                         selectedText.text = item.NAME;
                         if (windowType == 3)
                         {
-
+                            CommandSkill cmd = ((CommandSkill)item);
                             string extraText = "";
                             if (((CommandSkill)item).ETYPE == EType.physical)
-                                extraText = " " + "FT";
+                            {
+                                extraText = cmd.COST.ToString();// " " + "FT";
+                                if(cmd.COST > 0 )
+                                {
+                                selectedText.text += "FT +" + extraText;
+
+                                }
+                                else
+                                {
+                                    selectedText.text += "FT " + extraText;
+
+                                }
+
+                            }
                             else
+                            {
                                 extraText = " " + "SP";
                             selectedText.text += " " + ((CommandSkill)item).COST.ToString() + extraText;
+
+                            }
                         }
 
                     }

@@ -1,0 +1,13 @@
+id, name, description, item Type, target Type, value, element, stat, effect
+0, Dragonfruit (Small), restores 25% of HP, healthPotion,allyAndSelf,0.25, none, none, none
+1, Dragonfruit (medium), restores 50% of HP, healthPotion,allyAndSelf,0.50, none, none, none
+2, Dragonfruit (large), restores 75% of HP, healthPotion,allyAndSelf,0.75, none, none, none
+3, Starfruit (Small), increases FT by 20%, fatiguePotion,allyAndSelf,-0.20, none, none, none
+4, Starfruit (medium), increases FT by 40%, fatiguePotion,allyAndSelf,-0.40, none, None, none
+5, Starfruit (large), increases FT by 60%, fatiguePotion,allyAndSelf,-0.60, none, none, none
+6, Snakefruit (Small), restores 25% of FT, fatiguePotion,allyAndSelf,0.25, none, none, none
+7, Snakefruit (medium), restores 50% of FT, fatiguePotion,allyAndSelf,0.50, none, none, none
+8, Snakefruit (large), restores 75% of FT, fatiguePotion,allyAndSelf,0.75, none, none, none
+9, Passionfruit (Small), restores 25% of MP, manaPotion,allyAndSelf,0.25, none, none, none
+10, Passionfruit (medium), restores 50% of MP, manaPotion,allyAndSelf,0.50, none, none, none
+11, Passionfruit (large), restores 75% of MP, manaPotion,allyAndSelf,0.75, none, none, none

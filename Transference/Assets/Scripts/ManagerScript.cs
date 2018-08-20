@@ -127,6 +127,7 @@ public class ManagerScript : EventRunner
                 objs[i].currentTile.isOccupied = true;
             }
             currentState = State.EnemyTurn;
+            // Invoke("NextRoundBegin", 0.1f);
             NextRound();
             //if (myCamera)
             //{
@@ -160,6 +161,7 @@ public class ManagerScript : EventRunner
     {
         prevState = currentState;
         currentState = entry.state;
+        Debug.Log("Entering state " + currentState);
         menuStack.Add(entry);
         invManager.currentIndex = 0;
         invManager.Validate("manager, enter state");
@@ -176,7 +178,8 @@ public class ManagerScript : EventRunner
             menuStackEntry prevEntry = menuStack[menuStack.Count - 2];
             currentState = prevEntry.state;
             MenuManager menuManager = GetComponent<MenuManager>();
-
+            //   Debug.Log("cur :" + currEntry.menu);
+            //   Debug.Log("prev :" + prevEntry.menu);
             switch (currEntry.menu)
             {
                 case currentMenu.command:
@@ -312,7 +315,10 @@ public class ManagerScript : EventRunner
                                 skipCount++;
                             else
                             {
-                                selectedAttackingTile = Vector2.up;
+                                if (selectedAttackingTile == Vector2.zero)
+                                    selectedAttackingTile = Vector2.up;
+                                else
+                                    selectedAttackingTile = Vector2.zero;
                                 skipCount = 0;
                             }
                             hitkey = true;
@@ -324,7 +330,10 @@ public class ManagerScript : EventRunner
                                 skipCount++;
                             else
                             {
-                                selectedAttackingTile = Vector2.right;
+                                if (selectedAttackingTile == Vector2.zero)
+                                    selectedAttackingTile = Vector2.right;
+                                else
+                                    selectedAttackingTile = Vector2.zero;
                                 skipCount = 0;
                             }
                             hitkey = true;
@@ -336,7 +345,10 @@ public class ManagerScript : EventRunner
                                 skipCount++;
                             else
                             {
-                                selectedAttackingTile = Vector2.down;
+                                if (selectedAttackingTile == Vector2.zero)
+                                    selectedAttackingTile = Vector2.down;
+                                else
+                                    selectedAttackingTile = Vector2.zero;
                                 skipCount = 0;
                             }
                             hitkey = true;
@@ -348,7 +360,11 @@ public class ManagerScript : EventRunner
                                 skipCount++;
                             else
                             {
-                                selectedAttackingTile = Vector2.left;
+                                if (selectedAttackingTile == Vector2.zero)
+                                    selectedAttackingTile = Vector2.left;
+                                else
+                                    selectedAttackingTile = Vector2.zero;
+
                                 skipCount = 0;
                             }
                             hitkey = true;
@@ -629,14 +645,17 @@ public class ManagerScript : EventRunner
                     {
                         ComfirmMenuAction(oppObj);
                         oppEvent.caller = null;
-                        CleanMenuStack();
-                     
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         CancelMenuAction(oppObj);
                         oppEvent.caller = null;
-                        CleanMenuStack();
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
                     }
                     break;
                 default:
@@ -667,11 +686,11 @@ public class ManagerScript : EventRunner
                 if (!livingObjects[i].DEAD)
                 {
 
+
                     if (currentState == State.EnemyTurn)
                     {
                         if (livingObjects[i].IsEnenmy)
                         {
-                            livingObjects[i].ACTIONS = 2;
                             turnOrder.Add(livingObjects[i]);
                         }
                     }
@@ -679,12 +698,17 @@ public class ManagerScript : EventRunner
                     {
                         if (!livingObjects[i].IsEnenmy)
                         {
-                            livingObjects[i].ACTIONS = 2;
                             turnOrder.Add(livingObjects[i]);
 
                         }
 
                     }
+
+
+
+
+
+
                 }
             }
 
@@ -726,39 +750,7 @@ public class ManagerScript : EventRunner
     }
     public void NextTurn(string invokingObj)
     {
-        currOppList.Clear();
-        doubleAdjOppTiles.Clear();
-        Debug.Log(invokingObj + " is done with their turn, moving on ");
-        if (currentObject.GetComponent<BuffScript>())
-        {
-            BuffScript[] buffs = currentObject.GetComponents<BuffScript>();
-
-            for (int i = 0; i < buffs.Length; i++)
-            {
-                buffs[i].UpdateCount(currentObject.GetComponent<LivingObject>());
-            }
-        }
-        if (turnOrder.Count > 0)
-            turnOrder.RemoveAt(0);
-        if (turnOrder.Count <= 0)
-        {
-            NextRound();
-        }
-        // currentObject = turnOrder[0];
-
-        player.current = turnOrder[0];
-
-        if (currentObject.GetComponent<EffectScript>())
-        {
-            currentObject.GetComponent<EffectScript>().ApplyReaction(this, currentObject.GetComponent<LivingObject>());
-        }
-        if (currentObject.GetComponent<SecondStatusScript>())
-        {
-            currentObject.GetComponent<SecondStatusScript>().ReduceCount(this, currentObject.GetComponent<LivingObject>());
-        }
-
-
-        CreateEvent(this, turnOrder[0], "Initial Camera Event", CameraEvent);
+        CreateEvent(this, null, "Next turn event", NextTurnEvent);
 
     }
     public void showAttackableTiles()
@@ -1084,9 +1076,18 @@ public class ManagerScript : EventRunner
             return;
         if (obj.GetComponent<LivingObject>())
         {
-            if (IsTileOccupied(tileMap[TileIndex].GetComponent<TileScript>()) == true)
+            TileScript atile = tileMap[TileIndex].GetComponent<TileScript>();
+            if (IsTileOccupied(atile) == true)
             {
-                return;
+                GridObject gridObject = GetObjectAtTile(atile).GetComponent<LivingObject>();
+                if (gridObject.GetComponent<LivingObject>())
+                {
+                    if (gridObject.GetComponent<LivingObject>().IsEnenmy != obj.GetComponent<LivingObject>().IsEnenmy)
+                    {
+                        return;
+
+                    }
+                }
             }
         }
         GameObject temp = tileMap[TileIndex];
@@ -1379,20 +1380,24 @@ public class ManagerScript : EventRunner
                 if (newTile.isOccupied)
                 {
                     GridObject obj = GetObjectAtTile(newTile);
-                    if (obj.GetComponent<LivingObject>())
+                    if (obj)
                     {
-                        LivingObject liveObj = obj.GetComponent<LivingObject>();
-                        if (!currOppList.Contains(liveObj))
+
+                        if (obj.GetComponent<LivingObject>())
                         {
-
-                            if (liveObj.OPP_SLOTS.SKILLS.Count > 0)
+                            LivingObject liveObj = obj.GetComponent<LivingObject>();
+                            if (!currOppList.Contains(liveObj))
                             {
-                                for (int k = 0; k < liveObj.OPP_SLOTS.SKILLS.Count; k++)
-                                {
-                                    if ((liveObj.OPP_SLOTS.SKILLS[k] as OppSkill).TRIGGER == trigger)
-                                    {
-                                        tiles.Add(newTile);
 
+                                if (liveObj.OPP_SLOTS.SKILLS.Count > 0)
+                                {
+                                    for (int k = 0; k < liveObj.OPP_SLOTS.SKILLS.Count; k++)
+                                    {
+                                        if ((liveObj.OPP_SLOTS.SKILLS[k] as OppSkill).TRIGGER == trigger)
+                                        {
+                                            tiles.Add(newTile);
+
+                                        }
                                     }
                                 }
                             }
@@ -1783,6 +1788,7 @@ public class ManagerScript : EventRunner
     {
         if (invManager)
         {
+            Debug.Log("Selecting menu item from obj :" + invokingObject.FullName);
             invManager.selectedMenuItem.ApplyAction(invokingObject);
         }
 
@@ -1791,7 +1797,7 @@ public class ManagerScript : EventRunner
     {
         if (invManager)
         {
-
+            Debug.Log("Selecting menu item from sselected item");
             selectedItem.ApplyAction(player.current);
         }
 
@@ -1806,19 +1812,22 @@ public class ManagerScript : EventRunner
         }
 
     }
-    public void ComfirmMenuAction(GridObject invokingObject)
+    public bool ComfirmMenuAction(GridObject invokingObject)
     {
+        bool res = false;
         for (int i = 0; i < commandItems.Length; i++)
         {
 
             if (commandItems[i].itemType == currentMenuitem)
             {
-                commandItems[i].ComfirmAction(invokingObject);
+                res = commandItems[i].ComfirmAction(invokingObject);
+                return res;
                 break;
             }
 
 
         }
+        return false;
     }
     public void CancelMenuAction(GridObject invokingObject)
     {
@@ -1920,7 +1929,7 @@ public class ManagerScript : EventRunner
             case EHitType.leathal:
                 mod = 6.0f;
                 react.reaction = Reaction.cripple;
-                dmgObject.GENERATED = 0;
+                //dmgObject.GENERATED = 0;
                 //todo add lose a action
                 break;
             default:
@@ -1990,7 +1999,7 @@ public class ManagerScript : EventRunner
         calc = dmg * calc;
         Debug.Log("Combined: " + calc);
         //   Debug.Log("Calc2:" + calc);
-        calc = calc * (attackingObject.LEVEL / dmgObject.LEVEL);
+        calc = calc * ((float)attackingObject.LEVEL / (float)dmgObject.LEVEL);
         // Debug.Log("Calc with levels:" + calc);
         calc = Mathf.Sqrt(calc * 2);
         // Debug.Log("Calc4:" + calc);
@@ -2010,6 +2019,7 @@ public class ManagerScript : EventRunner
     }
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, CommandSkill skill, Reaction alteration = Reaction.none)
     {
+        Debug.Log("Calc 1");
         if (skill.ELEMENT == Element.Buff)
         {
             List<CommandSkill> passives = dmgObject.GetComponent<InventoryScript>().BUFFS;
@@ -2050,8 +2060,20 @@ public class ManagerScript : EventRunner
 
     public DmgReaction CalcDamage(AtkConatiner conatiner)
     {
+        Debug.Log("Calc 2");
         if (conatiner.command)
-            return CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.attackingElement, conatiner.attackType, conatiner.dmg, conatiner.alteration);
+        {
+            DmgReaction react = CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.command, conatiner.alteration);
+            if (react.reaction < Reaction.cripple)
+            {
+                if (conatiner.command.EFFECT != SideEffect.none)
+                {
+                    ApplyEffect(conatiner.dmgObject, conatiner.command.EFFECT);
+                }
+
+            }
+            return react;
+        }
         else
             return CalcDamage(conatiner.attackingObject, conatiner.dmgObject, conatiner.attackingObject.WEAPON, conatiner.alteration);
 
@@ -2059,6 +2081,7 @@ public class ManagerScript : EventRunner
 
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon, Reaction alteration = Reaction.none)
     {
+        Debug.Log("Calc 3");
         return CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
     }
 
@@ -2124,14 +2147,12 @@ public class ManagerScript : EventRunner
                 if (!dmgText[i].isShowing)
                 {
                     dto = dmgText[i];
-                    //       dto.gameObject.SetActive(true);
                     dto.text.text = react.damage.ToString();
                     dto.border.text = react.damage.ToString();
                     Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
                     v3.z -= 0.1f;
                     dto.transform.position = v3;
                     dto.text.color = new Color(Mathf.Min(255, react.damage), 0, 0);
-                    //        dto.StartCountDown();
                     break;
                 }
             }
@@ -2142,26 +2163,17 @@ public class ManagerScript : EventRunner
             //  Debug.Log("new dmg text");
             GameObject tjObject = Instantiate(dmgPrefab);
             tjObject.SetActive(false);
-            if (tjObject != null)
-            {
-                //  Debug.Log("found  text");
-            }
-            else
-            {
-                //  Debug.Log("no text");
-            }
+
             dto = tjObject.GetComponent<DmgTextObj>();
             dmgText.Add(dto);
             dto.manager = this;
             dto.Setup();
-            // dto.gameObject.SetActive(true);
             dto.text.text = react.damage.ToString();
             dto.border.text = react.damage.ToString();
             Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
             v3.z -= 0.1f;
             dto.transform.position = v3;
             dto.text.color = new Color(Mathf.Min(255, react.damage), 0, 0);
-            //  dto.StartCountDown();
         }
 
         GridAnimationObj gao = null;
@@ -2215,7 +2227,7 @@ public class ManagerScript : EventRunner
             if (target.IsEnenmy)
             {
                 target.gameObject.SetActive(false);
-                Destroy(target);
+                Destroy(target.gameObject);
             }
             LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
             bool winner = true;
@@ -2246,6 +2258,49 @@ public class ManagerScript : EventRunner
             }
         }
     }
+    public void CreateDmgTextEvent(string dmgValue, Color color, LivingObject target)
+    {
+        DmgTextObj dto = null;
+        dmgRequest++;
+        if (dmgRequest <= dmgText.Count)
+        {
+
+            for (int i = 0; i < dmgText.Count; i++)
+            {
+                if (!dmgText[i].isShowing)
+                {
+                    dto = dmgText[i];
+                    dto.text.text = dmgValue;
+                    dto.border.text = dmgValue;
+                    Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
+                    v3.z -= 0.1f;
+                    dto.transform.position = v3;
+                    dto.text.color = color;
+                    break;
+                }
+            }
+        }
+
+        else
+        {
+            //  Debug.Log("new dmg text");
+            GameObject tjObject = Instantiate(dmgPrefab);
+            tjObject.SetActive(false);
+
+            dto = tjObject.GetComponent<DmgTextObj>();
+            dmgText.Add(dto);
+            dto.manager = this;
+            dto.Setup();
+            dto.text.text = dmgValue;
+            dto.border.text = dmgValue;
+            Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
+            v3.z -= 0.1f;
+            dto.transform.position = v3;
+            dto.text.color = color;
+        }
+        CreateEvent(this, dto, "DmgText request: " + dmgRequest + "", CheckDmgText, dto.StartCountDown, 0);
+
+    }
     public bool AttackTargets(LivingObject invokingObject, CommandSkill skill)
     {
         bool hitSomething = false;
@@ -2258,7 +2313,6 @@ public class ManagerScript : EventRunner
             {
                 if (targetIndicies.Count > 0)
                 {
-                    hitSomething = true;
 
                     if (skill != null)
                     {
@@ -2268,22 +2322,40 @@ public class ManagerScript : EventRunner
                             if (potentialTarget.GetComponent<LivingObject>())
                             {
                                 LivingObject target = potentialTarget.GetComponent<LivingObject>();
-
-                                //DmgReaction react;
-
-                                for (int k = 0; k < skill.HITS; k++)
+                                bool acceptable = false;
+                                if (skill.ELEMENT == Element.Buff)
                                 {
-                                    // react = CalcDamage(invokingObject, target, skill);
-                                    // ApplyReaction(invokingObject, target, react);
-                                    AtkConatiner conatiner = new AtkConatiner();
-                                    conatiner.alteration = skill.REACTION;
-                                    conatiner.attackingElement = skill.ELEMENT;
-                                    conatiner.attackType = skill.ETYPE;
-                                    conatiner.attackingObject = invokingObject;
-                                    conatiner.command = skill;
-                                    conatiner.dmg = (int)skill.DAMAGE;
-                                    conatiner.dmgObject = target;
-                                    CreateEvent(this, conatiner, "Skill use event", AttackEvent);
+                                    if (target.IsEnenmy == invokingObject.IsEnenmy)
+                                    {
+                                        acceptable = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (target.IsEnenmy != invokingObject.IsEnenmy)
+                                    {
+                                        acceptable = true;
+                                    }
+                                }
+                                if (acceptable == true)
+                                {
+                                    hitSomething = true;
+
+
+                                    for (int k = 0; k < skill.HITS; k++)
+                                    {
+                                        // react = CalcDamage(invokingObject, target, skill);
+                                        // ApplyReaction(invokingObject, target, react);
+                                        AtkConatiner conatiner = new AtkConatiner();
+                                        conatiner.alteration = skill.REACTION;
+                                        conatiner.attackingElement = skill.ELEMENT;
+                                        conatiner.attackType = skill.ETYPE;
+                                        conatiner.attackingObject = invokingObject;
+                                        conatiner.command = skill;
+                                        conatiner.dmg = (int)skill.DAMAGE;
+                                        conatiner.dmgObject = target;
+                                        CreateEvent(this, conatiner, "Skill use event", AttackEvent);
+                                    }
                                 }
 
                             }
@@ -2317,8 +2389,6 @@ public class ManagerScript : EventRunner
                 if (targetIndicies.Count > 0)
                 {
 
-                    hitSomething = true;
-                    Debug.Log("Targets: " + targetIndicies.Count);
 
                     for (int i = 0; i < targetIndicies.Count; i++)
                     {
@@ -2329,20 +2399,25 @@ public class ManagerScript : EventRunner
 
                             DmgReaction react;
                             Reaction atkReaction = Reaction.none;
-                            if (weapon != null)
+                            if (target.IsEnenmy != invokingObject.IsEnenmy)
                             {
-                                for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+                                hitSomething = true;
+
+                                if (weapon != null)
                                 {
-                                    if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == AutoAct.beforeDmg)
+                                    for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
                                     {
-                                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
-                                        float chance = auto.CHANCE;
-                                        float result = Random.value * 100;
-                                        if (chance < result)
+                                        if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == AutoAct.beforeDmg)
                                         {
-                                            Debug.Log("Auto skill : " + auto.NAME + "has gone off");
-                                            atkReaction = auto.Activate(0);
-                                            break;
+                                            AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
+                                            float chance = auto.CHANCE;
+                                            float result = Random.value * 100;
+                                            if (chance < result)
+                                            {
+                                                Debug.Log("Auto skill : " + auto.NAME + "has gone off");
+                                                atkReaction = auto.Activate(0);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -2453,6 +2528,7 @@ public class ManagerScript : EventRunner
 
                         EffectScript ef = target.gameObject.AddComponent<EffectScript>();
                         ef.EFFECT = StatusEffect.paralyzed;
+                        target.ESTATUS = StatusEffect.paralyzed;
                     }
                 }
                 break;
@@ -2463,6 +2539,7 @@ public class ManagerScript : EventRunner
 
                         EffectScript ef = target.gameObject.AddComponent<EffectScript>();
                         ef.EFFECT = StatusEffect.sleep;
+                        target.ESTATUS = StatusEffect.sleep;
                     }
                 }
                 break;
@@ -2473,6 +2550,7 @@ public class ManagerScript : EventRunner
 
                         EffectScript ef = target.gameObject.AddComponent<EffectScript>();
                         ef.EFFECT = StatusEffect.frozen;
+                        target.ESTATUS = StatusEffect.frozen;
                     }
                 }
                 break;
@@ -2483,6 +2561,7 @@ public class ManagerScript : EventRunner
 
                         EffectScript ef = target.gameObject.AddComponent<EffectScript>();
                         ef.EFFECT = StatusEffect.burned;
+                        target.ESTATUS = StatusEffect.burned;
                     }
                 }
                 break;
@@ -2494,6 +2573,7 @@ public class ManagerScript : EventRunner
         AtkConatiner container = data as AtkConatiner;
         DmgReaction react = CalcDamage(container);
         ApplyReaction(container.attackingObject, container.dmgObject, react);
+
         if (react.reaction < Reaction.nulled)
         {
             if (!currOppList.Contains(container.attackingObject))
@@ -2575,12 +2655,14 @@ public class ManagerScript : EventRunner
 
     public void OppStart()
     {
+
         menuStackEntry entry = new menuStackEntry();
         entry.state = State.PlayerOppSelecting;
         entry.menu = currentMenu.command;
         enterState(entry);
-        menuManager.ShowNone();
         showOppAdjTiles();
+        menuManager.ShowNone();
+
     }
     public bool CheckDmgText(Object data)
     {
@@ -2623,8 +2705,66 @@ public class ManagerScript : EventRunner
         }
         return true;
     }
+    public bool NextRoundBegin()
+    {
+
+        NextRound();
+        player.current = turnOrder[0];
+        CreateEvent(this, turnOrder[0], "Initial Camera Event", CameraEvent);
+        return true;
+    }
     public bool NextTurnEvent(Object data)
     {
-        return false;
+
+        currOppList.Clear();
+        doubleAdjOppTiles.Clear();
+        //  Debug.Log(invokingObj + " is done with their turn, moving on ");
+        if (currentObject.GetComponent<BuffScript>())
+        {
+            BuffScript[] buffs = currentObject.GetComponents<BuffScript>();
+
+            for (int i = 0; i < buffs.Length; i++)
+            {
+                buffs[i].UpdateCount(currentObject.GetComponent<LivingObject>());
+            }
+        }
+        if (currentObject.GetComponent<EffectScript>())
+        {
+            currentObject.GetComponent<EffectScript>().ApplyReaction(this, currentObject.GetComponent<LivingObject>());
+        }
+        if (currentObject.GetComponent<SecondStatusScript>())
+        {
+            currentObject.GetComponent<SecondStatusScript>().ReduceCount(this, currentObject.GetComponent<LivingObject>());
+        }
+        if (turnOrder.Count > 0)
+            turnOrder.RemoveAt(0);
+        if (turnOrder.Count <= 0)
+        {
+            NextRound();
+        }
+        // currentObject = turnOrder[0];
+
+        player.current = turnOrder[0];
+        CleanMenuStack();
+
+        int acts = Mathf.RoundToInt(turnOrder[0].SPEED / 10);
+        Debug.Log(turnOrder[0].FullName + "round  acts-- = " + acts);
+        Debug.Log(turnOrder[0].FullName + "generated = " + turnOrder[0].GENERATED);
+
+        acts += turnOrder[0].GENERATED;
+        acts += 1;
+        Debug.Log(turnOrder[0].FullName + "final acts = " + acts);
+
+        turnOrder[0].ACTIONS = acts;
+
+        turnOrder[0].GENERATED = 0;
+
+        CreateEvent(this, turnOrder[0], "Initial Camera Event", CameraEvent);
+        return true;
+    }
+    public bool BufferedReturnEvent(Object data)
+    {
+        returnState();
+        return true;
     }
 }

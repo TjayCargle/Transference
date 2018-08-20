@@ -33,7 +33,14 @@ public class LivingObject : GridObject
     private skillSlots autoSlots;
     [SerializeField]
     private bool isDead;
+    [SerializeField]
+    private InventoryScript inventory;
 
+    public InventoryScript INVENTORY
+    {
+        get { return inventory; }
+        set { inventory = value; }
+    }
     public bool DEAD
     {
         get { return isDead; }
@@ -187,16 +194,61 @@ public class LivingObject : GridObject
         set { isEnenmy = value; }
     }
 
+    public bool ChangeHealth(int val)
+    {
+
+        if (val > 0 && HEALTH >= BASE_STATS.MAX_HEALTH)
+        {
+            STATS.HEALTH = 0;
+            return false;
+        }
+        STATS.HEALTH += val;
+
+        if (HEALTH < 0)
+        {
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH * -1;
+            DEAD = true;
+        }
+        return true;
+    }
+    public bool ChangeMana(int val)
+    {
+        if (val > 0 && STATS.MANA > STATS.MAX_MANA)
+        {
+            return false;
+        }
+        STATS.MANA += val;
+        if (STATS.MANA < 0)
+        {
+            STATS.MANA = 0;
+
+        }
+        return true;
+    }
+    public bool ChangeFatigue(int val)
+    {
+        if (val > 0 && STATS.FATIGUE > STATS.MAX_FATIGUE)
+        {
+            return false;
+        }
+        STATS.FATIGUE -= val;
+        if (STATS.FATIGUE > MAX_FATIGUE)
+        {
+            STATS.FATIGUE = MAX_FATIGUE;
+        }
+        return true;
+    }
     public override void Setup()
     {
-    
+
         if (!isSetup)
         {
-           // Debug.Log("Living setup " + FullName);
+            // Debug.Log("Living setup " + FullName);
             if (!GetComponent<InventoryScript>())
             {
-                gameObject.AddComponent<InventoryScript>();
+                  gameObject.AddComponent<InventoryScript>();
             }
+            inventory = GetComponent<InventoryScript>();
             if (!GetComponent<WeaponEquip>())
             {
                 gameObject.AddComponent<WeaponEquip>();
@@ -309,16 +361,17 @@ public class LivingObject : GridObject
 
             }
 
-            ACTIONS = 2;
+            ACTIONS = Mathf.RoundToInt(SPEED / 10) + 1;
             base.Setup();
         }
-      //  Debug.Log("Setup done");
+        //  Debug.Log("Setup done");
         isSetup = true;
     }
 
     public void ApplyPassives()
     {
         List<PassiveSkill> atkPassives = PASSIVE_SLOTS.ConvertToPassives();
+        List<CommandSkill> buffs = inventory.BUFFS;
         modifiedStats.MODS.Clear();
         modifiedStats.Reset(true);
 
@@ -326,9 +379,17 @@ public class LivingObject : GridObject
         {
             for (int i = 0; i < atkPassives.Count; i++)
             {
-                modifiedStats.IncreaseStat(atkPassives[i].ModStat, (int)atkPassives[i].ModValues[0]);
+                modifiedStats.IncreaseStat(atkPassives[i].ModStat, (int)atkPassives[i].ModValues[0], this);
             }
 
+        }
+
+        if (buffs.Count > 0)
+        {
+            for (int i = 0; i < buffs.Count; i++)
+            {
+                modifiedStats.IncreaseStat(buffs[i].BUFFEDSTAT, (int)buffs[i].BUFFVAL, this);
+            }
 
         }
 
@@ -350,10 +411,13 @@ public class LivingObject : GridObject
     }
     public void Wait()
     {
-       // STATS.HEALTH += 5;
-       // STATS.MANA += 2;
+        // STATS.HEALTH += 5;
+        // STATS.MANA += 2;
+        STATS.HEALTH -= (int)(0.2 * STATS.MAX_HEALTH) * (actions + 1);
+        STATS.MANA -= (int)(0.2 * STATS.MAX_MANA) * (actions + 1);
         STATS.FATIGUE -= (int)(0.2 * STATS.MAX_FATIGUE) * (actions + 1);
         ACTIONS = 0;
+        GENERATED += 2;
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;
         if (MANA > MAX_MANA)

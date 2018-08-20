@@ -13,6 +13,8 @@ public class LivingSetup : MonoBehaviour
     int[] startingArmors;
     [SerializeField]
     int[] startingAccessories;
+    [SerializeField]
+    int[] startingItems;
     bool isSetup = false;
     LivingObject me;
     DatabaseManager dm;
@@ -51,6 +53,12 @@ public class LivingSetup : MonoBehaviour
                         {
                             dm.GetArmor(startingArmors[i], me);
                         }
+
+                        for (int i = 0; i < startingItems.Length; i++)
+                        {
+                            dm.GetItem(startingItems[i], me);
+                        }
+
                         if (startingWeapons.Length > 0)
                         {
                             me.WEAPON.Equip(GetComponent<InventoryScript>().WEAPONS[0]);
@@ -59,6 +67,7 @@ public class LivingSetup : MonoBehaviour
                         {
                             me.ARMOR.Equip(GetComponent<InventoryScript>().ARMOR[0]);
                         }
+                  
                     }
                 }
             }

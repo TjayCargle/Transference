@@ -33,6 +33,9 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<AccessoryScript> accessories;
 
+    [SerializeField]
+    List<ItemScript> items;
+
     public List<UsableScript> USEABLES
     {
         get { return usables; }
@@ -85,7 +88,13 @@ public class InventoryScript : MonoBehaviour {
         get { return oppSkills; }
         set { oppSkills = value; }
     }
-    
+
+    public List<ItemScript> ITEMS
+    {
+        get { return items; }
+        set { items = value; }
+    }
+
     public SkillScript ContainsSkillName(string name)
     {
         for (int i = 0; i < commandSkills.Count; i++)

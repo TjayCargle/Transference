@@ -229,6 +229,10 @@ public class EnemyScript : LivingObject
         Debug.Log(FullName + " is Determining actions");
         psudeoActions = ACTIONS;
         calcLocation = transform.position;
+        if(psudeoActions == 0)
+        {
+            TakeAction();
+        }
         for (int i = 0; i < psudeoActions; i++)
         {
             //if (HEALTH > HEALTH * 0.5)
@@ -277,11 +281,13 @@ public class EnemyScript : LivingObject
                      //   TakeAction();
                     }
                 }
+                else
+                {
+                    TakeAction();
+                }
             }
          //   else
-            {
-            //    Debug.Log("Else....");
-            }
+        
 
         }
     }

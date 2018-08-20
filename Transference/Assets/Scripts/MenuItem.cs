@@ -44,8 +44,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             }
             if (!GetComponent<Button>())
             {
-              //  gameObject.AddComponent<Button>();
-              //  EventTrigger trigger = gameObject.AddComponent<EventTrigger>();
+                //  gameObject.AddComponent<Button>();
+                //  EventTrigger trigger = gameObject.AddComponent<EventTrigger>();
 
 
             }
@@ -68,6 +68,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                     //myManager.prevState = myManager.currentState;
                     //myManager.currentState = State.PlayerMove
+
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerMove;
                     entry.index = myManager.invManager.currentIndex;
@@ -211,7 +212,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.chooseSkill:
                 {
-                   // Debug.Log("going into select skill");
+                    // Debug.Log("going into select skill");
                     //  myManager.prevState = myManager.currentState;
                     //  myManager.currentState = State.PlayerEquipping;
                     menuStackEntry entry = new menuStackEntry();
@@ -298,7 +299,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectBS:
                 {
-                 //   Debug.Log("select battle skill");
+                    //   Debug.Log("select battle skill");
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerEquipping;
                     entry.index = myManager.invManager.currentIndex;
@@ -319,7 +320,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectAS:
                 {
-                   // Debug.Log("select auto skill");
+                    // Debug.Log("select auto skill");
                     menuStackEntry entry = new menuStackEntry();
                     entry.state = State.PlayerEquipping;
                     entry.index = myManager.invManager.currentIndex;
@@ -386,41 +387,62 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.generated:
                 myManager.player.useOrEquip();
                 break;
+
+            case MenuItemType.selectItem:
+                {
+                    Debug.Log("select item");
+                    menuStackEntry entry = new menuStackEntry();
+                    entry.state = State.PlayerSelectItem;
+                    entry.index = myManager.invManager.currentIndex;
+                    entry.menu = currentMenu.invMain;
+                    myManager.enterState(entry);
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(11, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
             default:
                 break;
         }
     }
-    public void ComfirmAction(GridObject invokingObject)
+    public bool ComfirmAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
         MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
         switch (item)
         {
             case MenuItemType.Move:
-                invokingObject.HASMOVED = true;
-                myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
-                // myManager.currentState = State.PlayerInput;
-                myManager.returnState();
-                if (myMenuManager)
+                if (myManager.GetTile(invokingObject).isOccupied == false)
                 {
-                    myMenuManager.ShowCommandCanvas();
+
+                    invokingObject.HASMOVED = true;
+                    myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
+                    // myManager.currentState = State.PlayerInput;
+                    myManager.returnState();
+                    if (myMenuManager)
+                    {
+                        myMenuManager.ShowCommandCanvas();
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
                 break;
-            case MenuItemType.Attack:
 
-                break;
-            case MenuItemType.Equip:
-
-                break;
-            case MenuItemType.Wait:
-
-                break;
-            case MenuItemType.Look:
-
-                break;
 
             default:
                 myManager.returnState();// myManager.currentState = State.PlayerInput;
+                return true;
                 break;
 
         }

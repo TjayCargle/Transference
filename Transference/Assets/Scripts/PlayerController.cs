@@ -97,8 +97,11 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        myManager.ComfirmMenuAction(current);
-                        current.TakeAction();
+                        if (myManager.ComfirmMenuAction(current))
+                        {
+                            current.TakeAction();
+                        }
+
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
@@ -206,7 +209,7 @@ public class PlayerController : MonoBehaviour
                     break;
                 case State.PlayerOppOptions:
                     {
-                    
+
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
                             myManager.oppEvent.caller = null;
@@ -215,7 +218,36 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
 
-               
+                case State.PlayerSelectItem:
+                    {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            if (invm.selectedMenuItem)
+                            {
+                                if (invm.selectedMenuItem.refItem)
+                                {
+                                    if (invm.selectedMenuItem.refItem.TYPE == 5)
+                                    {
+                                        ItemScript selectedItem = (ItemScript)invm.selectedMenuItem.refItem;
+                                        if(selectedItem.useItem(current) == true)
+                                        {
+                                            Debug.Log("Health: " + current.HEALTH);
+                                            Debug.Log("Stats health " + current.STATS.HEALTH);
+                                            current.TakeAction();
+                                            current.INVENTORY.ITEMS.Remove(selectedItem);
+                                            invm.Validate("Player controller used item");
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            myManager.CancelMenuAction(current);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -283,7 +315,7 @@ public class PlayerController : MonoBehaviour
                                 Debug.Log("Got it");
                                 selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
                             }
-                     
+
                             currentSkill = selectedSkil;
                             myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
                             myManager.ShowWhite();
@@ -342,7 +374,7 @@ public class PlayerController : MonoBehaviour
                     case 4:
                         {
                             Debug.Log("use or atk");
-               if (invm.selectedMenuItem.refItem.GetType() != typeof(UsableScript))
+                            if (invm.selectedMenuItem.refItem.GetType() != typeof(UsableScript))
                             {
                                 CommandSkill selectedSkill = (CommandSkill)invm.selectedMenuItem.refItem;
                                 currentSkill = selectedSkill;
@@ -351,11 +383,11 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                     default:
- 
-                            Debug.Log("default  use");
+
+                        Debug.Log("default  use");
                         Debug.Log(invm.selectedMenuItem.refItem.NAME);
-                           // invm.selectedMenuItem.ApplyAction(oppTarget);
-                        if(invm.selectedMenuItem.refItem.NAME.Equals("ATTACK"))
+                        // invm.selectedMenuItem.ApplyAction(oppTarget);
+                        if (invm.selectedMenuItem.refItem.NAME.Equals("ATTACK"))
                         {
                             OppUseOrAttack(oppTarget);
                         }
@@ -371,7 +403,7 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             }
-           
+
         }
     }
     public void OppUseOrAttack(LivingObject invoker)
@@ -412,14 +444,14 @@ public class PlayerController : MonoBehaviour
 
                     if (check == true)
                     {
-             
+
                         myManager.oppEvent.caller = null;
                         myManager.CreateEvent(this, null, "Show Command", BeforeOpp);
                     }
 
                     if (currentSkill != null)
                         currentSkill = null;
-                  
+
                 }
             }
         }
@@ -450,9 +482,9 @@ public class PlayerController : MonoBehaviour
         if (check == true)
         {
 
-                myManager.oppEvent.caller = null;
-                myManager.CreateEvent(this, null, "Show Command", BeforeOpp);
-            
+            myManager.oppEvent.caller = null;
+            myManager.CreateEvent(this, null, "Show Command", BeforeOpp);
+
         }
     }
 

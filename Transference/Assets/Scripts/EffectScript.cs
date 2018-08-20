@@ -14,8 +14,8 @@ public class EffectScript : MonoBehaviour {
 
     public void ApplyReaction(ManagerScript manager, LivingObject living)
     {
-        int chance = Random.Range(0, 2);
-        Debug.Log("Chance = " + chance);
+        int chance = 0;// Random.Range(0, 2);
+      //  Debug.Log("Chance = " + chance);
         switch (effect)
         {
             case StatusEffect.paralyzed:
@@ -23,8 +23,9 @@ public class EffectScript : MonoBehaviour {
                 if(chance <= 0)
                 {
                     Debug.Log("Player is stunned");
-                    manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
-
+                    int dmg = (int)(living.HEALTH * 0.1);
+                    manager.DamageLivingObject(living,dmg);
+                    manager.CreateDmgTextEvent(dmg.ToString(), Color.yellow, living);
                     manager.NextTurn("effectScript");
                     return;
                 }
@@ -36,8 +37,9 @@ public class EffectScript : MonoBehaviour {
                 if (chance <= 0)
                 {
                     Debug.Log(living.FullName + " is sleeping");
-                    manager.DamageLivingObject(living, -(int)(living.HEALTH * 0.1));
-
+                    int dmg = -(int)(living.HEALTH * 0.1);
+                    manager.DamageLivingObject(living, dmg);
+                    manager.CreateDmgTextEvent(dmg.ToString(), Color.blue, living);
                     manager.NextTurn("effectScript");
                     return;
                 }
@@ -49,6 +51,7 @@ public class EffectScript : MonoBehaviour {
                 if (chance <= 0)
                 {
                     Debug.Log(living.FullName + " is frozen solid");
+                    manager.CreateDmgTextEvent("Frozen", Color.cyan, living);
                     manager.NextTurn("effectScript");
                     return;
                 }
@@ -56,12 +59,17 @@ public class EffectScript : MonoBehaviour {
                 Destroy(this);
                 break;
             case StatusEffect.burned:
+                {
+
                 Debug.Log(living.FullName + " is burned");
-                manager.DamageLivingObject(living, (int)(living.HEALTH * 0.2));
+                int dmg = (int)(living.HEALTH * 0.2);
+                manager.DamageLivingObject(living, dmg);
+                manager.CreateDmgTextEvent(dmg.ToString(), Color.red, living);
                 if (chance > 0)
                 {
                     Debug.Log(living.FullName + " is no longer burned");
                     Destroy(this);
+                }
                 }
                 break;
             default:

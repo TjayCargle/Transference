@@ -16,6 +16,7 @@ public enum State
     PlayerOppSelecting,
     PlayerOppOptions,
     PlayerOppMove,
+    PlayerSelectItem,
     EnemyTurn
 
 
@@ -58,7 +59,8 @@ public enum ModifiedStat
     Guard,
     Speed,
     Luck,
-    dmg
+    dmg,
+    none
 
 }
 public enum RanngeType
@@ -71,8 +73,10 @@ public enum RanngeType
 
 public enum TargetType
 {
-    enemy,
+    self,
     ally,
+    allyAndSelf,
+    enemy,
     alliesInRange,
     EnemiesInRange,
     any
@@ -107,7 +111,8 @@ public enum Element
     Opp,
     Ailment,
     Auto,
-    Heal
+    Heal,
+    none
 
 }
 public enum EType
@@ -147,17 +152,9 @@ public enum ItemType
     fatiguePotion,
     cure,
     buff,
-    atk
+    dmg
+}
 
-}
-public enum ItemTarget
-{
-    self,
-    ally,
-    any,
-    enemy,
-    enemies
-}
 
 public enum WepSkillType
 {
@@ -189,7 +186,8 @@ public enum MenuItemType
     selectPS,
     selectOS,
     equipOS,
-    generated
+    generated,
+    selectItem
 }
 public enum AutoAct
 {
