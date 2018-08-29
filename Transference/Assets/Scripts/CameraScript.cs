@@ -21,6 +21,22 @@ public class CameraScript : MonoBehaviour
     float distance = 0;
     ManagerScript manager;
     public bool showActions = true;
+    public int x = 0;
+    public int y = -5;
+    public int z = 7;
+
+    public GameObject elementPanel;
+
+    public Sprite[] resSprites;
+    public Sprite[] weakSprites;
+    public Sprite[] attrSprites;
+
+    public Image[] resists;
+    public Image[] elements;
+    public Image[] weaknesses;
+    Color transparent;
+    Color opaque;
+    public float smoothSpd = 0.5f;
     // Use this for initialization
     void Start()
     {
@@ -30,10 +46,11 @@ public class CameraScript : MonoBehaviour
         {
             manager.Setup();
         }
+        transparent = new Color(0, 0, 0, 0);
+        opaque = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (currentTile)
         {
@@ -103,6 +120,7 @@ public class CameraScript : MonoBehaviour
                                         if (manager.descriptionState != descState.none)
                                         {
                                             DescriptionCanvas.gameObject.SetActive(true);
+                                            elementPanel.SetActive(false);
                                             Text txt = DescriptionCanvas.GetComponentInChildren<Text>();
                                             string newText = "";
                                             switch (manager.descriptionState)
@@ -124,19 +142,226 @@ public class CameraScript : MonoBehaviour
                                                     newText += "Weapon: " + liver.WEAPON.NAME + "\n";
                                                     newText += "Armor: " + liver.ARMOR.NAME;
                                                     break;
-                                                case descState.affinities:
-                                                    newText = "Armor Afinities: \n";
-                                                    Element el = Element.Water;
-
-                                                    for (int i = 0; i < liver.ARMOR.HITLIST.Count; i++)
+                                                case descState.mag_affinities:
+                                                    //newText = "Armor Afinities: \n";
+                                                    if (elementPanel)
                                                     {
-                                                        el = (Element)i;
-                                                        newText += el.ToString() + ": " + liver.ARMOR.HITLIST[i].ToString() + " \t ";
-                                                        if (i % 2 != 0)
+                                                        if (!elementPanel.gameObject.activeInHierarchy)
                                                         {
-                                                            newText += "\n";
+                                                            elementPanel.SetActive(true);
+
+                                                            Element el = Element.Water;
+                                                            EHitType hitType = EHitType.normal;
+
+                                                            elements[0].sprite = attrSprites[(int)Element.Water];
+                                                            elements[1].sprite = attrSprites[(int)Element.Fire];
+                                                            elements[2].sprite = attrSprites[(int)Element.Ice];
+                                                            elements[3].sprite = attrSprites[(int)Element.Electric];
+                                                            elements[3].color = opaque;
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Water] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Water];
+                                                                resists[0].sprite = resSprites[truetype];
+                                                                resists[0].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[0].color = transparent;
+                                                            }
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Fire] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Fire];
+                                                                resists[1].sprite = resSprites[truetype];
+                                                                resists[1].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[1].color = transparent;
+
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Ice] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Ice];
+                                                                resists[2].sprite = resSprites[truetype];
+                                                                resists[2].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[2].color = transparent;
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Electric] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Electric];
+                                                                resists[3].sprite = resSprites[truetype];
+                                                                resists[3].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[3].color = transparent;
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Water] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Water];
+                                                                truetype -= 5;
+                                                                weaknesses[0].sprite = weakSprites[truetype];
+                                                                weaknesses[0].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[0].color = transparent;
+                                                            }
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Fire] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Fire];
+                                                                truetype -= 5;
+                                                                weaknesses[1].sprite = weakSprites[truetype];
+                                                                weaknesses[1].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[1].color = transparent;
+
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Ice] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Ice];
+                                                                truetype -= 5;
+                                                                weaknesses[2].sprite = weakSprites[truetype];
+                                                                weaknesses[2].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[2].color = transparent;
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Electric] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Electric];
+                                                                truetype -= 5;
+                                                                weaknesses[3].sprite = weakSprites[truetype];
+                                                                weaknesses[3].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[3].color = transparent;
+                                                            }
+
                                                         }
                                                     }
+
+
+                                                    break;
+
+                                                case descState.phys_affinities:
+                                                    //newText = "Armor Afinities: \n";
+                                                    if (elementPanel)
+                                                    {
+                                                        if (!elementPanel.gameObject.activeInHierarchy)
+                                                        {
+                                                            elementPanel.SetActive(true);
+
+                                                            Element el = Element.Water;
+                                                            EHitType hitType = EHitType.normal;
+
+                                                            elements[0].sprite = attrSprites[(int)Element.Slash];
+                                                            elements[1].sprite = attrSprites[(int)Element.Pierce];
+                                                            elements[2].sprite = attrSprites[(int)Element.Blunt];
+                                                            elements[3].color = transparent;
+                                                            resists[3].color = transparent;
+                                                            weaknesses[3].color = transparent;
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Slash] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Slash];
+                                                                resists[0].sprite = resSprites[truetype];
+                                                                resists[0].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[0].color = transparent;
+                                                            }
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Pierce] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Pierce];
+                                                                resists[1].sprite = resSprites[truetype];
+                                                                resists[1].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[1].color = transparent;
+
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Blunt] < EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Blunt];
+                                                                resists[2].sprite = resSprites[truetype];
+                                                                resists[2].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                resists[2].color = transparent;
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Slash] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Slash];
+                                                                truetype -= 5;
+                                                                weaknesses[0].sprite = weakSprites[truetype];
+                                                                weaknesses[0].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[0].color = transparent;
+                                                            }
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Pierce] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Pierce];
+                                                                truetype -= 5;
+                                                                weaknesses[1].sprite = weakSprites[truetype];
+                                                                weaknesses[1].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[1].color = transparent;
+
+                                                            }
+
+
+                                                            if (liver.ARMOR.HITLIST[(int)Element.Blunt] > EHitType.normal)
+                                                            {
+                                                                int truetype = (int)liver.ARMOR.HITLIST[(int)Element.Blunt];
+                                                                truetype -= 5;
+                                                                weaknesses[2].sprite = weakSprites[truetype];
+                                                                weaknesses[2].color = opaque;
+                                                            }
+                                                            else
+                                                            {
+                                                                weaknesses[2].color = transparent;
+                                                            }
+
+
+
+                                                        }
+                                                    }
+
+
                                                     break;
                                                 case descState.status:
                                                     newText = "Status: \n";
@@ -189,20 +414,23 @@ public class CameraScript : MonoBehaviour
 
 
         }
-
         if (currentTile)
         {
 
             Vector3 tilePos = currentTile.transform.position;
             Vector3 camPos = transform.position;
-            tilePos.y = 0.0f;
-            camPos.y = 0.0f;
-            distance = Vector3.Distance(tilePos, camPos);// Mathf.Abs(tilePos.sqrMagnitude - camPos.sqrMagnitude);
+            tilePos.y += y;
+            tilePos.z += z;
+            Vector3 targetLocation = tilePos - camPos;  //Vector3.Distance(tilePos, camPos);// Mathf.Abs(tilePos.sqrMagnitude - camPos.sqrMagnitude);
+            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd);
+           // distance = targetLocation.sqrMagnitude;
+            transform.position = smooth;
+
             //distance = Mathf.Sqrt(distance);
-            if (distance > 0.2f)
+            // if (distance > 0.2f)
             {
-                Vector3 directionVector = (currentTile.transform.position - new Vector3(0, -5, 7)) - transform.position;
-                transform.Translate(directionVector * Time.deltaTime);
+                //Vector3 directionVector = (currentTile.transform.position - new Vector3(x, y, z)) - transform.position;
+                //transform.position = currentTile.transform.position
             }
         }
 

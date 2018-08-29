@@ -5,9 +5,9 @@ using UnityEngine;
 public class LivingObject : GridObject
 {
     [SerializeField]
-    private StatScript baseStats;
+    private BaseStats baseStats;
     [SerializeField]
-    private StatScript modifiedStats;
+    private ModifiedStats modifiedStats;
     private WeaponEquip equippedWeapon;
     private ArmorEquip equipedArmor;
     private AccessoryEquip equippedAccessory;
@@ -84,12 +84,12 @@ public class LivingObject : GridObject
         get { return autoSlots; }
         set { autoSlots = value; }
     }
-    public StatScript BASE_STATS
+    public BaseStats BASE_STATS
     {
         get { return baseStats; }
         set { baseStats = value; }
     }
-    public StatScript STATS
+    public ModifiedStats STATS
     {
         get { return modifiedStats; }
         set { modifiedStats = value; }
@@ -112,8 +112,18 @@ public class LivingObject : GridObject
 
     public override int MOVE_DIST
     {
-        get { return (base.MOVE_DIST = STATS.MOVE_DIST + BASE_STATS.MOVE_DIST); }
-        set { STATS.MOVE_DIST = value; base.MOVE_DIST = value; }
+        get
+        {
+            if (PSTATUS != PrimaryStatus.crippled)
+            {
+                return (base.MOVE_DIST = STATS.MOVE_DIST + BASE_STATS.MOVE_DIST);
+            }
+            else
+            {
+                return (int)(((float)STATS.MOVE_DIST + (float)BASE_STATS.MOVE_DIST) * 0.5f);
+            }
+        }
+
     }
 
     public int ACTIONS
@@ -127,14 +137,11 @@ public class LivingObject : GridObject
         set { generatedActions = value; }
     }
 
-    public int Max_Atk_DIST
+    public int Atk_DIST
     {
-        get { return STATS.Max_Atk_DIST + BASE_STATS.Max_Atk_DIST; }
+        get { return equippedWeapon.DIST; }
     }
-    public int Min_Atk_DIST
-    {
-        get { return STATS.Min_Atk_DIST + BASE_STATS.Min_Atk_DIST; }
-    }
+
     public int STRENGTH
     {
         get { return STATS.STRENGTH + BASE_STATS.STRENGTH; }
@@ -145,15 +152,15 @@ public class LivingObject : GridObject
     }
     public int DEFENSE
     {
-        get { return STATS.DEFENSE + BASE_STATS.DEFENSE; }
+        get { return STATS.DEFENSE + BASE_STATS.DEFENSE + ARMOR.DEFENSE; }
     }
     public int RESIESTANCE
     {
-        get { return STATS.RESIESTANCE + BASE_STATS.RESIESTANCE; }
+        get { return STATS.RESIESTANCE + BASE_STATS.RESIESTANCE + ARMOR.RESISTANCE; }
     }
     public int SPEED
     {
-        get { return STATS.SPEED + BASE_STATS.SPEED; }
+        get { return STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED; }
     }
     public int LUCK
     {
@@ -246,7 +253,7 @@ public class LivingObject : GridObject
             // Debug.Log("Living setup " + FullName);
             if (!GetComponent<InventoryScript>())
             {
-                  gameObject.AddComponent<InventoryScript>();
+                gameObject.AddComponent<InventoryScript>();
             }
             inventory = GetComponent<InventoryScript>();
             if (!GetComponent<WeaponEquip>())
@@ -274,42 +281,24 @@ public class LivingObject : GridObject
             equippedAccessory = GetComponent<AccessoryEquip>();
             equippedAccessory.USER = this;
 
-            if (!GetComponent<StatScript>())
+            if (!GetComponent<BaseStats>())
             {
-                baseStats = gameObject.AddComponent<StatScript>();
-                modifiedStats = gameObject.AddComponent<StatScript>();
-                baseStats.USER = this;
-                modifiedStats.USER = this;
-                modifiedStats.Reset(true);
+                gameObject.AddComponent<BaseStats>();
             }
-            else
-            {
-                StatScript[] statsScripts = GetComponents<StatScript>();
-                if (statsScripts.Length == 1)
-                {
-                    modifiedStats = gameObject.AddComponent<StatScript>();
-                    modifiedStats.type = 1;
-                    modifiedStats.Reset(true);
-                    modifiedStats.USER = this;
-                }
-                for (int i = 0; i < statsScripts.Length; i++)
-                {
-                    if (statsScripts[i].type == 0)
-                    {
-                        baseStats = statsScripts[i];
-                        baseStats.USER = this;
-                    }
-                    else
-                    {
-                        modifiedStats = statsScripts[i];
-                        modifiedStats.Reset(true);
-                        modifiedStats.USER = this;
-                    }
-                }
 
-                this.baseStats.HEALTH = this.baseStats.MAX_HEALTH;
-                this.baseStats.MANA = this.baseStats.MAX_MANA;
+            if (!GetComponent<ModifiedStats>())
+            {
+
+                gameObject.AddComponent<ModifiedStats>();
             }
+            baseStats = GetComponent<BaseStats>();
+            modifiedStats = GetComponent<ModifiedStats>();
+            baseStats.USER = this;
+            modifiedStats.USER = this;
+            this.baseStats.HEALTH = this.baseStats.MAX_HEALTH;
+            this.baseStats.MANA = this.baseStats.MAX_MANA;
+            modifiedStats.Reset(true);
+            modifiedStats.type = 1;
 
             if (!GetComponent<skillSlots>())
             {
@@ -360,8 +349,10 @@ public class LivingObject : GridObject
                 oppSlots.TYPE = 3;
 
             }
+            GetComponent<LivingSetup>().Setup();
+            float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
 
-            ACTIONS = Mathf.RoundToInt(SPEED / 10) + 1;
+            ACTIONS = Mathf.RoundToInt(spd / 10) + 1;
             base.Setup();
         }
         //  Debug.Log("Setup done");
@@ -397,7 +388,7 @@ public class LivingObject : GridObject
 
     public void TakeAction()
     {
-        Debug.Log(FullName + " took an action");
+        //  Debug.Log(FullName + " took an action");
         ACTIONS--;
         if (myManager)
         {
@@ -413,16 +404,45 @@ public class LivingObject : GridObject
     {
         // STATS.HEALTH += 5;
         // STATS.MANA += 2;
-        STATS.HEALTH -= (int)(0.2 * STATS.MAX_HEALTH) * (actions + 1);
-        STATS.MANA -= (int)(0.2 * STATS.MAX_MANA) * (actions + 1);
-        STATS.FATIGUE -= (int)(0.2 * STATS.MAX_FATIGUE) * (actions + 1);
+        STATS.HEALTH += (int)(0.2 * MAX_HEALTH) * (actions + 1);
+        STATS.MANA += (int)(0.2 * MAX_MANA) * (actions + 1);
+        STATS.FATIGUE -= (int)(0.2 * MAX_FATIGUE) * (actions + 1);
+        if (HEALTH > MAX_HEALTH)
+        {
+            STATS.HEALTH = STATS.MAX_HEALTH;
+        }
+        if (MANA > MAX_MANA)
+        {
+            STATS.MANA = STATS.MAX_MANA;
+        }
+        if (FATIGUE < 0)
+        {
+            STATS.FATIGUE = 0;
+        }
         ACTIONS = 0;
+        float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
+        if (actions == spd || actions == spd + 2)
+        {
         GENERATED += 2;
+
+        }
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;
         if (MANA > MAX_MANA)
             STATS.MANA = MAX_MANA;
         if (FATIGUE < 0)
             STATS.FATIGUE = 0;
+    }
+    public void LevelUp()
+    {
+        BASE_STATS.LEVEL++;
+        BASE_STATS.MAX_HEALTH += 5;
+        BASE_STATS.EXP -= 100;
+    }
+
+    public void GainExp(int val)
+    {
+        BASE_STATS.EXP += val;
+
     }
 }

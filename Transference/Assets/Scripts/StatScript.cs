@@ -33,9 +33,7 @@ public class StatScript : MonoBehaviour
     [SerializeField]
     private int myMoveDist = 0;
     [SerializeField]
-    private int myMaxAtkDist = 0;
-    [SerializeField]
-    private int myMinAtkDist = 0;
+    private int myAtkDist = 0;
     [SerializeField]
     List<string> appliedPassives = new List<string>();
     public int type = 0;
@@ -62,16 +60,12 @@ public class StatScript : MonoBehaviour
         get { return myMoveDist; }
         set { myMoveDist = value; }
     }
-    public int Max_Atk_DIST
+    public int Atk_DIST
     {
-        get { return myMaxAtkDist; }
-        set { myMoveDist = value; }
+        get { return myAtkDist; }
+        set { myAtkDist = value; }
     }
-    public int Min_Atk_DIST
-    {
-        get { return myMinAtkDist; }
-        set { myMoveDist = value; }
-    }
+
     public int STRENGTH
     {
         get { return myBaseStr; }
@@ -247,11 +241,9 @@ public class StatScript : MonoBehaviour
                 break;
         }
     }
-    public void Reset(bool hard = false)
+    public void SetZero(bool hard = false)
     {
-
-        Max_Atk_DIST = 0;
-        Min_Atk_DIST = 0;
+        Atk_DIST = 0;
         HEALTH = 0;
         MANA = 0;
         STRENGTH = 0;
@@ -261,6 +253,26 @@ public class StatScript : MonoBehaviour
         SPEED = 0;
         LUCK = 0;
         FATIGUE = 0;
+        FTCHANGE = 1.0f;
+        SPCHANGE = 1.0f;
+
+        if (hard == true)
+        {
+            LEVEL = 0;
+            MAX_HEALTH = 0;
+            MAX_MANA = 0;
+            MAX_FATIGUE = 0;
+
+        }
+    }
+    public void Reset(bool hard = false)
+    {
+        STRENGTH = 0;
+        MAGIC = 0;
+        DEFENSE = 0;
+        RESIESTANCE = 0;
+        SPEED = 0;
+        LUCK = 0;
         FTCHANGE = 1.0f;
         SPCHANGE = 1.0f;
 

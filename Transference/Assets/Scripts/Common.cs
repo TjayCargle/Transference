@@ -17,6 +17,7 @@ public enum State
     PlayerOppOptions,
     PlayerOppMove,
     PlayerSelectItem,
+    ChangeOptions,
     EnemyTurn
 
 
@@ -37,10 +38,24 @@ public enum EHitType
     normal,
 
     weak, //dmg x2
-    knocked, // dmg x2 + lose a turn
+    savage, // dmg x2 + lose a turn
     cripples, // dmg x4 + stats halved
     leathal // dmg x4 + lose a turn + stats halved
 
+}
+public enum Resists
+{
+    absorbs,
+    nulls,
+    reflects,
+    resists,
+}
+public enum Weaks
+{
+    weak, 
+    savage, 
+    cripples, 
+    leathal 
 }
 public enum ModifiedStat
 {
@@ -60,7 +75,8 @@ public enum ModifiedStat
     Speed,
     Luck,
     dmg,
-    none
+    none,
+    all
 
 }
 public enum RanngeType
@@ -68,7 +84,8 @@ public enum RanngeType
     single,
     multi,
     area,
-    any
+    any,
+    anyarea
 }
 
 public enum TargetType
@@ -86,6 +103,8 @@ public enum BuffType
 {
     none,
     attack,
+    str,
+    mag,
     speed,
     defense,
     resistance,
@@ -104,14 +123,12 @@ public enum Element
     Slash,
     Pierce,
     Blunt,
-
-    Neutral,
-    Passive,
     Buff,
+    Heal,
+    Passive,
     Opp,
     Ailment,
     Auto,
-    Heal,
     none
 
 }
@@ -123,6 +140,7 @@ public enum EType
 public enum Reaction
 {
     none,
+    buff,
     knockback,
     snatched,
     reduceAtk,
@@ -131,10 +149,13 @@ public enum Reaction
     reduceMag,
     reduceRes,
     reduceLuck,
+    turnloss,
     cripple,
+    turnAndcrip,
     nulled,
     reflected,
-    absorb
+    absorb,
+    weak
 }
 public enum DMG
 {
@@ -204,12 +225,14 @@ public enum AutoReact
     extraAction,
     recoverSP,
     reduceFT,
+    increaseFT,
     reduceDef,
     reduceAtk,
     reduceSpd,
     reduceMag,
     reduceRes,
-    reduceLuck
+    reduceLuck,
+    discoverItem
 
 }
 
@@ -258,7 +281,7 @@ public enum SideEffect
     burn,
 }
 
-
+[System.Serializable]
 public class AtkConatiner : ScriptableObject
 {
     public LivingObject attackingObject;
@@ -268,6 +291,7 @@ public class AtkConatiner : ScriptableObject
     public int dmg;
     public Reaction alteration;
     public CommandSkill command;
+
 }
 public struct DmgReaction
 {
@@ -319,19 +343,20 @@ public struct menuStackEntry
     public int index;
     public currentMenu menu;
 }
-public delegate bool RunableEvent(Object data);
-public delegate void StartupEvent();
-public delegate void StartupWResourcesEvent(Object data);
-
 public enum descState
 {
     stats,
     skills,
     equipped,
-    affinities,
+    mag_affinities,
+    phys_affinities,
     status,
     none
 }
+public delegate bool RunableEvent(Object data);
+public delegate void StartupEvent();
+public delegate void StartupWResourcesEvent(Object data);
+
 public struct GridEvent
 {
     public string name;
@@ -363,57 +388,41 @@ public struct GridEvent
         set { startw = value; }
     }
 }
+
+public struct TextEvent
+{
+    public string name;
+    public Object caller;
+    public string data;
+    public bool isRunning;
+    RunableEvent runable;
+    StartupEvent start;
+    StartupWResourcesEvent startw;
+    public RunableEvent RUNABLE
+    {
+        get { return runable; }
+
+        set { runable = value; }
+    }
+
+    public StartupEvent START
+    {
+        get { return start; }
+
+        set { start = value; }
+    }
+
+}
 public enum STATICVAR
 {
     minActions = 1,
     maxActions = 5
 }
 
-public class test
+public enum EActType
 {
-    public string name;
-    public static bool Check(test one, test two)
-    {
-        if (!System.Object.Equals(one, null))
-        {
-            //one is not null
-            if (!System.Object.Equals(two, null))
-            {
-                // two is not null, so now compare names.
-                return one.name.Equals(two.name);
-            }
-        }
-        else if (System.Object.Equals(two, null))
-        {
-            //both objects are null so return true;
-            return true;
-        }
-        //one object is null and the other isn't, return false
-        return false;
-    }
-    public override bool Equals(object obj)
-    {
-        if (obj != null)
-        {
-
-            if (obj.GetType() == typeof(test))
-            {
-                return Check(this, obj as test);
-            }
-            else
-                return base.Equals(obj);
-        }
-        else
-            return base.Equals(obj);
-    }
-    public static bool operator ==(test one, test two)
-    {
-        return Check(one, two);
-    }
-    public static bool operator !=(test one, test two)
-    {
-        return Check(one, two);
-    }
+    move,
+    atk
 }
 
 

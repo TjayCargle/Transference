@@ -17,7 +17,7 @@ public class LivingSetup : MonoBehaviour
     int[] startingItems;
     bool isSetup = false;
     LivingObject me;
-    DatabaseManager dm;
+  public  DatabaseManager dm;
     ManagerScript manager;
     public virtual void Setup()
     {

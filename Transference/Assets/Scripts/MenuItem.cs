@@ -453,17 +453,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             default:
                 {
-                    Vector3 resetPos = invokingObject.currentTile.transform.position;
-                    resetPos.y = 0.5f;
-                    invokingObject.transform.position = resetPos;
-                    Debug.Log("Default");
-                    if (myManager.attackableTiles != null)
-                    {
-                        myManager.attackableTiles.Clear();
-                        myManager.ShowWhite();
-                    }
+               
                     // myMenuManager.ShowCommandCanvas();
-                    myManager.returnState();
                     // myManager.currentState = State.PlayerInput;
                 }
                 break;

@@ -1,4 +1,4 @@
-id, name, description, item Type, target Type, value, element, stat, effect
+-id, name, description, item Type, target Type, value, element, stat, effect
 0, Dragonfruit (Small), restores 25% of HP, healthPotion,allyAndSelf,0.25, none, none, none
 1, Dragonfruit (medium), restores 50% of HP, healthPotion,allyAndSelf,0.50, none, none, none
 2, Dragonfruit (large), restores 75% of HP, healthPotion,allyAndSelf,0.75, none, none, none

@@ -2,31 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NonCombatButton : MonoBehaviour {
+public class NonCombatButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
+{
 
     public int type;
-    public void PressStart()
+    public NonCombatController controller;
+    private void Start()
     {
-   
-        SceneManager.LoadSceneAsync("DemoMap");
-
-    
+        controller = GameObject.FindObjectOfType<NonCombatController>();
     }
-
-    public void PressControls()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-
+        controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
+        controller.selectedButton = this;
+        controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+        if(type < 3)
+        {
+            controller.buttonIndex = type;
+            controller.currTarget = controller.targets[type];
+        }
     }
-
-    public void PressQuit()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        Application.Quit();
+        controller.HitButton();
     }
-    public void pressMain()
-    {
-        SceneManager.LoadScene("start");
-    }
-	
+   public void PressStart()
+   {
+
+       SceneManager.LoadSceneAsync("DemoMap");
+
+
+   }
+
+   public void PressControls()
+   {
+
+   }
+
+   public void PressQuit()
+   {
+       Application.Quit();
+   }
+   public void pressMain()
+   {
+       SceneManager.LoadScene("start");
+   }
+
 }

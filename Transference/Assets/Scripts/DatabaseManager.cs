@@ -226,7 +226,11 @@ public class DatabaseManager : MonoBehaviour
                             buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
                             buff.NEXT = Int32.Parse(parsed[8]);
                             buff.NEXTCOUNT = Int32.Parse(parsed[9]);
-                           // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
+                            if (buff.NEXTCOUNT > 0)
+                            {
+                                buff.NEXTCOUNT = 2;
+                            }
+                            // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
                             buff.HITS = Int32.Parse(parsed[12]);
                             buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[13]);
                             buff.TILES = new System.Collections.Generic.List<Vector2>();
@@ -248,6 +252,17 @@ public class DatabaseManager : MonoBehaviour
                                     break;
                                 case BuffType.luck:
                                     mod.affectedStat = ModifiedStat.Luck;
+                                    break;
+                                case BuffType.none:
+                                    break;
+                                case BuffType.str:
+                                    mod.affectedStat = ModifiedStat.Str;
+                                    break;
+                                case BuffType.mag:
+                                    mod.affectedStat = ModifiedStat.Mag;
+                                    break;
+                                case BuffType.all:
+                                    mod.affectedStat = ModifiedStat.all;
                                     break;
                             }
                             mod.editValue = (float)Double.Parse(parsed[11]);
@@ -327,6 +342,10 @@ public class DatabaseManager : MonoBehaviour
                             command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
                             command.NEXT = Int32.Parse(parsed[8]);
                             command.NEXTCOUNT = Int32.Parse(parsed[9]);
+                            if(command.NEXTCOUNT > 0)
+                            {
+                                command.NEXTCOUNT = 2;
+                            }
 
                             command.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             command.COST = Int32.Parse(parsed[5]);
@@ -355,7 +374,10 @@ public class DatabaseManager : MonoBehaviour
                                 command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + skill.DESC + " " + command.HITS + " times";
 
                             }
-
+                            if(command.EFFECT != SideEffect.none)
+                            {
+                                command.DESC += " with a chance to " + command.EFFECT.ToString();
+                            }
 
                             livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);
                             livingObject.GetComponent<InventoryScript>().USEABLES.Add(command);
@@ -406,7 +428,7 @@ public class DatabaseManager : MonoBehaviour
 
                         WeaponScript weapon = ScriptableObject.CreateInstance<WeaponScript>();
                         weapon.NAME = parsed[1];
-                        weapon.DESC = parsed[2];
+                      //  weapon.DESC = parsed[2];
                         weapon.ATTACK = Int32.Parse(parsed[3]);
                         weapon.ATTACK_TYPE = (EType)Enum.Parse(typeof(EType), parsed[4]);
                         weapon.AFINITY = (Element)Enum.Parse(typeof(Element), parsed[5]);
@@ -416,6 +438,17 @@ public class DatabaseManager : MonoBehaviour
                         weapon.LUCK = Int32.Parse(parsed[9]);
                         weapon.TYPE = 0;
 
+                        weapon.DESC = "Deals " + (DMG)Enum.Parse(typeof(DMG), parsed[3]) + " "+ weapon.ATTACK_TYPE+ " "  + weapon.AFINITY + " based dmg.";
+
+                        if(weapon.Range == 1)
+                        {
+                            weapon.DESC += " Hits a tile " + weapon.DIST + " space away";
+                        }
+                        else if (weapon.Range == weapon.DIST)
+                        {
+                            weapon.DESC += " Hits tiles up to " + weapon.DIST + " spaces away";
+                        }
+                       
                         livingObject.GetComponent<InventoryScript>().WEAPONS.Add(weapon);
                         livingObject.GetComponent<InventoryScript>().USEABLES.Add(weapon);
                     }
@@ -457,7 +490,7 @@ public class DatabaseManager : MonoBehaviour
 
                         ArmorScript armor = ScriptableObject.CreateInstance<ArmorScript>();
                         armor.NAME = parsed[1];
-                        armor.DESC = parsed[2];
+                      //  armor.DESC = parsed[2];
                         armor.DEFENSE = Int32.Parse(parsed[3]);
                         armor.RESISTANCE = Int32.Parse(parsed[4]);
                         armor.SPEED = Int32.Parse(parsed[5]);
@@ -471,6 +504,7 @@ public class DatabaseManager : MonoBehaviour
                         list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[11]));
                         list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[12]));
 
+                        armor.DESC = "Defense: " + armor.DEFENSE + " Resistance: " + armor.RESISTANCE + " Speed: " + armor.SPEED;
 
                         armor.HITLIST = list;
 

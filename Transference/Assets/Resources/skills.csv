@@ -1,50 +1,107 @@
 -id,name,description,element,effect,cost,etype,range type, next, next count,  accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy
-0,Whip,foe,Slash,none,3,physical,single,1,5,100, minute,1,0,1,0,1
-1,Lash,foe,Slash,none,6,physical,single,2,10,100, small,1,0,1,0,1
-2,Whiplash,foe,Slash,none,9,physical,single,3,15,95, medium,1,0,1,1,1
-3,Razorlash,foe,Slash,none,12,physical,single,4,20,90, heavy,1,0,1,0,1
-4,Chainlash,foe,Slash,none,15, physical,single,5,25,90, severe,1,0,1,0,1
-5,ChainSlash,foe,Slash,none,18, physical,single,-1,0,90, collassal,1,0,1,0,1
+0,Sura,foe,Slash,none,3,physical,single,1,2,100, minute,1,0,1,0,1
+1,Sureta,foe,Slash,none,6,physical,single,2,4,100, small,1,0,1,0,1
+2,Surpa,foe,Slash,none,9,physical,single,3,6,95, medium,1,0,1,1,1
+3,Suricron,foe,Slash,none,12,physical,single,4,8,90, heavy,1,0,1,0,1
+4,Surgma,foe,Slash,none,15, physical,single,5,10,90, severe,1,0,1,0,1
+5,Surega,foe,Slash,none,18, physical,single,-1,0,90, collassal,1,0,1,0,1
 -
-6,Cuts,foe,Slash,none,5,physical,multi,7,5,100, minute,2,0,2,0,1,0,2
-7,Chops,foe,Slash,none,10,physical,multi,8,10,100,minute,3,0,2,0,1,0,2
-8,Slice,foe,Slash,none,15,physical,multi,9,20,100, small,2,0,2,0,1,0,2
-9,Dice,foe,Slash,none,20,physical,multi,10,40,100, small,3,0,2,0,1,0,2
-10,Mince,foe,Slash,none,25,physical,multi,-1,0,100, medium,3,0,2,0,1,0,2
+6,Surasha,foe,Slash,none,-5,physical,multi,7,2,100, minute,2,0,2,0,1,0,2
+7,Surasheta,foe,Slash,none,-10,physical,multi,8,4,100,minute,3,0,2,0,,2
+8,Surashpa,foe,Slash,none,-25,physical,multi,9,6,100, small,3,0,2,0,1,0,2
+9,Surashicron,foe,Slash,none,-30,physical,multi,10,8,100, small,4,0,2,0,1,0,2
+10,Surashgma,foe,Slash,none,-45,physical,multi,11,10,100, medium,4,0,2,0,1,0,2
+11,Surashega,foe,Slash,none,-50,physical,multi,-1,0,100, medium,5,0,2,0,1,0,2
 -
-11,ConfuStrike,foes,Pierce,confusion,5,physical,single,12,5,100, minute,1,0,1,0,1
-12,DumbStrike,foes,Pierce,confusion,7,physical,single,13,10,100,small,1,0,1,0,1
-13,BlazingStrike,foes,Pierce,burn,-6,physical,single,14,20,100, small,1,0,1,0,1
-14,ScorchStrike,foes,Pierce,burn,-12,physical,single,15,20,100, medium,1,0,1,0,1
-15,PoisonStrike,foes,Pierce,poison,10,physical,single,16,0,100, small,1,0,1,0,1
-16,VenomStrike,foes,Pierce,poison,16,physical,single,-1,0,100, heavy,1,0,1,0,1
+12,Surmua,foe,Slash,none,-7,physical,area,13,5,100, minute,1,0,3,0,1,1,1,-1,1
+13,Surmueta,foe,Slash,none,-14,physical,area,14,10,100,small,1,0,3,0,1,1,1,-1,1
+14,Surmupa,foe,Slash,none,-21,physical,area,15,20,100, medium,1,0,3,0,1,1,1,-1,1
+15,Surmuicron,foe,Slash,none,-28,physical,area,16,40,100, heavy,1,0,3,0,1,1,1,-1,1
+16,Surmugma,foe,Slash,none,-34,physical,area,17,80,100, severe,1,0,3,0,1,1,1,-1,1
+17,Surmuega,foe,Slash,none,-41,physical,area,-1,0,100, collassal,1,0,3,0,1,1,1,-1,1
 -
-46, Pyr,foes,Fire,burn,5, magical,multi,47,5,99, minute,2,0,1,0,2
-47, Pyri,foes,Fire,burn,10, magical,multi,48,10,99, small,2,0,1,0,2
-48, Pyron,foes,Fire,burn,15, magical,multi,-1,0,99, medium,2,0,1,0,2
-49, Pyrho,foes,Fire,burn,20, magical,multi,-1,0,99, medium,2,0,1,0,2
-50, Pyrega,foes,Fire,burn,25, magical,multi,-1,0,99, medium,2,0,1,0,2
+18,Tsua,foe,Pierce,none,3,physical,single,19,2,100, minute,1,0,1,0,1
+19,Tsueta,foe,Pierce,none,6,physical,single,20,4,100, small,1,0,1,0,1
+20,Tsupa,foe,Pierce,none,9,physical,single,21,6,95, medium,1,0,1,1,1
+21,Tsuicron,foe,Pierce,none,12,physical,single,22,8,90, heavy,1,0,1,0,1
+22,Tsugma,foe,Pierce,none,15, physical,single,23,10,90, severe,1,0,1,0,1
+23,Tsuega,foe,Pierce,none,18, physical,single,-1,0,90, collassal,1,0,1,0,1
 -
-143,Ralli Atk,Increases Atk by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, attack,1,0,1
-144,ZeRali Atk,Increases Atk by 30% for 3 turns in range,Buff,none,8,magical,area,145,5,1,30,1, attack,4,0,1,1,1,-1,1,0,2
-145,Rallho Atk,Increases Atk by 40% for 3 turns,Buff,none,6,magical,multi,146,15,1,40,1, attack,4,0,1,1,1,-1,1,0,2
-146,ZeRallho Atk,Increases Atk by 40% for 3 turns in range,Buff,none,10,magical,area,147,5,1,40,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-147,Rallega Atk,Increases Atk by 50% for 3 turns,Buff,none,8,magical,multi,148,15,1,50,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-148,ZeRallega Atk,Increases Atk by 50% for 3 turns in range,Buff,none,12,magical,area,-1,5,1,50,1, attack,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+24,Tsuasha,foe,Pierce,none,-5,physical,multi,25,2,100, minute,2,0,2,0,1,0,2
+25,Tsuasheta,foe,Pierce,none,-10,physical,multi,26,4,100,minute,3,0,2,0,1,0,2
+26,Tsuashpa,foe,Pierce,none,-25,physical,multi,27,6,100, small,3,0,2,0,1,0,2
+27,Tsuashicron,foe,Pierce,none,-30,physical,multi,28,8,100, small,4,0,2,0,1,0,2
+28,Tsuashgma,foe,Pierce,none,-45,physical,multi,29,10,100, medium,4,0,2,0,1,0,2
+29,Tsuashega,foe,Pierce,none,-50,physical,multi,-1,0,100, medium,5,0,2,0,1,0,2
 -
-149,Ralli Def,Increases Def by 30% for 3 turns,Buff,none,4,magical,single,150,5,1,30,1, defense,1,0,1
-150,ZeRali Def,Increases Def by 30% for 3 turns in range,Buff,none,8,magical,area,151,5,1,30,1, defense,4,0,1,1,1,-1,1,0,2
-151,Rallho Def,Increases Def by 40% for 3 turns,Buff,none,6,magical,multi,152,15,1,40,1, defense,4,0,1,1,1,-1,1,0,2
-152,ZeRallho Def,Increases Def by 40% for 3 turns in range,Buff,none,10,magical,area,153,5,1,40,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-153,Rallega Def,Increases Def by 50% for 3 turns,Buff,none,8,magical,multi,154,15,1,50,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-154,ZeRallega Def,Increases Def by 50% for 3 turns in range,Buff,none,12,magical,area,-1,5,1,50,1, defense,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+30,Tsumua,foe,Pierce,none,-7,physical,area,31,5,100, minute,1,0,3,0,1,0,2,0,3
+31,Tsumueta,foe,Pierce,none,-14,physical,area,32,10,100,small,1,0,3,0,1,0,2,0,3
+32,Tsumupa,foe,Pierce,none,-21,physical,area,33,20,100, medium,1,0,3,0,1,0,2,0,3
+33,Tsumuicron,foe,Pierce,none,-28,physical,area,34,40,100, heavy,1,0,3,0,1,0,2,0,3
+34,Tsumugma,foe,Pierce,none,-34,physical,area,35,80,100, severe,1,0,3,0,1,0,2,0,3
+35,Tsumuega,foe,Pierce,none,-41,physical,area,-1,0,100, collassal,1,0,3,0,1,0,2,0,3
 -
-155,Ralli Spd,Increases Speed by 30% for 3 turns,Buff,none,4,magical,single,156,5,1,30,1, speed,1,0,1
-156,ZeRali Spd,Increases Speed by 30% for 3 turns in range,Buff,none,8,magical,area,157,5,1,30,1, speed,4,0,1,1,1,-1,1,0,2
-157,Rallho Spd,Increases Speed by 40% for 3 turns,Buff,none,6,magical,multi,158,15,1,40,1, speed,4,0,1,1,1,-1,1,0,2
-158,ZeRallho Spd,Increases Speed by 40% for 3 turns in range,Buff,none,10,magical, area,159,5,1,40,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-159,Rallega Spd,Increases Speed by 50% for 3 turns,Buff,none,8,magical,multi,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-160,ZeRallega Spd,Increases Speed by 50% for 3 turns in range,Buff,none,12,magical,area,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+36,Dona,foe,Blunt,none,3,physical,single,37,2,100, minute,1,0,1,0,1
+37,Doneta,foe,Blunt,none,6,physical,single,38,4,100, small,1,0,1,0,1
+38,Donpa,foe,Blunt,none,9,physical,single,39,6,95, medium,1,0,1,1,1
+39,Donicron,foe,Blunt,none,12,physical,single,40,8,90, heavy,1,0,1,0,1
+40,Dongma,foe,Blunt,none,15, physical,single,41,10,90, severe,1,0,1,0,1
+41,Donega,foe,Blunt,none,18, physical,single,-1,0,90, collassal,1,0,1,0,1
+-
+42,Donasha,foe,Blunt,none,-5,physical,multi,43,2,100, minute,2,0,1,0,1
+43,Donasheta,foe,Blunt,none,-10,physical,multi,44,4,100,minute,3,0,1,0,1
+44,Donashpa,foe,Blunt,none,-25,physical,multi,45,6,100, small,3,0,1,0,1
+45,Donashicron,foe,Blunt,none,-30,physical,multi,46,8,100, small,4,0,1,0,1
+46,Donashgma,foe,Blunt,none,-45,physical,multi,47,10,100, medium,4,0,1,0,1
+47,Donashega,foe,Blunt,none,-50,physical,multi,-1,0,100, medium,5,0,1,0,1
+-
+48,Donmua,foe,Blunt,none,-7,physical,area,49,5,100, minute,1,0,4,0,1,0,2,1,1,1,2
+49,Donmueta,foe,Blunt,none,-14,physical,area,50,10,100,small,1,0,4,0,1,0,2,1,1,1,2
+50,Donmupa,foe,Blunt,none,-21,physical,area,51,20,100, medium,1,0,4,0,1,0,2,1,1,1,2
+51,Donmuicron,foe,Blunt,none,-28,physical,area,52,40,100, heavy,1,0,4,0,1,0,2,1,1,1,2
+52,Donmugma,foe,Blunt,none,-34,physical,area,53,80,100, severe,1,0,4,0,1,0,2,1,1,1,2
+53,Donmuega,foe,Blunt,none,-41,physical,area,-1,0,100, collassal,1,0,4,0,1,0,2,1,1,1,2
+-
+54,ConfuStrike,foes,Pierce,confusion,-5,physical,single,55,5,100, minute,1,0,1,0,1
+55,DumbStrike,foes,Pierce,confusion,7-,physical,single,56,10,100,small,1,0,1,0,1
+56,PryriSting,foes,Pierce,burn,-6,physical,single,57,20,100, small,1,0,1,0,1
+57,ScorchStrike,foes,Pierce,burn,-12,physical,single,58,20,100, medium,1,0,1,0,1
+58,PoisonStrike,foes,Pierce,poison,-10,physical,single,59,0,100, small,1,0,1,0,1
+59,VenomStrike,foes,Pierce,poison,-16,physical,single,-1,0,100, heavy,1,0,1,0,1
+-
+91, Pyr,foes,Fire,burn,5, magical,multi,47,5,99, minute,2,0,1,0,2
+92, Pyri,foes,Fire,burn,10, magical,multi,48,10,99, small,2,0,1,0,2
+93, Pyron,foes,Fire,burn,15, magical,multi,-1,0,99, medium,2,0,1,0,2
+94, Pyrho,foes,Fire,burn,20, magical,multi,-1,0,99, medium,2,0,1,0,2
+95, Pyrega,foes,Fire,burn,25, magical,multi,-1,0,99, medium,2,0,1,0,2
+-
+143,Ralli Atk,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, attack,1,0,1
+144,ZeRali Atk,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, attack,4,0,1,1,1,-1,1,0,2
+145,Rallho Atk,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, attack,4,0,1,1,1,-1,1,0,2
+146,ZeRallho Atk,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+147,Rallega Atk,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+148,ZeRallega Atk,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, attack,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+-
+149,Ralli Def,Increases Def by 30% for 3 turns,Buff,none,4,magical,any,150,5,1,30,1, defense,1,0,1
+150,ZeRali Def,Increases Def by 30% for 3 turns in range,Buff,none,8,magical,anyarea,151,5,1,30,1, defense,4,0,1,1,1,-1,1,0,2
+151,Rallho Def,Increases Def by 40% for 3 turns,Buff,none,6,magical,any,152,15,1,40,1, defense,4,0,1,1,1,-1,1,0,2
+152,ZeRallho Def,Increases Def by 40% for 3 turns in range,Buff,none,10,magical,anyarea,153,5,1,40,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+153,Rallega Def,Increases Def by 50% for 3 turns,Buff,none,8,magical,any,154,15,1,50,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+154,ZeRallega Def,Increases Def by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, defense,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+-
+155,Ralli Spd,Increases Speed by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, speed,1,0,1
+156,ZeRali Spd,Increases Speed by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, speed,4,0,1,1,1,-1,1,0,2
+157,Rallho Spd,Increases Speed by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, speed,4,0,1,1,1,-1,1,0,2
+158,ZeRallho Spd,Increases Speed by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+159,Rallega Spd,Increases Speed by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+160,ZeRallega Spd,Increases Speed by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
+-
+161,Ralli Str,Increases str by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, str,1,0,1
+162,ZeRali Str,Increases str by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, str,4,0,1,1,1,-1,1,0,2
+163,Rallho Str,Increases str by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, str,4,0,1,1,1,-1,1,0,2
+164,ZeRallho Str,Increases str by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+165,Rallega Str,Increases str by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
+166,ZeRallega Str,Increases str by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, str,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
 -
 174,DragonStone,Fire and Slash attacks do 25% more dmg,Passive,1,0.25,0,ElementDmg,2, Fire, Slash
 175,HP+,Increases max hp by 25,Passive,1,25,0,Health,0
@@ -55,6 +112,14 @@
 182,Slash Opportunity φ,Follow up action from a Slash attack with extra damage.,Opp,Slash,1.5
 182,Slash Opportunity ω,Follow up action from a Slash attack with double damage.,Opp,Slash,2.0
 -
+183,Blunt Opportunity σ,Follow up action from a Blunt skill.,Opp,Blunt,1.0
+184,Blunt Opportunity φ,Follow up action from a Blunt skill with extra damage.,Opp,Blunt,1.5
+185,Blunt Opportunity ω,Follow up action from a Blunt skill with double damage.,Opp,Blunt,2.0
+-
 209,Lifestrip,20% chance to heal the damage you delt.,Auto,20.0,afterDmg,healByDmg,210,5
 210,Lifelift,40% chance to heal the damage you delt.,Auto,40.0,afterDmg,healByDmg,211,10
 211,Lifesteal,60% chance to heal the damage you delt.,Auto,60.0,afterDmg,healByDmg,-1,0
+-
+212,Profit,20% chance to discover an item after a basic attack.,Auto,20.0,afterDmg,discoverItem,213,5
+213,Profit More,40% chance to discover an item after a basic attack.,Auto,40.0,afterDmg,discoverItem,214,10
+214,Profit Lots,60% chance to discover an item after a basic attack.,Auto,60.0,afterDmg,discoverItem,-1,0

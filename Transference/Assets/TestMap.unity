@@ -323,7 +323,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000076293945, y: -0.361557}
+  m_AnchoredPosition: {x: 0.000038146973, y: -0.361557}
   m_SizeDelta: {x: -9.599976, y: 0.6030884}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &84625409
@@ -1144,7 +1144,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.36157227}
+  m_AnchoredPosition: {x: 0.000030517578, y: -0.36157227}
   m_SizeDelta: {x: -9.599976, y: 0.6030884}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &246536949
@@ -1293,6 +1293,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 1
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -1300,7 +1301,10 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
   potentialTargets: []
+  isPerforming: 0
   currentEnemy: {fileID: 0}
   headCount: 0
   psudeoActions: 0
@@ -1320,6 +1324,7 @@ MonoBehaviour:
   startingWeapons: 06000000
   startingArmors: 01000000
   startingAccessories: 
+  startingItems: 
 --- !u!114 &275073831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1341,6 +1346,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &275073832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1366,8 +1372,7 @@ MonoBehaviour:
   myBaseSpeed: 4
   myBaseLuck: 2
   myMoveDist: 3
-  myMaxAtkDist: 1
-  myMinAtkDist: 0
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -1978,6 +1983,14 @@ MonoBehaviour:
   AnimationRequests: 0
   eventManager: {fileID: 0}
   menuStackCount: 0
+  descriptionState: 0
+  sfx: {fileID: 0}
+  oppImage: {fileID: 0}
+  currOppList: []
+  doubleAdjOppTiles: []
+  targetIndex: 0
+  targets: []
+  flavor: {fileID: 0}
 --- !u!4 &443060568
 Transform:
   m_ObjectHideFlags: 0
@@ -2029,6 +2042,8 @@ MonoBehaviour:
   extraList: []
   slotIndex: 0
   imgTypes: []
+  attributeImages: []
+  isSetup: 0
 --- !u!114 &443060570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2046,9 +2061,11 @@ MonoBehaviour:
   descCanvas: {fileID: 1525699745}
   skillCanvas: {fileID: 428956867}
   extraCanvas: {fileID: 31613909}
+  optionsCanvas: {fileID: 0}
   ItemRect: {fileID: 0}
   inManager: {fileID: 443060569}
   isSetup: 0
+  myCamera: {fileID: 0}
 --- !u!114 &443060571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3040,8 +3057,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1308037330}
   m_HandleRect: {fileID: 1308037329}
   m_Direction: 2
-  m_Value: 0.59953445
-  m_Size: 0.9979598
+  m_Value: 0.5995547
+  m_Size: 0.9979597
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3194,7 +3211,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000022888184, y: 0.0000076293945}
+  m_AnchoredPosition: {x: -0.0000076293945, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 30.2}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &651693874
@@ -3394,7 +3411,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0.0000076293945}
   m_SizeDelta: {x: 0, y: 30.2}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &706115703
@@ -3621,15 +3638,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c497f6860737da846a070af0029f2e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill: {fileID: 0}
   skillFile: {fileID: 4900000, guid: 872cd0495722cae4faec24d61aedb3e3, type: 3}
   weaponFile: {fileID: 4900000, guid: bfce824803776d244826b21af637a3b8, type: 3}
   armorFile: {fileID: 4900000, guid: 687a27e52585c0942b03074baa383d09, type: 3}
   accFile: {fileID: 4900000, guid: 70e9903272ce4df4bb1757a7f26b8482, type: 3}
+  itemFile: {fileID: 0}
   skillLines: []
   weaponLines: []
   armorLines: []
   accLines: []
+  itemLines: []
   isSetup: 0
 --- !u!4 &751661922
 Transform:
@@ -3857,6 +3875,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &773884758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3872,6 +3891,7 @@ MonoBehaviour:
   startingWeapons: 04000000
   startingArmors: 01000000
   startingAccessories: 
+  startingItems: 
 --- !u!114 &773884759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3897,8 +3917,7 @@ MonoBehaviour:
   myBaseSpeed: 4
   myBaseLuck: 2
   myMoveDist: 3
-  myMaxAtkDist: 1
-  myMinAtkDist: 0
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -3921,6 +3940,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 1
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -3928,7 +3948,10 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
   potentialTargets: []
+  isPerforming: 0
   currentEnemy: {fileID: 0}
   headCount: 0
   psudeoActions: 0
@@ -4309,7 +4332,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 673481440}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4773,8 +4796,7 @@ MonoBehaviour:
   myBaseSpeed: 2
   myBaseLuck: 1
   myMoveDist: 2
-  myMaxAtkDist: 2
-  myMinAtkDist: 1
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -4800,6 +4822,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &952455469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4815,6 +4838,7 @@ MonoBehaviour:
   startingWeapons: 000000000100000002000000
   startingArmors: 00000000
   startingAccessories: 
+  startingItems: 
 --- !u!114 &952455470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4833,6 +4857,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 0
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -4840,6 +4865,8 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
 --- !u!1 &985401018
 GameObject:
   m_ObjectHideFlags: 0
@@ -5431,8 +5458,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2136371535}
   m_HandleRect: {fileID: 2136371534}
   m_Direction: 2
-  m_Value: 0.59948385
-  m_Size: 0.9975923
+  m_Value: 0.59947884
+  m_Size: 0.99759215
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5933,6 +5960,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 1
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -5940,7 +5968,10 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
   potentialTargets: []
+  isPerforming: 0
   currentEnemy: {fileID: 0}
   headCount: 0
   psudeoActions: 0
@@ -5960,6 +5991,7 @@ MonoBehaviour:
   startingWeapons: 06000000
   startingArmors: 01000000
   startingAccessories: 
+  startingItems: 
 --- !u!114 &1179961035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5981,6 +6013,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &1179961036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6006,8 +6039,7 @@ MonoBehaviour:
   myBaseSpeed: 4
   myBaseLuck: 2
   myMoveDist: 3
-  myMaxAtkDist: 1
-  myMinAtkDist: 0
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -6590,6 +6622,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 0
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -6597,6 +6630,8 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
 --- !u!212 &1262598732
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6681,8 +6716,7 @@ MonoBehaviour:
   myBaseSpeed: 2
   myBaseLuck: 2
   myMoveDist: 3
-  myMaxAtkDist: 1
-  myMinAtkDist: 0
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -6708,6 +6742,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &1262598736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6723,6 +6758,7 @@ MonoBehaviour:
   startingWeapons: 05000000
   startingArmors: 01000000
   startingAccessories: 
+  startingItems: 
 --- !u!1 &1272304742
 GameObject:
   m_ObjectHideFlags: 0
@@ -7091,7 +7127,7 @@ RectTransform:
   m_Father: {fileID: 2135973915}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.0012231746}
+  m_AnchorMin: {x: 0, y: 0.0012232874}
   m_AnchorMax: {x: 1, y: 0.99918294}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -8166,6 +8202,7 @@ MonoBehaviour:
   startingWeapons: 000000000100000002000000
   startingArmors: 00000000
   startingAccessories: 
+  startingItems: 
 --- !u!114 &1528805168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8187,6 +8224,7 @@ MonoBehaviour:
   weapons: []
   armor: []
   accessories: []
+  items: []
 --- !u!114 &1528805169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8212,8 +8250,7 @@ MonoBehaviour:
   myBaseSpeed: 2
   myBaseLuck: 1
   myMoveDist: 2
-  myMaxAtkDist: 2
-  myMinAtkDist: 1
+  myAtkDist: 0
   appliedPassives: []
   type: 0
   manaCostChange: 1
@@ -8295,6 +8332,7 @@ MonoBehaviour:
   modifiedStats: {fileID: 0}
   isEnenmy: 0
   actions: 0
+  generatedActions: 0
   pStatus: 0
   sStatus: 0
   eStatus: 0
@@ -8302,6 +8340,8 @@ MonoBehaviour:
   passiveSlots: {fileID: 0}
   oppSlots: {fileID: 0}
   autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
 --- !u!1 &1529172498
 GameObject:
   m_ObjectHideFlags: 0
@@ -8558,7 +8598,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 517677007}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9479,6 +9519,9 @@ MonoBehaviour:
   fatigueText: {fileID: 1976872050}
   infoObject: {fileID: 0}
   actionText: {fileID: 221855944}
+  test: {fileID: 0}
+  DescriptionCanvas: {fileID: 0}
+  showActions: 1
 --- !u!1 &1807929042
 GameObject:
   m_ObjectHideFlags: 0
@@ -10023,7 +10066,7 @@ RectTransform:
   m_Father: {fileID: 1918703456}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.001443395}
+  m_AnchorMin: {x: 0, y: 0.0014434544}
   m_AnchorMax: {x: 1, y: 0.9990357}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -10642,7 +10685,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000076293945, y: -0.361557}
+  m_AnchoredPosition: {x: 0.000038146973, y: -0.361557}
   m_SizeDelta: {x: -9.599976, y: 0.6030884}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2054509553
@@ -10776,8 +10819,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1902653840}
   m_HandleRect: {fileID: 1902653839}
   m_Direction: 2
-  m_Value: 0.59948385
-  m_Size: 0.9975923
+  m_Value: 0.59947884
+  m_Size: 0.99759215
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10882,7 +10925,7 @@ RectTransform:
   m_Father: {fileID: 1739727307}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.001443395}
+  m_AnchorMin: {x: 0, y: 0.0014434544}
   m_AnchorMax: {x: 1, y: 0.9990357}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}

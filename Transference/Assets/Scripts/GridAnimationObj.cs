@@ -8,6 +8,7 @@ public class GridAnimationObj : GridObject
     public AnimationScript script;
     public Animation anim;
     public bool isShowing = false;
+    public int type = 0;
   //  private float time = 2;
 
     public override void Setup()
@@ -28,7 +29,14 @@ public class GridAnimationObj : GridObject
     {
         if (isShowing == false)
         {
+            if(type == 0)
+            {
             script.LoadList("Animations/Cuts/");
+            }
+            else
+            {
+                script.LoadList("Animations/Buffs/");
+            }
             gameObject.SetActive(true);
             isShowing = true;
             script.index = 0;

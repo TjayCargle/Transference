@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     public Canvas descCanvas;
     public Canvas skillCanvas;
     public Canvas extraCanvas;
+    public Canvas optionsCanvas;
     private Text descText;
     public ScrollRect ItemRect;
     public InventoryMangager inManager;
@@ -43,6 +44,47 @@ public class MenuManager : MonoBehaviour
         }
     }
     
+    public void ShowOptions()
+    {
+        if (commandCanvas)
+        {
+            commandCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas)
+        {
+            inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (itemCanvas)
+        {
+            if (inManager)
+            {
+                inManager.unloadContents();
+            }
+            itemCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
+        }
+
+        if (inManager)
+        {
+            inManager.setContentAndScroll(null, null, 0, null);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
+        if (optionsCanvas)
+        {
+            optionsCanvas.gameObject.SetActive(true);
+        }
+    }
+
     public void ShowNone()
     {
      if(myCamera)
@@ -82,18 +124,19 @@ public class MenuManager : MonoBehaviour
         {
             extraCanvas.gameObject.SetActive(false);
         }
+        if (optionsCanvas)
+        {
+            optionsCanvas.gameObject.SetActive(false);
+        }
     }
     public void ShowCommandCanvas()
     {
-        //ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
-        //if(manager)
-        //{
-        //    manager.ShowGridObjectAffectArea(manager.currentObject);
-        //}
+  
         if (myCamera)
         {
             myCamera.showActions = true;
         }
+     
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(true);
@@ -109,6 +152,10 @@ public class MenuManager : MonoBehaviour
                     }
                 }
             }
+        }
+        if (optionsCanvas)
+        {
+            optionsCanvas.gameObject.SetActive(false);
         }
         if (inventoryCanvas)
         {
@@ -192,6 +239,10 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
+            if(myCamera)
+            {
+                myCamera.elementPanel.gameObject.SetActive(false);
+            }
         }
         if (skillCanvas)
         {
@@ -231,6 +282,10 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
+            if (myCamera)
+            {
+                myCamera.elementPanel.gameObject.SetActive(false);
+            }
         }
         if (skillCanvas)
         {

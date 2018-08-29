@@ -11,13 +11,26 @@ public class NonCombatController : MonoBehaviour
     public Canvas ctrlCnvs;
     public Sprite[] controls;
     public Image currControl;
-    int buttonIndex = 0;
-    int controlIndex = 0;
+    //   public Sprite[] silouetes;
+    public GameObject[] targets;
+    public GameObject currTarget;
+    // [SerializeField]
+    // Image siloute;
+    public int buttonIndex = 0;
+    public int controlIndex = 0;
     // Use this for initialization
     void Start()
     {
         selectedButton = buttons[0];
         selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+        if (targets != null)
+        {
+            if (targets.Length > 0)
+            {
+
+                currTarget = targets[0];
+            }
+        }
         // controls = Resources.LoadAll<Sprite>("Demo/");
         if (ctrlCnvs)
         {
@@ -34,6 +47,7 @@ public class NonCombatController : MonoBehaviour
             {
                 case 0:
                     selectedButton.PressStart();
+
                     break;
 
                 case 1:
@@ -56,6 +70,16 @@ public class NonCombatController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 targetLocation = Vector3.zero;
+        if (currTarget)
+        {
+            targetLocation = currTarget.transform.position;
+        }
+        targetLocation.z -= 65;
+        if (Vector3.Distance(transform.position, targetLocation) > 2f)
+        {
+            transform.Translate((targetLocation - transform.position) * 0.5f);
+        }
         if (Input.GetKeyDown(KeyCode.S))
         {
             if (buttons.Length > 0)
@@ -69,6 +93,8 @@ public class NonCombatController : MonoBehaviour
                 {
                     buttonIndex = 0;
                 }
+
+                currTarget = targets[buttonIndex];
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
@@ -88,6 +114,7 @@ public class NonCombatController : MonoBehaviour
                 {
                     buttonIndex = buttons.Length - 1;
                 }
+                currTarget = targets[buttonIndex];
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;

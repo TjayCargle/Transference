@@ -139,7 +139,7 @@ public class CommandSkill : SkillScript
     }
 
 
-    public void UseSkill(LivingObject user, float modification = 1.0f)
+    public bool UseSkill(LivingObject user, float modification = 1.0f)
     {
 
         if (ETYPE == EType.magical)
@@ -163,11 +163,13 @@ public class CommandSkill : SkillScript
                     if (database != null)
                     {
                         database.LearnSkill(NEXT, user);
+                        return true; //to check if a new skill was learned
 
                     }
                 }
             }
         }
+        return false;
 
     }
     public bool CanUse(float modification = 1.0f)

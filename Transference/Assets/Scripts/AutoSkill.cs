@@ -75,6 +75,8 @@ public class AutoSkill : SkillScript
                 return Reaction.none;
                 break;
             case AutoReact.extraAction:
+                OWNER.ACTIONS++;
+                return Reaction.none;
                 break;
             case AutoReact.recoverSP:
                 OWNER.STATS.MANA += VAL;
@@ -102,13 +104,21 @@ public class AutoSkill : SkillScript
             case AutoReact.reduceLuck:
                 return Reaction.reduceLuck;
                 break;
+            case AutoReact.increaseFT:
+                OWNER.STATS.FATIGUE += VAL;
+                return Reaction.none;
+                break;
+            case AutoReact.discoverItem:
+                OWNER.GetComponent<LivingSetup>().dm.GetItem(UnityEngine.Random.Range(0, 11), OWNER);
+                return Reaction.none;
+                break;
             default:
                 Debug.Log("No reaction error");
                 return Reaction.none;
                 break;
         }
 
-     
+
         return Reaction.none;
     }
 

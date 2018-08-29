@@ -23,13 +23,17 @@ public class InventoryMangager : MonoBehaviour
     public MenuItem[] extraSlots;
     UsableScript genericMove;
     UsableScript genericAtk;
-  
+
     public List<UsableScript> currentList = null;
     public List<UsableScript> extraList = null;
     public int slotIndex;
     [SerializeField]
     private Sprite[] imgTypes;
+    [SerializeField]
+    private Sprite[] attributeImages;
     public bool isSetup = false;
+    public int attrOffset = 120;
+    public int otherOffset = 100;
     public void Setup()
     {
         if (!isSetup)
@@ -182,7 +186,7 @@ public class InventoryMangager : MonoBehaviour
                         }
                         if (Input.GetKeyDown(KeyCode.S))
                         {
-                            DecreaseScroll();        
+                            DecreaseScroll();
                         }
                     }
                     break;
@@ -252,7 +256,8 @@ public class InventoryMangager : MonoBehaviour
                     {
                         currentIndex = currentContent.transform.childCount - 1;
                     }
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                 
+                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
@@ -509,7 +514,8 @@ public class InventoryMangager : MonoBehaviour
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
                     }
 
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                    if (currentContent.transform.childCount < currentIndex)
+                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
@@ -567,22 +573,22 @@ public class InventoryMangager : MonoBehaviour
                         Image selectedImg = selectableItem.GetComponent<Image>();
                         if (selectableItem.refItem)
                         {
-                            if(selectableItem.refItem.GetType() != typeof(UsableScript))
-                            switch (((SkillScript)selectableItem.refItem).ELEMENT)
-                            {
-                                case Element.Passive:
-                                    selectedImg.sprite = imgTypes[2];
-                                    break;
-                                case Element.Auto:
-                                    selectedImg.sprite = imgTypes[3];
-                                    break;
-                                case Element.Opp:
-                                    selectedImg.sprite = imgTypes[4];
-                                    break;
-                                default:
-                                    selectedImg.sprite = imgTypes[1];
-                                    break;
-                            }
+                            if (selectableItem.refItem.GetType() != typeof(UsableScript))
+                                switch (((SkillScript)selectableItem.refItem).ELEMENT)
+                                {
+                                    case Element.Passive:
+                                        selectedImg.sprite = imgTypes[2];
+                                        break;
+                                    case Element.Auto:
+                                        selectedImg.sprite = imgTypes[3];
+                                        break;
+                                    case Element.Opp:
+                                        selectedImg.sprite = imgTypes[4];
+                                        break;
+                                    default:
+                                        selectedImg.sprite = imgTypes[1];
+                                        break;
+                                }
                         }
                     }
                 }
@@ -609,7 +615,7 @@ public class InventoryMangager : MonoBehaviour
         //UsableScript itemType = new UsableScript();
         int useType = -1;
         int windowType = -1;
-      //  Debug.Log("index = " + index);
+        //  Debug.Log("index = " + index);
         switch (index)
         {
 
@@ -643,7 +649,7 @@ public class InventoryMangager : MonoBehaviour
             case 3:
                 // itemType = new ItemScript();
                 // itemType.TYPE = 3;
-                useType = 3;
+                useType = 4;
                 currentList.Add(genericMove);
                 currentList.Add(genericAtk);
                 for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
@@ -717,7 +723,7 @@ public class InventoryMangager : MonoBehaviour
                 break;
             case 11:
                 useType = 5;
-              // items
+                // items
 
                 for (int i = 0; i < liveObject.INVENTORY.ITEMS.Count; i++)
                 {
@@ -740,37 +746,51 @@ public class InventoryMangager : MonoBehaviour
 
                 if (selectableItem.GetComponentInChildren<Text>())
                 {
+
+                    Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
                     Text selectedText = selectableItem.GetComponentInChildren<Text>();
+                    RectTransform rectTransform = selectedText.GetComponent<RectTransform>();
+                    attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+                    rectTransform.position = new Vector3(attrOffset, rectTransform.position.y, rectTransform.position.z);
                     if (item.TYPE != 4)
                     {
                         selectedText.text = item.NAME;
                     }
                     else
                     {
+
                         selectedText.text = item.NAME;
-                        if (windowType == 3)
+                        if (windowType == 3 || windowType == -1)
                         {
+                            if (manager.currentState == State.PlayerEquipping)
+                            {
+                                attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                int indxex = (int)((CommandSkill)item).ELEMENT;
+                                //Debug.Log("the index is = " + indxex);
+                                attr.sprite = attributeImages[indxex];
+                                rectTransform.position = new Vector3(otherOffset, rectTransform.position.y, rectTransform.position.z);
+                            }
                             CommandSkill cmd = ((CommandSkill)item);
                             string extraText = "";
                             if (((CommandSkill)item).ETYPE == EType.physical)
                             {
                                 extraText = cmd.COST.ToString();// " " + "FT";
-                                if(cmd.COST > 0 )
+                                if (cmd.COST > 0)
                                 {
-                                selectedText.text += "FT +" + extraText;
+                                    selectedText.text += " FT +" + extraText;
 
                                 }
                                 else
                                 {
-                                    selectedText.text += "FT " + extraText;
+                                    selectedText.text += " FT " + extraText;
 
                                 }
 
                             }
                             else
                             {
-                                extraText = " " + "SP";
-                            selectedText.text += " " + ((CommandSkill)item).COST.ToString() + extraText;
+                                extraText = " SP";
+                                selectedText.text += " " + ((CommandSkill)item).COST.ToString() + extraText;
 
                             }
                         }
@@ -782,6 +802,10 @@ public class InventoryMangager : MonoBehaviour
                 {
                     //  MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
                     item.TYPE = useType;//itemType.TYPE;
+                    if (item.NAME.Equals("MOVE") || item.NAME.Equals("ATTACK"))
+                    {
+                        item.TYPE = 3;
+                    }
                     selectableItem.refItem = item;
                     if (index == 3)
                     {
@@ -791,8 +815,8 @@ public class InventoryMangager : MonoBehaviour
                             selectableItem.refItem.DESC = "Move a number of tiles";
 
                         }
-                      
-                    
+
+
                     }
                 }
 

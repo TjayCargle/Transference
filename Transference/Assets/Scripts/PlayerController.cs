@@ -65,12 +65,7 @@ public class PlayerController : MonoBehaviour
                     //    }
                     //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     //}
-                    if (Input.GetKeyDown(KeyCode.Escape))
-                    {
-                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
-                        myManager.CancelMenuAction(current);
-
-                    }
+                
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
                         //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
@@ -100,6 +95,7 @@ public class PlayerController : MonoBehaviour
                         if (myManager.ComfirmMenuAction(current))
                         {
                             current.TakeAction();
+                         // myManager.ComfirmMoveGridObject(current,myManager.GetTileIndex(current));
                         }
 
                     }
@@ -312,7 +308,7 @@ public class PlayerController : MonoBehaviour
                             CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
                             if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
                             {
-                                Debug.Log("Got it");
+                              //  Debug.Log("Got it");
                                 selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
                             }
 
@@ -385,7 +381,7 @@ public class PlayerController : MonoBehaviour
                     default:
 
                         Debug.Log("default  use");
-                        Debug.Log(invm.selectedMenuItem.refItem.NAME);
+                        Debug.Log(invm.selectedMenuItem.refItem.NAME + " " + invm.selectedMenuItem.refItem.TYPE);
                         // invm.selectedMenuItem.ApplyAction(oppTarget);
                         if (invm.selectedMenuItem.refItem.NAME.Equals("ATTACK"))
                         {
@@ -561,7 +557,6 @@ public class PlayerController : MonoBehaviour
             else
             {
                 check = myManager.AttackTargets(current, current.WEAPON);
-
             }
         }
 
