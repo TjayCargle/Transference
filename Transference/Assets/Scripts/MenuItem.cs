@@ -18,12 +18,14 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        myManager.SelectMenuItem(this);
+        if (myManager)
+            myManager.SelectMenuItem(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        myManager.HoverMenuItem(this);
+        if (myManager)
+            myManager.HoverMenuItem(this);
     }
 
     public void Setup()
@@ -383,7 +385,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.equipOS:
                 break;
-
+            case MenuItemType.prevMenu:
+             
+                myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
+                break;
             case MenuItemType.generated:
                 myManager.player.useOrEquip();
                 break;
@@ -423,7 +428,6 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 if (myManager.GetTile(invokingObject).isOccupied == false)
                 {
 
-                    invokingObject.HASMOVED = true;
                     myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                     // myManager.currentState = State.PlayerInput;
                     myManager.returnState();
@@ -453,7 +457,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             default:
                 {
-               
+
                     // myMenuManager.ShowCommandCanvas();
                     // myManager.currentState = State.PlayerInput;
                 }

@@ -33,7 +33,7 @@ public class MenuManager : MonoBehaviour
             }
             descCanvas.gameObject.SetActive(false);
         }
-        ShowCommandCanvas();
+        //ShowCommandCanvas();
         isSetup = true;
     }
     void Start()
@@ -87,6 +87,7 @@ public class MenuManager : MonoBehaviour
 
     public void ShowNone()
     {
+
      if(myCamera)
         {
             myCamera.showActions = false;

@@ -176,11 +176,11 @@ public class StatScript : MonoBehaviour
                 MOVE_DIST += val;
                 break;
             case ModifiedStat.Str:
-                modification = ((float)val / 100);
+                modification = ((float)val / 100) * baseObj.STRENGTH;
                 STRENGTH += (int)modification;
                 break;
             case ModifiedStat.Mag:
-                modification = ((float)val / 100) ;
+                modification = ((float)val / 100) * baseObj.MAGIC;
                 MAGIC += (int)modification;
                 break;
             case ModifiedStat.Atk:

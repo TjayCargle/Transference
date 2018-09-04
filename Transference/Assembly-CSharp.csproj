@@ -73,7 +73,6 @@
     <Compile Include="Assets\Scripts\BuffScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\CanvasManager.cs" />
-    <Compile Include="Assets\Scripts\CanvasScript.cs" />
     <Compile Include="Assets\Scripts\CommandScript.cs" />
     <Compile Include="Assets\Scripts\CommandSkill.cs" />
     <Compile Include="Assets\Scripts\Common.cs" />
@@ -103,6 +102,7 @@
     <Compile Include="Assets\Scripts\ManagerScript.cs" />
     <Compile Include="Assets\Scripts\MenuItem.cs" />
     <Compile Include="Assets\Scripts\MenuManager.cs" />
+    <Compile Include="Assets\Scripts\MenuStackManager.cs" />
     <Compile Include="Assets\Scripts\ModifiedStats.cs" />
     <Compile Include="Assets\Scripts\NonCombatButton.cs" />
     <Compile Include="Assets\Scripts\NonCombatController.cs" />
@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\SkillScript.cs" />
     <Compile Include="Assets\Scripts\skillSlots.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
+    <Compile Include="Assets\Scripts\TempObject.cs" />
     <Compile Include="Assets\Scripts\TextEventManager.cs" />
     <Compile Include="Assets\Scripts\TextObj.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />

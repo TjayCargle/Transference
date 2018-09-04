@@ -141,6 +141,7 @@ public enum Reaction
 {
     none,
     buff,
+    bonusAction,
     knockback,
     snatched,
     reduceAtk,
@@ -208,13 +209,18 @@ public enum MenuItemType
     selectOS,
     equipOS,
     generated,
-    selectItem
+    selectItem,
+    trade,
+    prevMenu
 }
 public enum AutoAct
 {
     beforeDmg,
     afterDmg,
     afterKilling,
+    turnBegin,
+    afterSkill,
+    turnEnd
 
 }
 
@@ -313,7 +319,8 @@ public enum currentMenu
     CmdSkills,
     OppSelection,
     OppOptions,
-    OppMove
+    OppMove,
+    none
 }
 public class tjCompare : ScriptableObject, IComparer<pathNode>
 {

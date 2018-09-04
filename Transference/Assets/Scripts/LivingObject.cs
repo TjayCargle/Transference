@@ -396,7 +396,8 @@ public class LivingObject : GridObject
             {
 
                 myManager.NextTurn(FullName);
-                myManager.GetComponent<InventoryMangager>().Validate("living obj, action taken");
+                myManager.CleanMenuStack(true);
+                //myManager.GetComponent<InventoryMangager>().Validate("living obj, action taken");
             }
         }
     }

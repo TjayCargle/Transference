@@ -75,7 +75,9 @@ public class NonCombatController : MonoBehaviour
         {
             targetLocation = currTarget.transform.position;
         }
-        targetLocation.z -= 65;
+        targetLocation.z -= 90;
+        targetLocation.x -= 15;
+        targetLocation.y += 15;
         if (Vector3.Distance(transform.position, targetLocation) > 2f)
         {
             transform.Translate((targetLocation - transform.position) * 0.5f);

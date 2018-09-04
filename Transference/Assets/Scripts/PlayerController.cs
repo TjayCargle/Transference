@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         }
         if (myManager.turnOrder.Count > 0)
         {
-            current = myManager.turnOrder[0];
+          //  current = myManager.turnOrder[0];
         }
         // base.Start();
         // MoveDist = 1;

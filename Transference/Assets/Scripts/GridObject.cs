@@ -7,16 +7,9 @@ public class GridObject : MonoBehaviour
     protected ManagerScript myManager;
     public TileScript currentTile;
     public string FullName;
-    private bool hasMoved = false;
+   
     protected int MoveDist = 0;
     public bool isSetup = false;
-
-
-    public bool HASMOVED
-    {
-        get { return hasMoved; }
-        set { hasMoved = value; }
-    }
 
     public virtual int MOVE_DIST
     {
