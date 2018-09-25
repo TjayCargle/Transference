@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum State
 {
     PlayerInput,
@@ -18,6 +19,7 @@ public enum State
     PlayerOppMove,
     PlayerSelectItem,
     ChangeOptions,
+    PlayerTransition,
     EnemyTurn
 
 
@@ -202,16 +204,17 @@ public enum MenuItemType
     InventoryWeapon,
     InventoryArmor,
     InventoryAcc,
-    equipSkill,
+    equipBS,
     selectBS,
-    selectAS,
-    selectPS,
-    selectOS,
+    equipAS,
+    equipPS,
+    special,
     equipOS,
     generated,
     selectItem,
     trade,
-    prevMenu
+    prevMenu,
+    selectAct
 }
 public enum AutoAct
 {
@@ -320,6 +323,7 @@ public enum currentMenu
     OppSelection,
     OppOptions,
     OppMove,
+    act,
     none
 }
 public class tjCompare : ScriptableObject, IComparer<pathNode>

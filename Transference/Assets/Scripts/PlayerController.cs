@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private CommandSkill currentSkill;
+    public CommandSkill currentSkill;
 
     [SerializeField]
     public LivingObject current;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         }
         if (myManager.turnOrder.Count > 0)
         {
-          //  current = myManager.turnOrder[0];
+            //  current = myManager.turnOrder[0];
         }
         // base.Start();
         // MoveDist = 1;
@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
             switch (myManager.currentState)
             {
+
                 case State.PlayerInput:
                     //if (Input.GetKeyDown(KeyCode.W))
                     //{
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour
                     //    }
                     //    myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     //}
-                
+
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
                         //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
@@ -95,7 +96,7 @@ public class PlayerController : MonoBehaviour
                         if (myManager.ComfirmMenuAction(current))
                         {
                             current.TakeAction();
-                         // myManager.ComfirmMoveGridObject(current,myManager.GetTileIndex(current));
+                            // myManager.ComfirmMoveGridObject(current,myManager.GetTileIndex(current));
                         }
 
                     }
@@ -114,7 +115,7 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
-                        myManager.returnState();
+                        // myManager.returnState();
                         myManager.CancelMenuAction(current);
                         currentSkill = null;
                     }
@@ -147,7 +148,12 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        myManager.CancelMenuAction(current);
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        currentSkill = null;
                         myManager.CancelMenuAction(current);
                     }
                     break;
@@ -160,13 +166,16 @@ public class PlayerController : MonoBehaviour
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
-                            Debug.Log("hit escape");
                             // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                             myManager.CancelMenuAction(current);
                             currentSkill = null;
 
                         }
-
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            currentSkill = null;
+                            myManager.CancelMenuAction(current);
+                        }
                     }
                     break;
                 case State.PlayerWait:
@@ -188,18 +197,30 @@ public class PlayerController : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
-                        myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                        //myManager.invManager.currentIndex = myManager.invManager.prevIndex;
                         myManager.CancelMenuAction(current);
                     }
                     break;
                 case State.PlayerEquippingSkills:
+
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
 
                         myManager.CancelMenuAction(current);
                     }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+
+                        myManager.CancelMenuAction(current);
+                    }
+
                     break;
                 case State.PlayerSkillsMenu:
+                    if (Input.GetMouseButtonDown(1))
+                    {
+
+                        myManager.CancelMenuAction(current);
+                    }
                     break;
                 case State.EnemyTurn:
                     break;
@@ -225,7 +246,7 @@ public class PlayerController : MonoBehaviour
                                     if (invm.selectedMenuItem.refItem.TYPE == 5)
                                     {
                                         ItemScript selectedItem = (ItemScript)invm.selectedMenuItem.refItem;
-                                        if(selectedItem.useItem(current) == true)
+                                        if (selectedItem.useItem(current) == true)
                                         {
                                             Debug.Log("Health: " + current.HEALTH);
                                             Debug.Log("Stats health " + current.STATS.HEALTH);
@@ -239,6 +260,10 @@ public class PlayerController : MonoBehaviour
 
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            myManager.CancelMenuAction(current);
+                        }
+                        if (Input.GetMouseButtonDown(1))
                         {
                             myManager.CancelMenuAction(current);
                         }
@@ -286,9 +311,7 @@ public class PlayerController : MonoBehaviour
                     case 3:
                         if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
                         {
-                            AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                            current.ACCESSORY.Equip(newAcc);
-                            myManager.invManager.Validate("player controller for equipping");
+
                         }
                         break;
                     case 4:
@@ -308,53 +331,81 @@ public class PlayerController : MonoBehaviour
                             CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
                             if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
                             {
-                              //  Debug.Log("Got it");
+                                //  Debug.Log("Got it");
                                 selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
                             }
 
-                            currentSkill = selectedSkil;
-                            myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
-                            myManager.ShowWhite();
-                            if (myManager.attackableTiles.Count > 0)
+                            if (myManager.currentState == State.PlayerEquippingSkills)
                             {
-                                for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+                                Debug.Log("made it to use or equip");
+                                if (myManager.invManager.menuSide == -1)
                                 {
-                                    for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
-                                    {
+                                    Debug.Log("  equipin");
 
-                                        myManager.attackableTiles[i][j].myColor = Color.red;
-                                    }
+                                    myManager.invManager.EquipSkill();
                                 }
-                                myManager.currentAttackList = myManager.attackableTiles[0];
-
-                                for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                else
                                 {
-                                    myManager.currentAttackList[i].myColor = Color.green;
+                                    Debug.Log("  eun quipin");
+
+                                    myManager.invManager.UnequipSkill();
                                 }
-
-
                             }
-
                             else
                             {
-                                currentSkill = null;
-                                myManager.attackableTiles.Clear();
 
+                                if (selectedSkil.CanUse())
+                                {
+
+                                    currentSkill = selectedSkil;
+                                    myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
+                                    myManager.ShowWhite();
+                                    if (myManager.attackableTiles.Count > 0)
+                                    {
+                                        for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+                                        {
+                                            for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                                            {
+
+                                                myManager.attackableTiles[i][j].myColor = myManager.pink;// Color.red;
+                                            }
+                                        }
+                                        myManager.currentAttackList = myManager.attackableTiles[0];
+
+                                        for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                        {
+                                            myManager.currentAttackList[i].myColor = Color.red;
+                                        }
+
+
+                                    }
+
+                                    else
+                                    {
+                                        currentSkill = null;
+                                        myManager.attackableTiles.Clear();
+
+                                    }
+                                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                                    MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                                    if (myMenuManager)
+                                    {
+                                        myMenuManager.ShowNone();
+                                    }
+                                    menuStackEntry entry = new menuStackEntry();
+                                    entry.state = State.PlayerAttacking;
+                                    entry.index = invm.currentIndex;
+                                    entry.menu = currentMenu.CmdSkills;
+                                    myManager.enterState(entry);
+                                }
+                                else
+                                {
+                                    myManager.PlayExitSnd();
+                                }
                             }
-                            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                            MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                            if (myMenuManager)
-                            {
-                                myMenuManager.ShowNone();
-                            }
-                            menuStackEntry entry = new menuStackEntry();
-                            entry.state = State.PlayerAttacking;
-                            entry.index = invm.currentIndex;
-                            entry.menu = currentMenu.CmdSkills;
-                            myManager.enterState(entry);
+                            break;
                         }
-                        break;
                 }
             }
         }
@@ -382,7 +433,6 @@ public class PlayerController : MonoBehaviour
 
                         Debug.Log("default  use");
                         Debug.Log(invm.selectedMenuItem.refItem.NAME + " " + invm.selectedMenuItem.refItem.TYPE);
-                        // invm.selectedMenuItem.ApplyAction(oppTarget);
                         if (invm.selectedMenuItem.refItem.NAME.Equals("ATTACK"))
                         {
                             OppUseOrAttack(oppTarget);
@@ -473,7 +523,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
+        myManager.currentState = State.PlayerTransition;
 
         if (check == true)
         {
@@ -570,23 +620,16 @@ public class PlayerController : MonoBehaviour
                 current.TakeAction();
             }
 
-            EventManager eventManager = GameObject.FindObjectOfType<EventManager>();
-            if (eventManager)
-            {
-                //GridEvent grid = new GridEvent();
-                //grid.RUNABLE = ShowCmd;
-                //grid.caller = this;
-                //eventManager.gridEvents.Add(grid);
-                myManager.oppEvent.isRunning = false;
-                myManager.CreateEvent(this, null, "Show Command", ShowCmd);
-            }
+
             // myManager.menuManager.ShowNone();
         }
     }
 
     public bool ShowCmd(Object data)
     {
+     
         myManager.CleanMenuStack();
+        myManager.ShowGridObjectAffectArea(current);
         return true;
     }
     public bool BeforeOpp(Object data)

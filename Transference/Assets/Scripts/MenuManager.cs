@@ -17,7 +17,7 @@ public class MenuManager : MonoBehaviour
     public InventoryMangager inManager;
     public bool isSetup = false;
     public CameraScript myCamera;
-
+    public Canvas actCanvas;
     public Text DESC
     {
         get { return descText; }
@@ -44,6 +44,53 @@ public class MenuManager : MonoBehaviour
         }
     }
     
+    public void ShowActCanvas()
+    {
+        if (commandCanvas)
+        {
+            commandCanvas.gameObject.SetActive(false);
+        }
+        if (inventoryCanvas)
+        {
+            inventoryCanvas.gameObject.SetActive(false);
+        }
+        if (itemCanvas)
+        {
+            if (inManager)
+            {
+                inManager.unloadContents();
+            }
+            itemCanvas.gameObject.SetActive(false);
+        }
+        if (descCanvas)
+        {
+            descCanvas.gameObject.SetActive(false);
+        }
+
+        if (inManager)
+        {
+            inManager.setContentAndScroll(null, null, 0, null);
+        }
+        if (skillCanvas)
+        {
+            skillCanvas.gameObject.SetActive(false);
+        }
+        if (extraCanvas)
+        {
+            extraCanvas.gameObject.SetActive(false);
+        }
+        if (optionsCanvas)
+        {
+            optionsCanvas.gameObject.SetActive(false);
+        }
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(true);
+            inManager.setContentAndScroll(actCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, actCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+            inManager.ForceSelect();
+        }
+    }
+
     public void ShowOptions()
     {
         if (commandCanvas)
@@ -92,6 +139,10 @@ public class MenuManager : MonoBehaviour
         {
             myCamera.showActions = false;
         }
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -132,12 +183,18 @@ public class MenuManager : MonoBehaviour
     }
     public void ShowCommandCanvas()
     {
-  
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (myCamera)
         {
             myCamera.showActions = true;
         }
-     
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(true);
@@ -186,6 +243,10 @@ public class MenuManager : MonoBehaviour
 
     public void ShowInventoryCanvas()
     {
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -229,6 +290,10 @@ public class MenuManager : MonoBehaviour
 
     public void ShowItemCanvas(int index, LivingObject invokingObject)
     {
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -272,6 +337,10 @@ public class MenuManager : MonoBehaviour
     }
     public void showOpportunityOptions(LivingObject invokingObject)
     {
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -315,6 +384,10 @@ public class MenuManager : MonoBehaviour
     }
     public void ShowSkillCanvas()
     {
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (commandCanvas)
         {
             commandCanvas.gameObject.SetActive(false);
@@ -358,7 +431,10 @@ public class MenuManager : MonoBehaviour
 
     public void ShowExtraCanvas(int index, LivingObject invokingObject)
     {
-
+        if (actCanvas)
+        {
+            actCanvas.gameObject.SetActive(false);
+        }
         if (extraCanvas)
         {
             extraCanvas.gameObject.SetActive(true);

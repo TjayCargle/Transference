@@ -14,7 +14,7 @@ public class TextEventManager : MonoBehaviour
     {
         if (!isSetup)
         {
-           // flavor = FindObjectOfType<FlavorTextImg>();
+            // flavor = FindObjectOfType<FlavorTextImg>();
             textEvents = new List<TextEvent>();
             currentEvent.data = null;
             isSetup = true;
@@ -39,21 +39,23 @@ public class TextEventManager : MonoBehaviour
             if (textEvents.Count > 0)
             {
                 //Debug.Log("GOT AN EVENT BOUS");
-              //  Debug.Log(textEvents.Count);
+                //  Debug.Log(textEvents.Count);
                 if (currentEvent.isRunning == false)
                 {
                     // Debug.Log("not running BOUS");
                     currentEvent = textEvents[0];//Dequeue();
-                  //  Debug.Log(currentEvent.data);
+                                                 //  Debug.Log(currentEvent.data);
                     textEvents.Remove(textEvents[0]);
                     currentEvent.isRunning = true;
                     if (currentEvent.START != null)
                     {
                         currentEvent.START();
                     }
-                    flavor.myText.text = currentEvent.data;
+                    if (flavor)
+                        if (flavor.myText)
+                            flavor.myText.text = currentEvent.data;
 
-               //     Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
+                    //     Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 
                 }
             }
@@ -65,7 +67,7 @@ public class TextEventManager : MonoBehaviour
             {
                 // completed.Add(eve.name);
                 //   Debug.Log("Finished event: " + currentEvent.name + " from " + currentEvent.caller);
-               // Debug.Log("FINISHED: " + currentEvent.data);
+                // Debug.Log("FINISHED: " + currentEvent.data);
                 currentEvent.isRunning = false;
                 currentEvent.caller = null;
                 currentEvent.isRunning = false;

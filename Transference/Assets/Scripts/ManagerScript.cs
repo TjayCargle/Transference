@@ -44,6 +44,9 @@ public class ManagerScript : EventRunner
     private int skipCount = 0;
     public SFXManager sfx;
     public ImgObj oppImage;
+
+    public AudioClip[] sfxClips;
+
     public int TwoToOneD(int y, int width, int x)
     {
         return y * width + x;
@@ -61,7 +64,8 @@ public class ManagerScript : EventRunner
     public OptionsManager options;
     MenuStackManager stackManager;
     Color orange = new Color(1.0f, 0.369f, 0.0f);
-
+    public Color pink = new Color(1, 0.678f, 0.925f);
+    Color red = new Color(0.693f, 0.0f, 0.230f);
     // Use this for initialization
     public void Setup()
     {
@@ -99,6 +103,12 @@ public class ManagerScript : EventRunner
             targets = new List<LivingObject>();
             GameObject tileParent = new GameObject();
             tileMap = new GameObject[MapWidth * MapHeight];
+
+            stackManager = GameObject.FindObjectOfType<MenuStackManager>();
+            if (!stackManager)
+            {
+                stackManager = gameObject.AddComponent<MenuStackManager>();
+            }
             for (int i = 0; i < MapHeight; i++)
             {
                 for (int j = 0; j < MapWidth; j++)
@@ -187,6 +197,14 @@ public class ManagerScript : EventRunner
 
     public void enterState(menuStackEntry entry)
     {
+        if (sfx)
+        {
+            if (sfxClips.Length > 1)
+            {
+                sfx.loadAudio(sfxClips[2]);
+                sfx.playSound();
+            }
+        }
         prevState = currentState;
         currentState = entry.state;
         if (prevState != State.PlayerOppSelecting && currentState != State.PlayerOppSelecting)
@@ -202,23 +220,44 @@ public class ManagerScript : EventRunner
             ShowGridObjectMoveArea(currentObject);
         }
     }
+    public void PlayExitSnd()
+    {
+        if (sfx)
+        {
+            if (sfxClips.Length > 0)
+            {
+                sfx.loadAudio(sfxClips[0]);
+                sfx.playSound();
+            }
+        }
+    }
     public void returnState()
     {
+        // Debug.Log("returnin");
+        PlayExitSnd();
         if (menuStack.Count > 1)
         {
             menuStackEntry currEntry = menuStack[menuStack.Count - 1];
             menuStackEntry prevEntry = menuStack[menuStack.Count - 2];
             currentState = prevEntry.state;
             MenuManager menuManager = GetComponent<MenuManager>();
-            //   Debug.Log("cur :" + currEntry.menu);
-            //   Debug.Log("prev :" + prevEntry.menu);
+            // Debug.Log("curr :" + currEntry.menu);
+            // Debug.Log("prev :" + prevEntry.menu);
             switch (currEntry.menu)
             {
                 case currentMenu.command:
                     {
+
+                        currentState = State.PlayerInput;
+                        menuManager.ShowCommandCanvas();
+                        ShowGridObjectAffectArea(currentObject);
+                    }
+                    break;
+                case currentMenu.act:
+                    {
                         currentState = State.PlayerInput;
                         ShowGridObjectAffectArea(currentObject);
-                        menuManager.ShowCommandCanvas();
+                        menuManager.ShowActCanvas();
                     }
                     break;
                 case currentMenu.invMain:
@@ -268,45 +307,20 @@ public class ManagerScript : EventRunner
         }
         else
         {
-            Debug.Log("error tjay, do the stuff");
+
+            currentState = State.ChangeOptions;
+            menuManager.ShowOptions();
         }
 
     }
     public void CleanMenuStack(bool toCam = false)
     {
-        State prevst = currentState;
-        while (menuStack.Count > 1)
-        {
-            //   menuStack.Remove(menuStack[menuStack.Count - 1]);
-            menuStackEntry currEntry = menuStack[menuStack.Count - 1];
-            menuStackEntry prevEntry = menuStack[menuStack.Count - 2];
-
-            returnState();
-        }
-        attackableTiles.Clear();
-        if (toCam)
+      
+        while (menuStack.Count > 0)
         {
             returnState();
-
-            return;
         }
-        if (currentState != State.PlayerInput && menuStack.Count == 1)
-        {
-            menuStack.Remove(menuStack[0]);
-            menuStack.Add(defaultEntry);
-            ShowGridObjectAffectArea(currentObject);
-            menuManager.ShowCommandCanvas();
-        }
-        if (prevst == State.EnemyTurn)
-        {
-            currentState = State.EnemyTurn;
-        }
-        //    currentState = State.PlayerInput;
-
-
-        //  menuManager.ShowCommandCanvas();
-        currentObject = turnOrder[0];
-        ShowGridObjectAffectArea(currentObject);
+    
     }
     public GridEvent CreateEvent(Object caller, Object data, string name, RunableEvent run, StartupEvent start = null, int index = -1, StartupWResourcesEvent startupW = null)
     {
@@ -385,9 +399,74 @@ public class ManagerScript : EventRunner
                     {
                         returnState();
                     }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        returnState();
+                    }
                     break;
-                case State.PlayerMove:
 
+
+                case State.PlayerMove:
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        CancelMenuAction(player.current);
+                    }
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        RaycastHit hit = new RaycastHit();
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            Vector3 w = hit.point;
+                            w.x = Mathf.Round(w.x);
+                            w.y = Mathf.Round(w.y);
+                            w.z = Mathf.Round(w.z);
+
+                            if (GetTileIndex(w) > 0)
+                            {
+                                TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                bool alreadySelected = false;
+                                if (!hitTile.isOccupied)
+                                {
+
+                                    if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                    {
+                                        alreadySelected = true;
+
+                                    }
+
+                                    if (alreadySelected)
+                                    {
+                                        ComfirmMenuAction(player.current);
+                                        player.current.TakeAction();
+                                    }
+                                    else
+                                    {
+                                        tempObject.transform.position = hitTile.transform.position;
+                                        tempObject.GetComponent<GridObject>().currentTile = hitTile;
+                                        float tempX = hitTile.transform.position.x;
+                                        float tempY = hitTile.transform.position.z;
+
+                                        float objX = player.current.currentTile.transform.position.x;
+                                        float objY = player.current.currentTile.transform.position.z;
+
+
+                                        xDist = Mathf.Abs(tempX - objX);
+                                        yDist = Mathf.Abs(tempY - objY);
+                                        if (xDist + yDist <= player.current.MOVE_DIST)
+                                        {
+                                            player.current.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
+                                            myCamera.currentTile = hitTile;
+                                        }
+
+
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
                     break;
                 case State.PlayerAttacking:
                     {
@@ -454,6 +533,72 @@ public class ManagerScript : EventRunner
                             }
                             hitkey = true;
                         }
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            RaycastHit hit = new RaycastHit();
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                            if (Physics.Raycast(ray, out hit))
+                            {
+                                Vector3 w = hit.point;
+                                w.x = Mathf.Round(w.x);
+                                w.y = Mathf.Round(w.y);
+                                w.z = Mathf.Round(w.z);
+
+                                if (GetTileIndex(w) > 0)
+                                {
+                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                    bool alreadySelected = false;
+                                    int outer = -1;
+                                    int innner = -1;
+                                    for (int i = 0; i < attackableTiles.Count; i++)
+                                    {
+
+
+                                        for (int j = 0; j < attackableTiles[i].Count; j++)
+                                        {
+
+                                            if (attackableTiles[i][j] == hitTile)
+                                            {
+                                                outer = i;
+                                                innner = j;
+                                                currentAttackList = attackableTiles[i];
+                                                if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                                {
+                                                    alreadySelected = true;
+                                                    break;
+
+                                                }
+
+                                            }
+                                        }
+
+                                    }
+                                    if (alreadySelected)
+                                    {
+                                   
+                                            player.UseOrAttack();
+                                    }
+                                    else
+                                    {
+                                        if (outer >= 0 && innner >= 0)
+                                        {
+
+                                            showAttackableTiles();
+                                            tempObject.transform.position = hitTile.transform.position;
+                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+                                            hitTile.myColor = red;
+
+                                        }
+                                        else
+                                        {
+                                            //   Debug.Log("no outer : " + outer + " or inner: " + innner);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
                         if (hitkey == true)
                         {
 
@@ -502,7 +647,7 @@ public class ManagerScript : EventRunner
                                         }
 
                                     }
-                                    currentAttackList[i].myColor = Color.green;
+                                    currentAttackList[i].myColor = red;
                                 }
                                 if (foundSomething == false)
                                 {
@@ -516,6 +661,12 @@ public class ManagerScript : EventRunner
                                 //  ShowSelectedTile(tempObject.GetComponent<GridObject>());
                             }
                         }
+
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        CancelMenuAction(player.current);
+                        player.currentSkill = null;
                     }
                     break;
                 case State.PlayerOppSelecting:
@@ -569,6 +720,70 @@ public class ManagerScript : EventRunner
                             }
                             hitkey = true;
                         }
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            RaycastHit hit = new RaycastHit();
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            if (Physics.Raycast(ray, out hit))
+                            {
+                                Vector3 w = hit.point;
+                                w.x = Mathf.Round(w.x);
+                                w.y = Mathf.Round(w.y);
+                                w.z = Mathf.Round(w.z);
+
+                                if (GetTileIndex(w) > 0)
+                                {
+                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                    bool alreadySelected = false;
+                                    int inex = -1;
+
+                                    for (int i = 0; i < doubleAdjOppTiles.Count; i++)
+                                    {
+
+                                        if (doubleAdjOppTiles[i] == hitTile)
+                                        {
+                                            inex = i;
+
+                                            if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                            {
+                                                alreadySelected = true;
+                                                break;
+
+                                            }
+
+                                        }
+
+
+                                    }
+                                    if (alreadySelected)
+                                    {
+                                        oppObj = GetObjectAtTile(hitTile) as LivingObject;
+                                        hitTile.myColor = Color.red;
+                                        menuStackEntry entry = new menuStackEntry();
+                                        entry.state = State.PlayerOppOptions;
+                                        entry.index = invManager.currentIndex;
+                                        entry.menu = currentMenu.OppSelection;
+
+                                        enterState(entry);
+                                        menuManager.showOpportunityOptions(oppObj);
+                                    }
+                                    else
+                                    {
+                                        if (inex >= 0)
+                                        {
+
+                                            showOppAdjTiles();
+                                            tempObject.transform.position = hitTile.transform.position;
+                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+
+                                            hitTile.myColor = Color.red;
+                                        }
+
+
+                                    }
+                                }
+                            }
+                        }
                         if (hitkey == true)
                         {
 
@@ -606,7 +821,7 @@ public class ManagerScript : EventRunner
                                 TileScript targetTile = doubleAdjOppTiles[targetIndex];
                                 if (GetObjectAtTile(targetTile) != null)
                                 {
-                                    targetTile.myColor = Color.green;
+                                    targetTile.myColor = Color.red;
 
                                 }
                                 if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), targetTile.transform.position) == true)
@@ -621,6 +836,14 @@ public class ManagerScript : EventRunner
 
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
+                            if (sfx)
+                            {
+                                if (sfxClips.Length > 1)
+                                {
+                                    sfx.loadAudio(sfxClips[2]);
+                                    sfx.playSound();
+                                }
+                            }
                             if (targetIndex < doubleAdjOppTiles.Count)
                             {
                                 if (prevState != State.PlayerOppSelecting)
@@ -630,7 +853,7 @@ public class ManagerScript : EventRunner
                                     if (GetObjectAtTile(targetTile) != null)
                                     {
                                         oppObj = GetObjectAtTile(targetTile) as LivingObject;
-                                        targetTile.myColor = Color.green;
+                                        targetTile.myColor = Color.red;
                                         menuStackEntry entry = new menuStackEntry();
                                         entry.state = State.PlayerOppOptions;
                                         entry.index = invManager.currentIndex;
@@ -647,12 +870,25 @@ public class ManagerScript : EventRunner
                             oppEvent.caller = null;
                             CleanMenuStack();
                         }
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            oppEvent.caller = null;
+                            CleanMenuStack();
+                        }
                     }
                     break;
                 case State.PlayerOppOptions:
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
+                            if (sfx)
+                            {
+                                if (sfxClips.Length > 1)
+                                {
+                                    sfx.loadAudio(sfxClips[2]);
+                                    sfx.playSound();
+                                }
+                            }
                             player.useOppAction(oppObj);
                             returnState();
                         }
@@ -666,7 +902,15 @@ public class ManagerScript : EventRunner
                 case State.PlayerWait:
                     break;
                 case State.FreeCamera:
-
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        menuStackEntry entry = new menuStackEntry();
+                        entry.state = State.ChangeOptions;
+                        entry.index = invManager.currentIndex;
+                        entry.menu = currentMenu.command;
+                        enterState(entry);
+                        menuManager.ShowOptions();
+                    }
                     if (Input.GetMouseButtonDown(0))
                     {
                         RaycastHit hit = new RaycastHit();
@@ -815,6 +1059,14 @@ public class ManagerScript : EventRunner
                     }
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
+                        if (sfx)
+                        {
+                            if (sfxClips.Length > 1)
+                            {
+                                sfx.loadAudio(sfxClips[2]);
+                                sfx.playSound();
+                            }
+                        }
                         for (int i = 0; i < turnOrder.Count; i++)
                         {
                             if (turnOrder[i].ACTIONS > 0)
@@ -825,8 +1077,8 @@ public class ManagerScript : EventRunner
                                     player.current = turnOrder[i];
                                     currentObject = turnOrder[i];
 
-                                    enterState(defaultEntry);
-                                    menuManager.ShowCommandCanvas();
+                                    // enterState(defaultEntry);
+                                    StackCMDSelection();
                                     CreateEvent(this, currentObject, "Select Camera Event", CameraEvent);
                                 }
                             }
@@ -866,6 +1118,14 @@ public class ManagerScript : EventRunner
                     }
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
+                        if (sfx)
+                        {
+                            if (sfxClips.Length > 1)
+                            {
+                                sfx.loadAudio(sfxClips[2]);
+                                sfx.playSound();
+                            }
+                        }
                         ComfirmMenuAction(oppObj);
                         oppEvent.caller = null;
                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
@@ -880,10 +1140,23 @@ public class ManagerScript : EventRunner
                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                     }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        CancelMenuAction(oppObj);
+                        oppEvent.caller = null;
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                        CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                    }
                     break;
 
                 case State.ChangeOptions:
                     if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        returnState();
+                    }
+
+                    if (Input.GetMouseButtonDown(1))
                     {
                         returnState();
                     }
@@ -897,7 +1170,7 @@ public class ManagerScript : EventRunner
     }
     public void NextRound()
     {
-
+        Debug.Log("next");
         LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         if (currentState == State.EnemyTurn)
         {
@@ -999,7 +1272,7 @@ public class ManagerScript : EventRunner
         {
             for (int j = 0; j < attackableTiles[i].Count; j++)
             {
-                attackableTiles[i][j].myColor = Color.red;
+                attackableTiles[i][j].myColor = pink;
             }
         }
     }
@@ -1023,7 +1296,7 @@ public class ManagerScript : EventRunner
     }
     public void showOppAdjTiles()
     {
-
+        ShowWhite();
         for (int i = 0; i < doubleAdjOppTiles.Count; i++)
         {
 
@@ -1061,7 +1334,8 @@ public class ManagerScript : EventRunner
                 GameObject temp = tileMap[TwoToOneD(j, MapWidth, i)];
                 float tempX = temp.transform.position.x;
                 float tempY = temp.transform.position.z;
-
+                if (!obj)
+                    return;
                 float objX = obj.currentTile.transform.position.x;
                 float objY = obj.currentTile.transform.position.z;
 
@@ -1098,7 +1372,7 @@ public class ManagerScript : EventRunner
                 }
                 else if (xDist + yDist <= MoveDist + attackDist)
                 {
-                    temp.GetComponent<TileScript>().myColor = Color.red;
+                    temp.GetComponent<TileScript>().myColor = pink;
                 }
                 else
                 {
@@ -1284,7 +1558,7 @@ public class ManagerScript : EventRunner
                 }
                 else if (xDist + yDist <= attackDist)
                 {
-                    temp.GetComponent<TileScript>().myColor = Color.red;
+                    temp.GetComponent<TileScript>().myColor = pink;
                 }
                 else
                 {
@@ -1357,7 +1631,6 @@ public class ManagerScript : EventRunner
             obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0);
             myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
             myCamera.infoObject = GetObjectAtTile(tileMap[TileIndex].GetComponent<TileScript>());
-            myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
         }
     }
     public void ComfirmMoveGridObject(GridObject obj, int tileIndex)
@@ -1374,6 +1647,21 @@ public class ManagerScript : EventRunner
         }
         myCamera.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
         myCamera.infoObject = GetObjectAtTile(tileMap[tileIndex].GetComponent<TileScript>());
+    }
+    public void ComfirmMoveGridObject(GridObject obj, TileScript tile)
+    {
+        if (obj.gameObject != tempObject)
+        {
+            obj.currentTile.isOccupied = false;
+            obj.currentTile = tile;
+            obj.currentTile.isOccupied = true;
+        }
+        else
+        {
+            obj.currentTile = tile;
+        }
+        myCamera.currentTile = tile;
+        myCamera.infoObject = GetObjectAtTile(tile);
     }
     public int GetTileIndex(GridObject checkTile)
     {
@@ -1997,6 +2285,25 @@ public class ManagerScript : EventRunner
         return returnList;
     }
 
+    public void ShowSkillAttackbleTiles(LivingObject obj, CommandSkill skill)
+    {
+        ShowWhite();
+        List<List<TileScript>> tempTiles = GetSkillsAttackableTiles(obj, skill);
+
+        if (tempTiles.Count > 0)
+        {
+            for (int i = 0; i < tempTiles.Count; i++) //list of lists
+            {
+                for (int j = 0; j < tempTiles[i].Count; j++) //indivisual list
+                {
+
+                    tempTiles[i][j].myColor = Color.red;
+                }
+            }
+
+        }
+    }
+
     public List<int> GetTargetList()
     {
         if (currentAttackList.Count > 0)
@@ -2118,6 +2425,14 @@ public class ManagerScript : EventRunner
     {
         if (invManager)
         {
+            if (sfx)
+            {
+                if (sfxClips.Length > 1)
+                {
+                    sfx.loadAudio(sfxClips[1]);
+                    sfx.playSound();
+                }
+            }
             Debug.Log("Selecting menu item from sselected item");
             selectedItem.ApplyAction(player.current);
         }
@@ -2127,9 +2442,20 @@ public class ManagerScript : EventRunner
     {
         if (invManager)
         {
-            invManager.currentIndex = selectedItem.transform.GetSiblingIndex();
-            invManager.ForceSelect();
-            invManager.Validate("Manager hover");
+            if (sfx)
+            {
+                if (sfxClips.Length > 1)
+                {
+                    sfx.loadAudio(sfxClips[1]);
+                    sfx.playSound();
+                }
+            }
+
+            invManager.HoverSelect(selectedItem, selectedItem.transform.parent.gameObject);
+            //invManager.currentIndex = selectedItem.transform.GetSiblingIndex();
+            // invManager.ForceSelect();
+            // invManager.Validate("Manager hover");
+
         }
 
     }
@@ -2162,7 +2488,7 @@ public class ManagerScript : EventRunner
             attackableTiles.Clear();
             ShowWhite();
         }
-        returnState();
+        CreateEvent(this, null, "return state event", BufferedReturnEvent);
         //for (int i = 0; i < commandItems.Length; i++)
         //{
 
@@ -2663,7 +2989,30 @@ public class ManagerScript : EventRunner
         if (currentState != State.EnemyTurn)
         {
             DetermineExp(attackingObject, target, killedEnemy);
-            CreateEvent(this, null, "Exp event", UpdateExpBar, ShowExpBar, 2);
+            if (options)
+            {
+                if (options.showExp)
+                {
+                    CreateEvent(this, null, "Exp event", UpdateExpBar, ShowExpBar, 2);
+
+                }
+                else
+                {
+
+                    if (attackingObject.BASE_STATS.EXP >= 100)
+                    {
+                        attackingObject.LevelUp();
+
+                    }
+                }
+            }
+            else
+            {
+                if (attackingObject.BASE_STATS.EXP >= 100)
+                {
+                    attackingObject.LevelUp();
+                }
+            }
 
         }
     }
@@ -2678,9 +3027,12 @@ public class ManagerScript : EventRunner
     }
     public void DetermineExp(LivingObject atker, LivingObject target, bool killed)
     {
+        if (expbar)
+        {
 
-        expbar.currentUser = atker;
-        expbar.slider.value = atker.BASE_STATS.EXP;
+            expbar.currentUser = atker;
+            expbar.slider.value = atker.BASE_STATS.EXP;
+        }
         int diff = target.LEVEL - atker.LEVEL + 1;
         //   Debug.Log("res = " + diff);
         int amount = diff + 4;
@@ -3041,6 +3393,7 @@ public class ManagerScript : EventRunner
         {
             ApplyEffect(container.dmgObject, container.command.EFFECT);
         }
+        currentState = State.PlayerTransition;
         if (react.reaction < Reaction.nulled)
         {
             if (!currOppList.Contains(container.attackingObject))
@@ -3056,8 +3409,20 @@ public class ManagerScript : EventRunner
                     }
                     oppEvent = CreateEvent(this, null, "Opp Event", CheckOppEvent, OppStart);
                 }
+                else
+                {
+                    CreateEvent(this, null, "Show Command", player.ShowCmd);
+                }
 
             }
+            else
+            {
+                CreateEvent(this, null, "Show Command", player.ShowCmd);
+            }
+        }
+        else
+        {
+            CreateEvent(this, null, "Show Command", player.ShowCmd);
         }
         return true;
     }
@@ -3087,12 +3452,14 @@ public class ManagerScript : EventRunner
             }
         }
         ApplyReaction(container.attackingObject, container.dmgObject, react);
+        currentState = State.PlayerTransition;
         if (react.reaction < Reaction.nulled)
         {
             if (!currOppList.Contains(container.attackingObject))
             {
                 currOppList.Add(container.attackingObject);
                 doubleAdjOppTiles = GetOppViaDoubleAdjecentTiles(container.attackingObject, container.attackingElement);
+
                 if (doubleAdjOppTiles.Count > 0)
                 {
                     for (int i = 0; i < doubleAdjOppTiles.Count; i++)
@@ -3103,7 +3470,20 @@ public class ManagerScript : EventRunner
                     Debug.Log("found opp skill user");
                     oppEvent = CreateEvent(this, null, "Opp Event", CheckOppEvent, OppStart);
                 }
+                else
+                {
+                    CreateEvent(this, null, "Show Command", player.ShowCmd);
+                }
             }
+            else
+            {
+                CreateEvent(this, null, "Show Command", player.ShowCmd);
+            }
+
+        }
+        else
+        {
+            CreateEvent(this, null, "Show Command", player.ShowCmd);
         }
         return true;
     }
@@ -3127,22 +3507,35 @@ public class ManagerScript : EventRunner
     public void OppStart()
     {
 
-        menuStackEntry entry = new menuStackEntry();
-        entry.state = State.PlayerOppSelecting;
-        entry.menu = currentMenu.command;
-        enterState(entry);
+        //menuStackEntry entry = new menuStackEntry();
+        //entry.state = State.PlayerOppSelecting;
+        //entry.menu = currentMenu.command;
+        //enterState(entry);
+        StackNewSelection(State.PlayerOppSelecting, currentMenu.command);
         showOppAdjTiles();
         menuManager.ShowNone();
 
     }
     public void TextStart()
     {
-        flavor.gameObject.SetActive(true);
-        flavor.textObj.StartCountDown();
+        if (flavor)
+        {
+
+            flavor.gameObject.SetActive(true);
+            flavor.textObj.StartCountDown();
+        }
     }
     public bool CheckText(Object data)
     {
-        return !flavor.textObj.isShowing;
+        if (flavor)
+        {
+            return !flavor.textObj.isShowing;
+
+        }
+        else
+        {
+            return true;
+        }
     }
     public bool CheckDmgText(Object data)
     {
@@ -3237,6 +3630,9 @@ public class ManagerScript : EventRunner
         if (currentState != State.EnemyTurn)
         {
             Debug.Log("yosef");
+            CleanMenuStack();
+            currentState = State.FreeCamera;
+
         }
         if (turnOrder.Count <= 0)
         {
@@ -3344,6 +3740,42 @@ public class ManagerScript : EventRunner
             oppSelection.index = invManager.currentIndex;
             enterState(oppSelection);
             menuManager.ShowNone();
+        }
+        else
+        {
+            Debug.Log("No stack manager");
+        }
+
+    }
+
+    public void StackActSelection()
+    {
+
+        if (stackManager)
+        {
+            menuStackEntry actSelection = stackManager.GetActStack();
+
+            actSelection.index = invManager.currentIndex;
+            enterState(actSelection);
+            menuManager.ShowActCanvas();
+        }
+        else
+        {
+            Debug.Log("No stack manager");
+        }
+
+    }
+
+    public void StackCMDSelection()
+    {
+
+        if (stackManager)
+        {
+            menuStackEntry cmdSelection = stackManager.GetCmdStack();
+
+            cmdSelection.index = invManager.currentIndex;
+            enterState(cmdSelection);
+            menuManager.ShowCommandCanvas();
         }
         else
         {

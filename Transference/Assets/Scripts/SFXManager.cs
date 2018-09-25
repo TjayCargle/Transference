@@ -31,8 +31,9 @@ public class SFXManager : MonoBehaviour {
 
     public void playSound()
     {
-        if(!source.isPlaying)
+       // if(!source.isPlaying)
         {
+          //  source.Stop();
             source.Play();
         }
     }

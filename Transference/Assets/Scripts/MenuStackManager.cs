@@ -6,6 +6,7 @@ public class MenuStackManager : MonoBehaviour {
     ManagerScript manager;
     MenuManager menuManager;
     menuStackEntry cmd;
+    menuStackEntry act;
     menuStackEntry skillsMain;
     menuStackEntry inventoryMain;
     menuStackEntry oppSelection;
@@ -25,11 +26,16 @@ public class MenuStackManager : MonoBehaviour {
             oppOptions = new menuStackEntry();
             topEntry = new menuStackEntry();
             playerOptions = new menuStackEntry();
+            act = new menuStackEntry();
 
             cmd.state = State.PlayerInput;
+            cmd.menu = currentMenu.act;
+
+            act.state = State.PlayerInput;
+            act.menu = currentMenu.none;
 
             skillsMain.state = State.PlayerEquippingMenu;
-            skillsMain.menu = currentMenu.command;
+            skillsMain.menu = currentMenu.invMain;
 
             inventoryMain.state = State.PlayerEquippingMenu;
             inventoryMain.menu = currentMenu.command;
@@ -50,7 +56,6 @@ public class MenuStackManager : MonoBehaviour {
     {
         Setup();
     }
-
     public menuStackEntry GetSkillStack()
     {
         return skillsMain;
@@ -59,6 +64,15 @@ public class MenuStackManager : MonoBehaviour {
     public menuStackEntry GetInventoryStack()
     {
         return inventoryMain;
+    }
+    public menuStackEntry GetCmdStack()
+    {
+        return cmd;
+    }
+
+    public menuStackEntry GetActStack()
+    {
+        return act;
     }
 
     public menuStackEntry GetOptionsStack()

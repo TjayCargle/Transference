@@ -13,6 +13,7 @@ public class OptionsManager : MonoBehaviour
     public bool battleAnims = true;
     public bool dmgAnims = true;
     public bool displayMessages = true;
+    public bool showExp = false;
 
     public Slider masterSlider;
     public Slider musicSlider;

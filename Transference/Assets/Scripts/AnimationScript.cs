@@ -10,7 +10,8 @@ public class AnimationScript : MonoBehaviour
     public GridObject obj;
     public int index;
     public bool isSetup = false;
-    GridObject me;
+    LivingObject me;
+    PlayerController controller;
     CameraScript camera;
     public void Setup()
     {
@@ -31,6 +32,7 @@ public class AnimationScript : MonoBehaviour
             index = 0;
             me = GetComponent<LivingObject>();
             camera = GameObject.FindObjectOfType<CameraScript>();
+            controller = GameObject.FindObjectOfType<PlayerController>();
             isSetup = true;
         }
     }
@@ -50,11 +52,28 @@ public class AnimationScript : MonoBehaviour
     {
         if (currentList.Length > 0)
         {
+            if(me)
+            {
+                if(camera)
+                {
+                    if(camera.infoObject == me)
+                    {
+
+                        index++;
+                        if (index >= currentList.Length)
+                            index = 0;
+                        render.sprite = currentList[index];
+                    }
+                }
+            }
+            else
+            {
 
             index++;
             if (index >= currentList.Length)
                 index = 0;
             render.sprite = currentList[index];
+            }
         }
     }
 }

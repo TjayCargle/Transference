@@ -27,20 +27,23 @@ public class InventoryMangager : MonoBehaviour
     public List<UsableScript> currentList = null;
     public List<UsableScript> extraList = null;
     public int slotIndex;
-    [SerializeField]
-    private Sprite[] imgTypes;
+    //[SerializeField]
+    //  private Sprite[] imgTypes;
     [SerializeField]
     private Sprite[] attributeImages;
     public bool isSetup = false;
     public int attrOffset = 120;
     public int otherOffset = 100;
+
+    [SerializeField]
+    public GameObject trueExtra;
     public void Setup()
     {
         if (!isSetup)
         {
             menuManager = GameObject.FindObjectOfType<MenuManager>();
             manager = GetComponent<ManagerScript>();
-            imgTypes = Resources.LoadAll<Sprite>("Buttons2/");
+            // imgTypes = Resources.LoadAll<Sprite>("Buttons2/");
             genericMove = ScriptableObject.CreateInstance<UsableScript>();
             genericAtk = ScriptableObject.CreateInstance<UsableScript>();
             //genericWait = ScriptableObject.CreateInstance<UsableScript>();
@@ -111,10 +114,8 @@ public class InventoryMangager : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
-
                             if (menuSide == -1)
                             {
-
                                 EquipSkill();
                             }
                             else
@@ -150,17 +151,20 @@ public class InventoryMangager : MonoBehaviour
                     {
                         if (extraRect)
                         {
+                            if (Input.GetKeyDown(KeyCode.Return))
+                            {
+
+                            }
                             if (Input.GetKeyDown(KeyCode.A))
                             {
                                 menuManager.switchToEquiped();
-                                UpdateColors(itemSlots);
-                                UpdateColors(extraSlots);
+                                // UpdateColors(itemSlots);
+                                //UpdateColors(extraSlots);
                             }
                             if (Input.GetKeyDown(KeyCode.D))
                             {
                                 menuManager.switchToExtra();
-                                UpdateColors(itemSlots);
-                                UpdateColors(extraSlots);
+
                             }
                         }
                     }
@@ -225,6 +229,10 @@ public class InventoryMangager : MonoBehaviour
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                        selectedMenuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
                     }
                     currentIndex--;
 
@@ -256,11 +264,16 @@ public class InventoryMangager : MonoBehaviour
                     {
                         currentIndex = currentContent.transform.childCount - 1;
                     }
-                 
-                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+
+                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                     }
 
                     float index = currentIndex / (float)currentContent.transform.childCount;
@@ -282,7 +295,10 @@ public class InventoryMangager : MonoBehaviour
                             if (selectedMenuItem.refItem)
                             {
                                 menuManager.DESC.text = selectedMenuItem.refItem.DESC;
-
+                                if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
+                                {
+                                    manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
                             }
                         }
                     }
@@ -300,6 +316,11 @@ public class InventoryMangager : MonoBehaviour
                 if (selectedMenuItem)
                 {
                     selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                    selectedMenuItem.GetComponent<Image>().color = Color.black;
+                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 0;
+                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                 }
                 Vector2 newPos = currentRect.normalizedPosition;
                 newPos.y -= 0.01f;
@@ -309,6 +330,11 @@ public class InventoryMangager : MonoBehaviour
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                        selectedMenuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                     }
                     currentIndex++;
                     if (extraContent.activeInHierarchy)
@@ -352,6 +378,11 @@ public class InventoryMangager : MonoBehaviour
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                     }
 
                     float index = currentIndex / (float)(currentContent.transform.childCount - 1);
@@ -373,7 +404,10 @@ public class InventoryMangager : MonoBehaviour
                             if (selectedMenuItem.refItem)
                             {
                                 menuManager.DESC.text = selectedMenuItem.refItem.DESC;
-
+                                if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
+                                {
+                                    manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
                             }
                         }
                     }
@@ -382,6 +416,77 @@ public class InventoryMangager : MonoBehaviour
         }
 
 
+    }
+    public void HoverSelect(MenuItem hoveritem, GameObject content)
+    {
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                if (selectedMenuItem)
+                {
+                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                    selectedMenuItem.GetComponent<Image>().color = Color.black;
+                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 0;
+                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+                }
+                selectedMenuItem = hoveritem;
+                currentContent = content;
+                currentIndex = currentContent.transform.GetSiblingIndex();
+                if (trueExtra)
+                {
+
+                    if (currentContent == trueExtra)
+                    {
+
+                        menuSide = 1;
+                    }
+                    else
+                    {
+                        menuSide = -1;
+                    }
+                }
+                if (selectedMenuItem)
+                {
+                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                    selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 15;
+                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+                }
+
+                if (menuManager)
+                {
+                    if (menuManager.DESC)
+                    {
+
+
+                        if (selectedMenuItem)
+                        {
+                            if (selectedMenuItem.refItem)
+                            {
+                                menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+                                if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
+                                {
+                                    manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("no content!");
+            }
+        }
+        else
+        {
+            Debug.Log("no rekt!");
+        }
     }
     private void ShiftUp()
     {
@@ -399,8 +504,8 @@ public class InventoryMangager : MonoBehaviour
             itemSlots[5].GetComponentInChildren<Text>().text = currentList[slotIndex].NAME;
             Debug.Log("name = " + itemSlots[5].refItem.NAME);
             Debug.Log("index = " + slotIndex);
-            UpdateColors(itemSlots);
-            UpdateColors(extraSlots);
+            // UpdateColors(itemSlots);
+            // UpdateColors(extraSlots);
         }
     }
     private void ShiftDown()
@@ -426,8 +531,8 @@ public class InventoryMangager : MonoBehaviour
                     Debug.Log("name = " + itemSlots[0].refItem.NAME);
                 }
             }
-            UpdateColors(itemSlots);
-            UpdateColors(extraSlots);
+            // UpdateColors(itemSlots);
+            // UpdateColors(extraSlots);
         }
     }
     private void ShowBegining()
@@ -447,8 +552,8 @@ public class InventoryMangager : MonoBehaviour
             }
             slotIndex = 5;
         }
-        UpdateColors(itemSlots);
-        UpdateColors(extraSlots);
+        //UpdateColors(itemSlots);
+        //UpdateColors(extraSlots);
     }
 
     private void ShowEnd()
@@ -475,12 +580,13 @@ public class InventoryMangager : MonoBehaviour
             }
             slotIndex = currentList.Count - 1;
         }
-        UpdateColors(itemSlots);
-        UpdateColors(extraSlots);
+        // UpdateColors(itemSlots);
+        // UpdateColors(extraSlots);
     }
 
     public void Validate(string caller)
     {
+        return;
         if (currentRect)
         {
             if (currentContent)
@@ -493,7 +599,12 @@ public class InventoryMangager : MonoBehaviour
                     {
                         MenuItem temp = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
                         temp.GetComponentInChildren<Text>().color = Color.white;
-                        temp.GetComponent<Image>().sprite = imgTypes[0];
+                        selectedMenuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+                        //temp.GetComponent<Image>().sprite = imgTypes[0];
 
 
                         if (temp.refItem)
@@ -502,7 +613,7 @@ public class InventoryMangager : MonoBehaviour
                             {
 
 
-                                temp.GetComponent<Image>().sprite = imgTypes[5];
+                                //      temp.GetComponent<Image>().sprite = imgTypes[5];
                             }
 
 
@@ -512,6 +623,11 @@ public class InventoryMangager : MonoBehaviour
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                        selectedMenuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                     }
 
                     if (currentContent.transform.childCount < currentIndex)
@@ -519,6 +635,11 @@ public class InventoryMangager : MonoBehaviour
                     if (selectedMenuItem)
                     {
                         selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                     }
 
                 }
@@ -531,11 +652,15 @@ public class InventoryMangager : MonoBehaviour
         if (selectedMenuItem)
         {
             selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+            selectedMenuItem.GetComponent<Image>().color = Color.black;
+            Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+            pos.x = 0;
+            selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
 
             if (prevIndex < currentContent.transform.childCount)
                 selectedMenuItem = currentContent.transform.GetChild(prevIndex).GetComponent<MenuItem>();
             selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-
+            selectedMenuItem.GetComponent<Image>().color = Color.black;
         }
         if (currentContent.transform.childCount > 0)
         {
@@ -545,12 +670,22 @@ public class InventoryMangager : MonoBehaviour
 
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                    selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 15;
+                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                 }
                 else
                 {
                     currentIndex = 0;
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                    selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 15;
+                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
                 }
         }
 
@@ -559,7 +694,7 @@ public class InventoryMangager : MonoBehaviour
     }
     private void UpdateColors(MenuItem[] items)
     {
-
+        return;
         for (int i = 0; i < items.Length; i++)
         {
             MenuItem selectableItem = items[i];
@@ -576,18 +711,18 @@ public class InventoryMangager : MonoBehaviour
                             if (selectableItem.refItem.GetType() != typeof(UsableScript))
                                 switch (((SkillScript)selectableItem.refItem).ELEMENT)
                                 {
-                                    case Element.Passive:
-                                        selectedImg.sprite = imgTypes[2];
-                                        break;
-                                    case Element.Auto:
-                                        selectedImg.sprite = imgTypes[3];
-                                        break;
-                                    case Element.Opp:
-                                        selectedImg.sprite = imgTypes[4];
-                                        break;
-                                    default:
-                                        selectedImg.sprite = imgTypes[1];
-                                        break;
+                                    //case Element.Passive:
+                                    //    selectedImg.sprite = imgTypes[2];
+                                    //    break;
+                                    //case Element.Auto:
+                                    //    selectedImg.sprite = imgTypes[3];
+                                    //    break;
+                                    //case Element.Opp:
+                                    //    selectedImg.sprite = imgTypes[4];
+                                    //    break;
+                                    //default:
+                                    //    selectedImg.sprite = imgTypes[1];
+                                    //    break;
                                 }
                         }
                     }
@@ -671,7 +806,7 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = new SkillScript(); 
                 // itemType.TYPE = 4;
                 useType = 4;
-                windowType = 1; //all command skills
+                windowType = 5; //all command skills
                 for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
                 {
                     currentList.Add(liveObject.GetComponent<InventoryScript>().CSKILLS[i]);
@@ -698,7 +833,7 @@ public class InventoryMangager : MonoBehaviour
 
             case 8:
                 useType = 4;
-                windowType = 4; // passive skill slots
+                windowType = 5; // passive skill slots
                 for (int i = 0; i < liveObject.PASSIVE_SLOTS.SKILLS.Count; i++)
                 {
                     currentList.Add(liveObject.PASSIVE_SLOTS.SKILLS[i]);
@@ -739,19 +874,19 @@ public class InventoryMangager : MonoBehaviour
         {
             MenuItem selectableItem = itemSlots[useCount];
             selectableItem.itemType = 15;
+            Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
+            Text selectedText = selectableItem.GetComponentInChildren<Text>();
+                selectableItem.gameObject.SetActive(true);
             if (useCount < currentList.Count)
             {
                 UsableScript item = currentList[useCount];
-                selectableItem.gameObject.SetActive(true);
 
                 if (selectableItem.GetComponentInChildren<Text>())
                 {
 
-                    Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
-                    Text selectedText = selectableItem.GetComponentInChildren<Text>();
-                    RectTransform rectTransform = selectedText.GetComponent<RectTransform>();
+                    // RectTransform rectTransform = selectedText.GetComponent<RectTransform>();
                     attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-                    rectTransform.position = new Vector3(attrOffset, rectTransform.position.y, rectTransform.position.z);
+                    //   rectTransform.position = new Vector3(attrOffset, rectTransform.position.y, rectTransform.position.z);
                     if (item.TYPE != 4)
                     {
                         selectedText.text = item.NAME;
@@ -768,7 +903,7 @@ public class InventoryMangager : MonoBehaviour
                                 int indxex = (int)((CommandSkill)item).ELEMENT;
                                 //Debug.Log("the index is = " + indxex);
                                 attr.sprite = attributeImages[indxex];
-                                rectTransform.position = new Vector3(otherOffset, rectTransform.position.y, rectTransform.position.z);
+                                // rectTransform.position = new Vector3(otherOffset, rectTransform.position.y, rectTransform.position.z);
                             }
                             CommandSkill cmd = ((CommandSkill)item);
                             string extraText = "";
@@ -825,7 +960,9 @@ public class InventoryMangager : MonoBehaviour
             else
             {
                 selectableItem.refItem = null;
-                selectableItem.gameObject.SetActive(false);
+                selectedText.text = "";
+                 if (windowType < 5)
+                   selectableItem.gameObject.SetActive(false);
             }
 
 
@@ -833,7 +970,7 @@ public class InventoryMangager : MonoBehaviour
 
         slotIndex = 5;
 
-        UpdateColors(itemSlots);
+        //UpdateColors(itemSlots);
         if (content.GetComponent<RectTransform>())
         {
 
@@ -874,59 +1011,60 @@ public class InventoryMangager : MonoBehaviour
     {
         extraList.Clear();
         int useType = -1;
-
+        Debug.Log("Loading extra " + index);
         switch (index)
         {
 
             case 0:
                 useType = 4;
-                for (int i = 0; i < liveObject.BATTLE_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.CSKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.BATTLE_SLOTS.SKILLS[i]);
+                    extraList.Add(liveObject.INVENTORY.CSKILLS[i]);
                 }
                 break;
 
             case 1:
                 useType = 4;
-                for (int i = 0; i < liveObject.PASSIVE_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.PASSIVES.Count; i++)
                 {
-                    extraList.Add(liveObject.PASSIVE_SLOTS.SKILLS[i]);
+                    extraList.Add(liveObject.INVENTORY.PASSIVES[i]);
                 }
                 break;
 
 
             case 2:
                 useType = 4;
-                for (int i = 0; i < liveObject.AUTO_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.AUTOS.Count; i++)
                 {
-                    extraList.Add(liveObject.AUTO_SLOTS.SKILLS[i]);
+                    extraList.Add(liveObject.INVENTORY.AUTOS[i]);
                 }
                 break;
 
 
             case 3:
                 useType = 4;
-                for (int i = 0; i < liveObject.OPP_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.OPPS.Count; i++)
                 {
-                    extraList.Add(liveObject.OPP_SLOTS.SKILLS[i]);
+                    extraList.Add(liveObject.INVENTORY.OPPS[i]);
                 }
                 break;
 
 
         }
-        UpdateColors(extraSlots);
+        //UpdateColors(extraSlots);
 
         for (int useCount = 0; useCount < 6; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
         {
             MenuItem selectableItem = extraSlots[useCount];
+            selectableItem.gameObject.SetActive(true);
+            Text selectedText = selectableItem.GetComponentInChildren<Text>();
             if (useCount < extraList.Count)
             {
                 UsableScript item = extraList[useCount];
-                selectableItem.gameObject.SetActive(true);
 
                 if (selectableItem.GetComponentInChildren<Text>())
                 {
-                    Text selectedText = selectableItem.GetComponentInChildren<Text>();
+            
                     selectedText.text = item.NAME;
 
                     selectedText.resizeTextForBestFit = true;
@@ -941,7 +1079,8 @@ public class InventoryMangager : MonoBehaviour
             else
             {
                 selectableItem.refItem = null;
-                selectableItem.gameObject.SetActive(false);
+                selectedText.text = "";
+                //   selectableItem.gameObject.SetActive(false);
             }
 
 
@@ -994,8 +1133,8 @@ public class InventoryMangager : MonoBehaviour
                     }
                 }
             }
-        UpdateColors(itemSlots);
-        UpdateColors(extraSlots);
+        //UpdateColors(itemSlots);
+        // UpdateColors(extraSlots);
     }
 
     public void EquipSkill()
@@ -1050,8 +1189,8 @@ public class InventoryMangager : MonoBehaviour
             Debug.Log("No match!");
             Debug.Log(selectedMenuItem.refItem.GetType());
         }
-        UpdateColors(itemSlots);
-        UpdateColors(extraSlots);
+        //  UpdateColors(itemSlots);
+        //  UpdateColors(extraSlots);
 
     }
 
@@ -1102,8 +1241,8 @@ public class InventoryMangager : MonoBehaviour
                 }
             }
         }
-        UpdateColors(itemSlots);
-        UpdateColors(extraSlots);
+        // UpdateColors(itemSlots);
+        //UpdateColors(extraSlots);
     }
     public void unloadContents()
     {

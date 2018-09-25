@@ -120,7 +120,7 @@ public class EnemyScript : LivingObject
                         if (options[i] == pathTarget.realTarget)
                         {
                             Debug.Log("YOUR AN OPTIONAL FUCKING IDIOT!");
-
+                            //tpdp fox current = options[i];
                         }
                     }
                     if (!options[i].isOccupied)
