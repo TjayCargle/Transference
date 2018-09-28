@@ -75,6 +75,15 @@ public class InventoryMangager : MonoBehaviour
                     {
                         IncreaseScroll();
                     }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
+                    }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+                    }
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         DecreaseScroll();
@@ -89,27 +98,41 @@ public class InventoryMangager : MonoBehaviour
                     {
                         DecreaseScroll();
                     }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
+                    }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+                    }
                     break;
                 case State.PlayerEquippingSkills:
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         IncreaseScroll();
-                        if (extraContent)
-                        {
-                            DetermineAndFillExtra();
-                        }
+
+
 
                     }
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         DecreaseScroll();
-                        if (extraContent)
-                        {
-                            DetermineAndFillExtra();
-                        }
+
+
+                    }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
 
                     }
 
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+
+                    }
                     if (extraContent)
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
@@ -147,6 +170,15 @@ public class InventoryMangager : MonoBehaviour
                         DecreaseScroll();
 
                     }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
+                    }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+                    }
                     if (extraContent)
                     {
                         if (extraRect)
@@ -179,6 +211,15 @@ public class InventoryMangager : MonoBehaviour
                         DecreaseScroll();
 
                     }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
+                    }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+                    }
                     break;
 
                 case State.PlayerOppOptions:
@@ -189,6 +230,15 @@ public class InventoryMangager : MonoBehaviour
 
                         }
                         if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();
+                        }
+                        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        {
+                            IncreaseScroll();
+                        }
+
+                        if (Input.GetAxis("Mouse ScrollWheel") < 0)
                         {
                             DecreaseScroll();
                         }
@@ -207,6 +257,15 @@ public class InventoryMangager : MonoBehaviour
                         {
                             DecreaseScroll();
 
+                        }
+                        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        {
+                            IncreaseScroll();
+                        }
+
+                        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                        {
+                            DecreaseScroll();
                         }
                     }
                     break;
@@ -599,20 +658,22 @@ public class InventoryMangager : MonoBehaviour
                     {
                         MenuItem temp = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
                         temp.GetComponentInChildren<Text>().color = Color.white;
-                        selectedMenuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
                         //temp.GetComponent<Image>().sprite = imgTypes[0];
+                        if (selectedMenuItem)
+                        {
 
+                            selectedMenuItem.GetComponent<Image>().color = Color.black;
+                            Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                            pos.x = 0;
+                            selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+
+                        }
 
                         if (temp.refItem)
                         {
                             if (lastObject.WEAPON.NAME == temp.refItem.NAME || lastObject.ARMOR.NAME == temp.refItem.NAME || lastObject.ACCESSORY.NAME == temp.refItem.NAME)
                             {
-
-
                                 //      temp.GetComponent<Image>().sprite = imgTypes[5];
                             }
 
@@ -649,48 +710,60 @@ public class InventoryMangager : MonoBehaviour
 
     public void ForceSelect()
     {
-        if (selectedMenuItem)
+        if (currentContent)
         {
-            selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-            selectedMenuItem.GetComponent<Image>().color = Color.black;
-            Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-            pos.x = 0;
-            selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-            if (prevIndex < currentContent.transform.childCount)
-                selectedMenuItem = currentContent.transform.GetChild(prevIndex).GetComponent<MenuItem>();
-            selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-            selectedMenuItem.GetComponent<Image>().color = Color.black;
-        }
-        if (currentContent.transform.childCount > 0)
+        for (int i = 0; i < currentContent.transform.childCount; i++)
         {
-            if (currentIndex < currentContent.transform.childCount)
-                if (currentContent.transform.GetChild(currentIndex).gameObject.activeInHierarchy)
-                {
-
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-                    selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 15;
-                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-                }
-                else
-                {
-                    currentIndex = 0;
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-                    selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 15;
-                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-                }
+            MenuItem menuItem = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
+            if (menuItem)
+            {
+                menuItem.GetComponentInChildren<Text>().color = Color.white;
+                menuItem.GetComponent<Image>().color = Color.black;
+                Vector2 pos = menuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                pos.x = 0;
+            }
         }
+            if (selectedMenuItem)
+            {
+                selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                selectedMenuItem.GetComponent<Image>().color = Color.black;
+                Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                pos.x = 0;
+                selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                //if (prevIndex < currentContent.transform.childCount)
+                //    selectedMenuItem = currentContent.transform.GetChild(prevIndex).GetComponent<MenuItem>();
+                //selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                //selectedMenuItem.GetComponent<Image>().color = Color.black;
+            }
+            if (currentContent.transform.childCount > 0)
+            {
+                if (currentIndex < currentContent.transform.childCount)
+                    if (currentContent.transform.GetChild(currentIndex).gameObject.activeInHierarchy)
+                    {
 
-        Validate("inv manager for force select");
+                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
 
+                    }
+                    else
+                    {
+                        currentIndex = 0;
+                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+                    }
+            }
+
+
+        }
     }
     private void UpdateColors(MenuItem[] items)
     {
@@ -807,18 +880,18 @@ public class InventoryMangager : MonoBehaviour
                 // itemType.TYPE = 4;
                 useType = 4;
                 windowType = 5; //all command skills
-                for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.CSKILLS.Count; i++)
                 {
-                    currentList.Add(liveObject.GetComponent<InventoryScript>().CSKILLS[i]);
+                    currentList.Add(liveObject.INVENTORY.CSKILLS[i]);
                 }
                 break;
 
             case 6:
                 useType = 4;
                 windowType = 2; //all passive skills
-                for (int i = 0; i < liveObject.GetComponent<InventoryScript>().PASSIVES.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.PASSIVES.Count; i++)
                 {
-                    currentList.Add(liveObject.GetComponent<InventoryScript>().PASSIVES[i]);
+                    currentList.Add(liveObject.INVENTORY.PASSIVES[i]);
                 }
                 break;
 
@@ -842,18 +915,18 @@ public class InventoryMangager : MonoBehaviour
             case 9:
                 useType = 4;
                 windowType = 5; // auto skill slots
-                for (int i = 0; i < liveObject.AUTO_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.AUTOS.Count; i++)
                 {
-                    currentList.Add(liveObject.AUTO_SLOTS.SKILLS[i]);
+                    currentList.Add(liveObject.INVENTORY.AUTOS[i]);
                 }
                 break;
             case 10:
                 useType = 4;
                 windowType = 6; // opp skill slots
 
-                for (int i = 0; i < liveObject.OPP_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.OPPS.Count; i++)
                 {
-                    currentList.Add(liveObject.OPP_SLOTS.SKILLS[i]);
+                    currentList.Add(liveObject.INVENTORY.OPPS[i]);
                 }
                 break;
             case 11:
@@ -876,7 +949,7 @@ public class InventoryMangager : MonoBehaviour
             selectableItem.itemType = 15;
             Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
-                selectableItem.gameObject.SetActive(true);
+            selectableItem.gameObject.SetActive(true);
             if (useCount < currentList.Count)
             {
                 UsableScript item = currentList[useCount];
@@ -946,7 +1019,7 @@ public class InventoryMangager : MonoBehaviour
                     {
                         if (item == genericMove)
                         {
-                            selectableItem.itemType = 0;
+
                             selectableItem.refItem.DESC = "Move a number of tiles";
 
                         }
@@ -961,8 +1034,8 @@ public class InventoryMangager : MonoBehaviour
             {
                 selectableItem.refItem = null;
                 selectedText.text = "";
-                 if (windowType < 5)
-                   selectableItem.gameObject.SetActive(false);
+                if (windowType < 5)
+                    selectableItem.gameObject.SetActive(false);
             }
 
 
@@ -971,13 +1044,7 @@ public class InventoryMangager : MonoBehaviour
         slotIndex = 5;
 
         //UpdateColors(itemSlots);
-        if (content.GetComponent<RectTransform>())
-        {
 
-            RectTransform rt = content.GetComponent<RectTransform>();
-            float newValue = menuItem.GetComponent<RectTransform>().rect.height * content.transform.childCount;
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, newValue);
-        }
         if (currentRect)
         {
             if (currentContent)
@@ -1017,35 +1084,35 @@ public class InventoryMangager : MonoBehaviour
 
             case 0:
                 useType = 4;
-                for (int i = 0; i < liveObject.INVENTORY.CSKILLS.Count; i++)
+                for (int i = 0; i < liveObject.BATTLE_SLOTS.SKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.INVENTORY.CSKILLS[i]);
+                    extraList.Add(liveObject.BATTLE_SLOTS.SKILLS[i]);
                 }
                 break;
 
             case 1:
                 useType = 4;
-                for (int i = 0; i < liveObject.INVENTORY.PASSIVES.Count; i++)
+                for (int i = 0; i < liveObject.PASSIVE_SLOTS.SKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.INVENTORY.PASSIVES[i]);
+                    extraList.Add(liveObject.PASSIVE_SLOTS.SKILLS[i]);
                 }
                 break;
 
 
             case 2:
                 useType = 4;
-                for (int i = 0; i < liveObject.INVENTORY.AUTOS.Count; i++)
+                for (int i = 0; i < liveObject.AUTO_SLOTS.SKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.INVENTORY.AUTOS[i]);
+                    extraList.Add(liveObject.AUTO_SLOTS.SKILLS[i]);
                 }
                 break;
 
 
             case 3:
                 useType = 4;
-                for (int i = 0; i < liveObject.INVENTORY.OPPS.Count; i++)
+                for (int i = 0; i < liveObject.OPP_SLOTS.SKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.INVENTORY.OPPS[i]);
+                    extraList.Add(liveObject.OPP_SLOTS.SKILLS[i]);
                 }
                 break;
 
@@ -1064,7 +1131,7 @@ public class InventoryMangager : MonoBehaviour
 
                 if (selectableItem.GetComponentInChildren<Text>())
                 {
-            
+
                     selectedText.text = item.NAME;
 
                     selectedText.resizeTextForBestFit = true;
@@ -1143,7 +1210,7 @@ public class InventoryMangager : MonoBehaviour
         {
             if (!lastObject.BATTLE_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
             {
-                if (lastObject.BATTLE_SLOTS.SKILLS.Count < 5)
+                if (lastObject.BATTLE_SLOTS.SKILLS.Count < 6)
                 {
 
                     lastObject.BATTLE_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
@@ -1156,7 +1223,7 @@ public class InventoryMangager : MonoBehaviour
         {
             if (!lastObject.PASSIVE_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
             {
-                if (lastObject.PASSIVE_SLOTS.SKILLS.Count < 5)
+                if (lastObject.PASSIVE_SLOTS.SKILLS.Count < 6)
                 {
 
                     lastObject.PASSIVE_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
@@ -1168,7 +1235,7 @@ public class InventoryMangager : MonoBehaviour
 
         else if (selectedMenuItem.refItem.GetType() == typeof(AutoSkill))
         {
-            if (lastObject.AUTO_SLOTS.SKILLS.Count < 5)
+            if (lastObject.AUTO_SLOTS.SKILLS.Count < 6)
             {
 
                 lastObject.AUTO_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
@@ -1178,7 +1245,7 @@ public class InventoryMangager : MonoBehaviour
 
         else if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
         {
-            if (lastObject.OPP_SLOTS.SKILLS.Count < 5)
+            if (lastObject.OPP_SLOTS.SKILLS.Count < 6)
             {
                 lastObject.OPP_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
                 loadExtra(3, lastObject);
@@ -1196,7 +1263,6 @@ public class InventoryMangager : MonoBehaviour
 
     public void UnequipSkill()
     {
-        Debug.Log("unequipping");
         if (selectedMenuItem)
         {
             if (selectedMenuItem.refItem)
@@ -1204,7 +1270,6 @@ public class InventoryMangager : MonoBehaviour
 
                 if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
                 {
-                    Debug.Log("its a command");
 
                     if (lastObject.BATTLE_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
                     {
@@ -1221,18 +1286,29 @@ public class InventoryMangager : MonoBehaviour
                     {
 
                         lastObject.PASSIVE_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
+                        lastObject.ApplyPassives();
                         loadExtra(1, lastObject);
                     }
                 }
 
                 else if (selectedMenuItem.refItem.GetType() == typeof(AutoSkill))
                 {
+                    if (lastObject.AUTO_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
+                    {
 
+                        lastObject.AUTO_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
+                        loadExtra(2, lastObject);
+                    }
                 }
 
                 else if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
                 {
+                    if (lastObject.OPP_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
+                    {
 
+                        lastObject.OPP_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
+                        loadExtra(3, lastObject);
+                    }
                 }
                 else
                 {

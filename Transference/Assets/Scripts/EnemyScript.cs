@@ -85,7 +85,7 @@ public class EnemyScript : LivingObject
             LivingObject realTarget = target as LivingObject;
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
             manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
-            myManager.ApplyReaction(this, realTarget, bestReaction);
+            myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
             // Debug.Log(FullName + " used " + bestReaction.atkName);
 
             TakeAction();
@@ -281,11 +281,13 @@ public class EnemyScript : LivingObject
                     {
                         bestReaction = aReaction;
                         bestReaction.atkName = skill.NAME;
+                        bestReaction.dmgElement = skill.ELEMENT;
                     }
                     if ((int)target.ARMOR.HITLIST[(int)skill.ELEMENT] > (int)currHit)
                     {
                         bestReaction = aReaction;
                         bestReaction.atkName = skill.NAME;
+                        bestReaction.dmgElement = skill.ELEMENT;
                     }
                 }
             }

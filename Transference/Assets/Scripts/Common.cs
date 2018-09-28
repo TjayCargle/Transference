@@ -14,10 +14,10 @@ public enum State
     PlayerSkillsMenu,
     PlayerWait,
     FreeCamera,
+    PlayerSelectItem,
     PlayerOppSelecting,
     PlayerOppOptions,
     PlayerOppMove,
-    PlayerSelectItem,
     ChangeOptions,
     PlayerTransition,
     EnemyTurn
@@ -42,7 +42,7 @@ public enum EHitType
     weak, //dmg x2
     savage, // dmg x2 + lose a turn
     cripples, // dmg x4 + stats halved
-    leathal // dmg x4 + lose a turn + stats halved
+    leathal // dmg x6 + lose a turn + stats halved
 
 }
 public enum Resists
@@ -158,7 +158,8 @@ public enum Reaction
     nulled,
     reflected,
     absorb,
-    weak
+    weak,
+    missed
 }
 public enum DMG
 {
@@ -262,7 +263,6 @@ public enum SecondaryStatus
     rage,
     charm,
     seal,
-    poisoned,
     confusion
 }
 
@@ -273,6 +273,8 @@ public enum StatusEffect
     sleep,
     frozen,
     burned,
+    poisoned,
+    bleeding
 
 }
 public enum SideEffect
@@ -288,6 +290,8 @@ public enum SideEffect
     sleep,
     freeze,
     burn,
+    bleed
+
 }
 
 [System.Serializable]
@@ -307,6 +311,7 @@ public struct DmgReaction
     public int damage;
     public Reaction reaction;
     public string atkName;
+    public Element dmgElement;
 }
 public struct Modification
 {
@@ -323,6 +328,7 @@ public enum currentMenu
     OppSelection,
     OppOptions,
     OppMove,
+    PlayerOptions,
     act,
     none
 }
@@ -439,5 +445,11 @@ public enum EActType
 
 public class Common : ScriptableObject
 {
-
+    public static Color orange = new Color(1.0f, 0.369f, 0.0f);
+    public static Color pink = new Color(1, 0.678f, 0.925f);
+    public static Color lime = new Color(0.802f, 1, 0.825f);
+    public static Color green = new Color(0.0f, 0.693f, 0.230f);
+    public static Color red = new Color(0.693f, 0.0f, 0.230f);
+    public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
+    public static int maxDmg = 999;
 }

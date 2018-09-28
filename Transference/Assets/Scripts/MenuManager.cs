@@ -93,42 +93,16 @@ public class MenuManager : MonoBehaviour
 
     public void ShowOptions()
     {
-        if (commandCanvas)
-        {
-            commandCanvas.gameObject.SetActive(false);
-        }
-        if (inventoryCanvas)
-        {
-            inventoryCanvas.gameObject.SetActive(false);
-        }
-        if (itemCanvas)
-        {
-            if (inManager)
-            {
-                inManager.unloadContents();
-            }
-            itemCanvas.gameObject.SetActive(false);
-        }
-        if (descCanvas)
-        {
-            descCanvas.gameObject.SetActive(false);
-        }
-
-        if (inManager)
-        {
-            inManager.setContentAndScroll(null, null, 0, null);
-        }
-        if (skillCanvas)
-        {
-            skillCanvas.gameObject.SetActive(false);
-        }
-        if (extraCanvas)
-        {
-            extraCanvas.gameObject.SetActive(false);
-        }
         if (optionsCanvas)
         {
             optionsCanvas.gameObject.SetActive(true);
+        }
+    }
+    public void DontShowOptions()
+    {
+        if (optionsCanvas)
+        {
+            optionsCanvas.gameObject.SetActive(false);
         }
     }
 

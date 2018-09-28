@@ -110,9 +110,9 @@ public class ItemScript : UsableScript
                             }
                             break;
                         case SideEffect.poison:
-                            if (target.SSTATUS == SecondaryStatus.poisoned)
+                            if (target.ESTATUS == StatusEffect.poisoned)
                             {
-                                target.SSTATUS = SecondaryStatus.normal;
+                                target.ESTATUS = StatusEffect.none;
                                 usedEffect = true;
                             }
                             break;

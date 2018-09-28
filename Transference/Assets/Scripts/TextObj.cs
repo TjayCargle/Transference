@@ -32,7 +32,7 @@ public class TextObj : MonoBehaviour {
         {
             gameObject.SetActive(true);
             isShowing = true;
-            time = 2.00f;
+            time = 1.00f;
         }
     }
 

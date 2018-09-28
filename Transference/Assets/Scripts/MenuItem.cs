@@ -66,6 +66,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void ApplyAction(GridObject invokingObject)
     {
+        if(myManager.currentState == State.ChangeOptions)
+        {
+            return;
+        }
         MenuItemType item = (MenuItemType)itemType;
        // Debug.Log("Menu item :" + item);
         switch (item)
@@ -103,7 +107,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             {
                                 for (int j = 0; j < myManager.attackableTiles[i].Count; j++)
                                 {
-                                    myManager.attackableTiles[i][j].myColor = myManager.pink;
+                                    myManager.attackableTiles[i][j].myColor = Common.pink;
                                 }
                             }
                             myManager.currentAttackList = myManager.attackableTiles[0];
@@ -122,7 +126,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                     }
 
                                 }
-                                myManager.currentAttackList[i].myColor = Color.red;
+                                myManager.currentAttackList[i].myColor = Common.red;
                             }
                             if (foundSomething == false)
                             {
@@ -425,7 +429,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
      
                 if(myManager.currentState == State.PlayerOppOptions)
                 {
-                    myManager.player.OppUseOrAttack(invokingObject.GetComponent<LivingObject>());
+                    myManager.player.useOppAction(myManager.oppObj);
                 }
                 else
                 {

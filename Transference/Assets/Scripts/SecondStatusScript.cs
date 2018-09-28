@@ -44,15 +44,7 @@ public class SecondStatusScript : MonoBehaviour {
                 break;
             case SecondaryStatus.seal:
                 break;
-            case SecondaryStatus.poisoned:
-                Debug.Log(living.FullName + " is poisoned");
-                manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
-                if (chance > 0)
-                {
-                    Debug.Log(living.FullName + " is no longer poisoned");
-                    Destroy(this);
-                }
-                break;
+      
         }
 
         COUNTDOWN--;

@@ -10,7 +10,7 @@ public class GridAnimationObj : GridObject
     public bool isShowing = false;
     public int type = 0;
     public CameraShake shake;
-
+    public int magnitute = 1;
     //  private float time = 2;
 
     public override void Setup()
@@ -32,14 +32,14 @@ public class GridAnimationObj : GridObject
     {
         if (isShowing == false)
         {
-            if (type == 0)
+            if (type == (int)Element.Buff)
             {
-                script.LoadList("Animations/Cuts/");
+                script.LoadList("Animations/Buffs/");
 
             }
             else
             {
-                script.LoadList("Animations/Buffs/");
+                script.LoadList("Animations/"+((Element)type).ToString().ToLower()+"/");
             }
             gameObject.SetActive(true);
 
@@ -69,12 +69,12 @@ public class GridAnimationObj : GridObject
     {
         if (isShowing)
         {
-            if (script.index == (int)(script.currentList.Length * 0.7f))
+            if (script.index == (int)(script.currentList.Length * 0.3f))
             {
                 if (shake)
                 {
-                    float val = script.currentList.Length;
-                    StartCoroutine(shake.Shake(val * Time.deltaTime, 0.2f * (type % 6), (val * 0.5f) * Time.deltaTime));
+                    float val = script.currentList.Length * Random.Range(1.2f, 1.8f);
+                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.02f * magnitute) , (val * 0.5f)* Time.deltaTime ));
                 }
             }
             // time -= Time.deltaTime;

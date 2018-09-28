@@ -13,6 +13,7 @@ public class MenuStackManager : MonoBehaviour {
     menuStackEntry oppOptions;
     menuStackEntry topEntry;
     menuStackEntry playerOptions;
+
     public bool isSetup = false;
 
     public void Setup()
@@ -41,7 +42,7 @@ public class MenuStackManager : MonoBehaviour {
             inventoryMain.menu = currentMenu.command;
 
             playerOptions.state = State.ChangeOptions;
-            playerOptions.menu = currentMenu.command;
+            playerOptions.menu = currentMenu.PlayerOptions;
 
             oppOptions.state = State.PlayerOppOptions;
             oppOptions.menu = currentMenu.OppSelection;

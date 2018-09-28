@@ -384,11 +384,26 @@ public class LivingObject : GridObject
 
         }
 
+        if(HEALTH > MAX_HEALTH)
+        {
+            STATS.HEALTH = 0;
+        }
+
+        if (MANA > MAX_MANA)
+        {
+            STATS.MANA = 0;
+        }
+
+        if (FATIGUE > MAX_FATIGUE)
+        {
+            STATS.FATIGUE = MAX_FATIGUE;
+        }
+
     }
 
     public void TakeAction()
     {
-        //  Debug.Log(FullName + " took an action");
+          Debug.Log(FullName + " took an action");
         ACTIONS--;
         if (myManager)
         {

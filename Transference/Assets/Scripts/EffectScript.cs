@@ -15,8 +15,8 @@ public class EffectScript : MonoBehaviour
 
     public void ApplyReaction(ManagerScript manager, LivingObject living)
     {
-        int chance = 0;// Random.Range(0, 2);
-                       //  Debug.Log("Chance = " + chance);
+        int chance = Random.Range(-5, 5);
+        Debug.Log("Status Effect Chance = " + chance);
         switch (effect)
         {
             case StatusEffect.paralyzed:
@@ -77,6 +77,15 @@ public class EffectScript : MonoBehaviour
                         manager.CreateTextEvent(this, "" + living.FullName + " is no longer burned", "no longer burned effect", manager.CheckText, manager.TextStart);
                         Destroy(this);
                     }
+                }
+                break;
+            case StatusEffect.poisoned:
+                Debug.Log(living.FullName + " is poisoned");
+                manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
+                if (chance > 0)
+                {
+                    Debug.Log(living.FullName + " is no longer poisoned");
+                    Destroy(this);
                 }
                 break;
             default:
