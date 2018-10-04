@@ -104,7 +104,14 @@ public class StatScript : MonoBehaviour
     public int HEALTH
     {
         get { return myHealth; }
-        set { myHealth = value; }
+        set
+        {
+            myHealth = value;
+            if (myHealth > MAX_HEALTH)
+            {
+                myHealth = MAX_HEALTH;
+            }
+        }
     }
     public int MAX_MANA
     {

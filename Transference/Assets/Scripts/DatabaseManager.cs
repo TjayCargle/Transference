@@ -385,7 +385,7 @@ public class DatabaseManager : MonoBehaviour
                                 }
                                 if (command.EFFECT != SideEffect.none)
                                 {
-                                    command.DESC += " with a chance to " + command.EFFECT.ToString();
+                                    command.DESC += " with a chance of " + command.EFFECT.ToString();
                                 }
 
                                 livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);

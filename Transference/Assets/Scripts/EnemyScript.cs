@@ -15,6 +15,13 @@ public class EnemyScript : LivingObject
     TileScript targetTile;
     ManagerScript manager;
     public TileScript nextTile;
+
+    public void MoveStart()
+    {
+        Debug.Log(FullName+" is showinng");
+        myManager.ShowGridObjectMoveArea(this);
+
+    }
     public bool MoveEvent(Object target)
     {
 
@@ -47,6 +54,7 @@ public class EnemyScript : LivingObject
         {
             if (transform.position.z == nextTile.transform.position.z)
             {
+
                 currentTile.isOccupied = false;
                 currentTile = pathTarget.currentPath.Dequeue();
                 currentTile.isOccupied = true;
@@ -62,6 +70,7 @@ public class EnemyScript : LivingObject
             }
             //Debug.Log("Move Event Done!");
         }
+        myManager.myCamera.currentTile = currentTile;
         return isDone;
     }
     public override void Setup()
@@ -102,9 +111,8 @@ public class EnemyScript : LivingObject
         {
             int depth = 0;
             currentTile.isOccupied = false;
-            myManager.ShowGridObjectMoveArea(this);
             //  targ = target;
-            Debug.Log(FullName + " is Determining path");
+            // Debug.Log(FullName + " is Determining path");
             bool complete = false;
             TileScript current = currentTile;//myManager.GetTileAtIndex(myManager.GetTileIndex(calcLocation));
             while (complete == false)
@@ -114,32 +122,26 @@ public class EnemyScript : LivingObject
                     current = options[0];
                 for (int i = 0; i < options.Count; i++)
                 {
-                    if (options[i].isOccupied)
-                    {
-                        Debug.Log("occupodo");
-                        if (options[i] == pathTarget.realTarget)
-                        {
-                            Debug.Log("YOUR AN OPTIONAL FUCKING IDIOT!");
-                            //tpdp fox current = options[i];
-                        }
-                    }
-                    if (!options[i].isOccupied)
+                    TileScript checkTile = options[i];
+         
+                    if (checkTile.isOccupied == false)
                     {
 
-                        if (Vector3.Distance(pathTarget.realTarget.transform.position, options[i].transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
+                        if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
                         {
-                            current = options[i];
+                            current = checkTile;
                         }
                     }
                     else
                     {
-                        if (manager.GetObjectAtTile(options[i]).GetComponent<LivingObject>())
+                        if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>())
                         {
-                            if (manager.GetObjectAtTile(options[i]).GetComponent<LivingObject>().IsEnenmy)
+                            if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>().IsEnenmy)
                             {
-                                if (Vector3.Distance(pathTarget.realTarget.transform.position, options[i].transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
+                                LivingObject living = manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>();
+                                if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
                                 {
-                                    current = options[i];
+                                    current = checkTile;
                                 }
                             }
                         }
@@ -148,8 +150,13 @@ public class EnemyScript : LivingObject
 
                 if (!pathTarget.currentPath.Contains(current))
                 {
-                    Debug.Log(FullName + " Current location = " + current.transform.position);
-                    pathTarget.currentPath.Enqueue(current);
+                    //  Debug.Log(FullName + " Current location = " + current.transform.position);
+                    if (current.isOccupied == false)
+                    {
+                        pathTarget.currentPath.Enqueue(current);
+
+                    }
+            
                 }
                 if (current == pathTarget.realTarget)
                 {
@@ -195,7 +202,7 @@ public class EnemyScript : LivingObject
     }
     public TileScript DetermineMoveLocation(TileScript targetTile)
     {
-        Debug.Log(FullName + " is Determining move location");
+        // Debug.Log(FullName + " is Determining move location");
         TileScript newTile = null;
         List<TileScript> myTiles = myManager.GetMoveAbleTiles(calcLocation, MOVE_DIST);
         for (int i = 0; i < myTiles.Count; i++)
@@ -225,7 +232,7 @@ public class EnemyScript : LivingObject
     }
     public LivingObject FindNearestEnemy()
     {
-        Debug.Log(FullName + " is finding near enemies");
+        // Debug.Log(FullName + " is finding near enemies");
         LivingObject newTarget = null;
         LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = 0; i < objects.Length; i++)
@@ -261,6 +268,7 @@ public class EnemyScript : LivingObject
     {
         DmgReaction bestReaction = myManager.CalcDamage(this, target, WEAPON);
         bestReaction.atkName = WEAPON.NAME;
+        bestReaction.dmgElement = WEAPON.AFINITY;
         EHitType currHit = target.ARMOR.HITLIST[(int)WEAPON.AFINITY];
         for (int j = 0; j < BATTLE_SLOTS.SKILLS.Count; j++)
         {
@@ -277,17 +285,17 @@ public class EnemyScript : LivingObject
                     skill.UseSkill(this, modification);
 
                     DmgReaction aReaction = myManager.CalcDamage(this, target, skill, skill.REACTION);
+                    aReaction.dmgElement = skill.ELEMENT;
+
                     if (aReaction.damage > bestReaction.damage)
                     {
                         bestReaction = aReaction;
                         bestReaction.atkName = skill.NAME;
-                        bestReaction.dmgElement = skill.ELEMENT;
                     }
                     if ((int)target.ARMOR.HITLIST[(int)skill.ELEMENT] > (int)currHit)
                     {
                         bestReaction = aReaction;
                         bestReaction.atkName = skill.NAME;
-                        bestReaction.dmgElement = skill.ELEMENT;
                     }
                 }
             }
@@ -297,12 +305,12 @@ public class EnemyScript : LivingObject
     public void DetermineActions()
     {
         isPerforming = true;
-        Debug.Log(FullName + " is Determining actions");
+      //  Debug.Log(FullName + " is Determining actions");
         psudeoActions = ACTIONS;
         calcLocation = transform.position;
         if (psudeoActions == 0)
         {
-            TakeAction();
+         //   TakeAction();
         }
         List<EActType> etypes = new List<EActType>();
         path p = null;
@@ -351,7 +359,7 @@ public class EnemyScript : LivingObject
                     }
                     else
                     {
-                        Debug.Log("Doing an attack event");
+                //        Debug.Log("Doing an attack event");
                         //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
                         etypes.Add(EActType.atk);
                         //   TakeAction();
@@ -359,26 +367,26 @@ public class EnemyScript : LivingObject
                 }
                 else
                 {
-                    TakeAction();
+                   // TakeAction();
 
                     isPerforming = false;
 
                 }
             }
         }
-
+     
         for (int i = 0; i < etypes.Count; i++)
         {
             switch (etypes[i])
             {
                 case EActType.move:
                     //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent, null, i);
+                    myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent, MoveStart, i);
                     break;
 
                 case EActType.atk:
                     // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null, i);
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, MoveStart, i);
                     break;
             }
         }

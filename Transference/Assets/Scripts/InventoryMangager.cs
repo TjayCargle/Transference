@@ -163,11 +163,12 @@ public class InventoryMangager : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         IncreaseScroll();
-
+                        manager.myCamera.UpdateCamera();
                     }
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         DecreaseScroll();
+                        manager.myCamera.UpdateCamera();
 
                     }
                     if (Input.GetAxis("Mouse ScrollWheel") > 0)
@@ -712,17 +713,17 @@ public class InventoryMangager : MonoBehaviour
     {
         if (currentContent)
         {
-        for (int i = 0; i < currentContent.transform.childCount; i++)
-        {
-            MenuItem menuItem = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
-            if (menuItem)
+            for (int i = 0; i < currentContent.transform.childCount; i++)
             {
-                menuItem.GetComponentInChildren<Text>().color = Color.white;
-                menuItem.GetComponent<Image>().color = Color.black;
-                Vector2 pos = menuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                pos.x = 0;
+                MenuItem menuItem = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
+                if (menuItem)
+                {
+                    menuItem.GetComponentInChildren<Text>().color = Color.white;
+                    menuItem.GetComponent<Image>().color = Color.black;
+                    Vector2 pos = menuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
+                    pos.x = 0;
+                }
             }
-        }
             if (selectedMenuItem)
             {
                 selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
@@ -1078,7 +1079,7 @@ public class InventoryMangager : MonoBehaviour
     {
         extraList.Clear();
         int useType = -1;
-        Debug.Log("Loading extra " + index);
+
         switch (index)
         {
 
@@ -1116,14 +1117,48 @@ public class InventoryMangager : MonoBehaviour
                 }
                 break;
 
+            case 4:
+                //equipped weapon
+                useType = 0;
+                for (int i = 0; i < liveObject.INVENTORY.WEAPONS.Count; i++)
+                {
+                    if (liveObject.INVENTORY.WEAPONS[i].NAME == liveObject.WEAPON.NAME)
+                    {
+                        extraList.Add(liveObject.INVENTORY.WEAPONS[i]);
+                        break;
+                    }
+                }
+                break;
+            case 5:
+                //equipped armor
+                useType = 1;
+                for (int i = 0; i < liveObject.INVENTORY.ARMOR.Count; i++)
+                {
+                    if (liveObject.INVENTORY.ARMOR[i].NAME == liveObject.ARMOR.NAME)
+                    {
+                        extraList.Add(liveObject.INVENTORY.ARMOR[i]);
+                        break;
+                    }
+                }
+                break;
 
         }
         //UpdateColors(extraSlots);
+        //UsableScript item in liveObject.GetComponents<UsableScript>())
 
-        for (int useCount = 0; useCount < 6; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
+        for (int useCount = 0; useCount < 6; useCount++)
         {
             MenuItem selectableItem = extraSlots[useCount];
             selectableItem.gameObject.SetActive(true);
+
+            if (useType < 4)
+            {
+                if (useCount > 0)
+                {
+                    selectableItem.gameObject.SetActive(false);
+                    continue;
+                }
+            }
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
             if (useCount < extraList.Count)
             {
@@ -1140,6 +1175,7 @@ public class InventoryMangager : MonoBehaviour
                 {
                     item.TYPE = useType;//itemType.TYPE;
                     selectableItem.refItem = item;
+
 
                 }
             }
@@ -1217,6 +1253,10 @@ public class InventoryMangager : MonoBehaviour
                     loadExtra(0, lastObject);
                 }
             }
+            else
+            {
+                UnequipSkill();
+            }
         }
 
         else if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
@@ -1231,24 +1271,45 @@ public class InventoryMangager : MonoBehaviour
                     loadExtra(1, lastObject);
                 }
             }
+            else
+            {
+                UnequipSkill();
+            }
         }
 
         else if (selectedMenuItem.refItem.GetType() == typeof(AutoSkill))
         {
-            if (lastObject.AUTO_SLOTS.SKILLS.Count < 6)
+            if (!lastObject.AUTO_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
             {
 
-                lastObject.AUTO_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
-                loadExtra(2, lastObject);
+                if (lastObject.AUTO_SLOTS.SKILLS.Count < 6)
+                {
+
+                    lastObject.AUTO_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
+                    loadExtra(2, lastObject);
+                }
+
+            }
+            else
+            {
+                UnequipSkill();
             }
         }
 
         else if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
         {
-            if (lastObject.OPP_SLOTS.SKILLS.Count < 6)
+            if (!lastObject.OPP_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
             {
-                lastObject.OPP_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
-                loadExtra(3, lastObject);
+
+                if (lastObject.OPP_SLOTS.SKILLS.Count < 6)
+                {
+                    lastObject.OPP_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
+                    loadExtra(3, lastObject);
+                }
+            }
+            else
+            {
+                UnequipSkill();
             }
         }
         else

@@ -384,7 +384,7 @@ public class LivingObject : GridObject
 
         }
 
-        if(HEALTH > MAX_HEALTH)
+        if (HEALTH > MAX_HEALTH)
         {
             STATS.HEALTH = 0;
         }
@@ -403,16 +403,22 @@ public class LivingObject : GridObject
 
     public void TakeAction()
     {
-          Debug.Log(FullName + " took an action");
+        Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
         ACTIONS--;
         if (myManager)
         {
+          //  myManager.doubleAdjOppTiles.Clear();
             if (ACTIONS <= 0)
             {
-
                 myManager.NextTurn(FullName);
-                myManager.CleanMenuStack(true);
+                //myManager.CreateEvent(this, null, "clean state state event", myManager.BufferedCleanEvent);
+
+                //  myManager.CleanMenuStack(true);
                 //myManager.GetComponent<InventoryMangager>().Validate("living obj, action taken");
+            }
+            else
+            {
+                myManager.currOppList.Clear();
             }
         }
     }
@@ -439,7 +445,7 @@ public class LivingObject : GridObject
         float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
         if (actions == spd || actions == spd + 2)
         {
-        GENERATED += 2;
+            GENERATED += 2;
 
         }
         if (HEALTH > MAX_HEALTH)

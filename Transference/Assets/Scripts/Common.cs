@@ -155,10 +155,10 @@ public enum Reaction
     turnloss,
     cripple,
     turnAndcrip,
+    weak,
     nulled,
     reflected,
     absorb,
-    weak,
     missed
 }
 public enum DMG
@@ -452,4 +452,6 @@ public class Common : ScriptableObject
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static int maxDmg = 999;
+    public static List<EHitType> noAmor = new List<EHitType>();
+    
 }

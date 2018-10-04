@@ -32,7 +32,7 @@ public class NonCombatButton : MonoBehaviour, IPointerDownHandler, IPointerEnter
    public void PressStart()
    {
 
-       SceneManager.LoadSceneAsync("DemoMap");
+       SceneManager.LoadSceneAsync("DemoMap2");
 
 
    }

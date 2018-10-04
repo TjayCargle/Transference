@@ -11,10 +11,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/TestMap.unity
     guid: b6897f7cc70f3f0408bc2138852bb4d1
-  - enabled: 1
+  - enabled: 0
     path: Assets/DemoMap.unity
     guid: 969bb85abf1cb0841a640c5890178d1c
   - enabled: 1
     path: Assets/GameOver.unity
     guid: 698c164a266012a4fb9e555ade5ad69b
+  - enabled: 1
+    path: Assets/DemoMap2.unity
+    guid: e10f05a0706ddd5499a9f443d6c6d43c
   m_configObjects: {}

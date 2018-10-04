@@ -135,7 +135,7 @@ public class NonCombatController : MonoBehaviour
             if (ctrlCnvs.gameObject.activeInHierarchy)
             {
 
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButton(1))
                 {
                     ctrlCnvs.gameObject.SetActive(false);
                 }

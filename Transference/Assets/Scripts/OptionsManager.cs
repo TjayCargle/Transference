@@ -13,7 +13,7 @@ public class OptionsManager : MonoBehaviour
     public bool battleAnims = true;
     public bool dmgAnims = true;
     public bool displayMessages = true;
-    public bool showExp = false;
+    public bool showExp = true;
 
     public Slider masterSlider;
     public Slider musicSlider;
@@ -22,6 +22,7 @@ public class OptionsManager : MonoBehaviour
     public Toggle battleAnimToggle;
     public Toggle dmgAnimToggle;
     public Toggle displayToggle;
+    public Toggle dispalyExp;
 
     private void Start()
     {
@@ -60,6 +61,12 @@ public class OptionsManager : MonoBehaviour
             displayToggle.isOn = displayMessages;
             displayToggle.onValueChanged.AddListener(delegate { ChangeDisplayMessages(displayToggle); });
         }
+
+        if(dispalyExp)
+        {
+            dispalyExp.isOn = showExp;
+            dispalyExp.onValueChanged.AddListener(delegate { ChangeDisplayExp(dispalyExp); });
+        }
     }
     void ChangeBattleAnim(Toggle change)
     {
@@ -74,6 +81,10 @@ public class OptionsManager : MonoBehaviour
     void ChangeDisplayMessages(Toggle change)
     {
         displayMessages = !displayMessages;
+    }
+    void ChangeDisplayExp(Toggle change)
+    {
+        showExp = !showExp;
     }
     private void Update()
     {

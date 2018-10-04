@@ -18,7 +18,12 @@ public class WeaponEquip : Equipable {
     private EType eType;
     [SerializeField]
     private Element myAfinity = Element.Slash;
-
+    [SerializeField]
+    private int useCount;
+    [SerializeField]
+    private int level;
+    [SerializeField]
+    private WeaponScript equipped;
     private LivingObject owner;
 
  
@@ -66,6 +71,17 @@ public class WeaponEquip : Equipable {
         get { return myAttackRange; }
         set { myAttackRange = value; }
     }
+    public int USECOUNT
+    {
+        get { return useCount; }
+        set { useCount = value; }
+    }
+
+    public int LEVEL
+    {
+        get { return level; }
+        set { level = value; }
+    }
     public void Equip(WeaponScript weapon)
     {
         base.Equip(weapon);
@@ -75,6 +91,19 @@ public class WeaponEquip : Equipable {
         this.ATTACK_TYPE = weapon.ATTACK_TYPE;
         this.DIST = weapon.DIST;
         this.Range = weapon.Range;
+        this.USECOUNT = weapon.USECOUNT;
+        this.LEVEL = weapon.LEVEL;
+        equipped = weapon;
     }
-
+    public void Use()
+    {
+        useCount++;
+        equipped.USECOUNT++;
+        if (USECOUNT % 2 == 0)
+        {
+            LEVEL++;
+            equipped.LEVEL++;
+            equipped.ATTACK++;
+        }
+    }
 }

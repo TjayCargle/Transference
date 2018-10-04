@@ -224,6 +224,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(0, liveInvokingObject);
+                            myMenuManager.ShowExtraCanvas(4, liveInvokingObject);
+
                             //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
@@ -269,6 +271,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(1, liveInvokingObject);
+                            myMenuManager.ShowExtraCanvas(5, liveInvokingObject);
+
                             //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
                         }
@@ -498,7 +502,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 }
                 break;
 
-
+           
             default:
                 myManager.returnState();// myManager.currentState = State.PlayerInput;
                 return true;

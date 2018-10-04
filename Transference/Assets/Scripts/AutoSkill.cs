@@ -64,10 +64,27 @@ public class AutoSkill : SkillScript
 
     public Reaction Activate(float amount)
     {
+        if (NEXT > 0)
+        {
+            if (NEXTCOUNT > 0)
+            {
+                NEXTCOUNT--;
+                if (NEXTCOUNT <= 0)
+                {
+
+                    DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+                    if (database != null)
+                    {
+                        database.LearnSkill(NEXT, OWNER);
+
+                    }
+                }
+            }
+        }
         switch (REACT)
         {
             case AutoReact.healByDmg:
-                OWNER.STATS.HEALTH += (int)amount;
+                OWNER.ChangeHealth((int)amount);
                 return Reaction.none;
                 break;
             case AutoReact.healAmount:
@@ -122,16 +139,4 @@ public class AutoSkill : SkillScript
         return Reaction.none;
     }
 
-    public List<Type> acceptableTypes = new List<Type>();
-    public void loadTypes()
-    {
-        acceptableTypes.Add(typeof(bool));
-        //and repeat
-    }
-    public System.Object Convert(Type propType, string myString)
-    {
-        var converter =  TypeDescriptor.GetConverter(propType);
-        var result = converter.ConvertFrom(myString);
-        return result;
-    }
 }

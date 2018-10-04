@@ -1124,7 +1124,7 @@ MonoBehaviour:
   selectedButton: {fileID: 0}
   ctrlCnvs: {fileID: 1837800660}
   controls:
-  - {fileID: 21300000, guid: 7b050dbd2206fd641888660e91fbddd3, type: 3}
+  - {fileID: 21300000, guid: 1e8c4f7949b65ba49b331c8f449ba23b, type: 3}
   - {fileID: 21300000, guid: 655731d4a4494f44baa0334b51cf0365, type: 3}
   - {fileID: 21300000, guid: 28894e13b5c83cb4eae69ac7ce06a77e, type: 3}
   - {fileID: 21300000, guid: 114ac61b8011e0540a29e65b0ceaa837, type: 3}
@@ -1259,7 +1259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5943396, g: 0.2694503, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1703,7 +1703,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Instructions
+  m_Text: Guidebook
 --- !u!222 &1317092658
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1850,7 +1850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5943396, g: 0.2694503, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -16,6 +16,10 @@ public class WeaponScript : UsableScript
     private int myAttackRange;
     [SerializeField]
     private EType eType;
+    [SerializeField]
+    private int useCount;
+    [SerializeField]
+    private int level;
 
     private Element myAfinity = Element.Slash;
 
@@ -61,6 +65,18 @@ public class WeaponScript : UsableScript
     {
         get { return myAttackRange; }
         set { myAttackRange = value; }
+    }
+
+    public int USECOUNT
+    {
+        get { return useCount; }
+        set { useCount = value; }
+    }
+
+    public int LEVEL
+    {
+        get { return level; }
+        set { level = value; }
     }
   
 }
