@@ -64,12 +64,10 @@ public class ItemScript : UsableScript
         switch (ITYPE)
         {
             case ItemType.healthPotion:
-                Debug.Log("Health: " + target.HEALTH);
-                Debug.Log("Stats health " + target.STATS.HEALTH);
+        
                 int amoint = (int)(target.MAX_HEALTH * trueValue);
                 usedEffect = target.ChangeHealth( amoint);
-                Debug.Log("final Health: " + target.HEALTH);
-                Debug.Log("final Stats health " + target.STATS.HEALTH);
+
                 break;
             case ItemType.manaPotion:
                 usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * trueValue));

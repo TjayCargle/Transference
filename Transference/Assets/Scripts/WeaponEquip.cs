@@ -21,13 +21,13 @@ public class WeaponEquip : Equipable {
     [SerializeField]
     private int useCount;
     [SerializeField]
-    private int level;
+    private int level = 1;
     [SerializeField]
     private WeaponScript equipped;
-    private LivingObject owner;
+    private GridObject owner;
 
  
-    public LivingObject USER
+    public GridObject USER
     {
         get { return owner; }
         set { owner = value; }
@@ -48,7 +48,7 @@ public class WeaponEquip : Equipable {
         
     public int ATTACK
     {
-        get { return myAttack; }
+        get { return myAttack + LEVEL; }
         set { myAttack = value; }
     }
     public int ACCURACY
@@ -79,7 +79,11 @@ public class WeaponEquip : Equipable {
 
     public int LEVEL
     {
-        get { return level; }
+        get { if(equipped)
+            {
+                return equipped.LEVEL;
+            }
+            return level; }
         set { level = value; }
     }
     public void Equip(WeaponScript weapon)
@@ -101,9 +105,24 @@ public class WeaponEquip : Equipable {
         equipped.USECOUNT++;
         if (USECOUNT % 2 == 0)
         {
-            LEVEL++;
             equipped.LEVEL++;
             equipped.ATTACK++;
+            equipped.ACCURACY++;
+            if(equipped.LEVEL > 50)
+            {
+                equipped.LEVEL = 50;
+            }
+            if (equipped.ATTACK > (int)DMG.collassal)
+            {
+                equipped.ATTACK = (int)DMG.collassal;
+            }
+            if (equipped.ACCURACY > 100)
+            {
+                equipped.ACCURACY = 100;
+            }
+            LEVEL = equipped.LEVEL;
+            ATTACK = equipped.ATTACK;
+            ACCURACY = equipped.ACCURACY;
         }
     }
 }

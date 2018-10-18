@@ -20,7 +20,8 @@ public class InventoryScript : MonoBehaviour {
 
     [SerializeField]
     List<CommandSkill> activeBuffs;
-
+    [SerializeField]
+    List<CommandSkill> activeDeBuffs;
     [SerializeField]
     List<OppSkill> oppSkills;
 
@@ -30,8 +31,6 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<ArmorScript> armor;
 
-    [SerializeField]
-    List<AccessoryScript> accessories;
 
     [SerializeField]
     List<ItemScript> items;
@@ -56,11 +55,7 @@ public class InventoryScript : MonoBehaviour {
         get { return armor; }
         set { armor = value; }
     }
-    public List<AccessoryScript> ACCESSORIES
-    {
-        get { return accessories; }
-        set { accessories = value; }
-    }
+
     public List<CommandSkill> CSKILLS
     {
         get { return commandSkills; }
@@ -81,6 +76,11 @@ public class InventoryScript : MonoBehaviour {
     {
         get { return activeBuffs; }
         set { activeBuffs = value; }
+    }
+    public List<CommandSkill> DEBUFFS
+    {
+        get { return activeDeBuffs; }
+        set { activeDeBuffs = value; }
     }
 
     public List<OppSkill> OPPS
@@ -144,6 +144,17 @@ public class InventoryScript : MonoBehaviour {
         return null;
     }
 
+    public CommandSkill ContainsCommandIndex(int index)
+    {
+        for (int i = 0; i < commandSkills.Count; i++)
+        {
+            if (CSKILLS[i].INDEX == index)
+            {
+                return CSKILLS[i];
+            }
+        }
+        return null;
+    }
     public AutoSkill ContainsAutoName(string name)
     {
         for (int i = 0; i < autoSkills.Count; i++)
@@ -178,5 +189,21 @@ public class InventoryScript : MonoBehaviour {
             }
         }
         return null;
+    }
+
+    public void ChargeShields()
+    {
+        for (int i = 0; i < ARMOR.Count; i++)
+        {
+            if (ARMOR[i].HEALTH < ARMOR[i].MAX_HEALTH)
+            {
+                  
+                ARMOR[i].HEALTH += (0.20f *armor[i].MAX_HEALTH);
+
+                
+               
+            }
+
+        }
     }
 }

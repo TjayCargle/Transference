@@ -7,9 +7,22 @@ public class GridObject : MonoBehaviour
     protected ManagerScript myManager;
     public TileScript currentTile;
     public string FullName;
-   
+    [SerializeField]
+    public Faction myFaction;
     protected int MoveDist = 0;
     public bool isSetup = false;
+
+    public virtual string NAME
+    {
+        get { return FullName; }
+        set { FullName = value; }
+    }
+
+    public virtual Faction FACTION
+    {
+        get { return myFaction; }
+        set { myFaction = value; }
+    }
 
     public virtual int MOVE_DIST
     {
@@ -48,5 +61,9 @@ public class GridObject : MonoBehaviour
 
     }
 
+    public virtual void Die()
+    {
+
+    }
 
 }

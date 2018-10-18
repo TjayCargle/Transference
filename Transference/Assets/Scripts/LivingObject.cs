@@ -11,8 +11,8 @@ public class LivingObject : GridObject
     private WeaponEquip equippedWeapon;
     private ArmorEquip equipedArmor;
     private AccessoryEquip equippedAccessory;
-    [SerializeField]
-    private bool isEnenmy;
+    //[SerializeField]
+    //private bool isEnenmy;
     [SerializeField]
     private int actions;
     [SerializeField]
@@ -35,7 +35,7 @@ public class LivingObject : GridObject
     private bool isDead;
     [SerializeField]
     private InventoryScript inventory;
-
+    public int refreshState;
     public InventoryScript INVENTORY
     {
         get { return inventory; }
@@ -49,7 +49,14 @@ public class LivingObject : GridObject
     public PrimaryStatus PSTATUS
     {
         get { return pStatus; }
-        set { pStatus = value; }
+        set
+        {
+            pStatus = value;
+            if(PSTATUS != PrimaryStatus.normal)
+            {
+                refreshState = 2;
+            }
+        }
     }
 
     public SecondaryStatus SSTATUS
@@ -104,11 +111,6 @@ public class LivingObject : GridObject
         get { return equipedArmor; }
         set { equipedArmor = value; }
     }
-    public AccessoryEquip ACCESSORY
-    {
-        get { return equippedAccessory; }
-        set { equippedAccessory = value; }
-    }
 
     public override int MOVE_DIST
     {
@@ -162,9 +164,9 @@ public class LivingObject : GridObject
     {
         get { return STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED; }
     }
-    public int LUCK
+    public int SKILL
     {
-        get { return STATS.LUCK + BASE_STATS.LUCK; }
+        get { return STATS.SKILL + BASE_STATS.SKILL; }
     }
     public int MAX_HEALTH
     {
@@ -192,14 +194,14 @@ public class LivingObject : GridObject
     }
     public int LEVEL
     {
-        get { return STATS.LEVEL + BASE_STATS.LEVEL; }
+        get { return BASE_STATS.LEVEL; }
     }
 
-    public bool IsEnenmy
-    {
-        get { return isEnenmy; }
-        set { isEnenmy = value; }
-    }
+    //public bool IsEnenmy
+    //{
+    //    get { return isEnenmy; }
+    //    set { isEnenmy = value; }
+    //}
 
     public bool ChangeHealth(int val)
     {
@@ -225,9 +227,13 @@ public class LivingObject : GridObject
             return false;
         }
         STATS.MANA += val;
-        if (STATS.MANA < 0)
+        if(MANA > MAX_MANA)
         {
             STATS.MANA = 0;
+        }
+        if (MANA < 0)
+        {
+            STATS.MANA =  -1 * MAX_MANA;
 
         }
         return true;
@@ -259,27 +265,23 @@ public class LivingObject : GridObject
             if (!GetComponent<WeaponEquip>())
             {
                 gameObject.AddComponent<WeaponEquip>();
-                gameObject.GetComponent<WeaponEquip>().NAME = "default weapon";
+                gameObject.GetComponent<WeaponEquip>().NAME = "default";
             }
             equippedWeapon = GetComponent<WeaponEquip>();
             equippedWeapon.USER = this;
             if (!GetComponent<ArmorEquip>())
             {
                 gameObject.AddComponent<ArmorEquip>();
-                gameObject.GetComponent<ArmorEquip>().NAME = "default armor";
+                gameObject.GetComponent<ArmorEquip>().NAME = "default";
 
             }
             equipedArmor = GetComponent<ArmorEquip>();
             equipedArmor.USER = this;
-
-            if (!GetComponent<AccessoryEquip>())
+            equipedArmor. HITLIST = new List<EHitType>();
+            for (int i = 0; i < 7; i++)
             {
-                gameObject.AddComponent<AccessoryEquip>();
-                gameObject.GetComponent<AccessoryEquip>().NAME = "default accessory";
-
+                equipedArmor.HITLIST.Add(EHitType.normal);
             }
-            equippedAccessory = GetComponent<AccessoryEquip>();
-            equippedAccessory.USER = this;
 
             if (!GetComponent<BaseStats>())
             {
@@ -349,10 +351,24 @@ public class LivingObject : GridObject
                 oppSlots.TYPE = 3;
 
             }
-            GetComponent<LivingSetup>().Setup();
+            if (GetComponent<LivingSetup>())
+            {
+                GetComponent<LivingSetup>().Setup();
+
+            }
+            if (GetComponent<EnemySetup>())
+            {
+                GetComponent<EnemySetup>().Setup();
+
+            }
+            if (GetComponent<ActorSetup>())
+            {
+                GetComponent<ActorSetup>().Setup();
+
+            }
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
 
-            ACTIONS = Mathf.RoundToInt(spd / 10) + 1;
+            ACTIONS = (int)(spd / 10) + 2;
             base.Setup();
         }
         //  Debug.Log("Setup done");
@@ -363,6 +379,7 @@ public class LivingObject : GridObject
     {
         List<PassiveSkill> atkPassives = PASSIVE_SLOTS.ConvertToPassives();
         List<CommandSkill> buffs = inventory.BUFFS;
+        List<CommandSkill> debuffs = inventory.DEBUFFS;
         modifiedStats.MODS.Clear();
         modifiedStats.Reset(true);
 
@@ -380,6 +397,15 @@ public class LivingObject : GridObject
             for (int i = 0; i < buffs.Count; i++)
             {
                 modifiedStats.IncreaseStat(buffs[i].BUFFEDSTAT, (int)buffs[i].BUFFVAL, this);
+            }
+
+        }
+
+        if (debuffs.Count > 0)
+        {
+            for (int i = 0; i < debuffs.Count; i++)
+            {
+                modifiedStats.IncreaseStat(debuffs[i].BUFFEDSTAT, (int)debuffs[i].BUFFVAL, this);
             }
 
         }
@@ -403,11 +429,15 @@ public class LivingObject : GridObject
 
     public void TakeAction()
     {
-        Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
+        if(GetComponent<EnemyScript>())
+        {
+
+        //   Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
+        }
         ACTIONS--;
         if (myManager)
         {
-          //  myManager.doubleAdjOppTiles.Clear();
+            //  myManager.doubleAdjOppTiles.Clear();
             if (ACTIONS <= 0)
             {
                 myManager.NextTurn(FullName);
@@ -418,7 +448,7 @@ public class LivingObject : GridObject
             }
             else
             {
-                myManager.currOppList.Clear();
+                myManager.currOppList.Remove(this);//Clear();
             }
         }
     }
@@ -441,13 +471,15 @@ public class LivingObject : GridObject
         {
             STATS.FATIGUE = 0;
         }
-        ACTIONS = 0;
         float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
+        spd = (int)(spd / 10);
+       
         if (actions == spd || actions == spd + 2)
         {
             GENERATED += 2;
 
         }
+        ACTIONS = 0;
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;
         if (MANA > MAX_MANA)
@@ -459,6 +491,8 @@ public class LivingObject : GridObject
     {
         BASE_STATS.LEVEL++;
         BASE_STATS.MAX_HEALTH += 5;
+        BASE_STATS.MAX_MANA += 5;
+        BASE_STATS.MAX_FATIGUE += 5;
         BASE_STATS.EXP -= 100;
     }
 
@@ -466,5 +500,46 @@ public class LivingObject : GridObject
     {
         BASE_STATS.EXP += val;
 
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart);
+    }
+    protected bool isdoneDying = false;
+    public void DeathStart()
+    {
+        myManager.PlaySquishSnd();
+        isdoneDying = false;
+        StartCoroutine(FadeOut());
+    }
+
+    public bool DieEvent(Object data) 
+    {
+
+        return isdoneDying;
+    }
+    public virtual IEnumerator FadeOut()
+    {
+    //    Debug.Log("living dying");
+        if(GetComponent<SpriteRenderer>())
+        {
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            Color subtract = new Color(0, 0, 0, 0.1f);
+            int num = 0;
+            while(renderer.color.a > 0)
+            {
+                num++; 
+                if( num > 999)
+                {
+                    Debug.Log("time expired");
+                    break;
+                }
+                renderer.color = renderer.color - subtract;
+                yield return null;
+            }
+            isdoneDying = true;
+        }
     }
 }

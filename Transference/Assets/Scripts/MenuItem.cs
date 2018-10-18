@@ -70,6 +70,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             return;
         }
+        if(invokingObject == null)
+        {
+            return;
+        }
         MenuItemType item = (MenuItemType)itemType;
        // Debug.Log("Menu item :" + item);
         switch (item)

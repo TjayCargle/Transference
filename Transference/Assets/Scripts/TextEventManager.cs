@@ -29,7 +29,10 @@ public class TextEventManager : MonoBehaviour
     private void Update()
     {
 
-
+        if(textEvents == null)
+        {
+            textEvents = new List<TextEvent>();
+        }
         actiEvents = textEvents.Count;
         // Debug.Log("ActiEvents = " + actiEvents);
         if (currentEvent.caller == null)

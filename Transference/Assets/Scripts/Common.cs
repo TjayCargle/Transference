@@ -20,6 +20,8 @@ public enum State
     PlayerOppMove,
     ChangeOptions,
     PlayerTransition,
+    CheckDetails,
+    AquireNewSkill,
     EnemyTurn
 
 
@@ -65,6 +67,7 @@ public enum ModifiedStat
     SP,
     FT,
     FTCost,
+    FTCharge,
     SPCost,
     ElementDmg,
     Movement,
@@ -75,7 +78,7 @@ public enum ModifiedStat
     Res,
     Guard,
     Speed,
-    Luck,
+    Skill,
     dmg,
     none,
     all
@@ -87,7 +90,8 @@ public enum RanngeType
     multi,
     area,
     any,
-    anyarea
+    anyarea,
+    multiarea
 }
 
 public enum TargetType
@@ -104,13 +108,15 @@ public enum TargetType
 public enum BuffType
 {
     none,
-    attack,
     str,
     mag,
-    speed,
     defense,
     resistance,
-    luck,
+    speed,
+    skill,
+    attack,
+    guard,
+    act,
     all
 
 
@@ -134,6 +140,15 @@ public enum Element
     none
 
 }
+public enum DetailType
+{
+    Command,
+    Passive,
+    Auto,
+    Opportunity,
+    BasicAtk,
+    Armor
+}
 public enum EType
 {
     physical,
@@ -146,11 +161,11 @@ public enum Reaction
     bonusAction,
     knockback,
     snatched,
-    reduceAtk,
+    reduceStr,
     reduceDef,
-    reduceSpd,
     reduceMag,
     reduceRes,
+    reduceSpd,
     reduceLuck,
     turnloss,
     cripple,
@@ -163,11 +178,11 @@ public enum Reaction
 }
 public enum DMG
 {
-    minute = 10,
-    small = 20,
-    medium = 40,
-    heavy = 80,
-    severe = 160,
+    minute =   10,
+    small =    20,
+    medium =   40,
+    heavy =    80,
+    severe =   160,
     collassal = 320
 }
 public enum ItemType
@@ -232,15 +247,18 @@ public enum AutoReact
 {
     healByDmg,
     healAmount,
+    GainManaByDmg,
+    GainManaAmount,
+    ChargeFTByDmg,
+    ChargeFTByAmount,
+    HealFTByDmg,
+    HealFTByAmount,
     extraAction,
-    recoverSP,
-    reduceFT,
-    increaseFT,
+    reduceStr,
     reduceDef,
-    reduceAtk,
-    reduceSpd,
     reduceMag,
     reduceRes,
+    reduceSpd,
     reduceLuck,
     discoverItem
 
@@ -255,7 +273,7 @@ public enum PrimaryStatus
     knockedOut,
     dead
 }
-
+//remove seconf
 public enum SecondaryStatus
 {
     normal,
@@ -290,11 +308,23 @@ public enum SideEffect
     sleep,
     freeze,
     burn,
-    bleed
+    bleed,
+    reduceStr,
+    reduceDef,
+    reduceMag,
+    reduceRes,
+    reduceSpd,
+    reduceSkill,
+    reduceAtk,
+    reduceGuard,
+    reduceAct,
+    debuff
 
 }
-
-[System.Serializable]
+public class MassAtkConatiner : ScriptableObject
+{
+    public List<AtkConatiner> atkConatiners;
+}
 public class AtkConatiner : ScriptableObject
 {
     public LivingObject attackingObject;
@@ -331,6 +361,13 @@ public enum currentMenu
     PlayerOptions,
     act,
     none
+}
+public enum Faction
+{
+    ally,
+    enemy,
+    hazard,
+    other
 }
 public class tjCompare : ScriptableObject, IComparer<pathNode>
 {
@@ -369,6 +406,11 @@ public enum descState
     phys_affinities,
     status,
     none
+}
+public struct Debuff
+{
+    ModifiedStat stat;
+    float val;
 }
 public delegate bool RunableEvent(Object data);
 public delegate void StartupEvent();
@@ -448,10 +490,68 @@ public class Common : ScriptableObject
     public static Color orange = new Color(1.0f, 0.369f, 0.0f);
     public static Color pink = new Color(1, 0.678f, 0.925f);
     public static Color lime = new Color(0.802f, 1, 0.825f);
-    public static Color green = new Color(0.0f, 0.693f, 0.230f);
+    public static Color green = new Color(0.220f, 1, 0.230f);
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static int maxDmg = 999;
-    public static List<EHitType> noAmor = new List<EHitType>();
+    public static List<EHitType> noAmor = new List<EHitType>()
+    {
+        EHitType.normal,
+        EHitType.normal,
+        EHitType.normal,
+        EHitType.normal,
+        EHitType.normal,
+        EHitType.normal,
+        EHitType.normal
+    };
     
+    public static string GetSideEffectText(SideEffect effect)
+    {
+        string text = "";
+        switch (effect)
+        {
+  
+            case SideEffect.reduceDef:
+                text = "defense";
+                break;
+            case SideEffect.reduceMag:
+                text = "magic";
+                break;
+            case SideEffect.reduceRes:
+                text = "resistance";
+                break;
+            case SideEffect.reduceSpd:
+                text = "speed";
+                break;
+            case SideEffect.reduceSkill:
+                text = "skill";
+                break;
+        }
+        return text;
+    }
+
+    public static ModifiedStat GetSideEffectMod(SideEffect effect)
+    {
+        ModifiedStat stat = ModifiedStat.none;
+        switch (effect)
+        {
+
+            case SideEffect.reduceDef:
+                 stat = ModifiedStat.Def;
+                break;
+            case SideEffect.reduceMag:
+                stat = ModifiedStat.Mag;
+                break;
+            case SideEffect.reduceRes:
+                stat = ModifiedStat.Res;
+                break;
+            case SideEffect.reduceSpd:
+                stat = ModifiedStat.Speed;
+                break;
+            case SideEffect.reduceSkill:
+                stat = ModifiedStat.Skill;
+                break;
+        }
+        return stat;
+    }
 }

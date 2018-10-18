@@ -602,7 +602,7 @@ MonoBehaviour:
   myBaseDefense: 6
   myBaseResistance: 12
   myBaseSpeed: 11
-  myBaseLuck: 0
+  myBaseSkill: 0
   myMoveDist: 3
   myAtkDist: 0
   appliedPassives: []
@@ -705,7 +705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 12000000180000003a000000
+  startingSkills: 300000003600000078000000
   startingWeapons: 06000000
   startingArmors: 02000000
   startingAccessories: 
@@ -728,6 +728,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -4894,6 +4895,208 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &501514485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 501514492}
+  - component: {fileID: 501514491}
+  - component: {fileID: 501514490}
+  - component: {fileID: 501514489}
+  - component: {fileID: 501514488}
+  - component: {fileID: 501514487}
+  - component: {fileID: 501514486}
+  - component: {fileID: 501514493}
+  m_Layer: 0
+  m_Name: New Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &501514486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c633118fe4cbee4884a0ceaf2b6f53d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyId: 1
+  dm: {fileID: 0}
+  isSetup: 0
+--- !u!111 &501514487
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 6f9a3687284811d4f92553b40036a933, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!95 &501514488
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eba34701b3a68204585e7c2414c47397, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &501514489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc410d93352642409d33467963ed321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentList: []
+  render: {fileID: 0}
+  obj: {fileID: 0}
+  index: 0
+  isSetup: 0
+--- !u!114 &501514490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b57fba3ee72e3841ae908590de6a0b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usables: []
+  skills: []
+  commandSkills: []
+  autoSkills: []
+  passives: []
+  activeBuffs: []
+  activeDeBuffs: []
+  oppSkills: []
+  weapons: []
+  armor: []
+  accessories: []
+  items: []
+--- !u!212 &501514491
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 0534e8226f984c3478bc4d1616112e8c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.32, y: 0.64}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &501514492
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3, y: 0.5, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 27
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &501514493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 501514485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c77dcd00dc7a5a2498d7459a549ea46f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTile: {fileID: 0}
+  FullName: 
+  isSetup: 0
+  baseStats: {fileID: 0}
+  modifiedStats: {fileID: 0}
+  isEnenmy: 1
+  actions: 0
+  generatedActions: 0
+  pStatus: 0
+  sStatus: 0
+  eStatus: 0
+  battleSlots: {fileID: 0}
+  passiveSlots: {fileID: 0}
+  oppSlots: {fileID: 0}
+  autoSlots: {fileID: 0}
+  isDead: 0
+  inventory: {fileID: 0}
+  potentialTargets: []
+  isPerforming: 0
+  currentEnemy: {fileID: 0}
+  headCount: 0
+  psudeoActions: 0
+  calcLocation: {x: 0, y: 0, z: 0}
+  nextTile: {fileID: 0}
 --- !u!1 &503719351
 GameObject:
   m_ObjectHideFlags: 0
@@ -7523,7 +7726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 120000001e0000003a000000
+  startingSkills: 300000003600000048000000
   startingWeapons: 06000000
   startingArmors: 03000000
   startingAccessories: 
@@ -7546,6 +7749,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -7574,7 +7778,7 @@ MonoBehaviour:
   myBaseDefense: 11
   myBaseResistance: 5
   myBaseSpeed: 6
-  myBaseLuck: 2
+  myBaseSkill: 0
   myMoveDist: 2
   myAtkDist: 0
   appliedPassives: []
@@ -7797,12 +8001,12 @@ MonoBehaviour:
   skillFile: {fileID: 4900000, guid: 872cd0495722cae4faec24d61aedb3e3, type: 3}
   weaponFile: {fileID: 4900000, guid: bfce824803776d244826b21af637a3b8, type: 3}
   armorFile: {fileID: 4900000, guid: 687a27e52585c0942b03074baa383d09, type: 3}
-  accFile: {fileID: 4900000, guid: 70e9903272ce4df4bb1757a7f26b8482, type: 3}
+  enemyFile: {fileID: 4900000, guid: 6c238590882a23c4392937390851ab87, type: 3}
   itemFile: {fileID: 4900000, guid: 236e5538e3be670489be350329cc69eb, type: 3}
   skillLines: []
   weaponLines: []
   armorLines: []
-  accLines: []
+  enemyLines: []
   itemLines: []
   isSetup: 0
 --- !u!4 &751661922
@@ -8027,6 +8231,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -8072,7 +8277,7 @@ MonoBehaviour:
   myBaseDefense: 3
   myBaseResistance: 1
   myBaseSpeed: 4
-  myBaseLuck: 2
+  myBaseSkill: 0
   myMoveDist: 3
   myAtkDist: 0
   appliedPassives: []
@@ -10128,7 +10333,7 @@ MonoBehaviour:
   myBaseDefense: 14
   myBaseResistance: 4
   myBaseSpeed: 8
-  myBaseLuck: 2
+  myBaseSkill: 0
   myMoveDist: 5
   myAtkDist: 0
   appliedPassives: []
@@ -10153,6 +10358,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -10169,7 +10375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 00000000060000000c000000b7000000af000000d4000000
+  startingSkills: 0000000006000000900000009600000048000000de000000e5000000eb000000
   startingWeapons: 000000000100000002000000
   startingArmors: 0000000001000000
   startingAccessories: 
@@ -10908,7 +11114,7 @@ MonoBehaviour:
   myBaseDefense: 11
   myBaseResistance: 5
   myBaseSpeed: 6
-  myBaseLuck: 2
+  myBaseSkill: 0
   myMoveDist: 2
   myAtkDist: 0
   appliedPassives: []
@@ -11011,7 +11217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 120000001e0000003a000000
+  startingSkills: 300000003600000048000000
   startingWeapons: 06000000
   startingArmors: 03000000
   startingAccessories: 
@@ -11034,6 +11240,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -11965,7 +12172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 12000000180000003a000000
+  startingSkills: 300000003600000078000000
   startingWeapons: 06000000
   startingArmors: 02000000
   startingAccessories: 
@@ -11988,6 +12195,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -12016,7 +12224,7 @@ MonoBehaviour:
   myBaseDefense: 6
   myBaseResistance: 12
   myBaseSpeed: 11
-  myBaseLuck: 0
+  myBaseSkill: 0
   myMoveDist: 3
   myAtkDist: 0
   appliedPassives: []
@@ -13067,7 +13275,7 @@ MonoBehaviour:
   myBaseDefense: 1
   myBaseResistance: 3
   myBaseSpeed: 2
-  myBaseLuck: 2
+  myBaseSkill: 0
   myMoveDist: 3
   myAtkDist: 0
   appliedPassives: []
@@ -13091,6 +13299,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -15938,7 +16147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58de6d7aa8024e43a206fcfa94e929b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkills: 240000002a0000009b000000a1000000d1000000b5000000ae000000
+  startingSkills: 6000000066000000b4000000d2000000d8000000e2000000e8000000e1000000
   startingWeapons: 030000000100000004000000
   startingArmors: 0100000000000000
   startingAccessories: 
@@ -15961,6 +16170,7 @@ MonoBehaviour:
   autoSkills: []
   passives: []
   activeBuffs: []
+  activeDeBuffs: []
   oppSkills: []
   weapons: []
   armor: []
@@ -15989,7 +16199,7 @@ MonoBehaviour:
   myBaseDefense: 6
   myBaseResistance: 8
   myBaseSpeed: 33
-  myBaseLuck: 7
+  myBaseSkill: 0
   myMoveDist: 3
   myAtkDist: 0
   appliedPassives: []

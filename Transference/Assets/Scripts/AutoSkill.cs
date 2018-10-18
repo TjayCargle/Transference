@@ -88,26 +88,26 @@ public class AutoSkill : SkillScript
                 return Reaction.none;
                 break;
             case AutoReact.healAmount:
-                OWNER.STATS.HEALTH += VAL;
+                OWNER.ChangeHealth(VAL);
                 return Reaction.none;
                 break;
             case AutoReact.extraAction:
                 OWNER.ACTIONS++;
                 return Reaction.none;
                 break;
-            case AutoReact.recoverSP:
-                OWNER.STATS.MANA += VAL;
+            case AutoReact.GainManaAmount:
+                OWNER.ChangeMana(VAL);
                 return Reaction.none;
                 break;
-            case AutoReact.reduceFT:
-                OWNER.STATS.FATIGUE -= VAL;
+            case AutoReact.HealFTByAmount:
+                OWNER.ChangeFatigue(VAL);
                 return Reaction.none;
                 break;
             case AutoReact.reduceDef:
                 return Reaction.reduceDef;
                 break;
-            case AutoReact.reduceAtk:
-                return Reaction.reduceAtk;
+            case AutoReact.reduceStr:
+                return Reaction.reduceStr;
                 break;
             case AutoReact.reduceSpd:
                 return Reaction.reduceSpd;
@@ -121,13 +121,22 @@ public class AutoSkill : SkillScript
             case AutoReact.reduceLuck:
                 return Reaction.reduceLuck;
                 break;
-            case AutoReact.increaseFT:
-                OWNER.STATS.FATIGUE += VAL;
+            case AutoReact.ChargeFTByAmount:
+                OWNER.ChangeFatigue(-VAL);
                 return Reaction.none;
                 break;
             case AutoReact.discoverItem:
                 OWNER.GetComponent<LivingSetup>().dm.GetItem(UnityEngine.Random.Range(0, 11), OWNER);
                 return Reaction.none;
+                break;
+            case AutoReact.GainManaByDmg:
+                OWNER.ChangeMana((int)amount);
+                break;
+            case AutoReact.ChargeFTByDmg:
+                OWNER.ChangeFatigue((int)-amount);
+                break;
+            case AutoReact.HealFTByDmg:
+                OWNER.ChangeFatigue((int)amount);
                 break;
             default:
                 Debug.Log("No reaction error");

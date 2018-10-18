@@ -13,6 +13,7 @@ public class MenuStackManager : MonoBehaviour {
     menuStackEntry oppOptions;
     menuStackEntry topEntry;
     menuStackEntry playerOptions;
+    menuStackEntry detailsScreen;
 
     public bool isSetup = false;
 
@@ -28,6 +29,7 @@ public class MenuStackManager : MonoBehaviour {
             topEntry = new menuStackEntry();
             playerOptions = new menuStackEntry();
             act = new menuStackEntry();
+            detailsScreen = new menuStackEntry();
 
             cmd.state = State.PlayerInput;
             cmd.menu = currentMenu.act;
@@ -49,6 +51,9 @@ public class MenuStackManager : MonoBehaviour {
 
             oppSelection.state = State.PlayerOppSelecting;
             oppSelection.menu = currentMenu.command;
+
+            detailsScreen.state = State.CheckDetails;
+            detailsScreen.menu = currentMenu.none;
          
             isSetup = true;
         }
@@ -94,5 +99,10 @@ public class MenuStackManager : MonoBehaviour {
     public menuStackEntry GetTopStack()
     {
         return topEntry;
+    }
+
+    public menuStackEntry GetDetailStack()
+    {
+        return detailsScreen;
     }
 }

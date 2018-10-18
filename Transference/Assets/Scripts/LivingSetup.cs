@@ -15,16 +15,16 @@ public class LivingSetup : MonoBehaviour
     int[] startingAccessories;
     [SerializeField]
     int[] startingItems;
-    bool isSetup = false;
-    LivingObject me;
-  public  DatabaseManager dm;
-    ManagerScript manager;
+    public bool isSetup = false;
+    public LivingObject me;
+    public DatabaseManager dm;
+    public ManagerScript manager;
     public virtual void Setup()
     {
         if (!isSetup)
         {
-             dm = GameObject.FindObjectOfType<DatabaseManager>();
-            if(!dm.isSetup)
+            dm = GameObject.FindObjectOfType<DatabaseManager>();
+            if (!dm.isSetup)
             {
                 dm.Setup();
             }
@@ -35,12 +35,12 @@ public class LivingSetup : MonoBehaviour
             {
 
 
-               // Debug.Log(me.FullName + " is setting up");
+                // Debug.Log(me.FullName + " is setting up");
                 if (dm != null)
                 {
                     if (me)
                     {
-                        
+
                         for (int i = 0; i < startingSkills.Length; i++)
                         {
                             dm.LearnSkill(startingSkills[i], me, true);
@@ -59,15 +59,6 @@ public class LivingSetup : MonoBehaviour
                             dm.GetItem(startingItems[i], me);
                         }
 
-                        if (startingWeapons.Length > 0)
-                        {
-                            me.WEAPON.Equip(GetComponent<InventoryScript>().WEAPONS[0]);
-                        }
-                        if (startingArmors.Length > 0)
-                        {
-                            me.ARMOR.Equip(GetComponent<InventoryScript>().ARMOR[0]);
-                        }
-                  
                     }
                 }
             }

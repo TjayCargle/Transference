@@ -22,11 +22,11 @@ public class Expbar : MonoBehaviour
         {
             if (currentUser)
             {
-                if (slider.value < 100)
+             //   if (slider.value < 100)
                 {
                     if (slider.value < currentUser.BASE_STATS.EXP)
                     {
-                        slider.value += 0.02f * Mathf.Max(1, Mathf.Abs(slider.value - currentUser.BASE_STATS.EXP) * 1.5f);
+                        slider.value +=  Mathf.Max(0.18f, Mathf.Abs(slider.value - currentUser.BASE_STATS.EXP) * 0.03f);
                         text.text = ((int)slider.value).ToString() + "/100";
                     }
                     if (slider.value >= 100)

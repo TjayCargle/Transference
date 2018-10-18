@@ -19,6 +19,14 @@ public class AnimationScript : MonoBehaviour
         {
             obj = GetComponent<GridObject>();
             render = GetComponent<SpriteRenderer>();
+            if(!obj)
+            {
+                return;
+            }
+            if (obj.FullName == "")
+            {
+                return;
+            }
             // Debug.Log("InitialList");
 
             string shrtname = obj.FullName;
@@ -30,6 +38,10 @@ public class AnimationScript : MonoBehaviour
             }
             currentList = Resources.LoadAll<Sprite>("" + shrtname + "/Idle/"); //obj.FullName + "/Idle/");
             index = 0;
+            if(currentList.Length > 0)
+            {
+                render.sprite = currentList[index];
+            }
             me = GetComponent<LivingObject>();
             camera = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();

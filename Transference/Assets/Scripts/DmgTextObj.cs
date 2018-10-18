@@ -40,7 +40,7 @@ public class DmgTextObj : MonoBehaviour {
         isShowing = false;
         gameObject.SetActive(false);
         manager.dmgRequest--;
-        
+        manager.myCamera.UpdateCamera();
     }
 
     private void Update()

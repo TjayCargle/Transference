@@ -1,9 +1,9 @@
-id, name, description ,attack, attack_type,affinity, distance, range, accurracy, luck
+id, name, description,auto skill ,attack, attack_type,affinity, distance, range, accurracy, luck
 0, Tail Strike,El: Pierce. Phys. Str: 4. Hit: 100% Crit: 0. Range: 2. Dist: 2, 10, physical, Pierce, 2, 1, 100, 10
-1, Claw Slash,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1, 10, physical, Slash, 1, 1, 90, 10
+1, Claw Slash,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1,10, physical, Slash, 1, 1, 90, 10
 2, Dragon Breath,El: Fire. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Fire, 3, 3, 80, 10
 3, Kick,El: Blunt. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1. ,10, physical, Blunt, 1, 1, 90, 10
 4, Fire Tome,El: Fire. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Fire, 2, 2, 80, 10
 7, Crossbow,Low physical decent range. ,10, physical, Pierce, 3, 1, 90, 10
 5, Longbow, Long range ,10, magical, Pierce, 5, 1, 90, 10
-6, Stinger, El: Pierce. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,10, physical, Pierce, 1, 1, 90, 10
+6, Stinger, El: Pierce. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, physical, Pierce, 1, 1, 90, 10

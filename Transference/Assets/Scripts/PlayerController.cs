@@ -322,31 +322,25 @@ public class PlayerController : MonoBehaviour
                                 }
                                 else
                                 {
-                                    current.ARMOR.NAME = "none";
-                                    current.ARMOR.DEFENSE = 0;
-                                    current.ARMOR.RESISTANCE = 0;
-                                    current.ARMOR.HITLIST = Common.noAmor;
-                                    for (int i = 0; i < 7; i++)
-                                    {
-                                        current.ARMOR.HITLIST.Add(EHitType.normal);
-                                    }
+                                    current.ARMOR.unEquip();
+                                    //current.ARMOR.NAME = "none";
+                                    //current.ARMOR.DEFENSE = 0;
+                                    //current.ARMOR.RESISTANCE = 0;
+                                    //current.ARMOR.HITLIST = Common.noAmor;
+                                    //for (int i = 0; i < 7; i++)
+                                    //{
+                                    //    current.ARMOR.HITLIST.Add(EHitType.normal);
+                                    //}
                                 }
                                 myManager.menuManager.ShowExtraCanvas(5, current);
 
                             }
                             break;
                         case 2:
-                            if (invm.selectedMenuItem.refItem.GetType() == typeof(AccessoryScript))
-                            {
-                                AccessoryScript newAcc = (AccessoryScript)invm.selectedMenuItem.refItem;
-                                current.ACCESSORY.Equip(newAcc);
-                            }
+                       
                             break;
                         case 3:
-                            if (invm.selectedMenuItem.refItem.GetType() == current.ACCESSORY.GetType())
-                            {
-
-                            }
+                         
                             break;
                         case 4:
                             {
@@ -385,7 +379,21 @@ public class PlayerController : MonoBehaviour
                                         //  Debug.Log("Got it");
                                         selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
                                     }
-                                    if (selectedSkil.CanUse())
+                                    float modification = 1.0f;
+                                    if (selectedSkil.ETYPE == EType.magical)
+                                        modification = current.STATS.SPCHANGE;
+                                    if (selectedSkil.ETYPE == EType.physical)
+                                    {
+                                        if (selectedSkil.COST > 0)
+                                        {
+                                            modification = current.STATS.FTCHARGECHANGE;
+                                        }
+                                        else
+                                        {
+                                            modification = current.STATS.FTCOSTCHANGE;
+                                        }
+                                    }
+                                    if (selectedSkil.CanUse(modification))
                                     {
 
                                         currentSkill = selectedSkil;
@@ -520,7 +528,17 @@ public class PlayerController : MonoBehaviour
             if (currentSkill.ETYPE == EType.magical)
                 modification = invoker.STATS.SPCHANGE;
             if (currentSkill.ETYPE == EType.physical)
-                modification = invoker.STATS.FTCHANGE;
+            {
+                if(currentSkill.COST > 0)
+                {
+                    modification = invoker.STATS.FTCHARGECHANGE;
+                }
+                else
+                {
+                    modification = invoker.STATS.FTCOSTCHANGE;
+                }
+            }
+               
             if (invoker.SSTATUS != SecondaryStatus.seal)
             {
                 if (currentSkill.CanUse(modification))
@@ -552,6 +570,7 @@ public class PlayerController : MonoBehaviour
                     if (check == true)
                     {
                         myManager.oppEvent.caller = null;
+                        myManager.oppObj = null;
                     }
 
                     if (currentSkill != null)
@@ -608,7 +627,16 @@ public class PlayerController : MonoBehaviour
             if (currentSkill.ETYPE == EType.magical)
                 modification = current.STATS.SPCHANGE;
             if (currentSkill.ETYPE == EType.physical)
-                modification = current.STATS.FTCHANGE;
+            {
+                if (currentSkill.COST > 0)
+                {
+                    modification = current.STATS.FTCHARGECHANGE;
+                }
+                else
+                {
+                    modification = current.STATS.FTCOSTCHANGE;
+                }
+            }
             if (current.SSTATUS != SecondaryStatus.seal)
             {
                 if (currentSkill.CanUse(modification))
@@ -616,7 +644,7 @@ public class PlayerController : MonoBehaviour
                     if (current.SSTATUS == SecondaryStatus.confusion)
                     {
                         int chance = Random.Range(0, 2);
-                        if (chance <= 0)
+                        if (chance <= 2)
                         {
                             Debug.Log("They hit themselves");
                             newTarget.Clear();
@@ -657,7 +685,7 @@ public class PlayerController : MonoBehaviour
             {
                 int chance = Random.Range(0, 2);
 
-                if (chance <= 0)
+                if (chance <= 2)
                 {
                     Debug.Log("They hit themselves");
                     newTarget.Clear();
@@ -691,7 +719,11 @@ public class PlayerController : MonoBehaviour
     {
         if(myManager.oppEvent.caller == null)
         {
+            if(current)
+            {
             current.TakeAction();
+
+            }
         }
         myManager.CleanMenuStack();
         myManager.ShowGridObjectAffectArea(current);

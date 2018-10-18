@@ -5,6 +5,7 @@ using UnityEngine;
 public class TileScript : MonoBehaviour {
     public Color myColor;
     public bool isOccupied;
+    public bool canBeOccupied = true;
     MeshRenderer myRender;
 
 	// Use this for initialization

@@ -14,6 +14,17 @@ public class ArmorScript : UsableScript
     [SerializeField]
     private List<EHitType> hitList;
 
+    //[SerializeField]
+    //private int myHealth;
+
+    //[SerializeField]
+    //private int myMaxHealth;
+
+    [SerializeField]
+    private float healthPercent = 100.0f;
+
+    [SerializeField]
+    private float maxHealthPercent = 100.0f;
     private LivingObject owner;
 
 
@@ -43,5 +54,34 @@ public class ArmorScript : UsableScript
         get { return mySpeed; }
         set { mySpeed = value; }
     }
-  
+    public float MAX_HEALTH
+    {
+        get { return maxHealthPercent; }
+        set
+        {
+            maxHealthPercent = value;
+            if (maxHealthPercent > 100)
+            {
+                maxHealthPercent = 100;
+            }
+        }
+    }
+    public float HEALTH
+    {
+        get { return healthPercent; }
+        set
+        {
+            healthPercent = value;
+            if (healthPercent > maxHealthPercent)
+            {
+                healthPercent = maxHealthPercent;
+            }
+
+            if (healthPercent < 0)
+            {
+                healthPercent = 0;
+            }
+        }
+    }
+
 }

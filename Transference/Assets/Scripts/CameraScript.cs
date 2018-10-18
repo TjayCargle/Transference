@@ -100,7 +100,7 @@ public class CameraScript : MonoBehaviour
                                 {
 
                                     LivingObject liver = infoObject.GetComponent<LivingObject>();
-                                    infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<StatScript>().LEVEL.ToString();
+                                    infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
                                     if (!actionText.IsActive())
                                     {
                                         actionText.transform.parent.gameObject.SetActive(true);
@@ -108,14 +108,7 @@ public class CameraScript : MonoBehaviour
                                     actionText.text = "Actions: " + liver.ACTIONS;
                                     if (showActions)
                                     {
-                                        //if (actionText)
-                                        //{
-                                        //    if (!actionText.IsActive())
-                                        //    {
-                                        //        actionText.transform.parent.gameObject.SetActive(true);
-                                        //    }
-                                        //    actionText.text = "Actions: " + liver.ACTIONS;
-                                        //}
+                                  
 
                                     }
                                     else
@@ -163,7 +156,7 @@ public class CameraScript : MonoBehaviour
                                                         newText = "Stats \n";
                                                         newText += "Str: " + liver.STRENGTH + "  \t Def: " + liver.DEFENSE + "\n";
                                                         newText += "Mag: " + liver.MAGIC + " \t Res: " + liver.RESIESTANCE + "\n";
-                                                        newText += "Spd: " + liver.SPEED + " \t LUK: " + liver.LUCK + "\n";
+                                                        newText += "Spd: " + liver.SPEED + " \t LUK: " + liver.SKILL + "\n";
                                                         break;
                                                     case descState.skills:
                                                         newText = "Skills: \n";
@@ -174,7 +167,7 @@ public class CameraScript : MonoBehaviour
                                                         break;
                                                     case descState.equipped:
                                                         newText += "Attack: " + liver.WEAPON.NAME + "\n";
-                                                        newText += "Armor: " + liver.ARMOR.NAME;
+                                                        newText += "Ward: " + liver.ARMOR.NAME;
                                                         break;
                                                     case descState.mag_affinities:
                                                         //newText = "Armor Afinities: \n";
@@ -704,6 +697,42 @@ public class CameraScript : MonoBehaviour
                                                             txt.text = newText;
                                                             txt.resizeTextForBestFit = true;
                                                             break;
+
+                                                        case 4:
+                                                            switch (manager.descriptionState)
+                                                            {
+
+                                                                case descState.stats:
+                                                                    {
+                                                                        newText = manager.invManager.selectedMenuItem.refItem.DESC;
+
+                                                                    }
+                                                                    break;
+                                                                case descState.skills:
+                                                                    {
+
+                                                                        CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+                                                                        newText = "Accuracy: ";
+                                                                        newText += skil.ACCURACY.ToString();
+                                                                        newText += "\n Base Damage: " + ((int)skil.DAMAGE);
+                                                                        newText += "\n Side effect: " + skil.EFFECT;
+                                                                   
+                                                                    }
+                                                                    break;
+
+                                                                case descState.equipped:
+                                                                    {
+                                                                        CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+                                                                    
+                                                                        newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
+
+                                                                    }
+                                                                    break;
+
+                                                            }
+                                                            txt.text = newText;
+                                                            txt.resizeTextForBestFit = true;
+                                                            break;
                                                     }
                                                 }
                                             }
@@ -715,6 +744,8 @@ public class CameraScript : MonoBehaviour
                                             DescriptionCanvas.gameObject.SetActive(false);
                                         }
                                     }
+
+                      
 
                                 }
                                 else if (infoObject.GetComponent<StatScript>())

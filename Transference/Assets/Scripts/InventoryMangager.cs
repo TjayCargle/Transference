@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class InventoryMangager : MonoBehaviour
@@ -21,7 +22,7 @@ public class InventoryMangager : MonoBehaviour
     public int menuSide = -1;
     public MenuItem[] itemSlots;
     public MenuItem[] extraSlots;
-    UsableScript genericMove;
+   // UsableScript genericMove;
     UsableScript genericAtk;
 
     public List<UsableScript> currentList = null;
@@ -44,14 +45,14 @@ public class InventoryMangager : MonoBehaviour
             menuManager = GameObject.FindObjectOfType<MenuManager>();
             manager = GetComponent<ManagerScript>();
             // imgTypes = Resources.LoadAll<Sprite>("Buttons2/");
-            genericMove = ScriptableObject.CreateInstance<UsableScript>();
+         //   genericMove = ScriptableObject.CreateInstance<UsableScript>();
             genericAtk = ScriptableObject.CreateInstance<UsableScript>();
             //genericWait = ScriptableObject.CreateInstance<UsableScript>();
-            genericMove.NAME = "MOVE";
+         //   genericMove.NAME = "MOVE";
             genericAtk.NAME = "ATTACK";
             //genericWait.name = "WAIT";
-            genericMove.DESC = "Allows unit to move.";
-            genericAtk.DESC = "Use equipped weapon to attack enemy";
+          //  genericMove.DESC = "Allows unit to move.";
+            genericAtk.DESC = "Use basic attack to attack enemy";
         }
         isSetup = true;
     }
@@ -281,6 +282,7 @@ public class InventoryMangager : MonoBehaviour
         {
             if (currentContent)
             {
+
                 Vector2 newPos = currentRect.normalizedPosition;
                 newPos.y += 0.01f;
 
@@ -288,11 +290,16 @@ public class InventoryMangager : MonoBehaviour
                 {
                     if (selectedMenuItem)
                     {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-                        selectedMenuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText)
+                        {
+                            SetNormal(selectedText);
+                        }
+                        if (proText)
+                        {
+                            SetNormal(proText);
+                        }
                     }
                     currentIndex--;
 
@@ -328,11 +335,16 @@ public class InventoryMangager : MonoBehaviour
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                     if (selectedMenuItem)
                     {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 15;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText)
+                        {
+                            SetSelected(selectedText);
+                        }
+                        if (proText)
+                        {
+                            SetSelected(proText);
+                        }
 
                     }
 
@@ -375,12 +387,16 @@ public class InventoryMangager : MonoBehaviour
             {
                 if (selectedMenuItem)
                 {
-                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-                    selectedMenuItem.GetComponent<Image>().color = Color.black;
-                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 0;
-                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
+                    Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                    TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    if (selectedText)
+                    {
+                        SetNormal(selectedText);
+                    }
+                    if (proText)
+                    {
+                        SetNormal(proText);
+                    }
                 }
                 Vector2 newPos = currentRect.normalizedPosition;
                 newPos.y -= 0.01f;
@@ -389,11 +405,16 @@ public class InventoryMangager : MonoBehaviour
                 {
                     if (selectedMenuItem)
                     {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-                        selectedMenuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText)
+                        {
+                            SetNormal(selectedText);
+                        }
+                        if (proText)
+                        {
+                            SetNormal(proText);
+                        }
 
                     }
                     currentIndex++;
@@ -437,12 +458,16 @@ public class InventoryMangager : MonoBehaviour
 
                     if (selectedMenuItem)
                     {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 15;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
+                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText)
+                        {
+                            SetSelected(selectedText);
+                        }
+                        if (proText)
+                        {
+                            SetSelected(proText);
+                        }
                     }
 
                     float index = currentIndex / (float)(currentContent.transform.childCount - 1);
@@ -477,6 +502,38 @@ public class InventoryMangager : MonoBehaviour
 
 
     }
+    private void SetNormal(Text text)
+    {
+        text.color = Color.white;
+        selectedMenuItem.GetComponent<Image>().color = Color.black;
+        Vector2 pos = text.GetComponent<RectTransform>().localPosition;
+        pos.x = 0;
+        text.GetComponent<RectTransform>().localPosition = pos;
+    }
+    private void SetNormal(TextMeshProUGUI text)
+    {
+        text.color = Color.white;
+        selectedMenuItem.GetComponent<Image>().color = Color.black;
+        Vector2 pos = text.GetComponent<RectTransform>().localPosition;
+        pos.x = 0;
+        text.GetComponent<RectTransform>().localPosition = pos;
+    }
+    private void SetSelected(Text text)
+    {
+        text.color = Color.yellow;
+        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+        Vector2 pos = text.GetComponent<RectTransform>().localPosition;
+        pos.x = 15;
+        text.GetComponent<RectTransform>().localPosition = pos;
+    }
+    private void SetSelected(TextMeshProUGUI text)
+    {
+        text.color = Color.yellow;
+        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
+        Vector2 pos = text.GetComponent<RectTransform>().localPosition;
+        pos.x = 15;
+        text.GetComponent<RectTransform>().localPosition = pos;
+    }
     public void HoverSelect(MenuItem hoveritem, GameObject content)
     {
         if (currentRect)
@@ -485,36 +542,61 @@ public class InventoryMangager : MonoBehaviour
             {
                 if (selectedMenuItem)
                 {
-                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
+                    Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                    TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    Vector2 pos;
                     selectedMenuItem.GetComponent<Image>().color = Color.black;
-                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 0;
-                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                    if (selectedText)
+                    {
+                        selectedText.color = Color.white;
+                        pos = selectedText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedText.GetComponent<RectTransform>().localPosition = pos;
+                    }
+                    if (proText)
+                    {
+                        proText.color = Color.white;
+                        pos = proText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        proText.GetComponent<RectTransform>().localPosition = pos;
+                    }
 
-                }
-                selectedMenuItem = hoveritem;
-                currentContent = content;
-                currentIndex = currentContent.transform.GetSiblingIndex();
-                if (trueExtra)
-                {
-
-                    if (currentContent == trueExtra)
+                    selectedMenuItem = hoveritem;
+                    selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                    proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    currentContent = content;
+                    currentIndex = currentContent.transform.GetSiblingIndex();
+                    if (trueExtra)
                     {
 
-                        menuSide = 1;
+                        if (currentContent == trueExtra)
+                        {
+
+                            menuSide = 1;
+                        }
+                        else
+                        {
+                            menuSide = -1;
+                        }
                     }
-                    else
-                    {
-                        menuSide = -1;
-                    }
-                }
-                if (selectedMenuItem)
-                {
-                    selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
+
+
                     selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                    Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 15;
-                    selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+
+                    if (selectedText)
+                    {
+                        selectedText.color = Color.yellow;
+                        pos = selectedText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        selectedText.GetComponent<RectTransform>().localPosition = pos;
+                    }
+                    if (proText)
+                    {
+                        proText.color = Color.yellow;
+                        pos = proText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 15;
+                        proText.GetComponent<RectTransform>().localPosition = pos;
+                    }
 
                 }
 
@@ -552,18 +634,25 @@ public class InventoryMangager : MonoBehaviour
     {
         if (currentList.Count > 0)
         {
-            Debug.Log("shift up");
+            //   Debug.Log("shift up");
             for (int i = 0; i < 5; i++)
             {
                 itemSlots[i].refItem = itemSlots[i + 1].refItem;
-                itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i + 1].refItem.NAME;
+                // itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i + 1].refItem.NAME;
+                if (itemSlots[i].GetComponentInChildren<Text>())
+                    itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i + 1].refItem.NAME;
+                else if (itemSlots[i].GetComponentInChildren<TextMeshProUGUI>())
+                    itemSlots[i].GetComponentInChildren<TextMeshProUGUI>().text = itemSlots[i + 1].refItem.NAME;
+
             }
             slotIndex++;
 
             itemSlots[5].refItem = currentList[slotIndex];
-            itemSlots[5].GetComponentInChildren<Text>().text = currentList[slotIndex].NAME;
-            Debug.Log("name = " + itemSlots[5].refItem.NAME);
-            Debug.Log("index = " + slotIndex);
+            //   itemSlots[5].GetComponentInChildren<Text>().text = currentList[slotIndex].NAME;
+            if (itemSlots[5].GetComponentInChildren<Text>())
+                itemSlots[5].GetComponentInChildren<Text>().text = itemSlots[slotIndex].refItem.NAME;
+            else if (itemSlots[5].GetComponentInChildren<TextMeshProUGUI>())
+                itemSlots[5].GetComponentInChildren<TextMeshProUGUI>().text = currentList[slotIndex].NAME;
             // UpdateColors(itemSlots);
             // UpdateColors(extraSlots);
         }
@@ -577,18 +666,26 @@ public class InventoryMangager : MonoBehaviour
             {
                 if (slotIndex > 5)
                 {
-                    Debug.Log("shift down");
+                    //Debug.Log("shift down");
                     for (int i = 5; i > 0; i--)
                     {
                         // Debug.Log("i = " + i);
                         itemSlots[i].refItem = itemSlots[i - 1].refItem;
-                        itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i - 1].refItem.NAME;
+                        //   itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i - 1].refItem.NAME;
+                        if (itemSlots[i].GetComponentInChildren<Text>())
+                            itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i-1].refItem.NAME;
+                        else if (itemSlots[i].GetComponentInChildren<TextMeshProUGUI>())
+                            itemSlots[i].GetComponentInChildren<TextMeshProUGUI>().text = itemSlots[i-1].refItem.NAME;
                     }
                     slotIndex--;
-                    Debug.Log("index = " + slotIndex);
+          
                     itemSlots[0].refItem = currentList[slotIndex - 5];
-                    itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
-                    Debug.Log("name = " + itemSlots[0].refItem.NAME);
+                  //  itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
+                    if (itemSlots[0].GetComponentInChildren<Text>())
+                        itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
+                    else if (itemSlots[0].GetComponentInChildren<TextMeshProUGUI>())
+                        itemSlots[0].GetComponentInChildren<TextMeshProUGUI>().text = itemSlots[0].refItem.NAME;
+
                 }
             }
             // UpdateColors(itemSlots);
@@ -607,7 +704,10 @@ public class InventoryMangager : MonoBehaviour
                 {
                     UsableScript item = currentList[useCount];
                     selectableItem.refItem = item;
-                    selectableItem.GetComponentInChildren<Text>().text = item.NAME;
+                    if (selectableItem.GetComponentInChildren<Text>())
+                        selectableItem.GetComponentInChildren<Text>().text = item.NAME;
+                    else if (selectableItem.GetComponentInChildren<TextMeshProUGUI>())
+                        selectableItem.GetComponentInChildren<TextMeshProUGUI>().text = item.NAME;
                 }
             }
             slotIndex = 5;
@@ -634,7 +734,10 @@ public class InventoryMangager : MonoBehaviour
 
                     UsableScript item = currentList[realIndex];
                     selectableItem.refItem = item;
-                    selectableItem.GetComponentInChildren<Text>().text = item.NAME;
+                    if (selectableItem.GetComponentInChildren<Text>())
+                        selectableItem.GetComponentInChildren<Text>().text = item.NAME;
+                    else if (selectableItem.GetComponentInChildren<TextMeshProUGUI>())
+                        selectableItem.GetComponentInChildren<TextMeshProUGUI>().text = item.NAME;
                     realIndex++;
                 }
             }
@@ -673,7 +776,7 @@ public class InventoryMangager : MonoBehaviour
 
                         if (temp.refItem)
                         {
-                            if (lastObject.WEAPON.NAME == temp.refItem.NAME || lastObject.ARMOR.NAME == temp.refItem.NAME || lastObject.ACCESSORY.NAME == temp.refItem.NAME)
+
                             {
                                 //      temp.GetComponent<Image>().sprite = imgTypes[5];
                             }
@@ -713,28 +816,53 @@ public class InventoryMangager : MonoBehaviour
     {
         if (currentContent)
         {
+
             for (int i = 0; i < currentContent.transform.childCount; i++)
             {
                 MenuItem menuItem = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
                 if (menuItem)
                 {
-                    menuItem.GetComponentInChildren<Text>().color = Color.white;
-                    menuItem.GetComponent<Image>().color = Color.black;
-                    Vector2 pos = menuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                    pos.x = 0;
+                    Text selectedText = menuItem.GetComponentInChildren<Text>();
+                    TextMeshProUGUI proText = menuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    if (selectedText)
+                    {
+                        selectedText.color = Color.white;
+                        menuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = selectedText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                    }
+
+                    if (proText)
+                    {
+                        proText.color = Color.white;
+                        menuItem.GetComponent<Image>().color = Color.black;
+                        Vector2 pos = proText.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                    }
                 }
             }
+            Text selectedText2 = menuItem.GetComponentInChildren<Text>();
+            TextMeshProUGUI proText2 = menuItem.GetComponentInChildren<TextMeshProUGUI>();
             if (selectedMenuItem)
             {
-                selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
                 selectedMenuItem.GetComponent<Image>().color = Color.black;
-                Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                pos.x = 0;
-                selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-                //if (prevIndex < currentContent.transform.childCount)
-                //    selectedMenuItem = currentContent.transform.GetChild(prevIndex).GetComponent<MenuItem>();
-                //selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-                //selectedMenuItem.GetComponent<Image>().color = Color.black;
+                if (selectedText2)
+                {
+                    selectedText2.color = Color.white;
+                    Vector2 pos = selectedText2.GetComponent<RectTransform>().localPosition;
+                    pos.x = 0;
+                    selectedText2.GetComponent<RectTransform>().localPosition = pos;
+                }
+
+                if (proText2)
+                {
+                    proText2.color = Color.white;
+                    Vector2 pos = proText2.GetComponent<RectTransform>().localPosition;
+                    pos.x = 0;
+                    proText2.GetComponent<RectTransform>().localPosition = pos;
+                }
+
+
             }
             if (currentContent.transform.childCount > 0)
             {
@@ -743,22 +871,48 @@ public class InventoryMangager : MonoBehaviour
                     {
 
                         selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
                         selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 15;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                        selectedText2 = menuItem.GetComponentInChildren<Text>();
+                        proText2 = menuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText2)
+                        {
+                            selectedText2.color = Color.yellow;
+                            Vector2 pos = selectedText2.GetComponent<RectTransform>().localPosition;
+                            pos.x = 15;
+                            selectedText2.GetComponent<RectTransform>().localPosition = pos;
+                        }
+
+                        if (proText2)
+                        {
+                            proText2.color = Color.yellow;
+                            Vector2 pos = proText2.GetComponent<RectTransform>().localPosition;
+                            pos.x = 15;
+                            proText2.GetComponent<RectTransform>().localPosition = pos;
+                        }
 
                     }
                     else
                     {
                         currentIndex = 0;
                         selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
                         selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 15;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
+                        selectedText2 = menuItem.GetComponentInChildren<Text>();
+                        proText2 = menuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText2)
+                        {
+                            selectedText2.color = Color.yellow;
+                            Vector2 pos = selectedText2.GetComponent<RectTransform>().localPosition;
+                            pos.x = 15;
+                            selectedText2.GetComponent<RectTransform>().localPosition = pos;
+                        }
+
+                        if (proText2)
+                        {
+                            proText2.color = Color.yellow;
+                            Vector2 pos = proText2.GetComponent<RectTransform>().localPosition;
+                            pos.x = 15;
+                            proText2.GetComponent<RectTransform>().localPosition = pos;
+                        }
 
                     }
             }
@@ -768,6 +922,7 @@ public class InventoryMangager : MonoBehaviour
     }
     private void UpdateColors(MenuItem[] items)
     {
+
         return;
         for (int i = 0; i < items.Length; i++)
         {
@@ -777,7 +932,7 @@ public class InventoryMangager : MonoBehaviour
                 if (selectableItem.refItem)
                 {
                     System.Type itype = selectableItem.refItem.GetType();
-                    if (itype != typeof(WeaponScript) && itype != typeof(ArmorScript) && itype != typeof(AccessoryScript) && itype != typeof(ItemScript))
+
                     {
                         Image selectedImg = selectableItem.GetComponent<Image>();
                         if (selectableItem.refItem)
@@ -850,17 +1005,15 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = new AccessoryScript();
                 // itemType.TYPE = 2;
                 useType = 2;
-                for (int i = 0; i < liveObject.GetComponent<InventoryScript>().ACCESSORIES.Count; i++)
-                {
-                    currentList.Add(liveObject.GetComponent<InventoryScript>().ACCESSORIES[i]);
-                }
+
                 break;
             case 3:
                 // itemType = new ItemScript();
                 // itemType.TYPE = 3;
                 useType = 4;
-                currentList.Add(genericMove);
+               // currentList.Add(genericMove);
                 currentList.Add(genericAtk);
+
                 for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
                 {
                     currentList.Add(liveObject.GetComponent<InventoryScript>().CSKILLS[i]);
@@ -950,62 +1103,142 @@ public class InventoryMangager : MonoBehaviour
             selectableItem.itemType = 15;
             Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
+            TextMeshProUGUI proText = selectableItem.GetComponentInChildren<TextMeshProUGUI>();
+            string newText = "";
             selectableItem.gameObject.SetActive(true);
             if (useCount < currentList.Count)
             {
                 UsableScript item = currentList[useCount];
 
-                if (selectableItem.GetComponentInChildren<Text>())
+                //  if (selectableItem.GetComponentInChildren<Text>())
                 {
 
-                    // RectTransform rectTransform = selectedText.GetComponent<RectTransform>();
-                    attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-                    //   rectTransform.position = new Vector3(attrOffset, rectTransform.position.y, rectTransform.position.z);
+                    if (attr)
+                        attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                     if (item.TYPE != 4)
                     {
-                        selectedText.text = item.NAME;
+                        newText = item.NAME;
+                        if (selectedText)
+                        {
+                            selectedText.resizeTextForBestFit = true;
+                            selectedText.text = newText;
+                        }
+                        if (proText)
+                        {
+                            proText.text = newText;
+                            if (item.NAME.Length >= 7)
+                            {
+                                proText.enableAutoSizing = true;
+                            }
+                            else
+                            {
+                                proText.enableAutoSizing = false;
+                            }
+                        }
                     }
                     else
                     {
-
-                        selectedText.text = item.NAME;
+                        newText = item.NAME;
                         if (windowType == 3 || windowType == -1)
                         {
                             if (manager.currentState == State.PlayerEquipping)
                             {
-                                attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                                int indxex = (int)((CommandSkill)item).ELEMENT;
-                                //Debug.Log("the index is = " + indxex);
-                                attr.sprite = attributeImages[indxex];
-                                // rectTransform.position = new Vector3(otherOffset, rectTransform.position.y, rectTransform.position.z);
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                    int indxex = (int)((CommandSkill)item).ELEMENT;
+                                    attr.sprite = attributeImages[indxex];
+                                }
                             }
                             CommandSkill cmd = ((CommandSkill)item);
                             string extraText = "";
-                            if (((CommandSkill)item).ETYPE == EType.physical)
+                            if (proText)
                             {
-                                extraText = cmd.COST.ToString();// " " + "FT";
-                                if (cmd.COST > 0)
-                                {
-                                    selectedText.text += " FT +" + extraText;
 
+                                proText.text = newText;
+                                if (((CommandSkill)item).ETYPE == EType.physical)
+                                {
+                                  //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                    if (cmd.COST > 0)
+                                    {
+                                        extraText = (cmd.COST * lastObject.STATS.FTCHARGECHANGE).ToString();
+                                        proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>+ </size>" + extraText + "</color>"; //<sprite=0><color=#4ba0bc><size=30> +</size>" + extraText + "</color>";
+
+                                    }
+                                    else
+                                    {
+                                       // extraText = (cmd.COST * -1).ToString();
+                                        extraText = (-1 *(cmd.COST * lastObject.STATS.FTCOSTCHANGE)).ToString();
+                                        proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>- </size>" + extraText + "</color>";
+
+                                    }
+                                    if (item.NAME.Length > 7)
+                                    {
+                                        proText.enableAutoSizing = true;
+                                    }
+                                    else
+                                    {
+                                        proText.enableAutoSizing = false;
+                                    }
                                 }
                                 else
                                 {
-                                    selectedText.text += " FT " + extraText;
+                                    //extraText = " SP";
+                                    int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
+                                    proText.text += " <color=#a770ef>" + cost.ToString() + "</color><size=32><sprite=1></size><color=#4ba0bc><size=28>";
 
                                 }
-
                             }
                             else
                             {
-                                extraText = " SP";
-                                selectedText.text += " " + ((CommandSkill)item).COST.ToString() + extraText;
+                                if (selectedText)
+                                {
+                                    selectedText.text = newText;
+                                    selectedText.supportRichText = true;
 
+                                    if (((CommandSkill)item).ETYPE == EType.physical)
+                                    {
+                                        extraText = cmd.COST.ToString();// " " + "FT";
+                                        if (cmd.COST > 0)
+                                        {
+                                            selectedText.text += " <color=#4ba0bc>FT +" + extraText + "</color>";
+
+                                        }
+                                        else
+                                        {
+                                            selectedText.text += "  <color=#63d5d8>FT " + extraText + "</color>";
+
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        extraText = " SP";
+                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
+                                        selectedText.text += " <color=#a770ef>" + cost.ToString() + extraText + "</color>";
+
+                                    }
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (selectedText)
+                            {
+                                selectedText.resizeTextForBestFit = true;
+                                selectedText.text = newText;
+                            }
+                            if (proText)
+                            {
+                                proText.text = newText;
                             }
                         }
 
                     }
-                    selectedText.resizeTextForBestFit = true;
+
                 }
                 if (selectableItem.GetComponent<MenuItem>())
                 {
@@ -1018,10 +1251,10 @@ public class InventoryMangager : MonoBehaviour
                     selectableItem.refItem = item;
                     if (index == 3)
                     {
-                        if (item == genericMove)
+                     //   if (item == genericMove)
                         {
 
-                            selectableItem.refItem.DESC = "Move a number of tiles";
+                       //     selectableItem.refItem.DESC = "Move a number of tiles";
 
                         }
 
@@ -1033,8 +1266,11 @@ public class InventoryMangager : MonoBehaviour
             }
             else
             {
+                if (selectedText)
+                    selectedText.text = "";
+                if (proText)
+                    proText.text = "";
                 selectableItem.refItem = null;
-                selectedText.text = "";
                 if (windowType < 5)
                     selectableItem.gameObject.SetActive(false);
             }

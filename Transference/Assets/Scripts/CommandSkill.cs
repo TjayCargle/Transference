@@ -50,6 +50,11 @@ public class CommandSkill : SkillScript
     [SerializeField]
     protected int nextCount;
 
+    [SerializeField]
+    protected int friendIndex = -1;
+    [SerializeField]
+    protected int friendIndexNext = -1;
+
     public int COST
     {
         get { return cost; }
@@ -138,8 +143,30 @@ public class CommandSkill : SkillScript
         set { nextCount = value; }
     }
 
+    public int FRIEND
+    {
+        get { return friendIndex; }
+        set { friendIndex = value; }
+    }
 
-    public bool UseSkill(LivingObject user, float modification = 1.0f)
+    public int FRIEND_NEXT
+    {
+        get { return friendIndexNext; }
+        set { friendIndexNext = value; }
+    }
+    public int GetCost(LivingObject user, float modification = 1.0f)
+    {
+        if (ETYPE == EType.physical)
+        {
+            return (int)(COST * modification); ;
+        }
+        else
+        {
+            return (int)(COST * modification);
+
+        }
+    }
+    public SkillScript UseSkill(LivingObject user, float modification = 1.0f)
     {
 
         if (ETYPE == EType.magical)
@@ -160,16 +187,36 @@ public class CommandSkill : SkillScript
                 {
 
                     DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+
+                    if (friendIndex >= 0)
+                    {
+                        CommandSkill friendSkill = OWNER.INVENTORY.ContainsCommandIndex(FRIEND);
+                        if (friendSkill)
+                        {
+                            if (friendSkill.NEXT > 0)
+                            {
+                                if (friendSkill.NEXTCOUNT <= 0)
+                                {
+                                    if (database != null)
+                                    {
+                                        database.LearnSkill(FRIEND_NEXT, user);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
                     if (database != null)
                     {
-                        database.LearnSkill(NEXT, user);
-                        return true; //to check if a new skill was learned
+                        return database.LearnSkill(NEXT, user);
+                        // true; //to check if a new skill was learned
 
                     }
                 }
             }
         }
-        return false;
+        return null;
 
     }
     public bool CanUse(float modification = 1.0f)
@@ -180,7 +227,7 @@ public class CommandSkill : SkillScript
         {
             case EType.physical:
                 amt = owner.FATIGUE + (int)(COST * modification);
-                if (amt < owner.MAX_FATIGUE)
+                if (amt <= owner.MAX_FATIGUE)
                 {
                     if (amt >= 0)
                     {
@@ -190,11 +237,15 @@ public class CommandSkill : SkillScript
                 }
                 break;
             case EType.magical:
-                amt = owner.MANA + (int)(COST * modification);
+                amt = owner.MANA - (int)(COST * modification);
 
                 if (amt >= 0)
                 {
-                    can = true;
+                    if (amt <= OWNER.MAX_MANA)
+                    {
+                        can = true;
+
+                    }
                 }
                 break;
         }

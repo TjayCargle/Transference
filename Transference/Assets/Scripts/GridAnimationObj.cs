@@ -32,15 +32,35 @@ public class GridAnimationObj : GridObject
     {
         if (isShowing == false)
         {
-            if (type == (int)Element.Buff)
+            string path = "";
+            if (type == -1)
             {
-                script.LoadList("Animations/Buffs/");
+                path = "Animations/Break/";
+
+            }
+           else if (type == (int)Element.Buff)
+            {
+                path = "Animations/Buffs/";
 
             }
             else
             {
-                script.LoadList("Animations/"+((Element)type).ToString().ToLower()+"/");
+                path = "Animations/" + ((Element)type).ToString().ToLower() + "/";
             }
+            if (manager.sfx)
+            {
+                AudioClip[] audios = Resources.LoadAll<AudioClip>(path);
+                if (audios != null)
+                {
+                    if (audios.Length > 0)
+                    {
+
+                        manager.sfx.loadAudio(audios[0]);
+                        manager.sfx.playSound();
+                    }
+                }
+            }
+            script.LoadList(path);
             gameObject.SetActive(true);
 
             isShowing = true;
@@ -61,10 +81,10 @@ public class GridAnimationObj : GridObject
         isShowing = false;
         manager.AnimationRequests--;
         gameObject.SetActive(false);
-
+        manager.myCamera.UpdateCamera();
     }
 
-    
+
     private void Update()
     {
         if (isShowing)
@@ -73,8 +93,8 @@ public class GridAnimationObj : GridObject
             {
                 if (shake)
                 {
-                    float val = script.currentList.Length * Random.Range(1.2f, 1.8f);
-                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.02f * magnitute) , (val * 0.5f)* Time.deltaTime ));
+                    float val = script.currentList.Length * Random.Range(1.4f, 1.8f);
+                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.02f * magnitute), (val * 0.5f) * Time.deltaTime));
                 }
             }
             // time -= Time.deltaTime;

@@ -10,7 +10,9 @@ public class SkillScript : UsableScript
     [SerializeField]
     protected Element affinity;
 
- 
+    [SerializeField]
+    protected int index;
+
     public LivingObject OWNER
     {
         get { return owner; }
@@ -23,6 +25,11 @@ public class SkillScript : UsableScript
         set { affinity = value; }
     }
 
+    public int INDEX
+    {
+        get { return index; }
+        set { index = value; }
+    }
     public void Transfer(SkillScript skill)
     {
         skill.NAME = this.NAME;
@@ -30,6 +37,7 @@ public class SkillScript : UsableScript
         skill.OWNER = this.OWNER;
         skill.ELEMENT = this.ELEMENT;
         skill.TYPE = this.TYPE;
+        skill.INDEX = this.index;
     }
 
 }
