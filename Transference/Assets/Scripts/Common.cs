@@ -22,7 +22,8 @@ public enum State
     PlayerTransition,
     CheckDetails,
     AquireNewSkill,
-    EnemyTurn
+    EnemyTurn,
+    HazardTurn
 
 
 }
@@ -147,7 +148,8 @@ public enum DetailType
     Auto,
     Opportunity,
     BasicAtk,
-    Armor
+    Armor, 
+    exp
 }
 public enum EType
 {
@@ -336,6 +338,12 @@ public class AtkConatiner : ScriptableObject
     public CommandSkill command;
 
 }
+public class LearnContainer : ScriptableObject
+{
+    public LivingObject attackingObject;
+    public UsableScript usable;
+
+}
 public struct DmgReaction
 {
     public int damage;
@@ -493,6 +501,7 @@ public class Common : ScriptableObject
     public static Color green = new Color(0.220f, 1, 0.230f);
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
+    public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     public static int maxDmg = 999;
     public static List<EHitType> noAmor = new List<EHitType>()
     {
@@ -553,5 +562,31 @@ public class Common : ScriptableObject
                 break;
         }
         return stat;
+    }
+    public static int GetDmgIndex(DMG dmg)
+    {
+        int returnInt = -1;
+        switch (dmg)
+        {
+            case DMG.minute:
+                returnInt = 1;
+                break;
+            case DMG.small:
+                returnInt = 2;
+                break;
+            case DMG.medium:
+                returnInt = 3;
+                break;
+            case DMG.heavy:
+                returnInt = 4;
+                break;
+            case DMG.severe:
+                returnInt = 5;
+                break;
+            case DMG.collassal:
+                returnInt = 6;
+                break;
+        }
+        return returnInt;
     }
 }

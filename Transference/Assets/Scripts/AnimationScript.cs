@@ -13,17 +13,23 @@ public class AnimationScript : MonoBehaviour
     LivingObject me;
     PlayerController controller;
     CameraScript camera;
+    [SerializeField]
+    Animator anim;
     public void Setup()
     {
         if (!isSetup)
         {
             obj = GetComponent<GridObject>();
             render = GetComponent<SpriteRenderer>();
-            if(!obj)
+            if (!obj)
             {
                 return;
             }
             if (obj.FullName == "")
+            {
+                return;
+            }
+            if (obj.FullName == null)
             {
                 return;
             }
@@ -38,13 +44,14 @@ public class AnimationScript : MonoBehaviour
             }
             currentList = Resources.LoadAll<Sprite>("" + shrtname + "/Idle/"); //obj.FullName + "/Idle/");
             index = 0;
-            if(currentList.Length > 0)
+            if (currentList.Length > 0)
             {
                 render.sprite = currentList[index];
             }
             me = GetComponent<LivingObject>();
             camera = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();
+            anim = GetComponent<Animator>();
             isSetup = true;
         }
     }
@@ -64,13 +71,12 @@ public class AnimationScript : MonoBehaviour
     {
         if (currentList.Length > 0)
         {
-            if(me)
+            if (me)
             {
-                if(camera)
+                if (camera)
                 {
-                    if(camera.infoObject == me)
+                    if (camera.infoObject == me)
                     {
-
                         index++;
                         if (index >= currentList.Length)
                             index = 0;
@@ -81,10 +87,35 @@ public class AnimationScript : MonoBehaviour
             else
             {
 
-            index++;
-            if (index >= currentList.Length)
-                index = 0;
-            render.sprite = currentList[index];
+                index++;
+                if (index >= currentList.Length)
+                    index = 0;
+                render.sprite = currentList[index];
+            }
+        }
+    }
+    private void Update()
+    {
+        CheckAnimation();
+    }
+    public void CheckAnimation()
+    {
+        if (anim)
+        {
+
+            if (me)
+            {
+                if (camera)
+                {
+                    if (camera.infoObject == me)
+                    {
+                        anim.speed = 1;
+                    }
+                    else
+                    {
+                        anim.speed = 0;
+                    }
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySetup : LivingSetup
 {
     public int enemyId;
-     EnemyScript myself;
+    EnemyScript myself;
 
 
     public override void Setup()
@@ -24,7 +24,8 @@ public class EnemySetup : LivingSetup
             {
                 myself = gameObject.AddComponent<EnemyScript>();
             }
-            // me.Setup();
+            isSetup = true;
+            myself.Setup();
             myself.FACTION = Faction.enemy;
             // Debug.Log(me.FullName + " is setting up");
             if (dm != null)
@@ -36,9 +37,16 @@ public class EnemySetup : LivingSetup
                 }
             }
 
+            if (!manager.gridObjects.Contains(myself))
+            {
+                manager.gridObjects.Add(myself);
+                myself.currentTile = manager.GetTile(myself);
+                if (myself.currentTile)
+                    myself.currentTile.isOccupied = true;
+            }
             isSetup = true;
         }
     }
-   
+
 
 }

@@ -22,7 +22,7 @@
 -
 18,-1,-1,Surina,foe,Slash,reduceStr,6,physical,single,19,2,84, minute,1,75,1,0,1
 19,-1,-1,Surineta,foe,Slash,reduceStr,12,physical,single,20,4,87, small,1,80,1,0,1
-20,-1,-1,Surinpa,foe,Slash,reduceStr,18,physical,single,21,6,90, medium,1,85,1,1,1
+20,-1,-1,Surinpa,foe,Slash,reduceStr,18,physical,single,21,6,90, medium,1,85,1,0,1
 21,-1,-1,Surincron,foe,Slash,reduceStr,24,physical,single,22,8,93, heavy,1,90,1,0,1
 22,-1,-1,Suringma,foe,Slash,reduceStr,30, physical,single,23,10,96, severe,1,95,1,0,1
 23,-1,-1,Surinega,foe,Slash,reduceStr,36, physical,single,-1,0,99, collassal,1,100,1,0,1
@@ -83,12 +83,12 @@
 70,-1,-1,Tsuingma,foe,Pierce,reduceSpd,30, physical,single,70,10,96, severe,1,95,1,0,1
 71,-1,-1,Tsuinega,foe,Pierce,reduceSpd,36, physical,single,-1,0,99, collassal,1,100,1,0,1
 -
-72,78,84,Tsui,foe,Pierce,none,5,magical,single,73,2,84, small,1,0,1,0,1
-73,-1,-1,ZeTsui,foe,Pierce,none,10,magical,single,74,4,87, small,2,0,2,0,1,0,2
+72,78,84,Tsui,foe,Pierce,none,3,magical,single,73,2,84, small,1,0,1,0,1
+73,-1,-1,ZeTsui,foe,Pierce,none,6,magical,single,74,4,87, small,2,0,2,0,1,0,2
 74,-1,-1,Tsuho,foe,Pierce,none,15,magical,single,75,6,90, medium,1,0,1,1,1
-75,-1,-1,ZeTsuho,foe,Pierce,none,20,magical,single,76,8,93, medium,2,0,2,0,1,0,2
-76,-1,-1,Tsulon,foe,Pierce,none,25, magical,single,77,10,96, heavy,1,0,1,0,1
-77,-1,-1,ZeTsulon,foe,Pierce,none,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
+75,-1,-1,ZeTsuho,foe,Pierce,none,30,magical,single,76,8,93, medium,2,0,2,0,1,0,2
+76,-1,-1,Tsulon,foe,Pierce,none,35, magical,single,77,10,96, heavy,1,0,1,0,1
+77,-1,-1,ZeTsulon,foe,Pierce,none,70, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
 -
 78,72,84,Tsuashi,foe,Pierce,none,10,magical,multi,79,2,70, minute,2,0,2,0,1,0,2
 79,85,90,ZeTsuashi,foe,Pierce,none,20,magical,multiarea,80,4,75,small,2,0,2,0,1,2,2
@@ -113,7 +113,7 @@
 -  
 96,-1,-1,Dona,foe,Blunt,none,3,physical,single,37,2,80, minute,1,0,1,0,1
 97,-1,-1,Doneta,foe,Blunt,none,6,physical,single,38,4,83, small,1,0,1,0,1
-98,-1,-1,Donpa,foe,Blunt,none,9,physical,single,39,6,86, medium,1,0,1,1,1
+98,-1,-1,Donpa,foe,Blunt,none,9,physical,single,39,6,86, medium,1,0,1,0,1
 99,-1,-1,Donicron,foe,Blunt,confusion,12,physical,single,40,8,89, heavy,1,0,1,0,1
 100,-1,-1,Dongma,foe,Blunt,confusion,15, physical,single,41,10,92, severe,1,0,1,0,1
 101,-1,-1,Donega,foe,Blunt,confusion,18, physical,single,-1,0,95, collassal,1,0,1,0,1
@@ -203,25 +203,25 @@
 173,-1,-1,ZeAqulon,foe,Water,confusion,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
 -
 174,24,36,Aquashi,foe,Water,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-175,37,42,ZeAquashi,foe,Water,none,20,magical,multiarea,32,4,75,small,2,0,2,0,1,2,2
+175,37,42,ZeAquashi,foe,Water,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
 176,-1,-1,Aquashho,foe,Water,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-177,-1,-1,ZeAquashho,foe,Water,confusion,40,magical,multiarea,34,8,85, heavy,3,0,2,0,1,0,2
+177,-1,-1,ZeAquashho,foe,Water,confusion,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
 178,-1,-1,Aquashilon,foe,Water,confusion,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-179,-1,-1,ZeAquashilon,foe,Water,confusion,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
+179,-1,-1,ZeAquashilon,foe,Water,confusion,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
 - 
-180,-1,-1,Aqumui,foes,Water,confusion,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-181,31,42,ZeAqumui,foes,Water,confusion,20,magical,multiarea,38,10,67,small,1,0,3,0,1,1,1,-1,1
-182,-1,-1,Aqumuho,foes,Water,confusion,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-183,-1,-1,ZeAqumuho,foes,Water,confusion,40,magical,multiarea,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-184,-1,-1,Aqumulon,foes,Water,confusion,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-185,-1,-1,ZeAqumulon,foes,Water,confusion,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
+180,-1,-1,Aqumui,foes,Water,confusion,4,magical,area,37,5,60, minute,1,0,2,0,1,1,1
+181,31,42,ZeAqumui,foes,Water,confusion,8,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
+182,-1,-1,Aqumuho,foes,Water,confusion,15,magical,area,39,20,74, medium,1,0,2,0,1,1,1
+183,-1,-1,ZeAqumuho,foes,Water,confusion,30,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
+184,-1,-1,Aqumulon,foes,Water,confusion,50,magical,area,41,80,89, severe,1,0,2,0,1,1,1
+185,-1,-1,ZeAqumulon,foes,Water,confusion,75,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
 -
 186,-1,-1,Aquini,foe,Water,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
 187,-1,-1,ZeAquini,foe,Water,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
 188,-1,-1,Aquinho,foe,Water,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
 189,-1,-1,ZeAquinho,foe,Water,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
 190,-1,-1,Aquinlon,foe,Water,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-191,-1,-1,ZeAquinlon,foe,Water,reduceMag,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2  
+191,-1,-1,ZeAquinlon,foe,Water,reduceMag,90, magical,area,-1,0,99, collassal,2,95,2,0,1,0,2  
 -
 192,150,156,Pyra,foe,Fire,none,6,physical,single,1,2,84, minute,1,0,1,0,1
 193,-1,-1,Pyreta,foe,Fire,none,8,physical,single,2,4,87, small,1,0,1,0,1
@@ -259,32 +259,32 @@
 221,-1,-1,ZePyrlon,foe,Fire,burn,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
 -
 222,24,36,Pyrashi,foe,Fire,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-223,37,42,ZePyrashi,foe,Fire,none,20,magical,multiarea,32,4,75,small,2,0,2,0,1,2,2
+223,37,42,ZePyrashi,foe,Fire,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
 224,-1,-1,Pyrashho,foe,Fire,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-225,-1,-1,ZePyrashho,foe,Fire,burn,40,magical,multiarea,34,8,85, heavy,3,0,2,0,1,0,2
+225,-1,-1,ZePyrashho,foe,Fire,burn,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
 226,-1,-1,Pyrashilon,foe,Fire,burn,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-227,-1,-1,ZePyrashilon,foe,Fire,burn,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
+227,-1,-1,ZePyrashilon,foe,Fire,burn,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
 - 
 228,-1,-1,Pyrmui,foes,Fire,burn,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-229,31,42,ZePyrmui,foes,Fire,burn,20,magical,multiarea,38,10,67,small,1,0,3,0,1,1,1,-1,1
+229,31,42,ZePyrmui,foes,Fire,burn,20,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
 230,-1,-1,Pyrmuho,foes,Fire,burn,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-231,-1,-1,ZePyrmuho,foes,Fire,burn,40,magical,multiarea,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
+231,-1,-1,ZePyrmuho,foes,Fire,burn,40,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
 232,-1,-1,Pyrmulon,foes,Fire,burn,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-233,-1,-1,ZePyrmulon,foes,Fire,burn,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
+233,-1,-1,ZePyrmulon,foes,Fire,burn,60,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
 -
 234,-1,-1,Pyrini,foe,Fire,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
 235,-1,-1,ZePyrini,foe,Fire,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
 236,-1,-1,Pyrinho,foe,Fire,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
 237,-1,-1,ZePyrinho,foe,Fire,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
 238,-1,-1,Pyrinlon,foe,Fire,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-239,-1,-1,ZePyrinlon,foe,Fire,reduceMag,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2  
+239,-1,-1,ZePyrinlon,foe,Fire,reduceMag,90, magical,area,-1,0,99, collassal,2,95,2,0,1,0,2  
 -
-240,150,156,Gela,foe,Ice,none,6,physical,single,1,2,84, minute,1,0,1,0,1
-241,-1,-1,Geleta,foe,Ice,none,8,physical,single,2,4,87, small,1,0,1,0,1
-242,-1,-1,Gelpa,foe,Ice,none,10,physical,single,3,6,90, medium,1,0,1,1,1
-243,-1,-1,Gelicron,foe,Ice,burn,12,physical,single,4,8,93, heavy,1,0,1,0,1
-244,-1,-1,Gelgma,foe,Ice,burn,14, physical,single,5,10,96, severe,1,0,1,0,1
-245,-1,-1,Gelega,foe,Ice,burn,16, physical,single,-1,0,99, collassal,1,0,1,0,1
+240,150,156,Gela,foe,Ice,none,6,physical,single,1,2,84, minute,1,0,1,0,2
+241,-1,-1,Geleta,foe,Ice,none,8,physical,single,2,4,87, small,1,0,1,0,2
+242,-1,-1,Gelpa,foe,Ice,none,10,physical,single,3,6,90, medium,1,0,1,1,2
+243,-1,-1,Gelicron,foe,Ice,burn,12,physical,single,4,8,93, heavy,1,0,1,0,2
+244,-1,-1,Gelgma,foe,Ice,burn,14, physical,single,5,10,96, severe,1,0,1,0,2
+245,-1,-1,Gelega,foe,Ice,burn,16, physical,single,-1,0,99, collassal,1,0,1,0,2
 -
 246,144,156,Gelasha,foe,Ice,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
 247,157,162,Gelasheta,foe,Ice,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
@@ -315,18 +315,18 @@
 309,-1,-1,ZeGellon,foe,Ice,burn,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
 -
 310,24,36,Gelashi,foe,Ice,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-311,37,42,ZeGelashi,foe,Ice,none,20,magical,multiarea,32,4,75,small,2,0,2,0,1,2,2
+311,37,42,ZeGelashi,foe,Ice,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
 312,-1,-1,Gelashho,foe,Ice,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-313,-1,-1,ZeGelashho,foe,Ice,burn,40,magical,multiarea,34,8,85, heavy,3,0,2,0,1,0,2
+313,-1,-1,ZeGelashho,foe,Ice,burn,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
 314,-1,-1,Gelashilon,foe,Ice,burn,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-315,-1,-1,ZeGelashilon,foe,Ice,burn,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
+315,-1,-1,ZeGelashilon,foe,Ice,burn,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
 - 
 316,-1,-1,Gelmui,foes,Ice,burn,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-317,31,42,ZeGelmui,foes,Ice,burn,20,magical,multiarea,38,10,67,small,1,0,3,0,1,1,1,-1,1
+317,31,42,ZeGelmui,foes,Ice,burn,20,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
 318,-1,-1,Gelmuho,foes,Ice,burn,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-319,-1,-1,ZeGelmuho,foes,Ice,burn,40,magical,multiarea,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
+319,-1,-1,ZeGelmuho,foes,Ice,burn,40,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
 320,-1,-1,Gelmulon,foes,Ice,burn,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-321,-1,-1,ZeGelmulon,foes,Ice,burn,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
+321,-1,-1,ZeGelmulon,foes,Ice,burn,60,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
 -
 322,-1,-1,Gelini,foe,Ice,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
 323,-1,-1,ZeGelini,foe,Ice,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2

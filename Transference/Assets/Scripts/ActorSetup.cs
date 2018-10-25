@@ -22,7 +22,8 @@ public class ActorSetup: LivingSetup
             {
                 me = gameObject.AddComponent<LivingObject>();
             }
-           // me.Setup();
+            isSetup = true;
+            me.Setup();
           
             // Debug.Log(me.FullName + " is setting up");
             if (dm != null)
@@ -33,7 +34,13 @@ public class ActorSetup: LivingSetup
                     gameObject.GetComponent<AnimationScript>().Setup();
                 }
             }
-
+            if (!manager.gridObjects.Contains(me))
+            {
+                manager.gridObjects.Add(me);
+                me.currentTile = manager.GetTile(me);
+                   if (me.currentTile)
+                    me.currentTile.isOccupied = true;
+            }
             isSetup = true;
         }
     }

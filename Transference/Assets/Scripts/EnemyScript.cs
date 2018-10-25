@@ -456,7 +456,7 @@ public class EnemyScript : LivingObject
 
                 case EActType.atk:
                     // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,i);
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent);
                     break;
             }
         }
@@ -473,7 +473,8 @@ public class EnemyScript : LivingObject
 
     public override IEnumerator FadeOut()
     {
-        Debug.Log("enemy dying");
+        startedDeathAnimation = true;
+       // Debug.Log("enemy dying");
         if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();

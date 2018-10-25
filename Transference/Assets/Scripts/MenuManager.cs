@@ -136,10 +136,7 @@ public class MenuManager : MonoBehaviour
         //    myCamera.infoObject = null;
             myCamera.UpdateCamera();
         }
-        if(descCanvas)
-        {
-            descCanvas.gameObject.SetActive(false);
-        }
+
         if (detailCanvas)
         {
             detailCanvas.gameObject.SetActive(true);
@@ -155,10 +152,7 @@ public class MenuManager : MonoBehaviour
             myCamera.UpdateCamera();
 
         }
-        if (descCanvas)
-        {
-            descCanvas.gameObject.SetActive(true);
-        }
+
         
         if (detailCanvas)
         {
@@ -355,10 +349,7 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
-            if(myCamera)
-            {
-                myCamera.elementPanel.gameObject.SetActive(false);
-            }
+         
         }
         if (skillCanvas)
         {
@@ -406,10 +397,7 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
-            if (myCamera)
-            {
-                myCamera.elementPanel.gameObject.SetActive(false);
-            }
+
         }
         if (skillCanvas)
         {
@@ -557,10 +545,7 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
-            if (myCamera)
-            {
-                myCamera.elementPanel.gameObject.SetActive(false);
-            }
+     
         }
     }
 }

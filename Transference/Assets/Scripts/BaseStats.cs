@@ -8,6 +8,15 @@ public class BaseStats : StatScript {
     private int exp;
 
     [SerializeField]
+    private int physexp;
+
+    [SerializeField]
+    private int magexp;
+
+    [SerializeField]
+    private int skillexp;
+
+    [SerializeField]
     private int myLevel = 1;
     public int EXP
     {
@@ -15,6 +24,22 @@ public class BaseStats : StatScript {
         set { exp = value; }
     }
 
+    public int PHYSEXP
+    {
+        get { return physexp; }
+        set { physexp = value; }
+    }
+
+    public int MAGEXP
+    {
+        get { return magexp; }
+        set { magexp = value; }
+    }
+    public int SKILLEXP
+    {
+        get { return skillexp; }
+        set { skillexp = value; }
+    }
     public int LEVEL
     {
         get { return myLevel; }

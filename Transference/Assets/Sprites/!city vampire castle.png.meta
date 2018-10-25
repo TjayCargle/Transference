@@ -1,0 +1,2210 @@
+fileFormatVersion: 2
+guid: 949a383dace79d245b826107ddfde610
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: '!city vampire castle_0'
+    21300002: '!city vampire castle_1'
+    21300004: '!city vampire castle_2'
+    21300006: '!city vampire castle_3'
+    21300008: '!city vampire castle_4'
+    21300010: '!city vampire castle_5'
+    21300012: '!city vampire castle_6'
+    21300014: '!city vampire castle_7'
+    21300016: '!city vampire castle_8'
+    21300018: '!city vampire castle_9'
+    21300020: '!city vampire castle_10'
+    21300022: '!city vampire castle_11'
+    21300024: '!city vampire castle_12'
+    21300026: '!city vampire castle_13'
+    21300028: '!city vampire castle_14'
+    21300030: '!city vampire castle_15'
+    21300032: '!city vampire castle_16'
+    21300034: '!city vampire castle_17'
+    21300036: '!city vampire castle_18'
+    21300038: '!city vampire castle_19'
+    21300040: '!city vampire castle_20'
+    21300042: '!city vampire castle_21'
+    21300044: '!city vampire castle_22'
+    21300046: '!city vampire castle_23'
+    21300048: '!city vampire castle_24'
+    21300050: '!city vampire castle_25'
+    21300052: '!city vampire castle_26'
+    21300054: '!city vampire castle_27'
+    21300056: '!city vampire castle_28'
+    21300058: '!city vampire castle_29'
+    21300060: '!city vampire castle_30'
+    21300062: '!city vampire castle_31'
+    21300064: '!city vampire castle_32'
+    21300066: '!city vampire castle_33'
+    21300068: '!city vampire castle_34'
+    21300070: '!city vampire castle_35'
+    21300072: '!city vampire castle_36'
+    21300074: '!city vampire castle_37'
+    21300076: '!city vampire castle_38'
+    21300078: '!city vampire castle_39'
+    21300080: '!city vampire castle_40'
+    21300082: '!city vampire castle_41'
+    21300084: '!city vampire castle_42'
+    21300086: '!city vampire castle_43'
+    21300088: '!city vampire castle_44'
+    21300090: '!city vampire castle_45'
+    21300092: '!city vampire castle_46'
+    21300094: '!city vampire castle_47'
+    21300096: '!city vampire castle_48'
+    21300098: '!city vampire castle_49'
+    21300100: '!city vampire castle_50'
+    21300102: '!city vampire castle_51'
+    21300104: '!city vampire castle_52'
+    21300106: '!city vampire castle_53'
+    21300108: '!city vampire castle_54'
+    21300110: '!city vampire castle_55'
+    21300112: '!city vampire castle_56'
+    21300114: '!city vampire castle_57'
+    21300116: '!city vampire castle_58'
+    21300118: '!city vampire castle_59'
+    21300120: '!city vampire castle_60'
+    21300122: '!city vampire castle_61'
+    21300124: '!city vampire castle_62'
+    21300126: '!city vampire castle_63'
+    21300128: '!city vampire castle_64'
+    21300130: '!city vampire castle_65'
+    21300132: '!city vampire castle_66'
+    21300134: '!city vampire castle_67'
+    21300136: '!city vampire castle_68'
+    21300138: '!city vampire castle_69'
+    21300140: '!city vampire castle_70'
+    21300142: '!city vampire castle_71'
+    21300144: '!city vampire castle_72'
+    21300146: '!city vampire castle_73'
+    21300148: '!city vampire castle_74'
+    21300150: '!city vampire castle_75'
+    21300152: '!city vampire castle_76'
+    21300154: '!city vampire castle_77'
+    21300156: '!city vampire castle_78'
+    21300158: '!city vampire castle_79'
+    21300160: '!city vampire castle_80'
+    21300162: '!city vampire castle_81'
+    21300164: '!city vampire castle_82'
+    21300166: '!city vampire castle_83'
+    21300168: '!city vampire castle_84'
+    21300170: '!city vampire castle_85'
+    21300172: '!city vampire castle_86'
+    21300174: '!city vampire castle_87'
+    21300176: '!city vampire castle_88'
+    21300178: '!city vampire castle_89'
+    21300180: '!city vampire castle_90'
+    21300182: '!city vampire castle_91'
+    21300184: '!city vampire castle_92'
+    21300186: '!city vampire castle_93'
+    21300188: '!city vampire castle_94'
+    21300190: '!city vampire castle_95'
+    21300192: '!city vampire castle_96'
+    21300194: '!city vampire castle_97'
+    21300196: '!city vampire castle_98'
+    21300198: '!city vampire castle_99'
+  externalObjects: {}
+  serializedVersion: 7
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: -1
+    wrapV: -1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: '!city vampire castle_0'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc4b7ce47fd62b943a86df605b706da7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_1'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a61b3bdc4b8fbbb4bb3e036fafd72617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_2'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19759a8fe1b62684fb7f49fcef0cc5f6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_3'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4c4f505e589b804a8ac8e49c54542ab
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_4'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46c9915fb24ba4a4f85e6b484b6f12d5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_5'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33295a574f5b4754abf2e15b80ecc14b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_6'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 877dd0e0b3ec2744cba24be1db157606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_7'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca6e5b676d5558a49b7b6fc03fff78b1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_8'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b65234ec71f89140871384f19ad67b3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_9'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 950.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26c637874fb989e42bfa28785369881c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_10'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ff17d6220da1ae428a7c6b013856103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_11'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2bccefa18c335242aa9600b44dc9044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_12'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6e99a7029c0c2840addc240a7a58213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_13'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc7190a27220ef04d903f8d490744595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_14'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa7aa99fd8675c649a0f1ed0cbeff8c6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_15'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bde0f96b6d8f7a42883100e56ddf62d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_16'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e06fa10deb38dd54db0d2f24445235ef
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_17'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc54f36efd2b76a42b83021a62818399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_18'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f222a3a1371b3640b73046ecb3a1483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_19'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 845.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 866786cada968b54ab8daa94cc21ec10
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_20'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27d55bb817f6cc74ca532e83fe1f6e4b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_21'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2733147a7b2e24247a6c733619c8c16c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_22'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bb8d27bae3d7af498057f82d2697bbe
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_23'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12e03eadc6771bc4a8f587fa1d41719d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_24'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cd97ef673462d447adc09b10a398d0f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_25'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6b9deaf6bde7484ebcf25d4122fe060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_26'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f791c6b3ca52e3c4aa4db8174fd7b986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_27'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd5d7297e49ba2b4ea55fcc7da89fb74
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_28'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9840475dfd885854f9fea8c98a0d57b1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_29'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 740.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ef1b2ac233dda94fada975a0bbb3b63
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_30'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e42ad0d08fa04b548afbd16ce1b2b881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_31'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: feff3eba299e34940837c06d55ce8320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_32'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b185f04aebbca94d934503a3c2a1937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_33'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d2fe4c4f67fd194e86ee35032f101cb
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_34'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c62ce9e5b16ad6b4bb7ee1bf1b042138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_35'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e10581081571d94ab7fd9d0994c04b4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_36'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1adfe84c9b6c9a44a1b99317c054bd7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_37'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e2d79ac4d8999a4a862f1308e5a93a4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_38'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dd1aa70dac9f6d448bffdb8e015bbd7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_39'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 635.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb95174ff7b05d24cab4c91cdfe7bdc7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_40'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 912f9d096cab4d948877625b96082468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_41'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9744c76b7bfbee4cb0deb04648091e4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_42'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f751aac52afb2664993e7c8e5dca8ffe
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_43'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b0b40876c89e504c93297444a740c24
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_44'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17353d7a764671448818c97d3d449abe
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_45'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 053e1ec78da6284488a73217f7a09853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_46'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ccabe9a267f3b9499e3fec2da758fb0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_47'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c0ea2d13ff8d8049a558f843a3d8d81
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_48'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06e536c7c4d255142954fea9871921bc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_49'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 530.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b28932fb78692fb4fad4b9d020754f0d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_50'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 559aa2b4bd1ee514095cb4ca38d64416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_51'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47f97ca732e466645b0ccc330abb18c5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_52'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8dd46536bd9bfbe47876ccf8079b499a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_53'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1caaec1e11ab72047b605da94bcf8a19
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_54'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efa61bf47647f8549b0f4b0075d87c48
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_55'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91dbca75a4967f549a796039696ac761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_56'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa255fff85c6f5a49aa85978897810cc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_57'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7da692da3aefbe4893f149b51ddd30a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_58'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 463e846f2929f83478a2cdd08392bf34
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_59'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 425.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 710a9c3aa73c239479bbba46aa01b787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_60'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35a58d7e1497a69479a2afa6f1015854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_61'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28ff9ea9502c0aa4daaa0e03345ee352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_62'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bbda7398f840f446b16a4181145e7dc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_63'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c276c749398f96418795152734a88f4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_64'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e51808033f9c7144f8a4059d4d55845e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_65'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62e4a0daec3cdc1489cd5197d73343e6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_66'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1e5f1135798e324dbd5abd36c03f7e2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_67'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fdb404c1179a7544dabc5a0d02008183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_68'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6548bc8ca69128a459fb8652b611d27f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_69'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 320.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c7ee1cf961554a40931facd19f5d5a7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_70'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a7b3b39e898f8c45af4799f6afd03c6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_71'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 420be34956c1c1a47b5d5a9fea587d0d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_72'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 100418a4d7b3fd74ebedfb37bfe90833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_73'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d7ec683e083115449d349764aeae104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_74'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78bf30af456658c4997d7ac544db453f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_75'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f74c453abd5e7da4ca72cd4088783864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_76'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4c70837a33661e4491da52843f53143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_77'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7570893219655f439e6261c1a3e28ba
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_78'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb7397d58eef2f44ba2361e716240518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_79'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 215.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b758b1d4687e2544add60d70212bebf
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_80'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73f74bf2ecb2b7e4a9dd63ff6c3dc457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_81'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e80af85c9d0adfc4ab9dbc735cf5287b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_82'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c88c8a29707eb34fa3241846ddb46f0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_83'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c186e6b214d251443b0c4305164c23dc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_84'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c19341105ce1b8645903f5a3a9f80016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_85'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a37072e06b431a4bbbbbb573f77b72b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_86'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59167f158673d224b92e04d556c0d9ae
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_87'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09e725e0240a42a4083c9ae6dbe04459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_88'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39e04e8463ef0f946b08ca0ee769d442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_89'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 110.4
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc92bbfb0a501fe4285f2e4473ce4913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_90'
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdee9389b3d0b474d9788ce5c6a8d892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_91'
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9387c1eb99ed07d4185dc3aaa9200b89
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_92'
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ab4d6c27d917354eb2bf2dae1b97dcc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_93'
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c12e68eda8e56b54eb39569df9b21040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_94'
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbfec9e2a6469ec488a1ffe261b6099b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_95'
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 376dd3184db2b5d4e902bd53ef369a53
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_96'
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46cb99de5f2788d4eaaa0e2d7a8837b1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_97'
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 666f79e9f5693f94b8f56c87643a212e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_98'
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f78456fc816f2e40aad909993d80e0b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: '!city vampire castle_99'
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 5.4000015
+        width: 115.2
+        height: 105.6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 590d10184ebcb6249b0d8f8ea66bf90d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: fd673030d6717e643982178d30f9bfbe
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -70,32 +70,64 @@ public class StatScript : MonoBehaviour
     public int STRENGTH
     {
         get { return myBaseStr; }
-        set { myBaseStr = value; }
+        set { myBaseStr = value;
+            if (myBaseStr > 50)
+            {
+                myBaseStr = 50;
+            }
+        }
     }
     public int MAGIC
     {
         get { return myBaseMag; }
-        set { myBaseMag = value; }
+        set { myBaseMag = value;
+            if (myBaseMag > 50)
+            {
+                myBaseMag = 50;
+            }
+        }
     }
     public int DEFENSE
     {
         get { return myBaseDefense; }
-        set { myBaseDefense = value; }
+        set { myBaseDefense = value;
+            if (myBaseDefense > 50)
+            {
+                myBaseDefense = 50;
+            }
+        }
     }
     public int RESIESTANCE
     {
         get { return myBaseResistance; }
-        set { myBaseResistance = value; }
+        set { myBaseResistance = value;
+            if (myBaseResistance > 50)
+            {
+                myBaseResistance = 50;
+            }
+        }
     }
     public int SPEED
     {
         get { return myBaseSpeed; }
-        set { myBaseSpeed = value; }
+        set
+        {
+            myBaseSpeed = value;
+            if (myBaseSpeed > 50)
+            {
+                myBaseSpeed = 50;
+            }
+        }
     }
     public int SKILL
     {
         get { return myBaseSkill; }
-        set { myBaseSkill = value; }
+        set { myBaseSkill = value;
+            if (myBaseSkill > 50)
+            {
+                myBaseSkill = 50;
+            }
+        }
     }
     public int MAX_HEALTH
     {

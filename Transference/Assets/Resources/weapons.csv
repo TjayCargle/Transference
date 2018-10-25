@@ -7,3 +7,4 @@ id, name, description,auto skill ,attack, attack_type,affinity, distance, range,
 7, Crossbow,Low physical decent range. ,10, physical, Pierce, 3, 1, 90, 10
 5, Longbow, Long range ,10, magical, Pierce, 5, 1, 90, 10
 6, Stinger, El: Pierce. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, physical, Pierce, 1, 1, 90, 10
+8, Ice Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Ice, 2, 1, 80, 10

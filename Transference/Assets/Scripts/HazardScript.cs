@@ -7,29 +7,35 @@ public class HazardScript : LivingObject
 
     BaseStats myStats;
     private bool destructible = true;
-    public int Dropskill = -1;
+    public int droppedItemNum = -1;
     [SerializeField]
     public bool dropsSkill = false;
+
+    public int REWARD
+    {
+        get { return droppedItemNum; }
+        set { droppedItemNum = value; }
+    }
+
     public bool DESTRUCTIBLE
     {
         get { return destructible; }
         set { destructible = value; }
     }
-
+    public bool isPerforming = false;
 
     public override void Setup()
     {
         if (!isSetup)
         {
-           
+
             base.Setup();
             STATS.MANA = 0;
             STATS.MAX_MANA = 0;
             STATS.MAX_FATIGUE = 0;
             FACTION = Faction.hazard;
-          //  myStats = GetComponent<BaseStats>();
-           // myStats.HEALTH = myStats.MAX_HEALTH;
-            //FACTION = faction.hazard;
+            FullName = "Glyph";
+            isSetup = true;
         }
 
     }
@@ -39,10 +45,194 @@ public class HazardScript : LivingObject
 
     }
 
+    public LivingObject FindNearestEnemy()
+    {
+        LivingObject newTarget = null;
+        LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
+        List<List<TileScript>> attackbleTiles = null;
+        CommandSkill skill = null;
+        if (INVENTORY.CSKILLS.Count > 0)
+        {
+            skill = INVENTORY.CSKILLS[0];
+            attackbleTiles = myManager.GetSkillsAttackableTiles(this, skill);
+        }
+        else
+        {
+            attackbleTiles = myManager.GetWeaponAttackableTiles(this);
+        }
+        if (attackbleTiles == null)
+            return null;
+        Vector3 testLoc = Vector3.zero;
+        if (attackbleTiles.Count > 0)
+        {
+            for (int liveIndex = 0; liveIndex < objects.Length; liveIndex++)
+            {
+                LivingObject living = objects[liveIndex];
+                if (living.FACTION != Faction.hazard)
+                {
+                    if (!living.DEAD)
+                    {
+
+                        for (int i = 0; i < attackbleTiles.Count; i++)
+                        {
+                            for (int j = 0; j < attackbleTiles[i].Count; j++)
+                            {
+                                testLoc = attackbleTiles[i][j].transform.position;
+                                TileScript aTile = myManager.GetTileAtIndex(myManager.GetTileIndex(testLoc));
+                 
+                                if (living.currentTile == aTile)
+                                {
+                                    if (newTarget == null)
+                                    {
+                                        newTarget = living;
+                                        return newTarget;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+
+        return newTarget;
+    }
+
+    public bool HAtkEvent(Object target)
+    {
+        Debug.Log(FullName + " atacking");
+        bool isDone = true;
+        {
+
+            LivingObject realTarget = target as LivingObject;
+
+            DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
+            myManager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", myManager.CheckText, myManager.TextStart);
+            myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
+            myManager.myCamera.infoObject = realTarget;
+            myManager.myCamera.UpdateCamera();
+            if (bestReaction.reaction != Reaction.missed)
+            {
+                AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                conatiner.attackingObject = this;
+                conatiner.dmgObject = realTarget;
+                conatiner.attackingElement = bestReaction.dmgElement;
+                myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
+
+            }
+            // Debug.Log(FullName + " used " + bestReaction.atkName);
+
+            TakeAction();
+
+        }
+        return isDone;
+    }
+
+    public DmgReaction DetermineBestDmgOutput(LivingObject target, bool checkdistance = true)
+    {
+        Debug.Log("determining best output");
+        DmgReaction bestReaction;
+        CommandSkill usedSkill = null;
+        if (INVENTORY.CSKILLS.Count > 0)
+        {
+            usedSkill = INVENTORY.CSKILLS[0];
+            bestReaction = myManager.CalcDamage(this, target, usedSkill);
+            bestReaction.atkName = usedSkill.NAME;
+            bestReaction.dmgElement = usedSkill.ELEMENT;
+        }
+        else
+        {
+            bestReaction = myManager.CalcDamage(this, target, WEAPON);
+            bestReaction.atkName = WEAPON.NAME;
+            bestReaction.dmgElement = WEAPON.AFINITY;
+        }
+
+
+        if (usedSkill)
+        {
+        float modification = 1.0f;
+
+            if (usedSkill.ETYPE == EType.magical)
+                modification = STATS.SPCHANGE;
+            if (usedSkill.ETYPE == EType.physical)
+            {
+                if (usedSkill.COST > 0)
+                {
+                    modification = STATS.FTCHARGECHANGE;
+                }
+                else
+                {
+                    modification = STATS.FTCOSTCHANGE;
+                }
+            }
+            usedSkill.UseSkill(this, modification);
+        }
+        return bestReaction;
+    }
+    public void DetermineActions()
+    {
+        Debug.Log("determining actions");
+
+        isPerforming = true;
+        int psudeoActions = -1;
+        psudeoActions = ACTIONS;
+
+        List<EActType> etypes = new List<EActType>();
+        path p = null;
+        LivingObject liveObj = null;
+        for (int i = 0; i < psudeoActions; i++)
+        {
+
+            liveObj = FindNearestEnemy();
+            if (liveObj)
+            {
+                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent);
+            }
+        }
+        if(!liveObj)
+        {
+            Debug.Log("decide to wait");
+            myManager.CreateEvent(this, this, "" + FullName + "Next event", myManager.NextTurnEvent);
+
+            Wait();
+        }
+
+        isPerforming = false;
+    }
+
+
+
+
+
+    public UsableScript GiveReward(LivingObject killer)
+    {
+        if (droppedItemNum >= 0)
+        {
+            DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+            if (database)
+            {
+
+                if (dropsSkill)
+                {
+                    return database.LearnSkill(droppedItemNum, killer);
+                }
+                else
+                {
+                    return database.GetWeapon(droppedItemNum, killer);
+                }
+            }
+        }
+        return null;
+    }
+
 
     public override IEnumerator FadeOut()
     {
-        Debug.Log("hazard dying");
+        startedDeathAnimation = true;
+        //  Debug.Log("hazard dying");
         if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -64,8 +254,8 @@ public class HazardScript : LivingObject
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
             currentTile.isOccupied = false;
-           
-         //   Destroy(gameObject);
+
+            //   Destroy(gameObject);
         }
     }
 

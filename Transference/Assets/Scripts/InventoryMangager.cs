@@ -22,7 +22,7 @@ public class InventoryMangager : MonoBehaviour
     public int menuSide = -1;
     public MenuItem[] itemSlots;
     public MenuItem[] extraSlots;
-   // UsableScript genericMove;
+    // UsableScript genericMove;
     UsableScript genericAtk;
 
     public List<UsableScript> currentList = null;
@@ -45,13 +45,13 @@ public class InventoryMangager : MonoBehaviour
             menuManager = GameObject.FindObjectOfType<MenuManager>();
             manager = GetComponent<ManagerScript>();
             // imgTypes = Resources.LoadAll<Sprite>("Buttons2/");
-         //   genericMove = ScriptableObject.CreateInstance<UsableScript>();
+            //   genericMove = ScriptableObject.CreateInstance<UsableScript>();
             genericAtk = ScriptableObject.CreateInstance<UsableScript>();
             //genericWait = ScriptableObject.CreateInstance<UsableScript>();
-         //   genericMove.NAME = "MOVE";
+            //   genericMove.NAME = "MOVE";
             genericAtk.NAME = "ATTACK";
             //genericWait.name = "WAIT";
-          //  genericMove.DESC = "Allows unit to move.";
+            //  genericMove.DESC = "Allows unit to move.";
             genericAtk.DESC = "Use basic attack to attack enemy";
         }
         isSetup = true;
@@ -673,14 +673,14 @@ public class InventoryMangager : MonoBehaviour
                         itemSlots[i].refItem = itemSlots[i - 1].refItem;
                         //   itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i - 1].refItem.NAME;
                         if (itemSlots[i].GetComponentInChildren<Text>())
-                            itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i-1].refItem.NAME;
+                            itemSlots[i].GetComponentInChildren<Text>().text = itemSlots[i - 1].refItem.NAME;
                         else if (itemSlots[i].GetComponentInChildren<TextMeshProUGUI>())
-                            itemSlots[i].GetComponentInChildren<TextMeshProUGUI>().text = itemSlots[i-1].refItem.NAME;
+                            itemSlots[i].GetComponentInChildren<TextMeshProUGUI>().text = itemSlots[i - 1].refItem.NAME;
                     }
                     slotIndex--;
-          
+
                     itemSlots[0].refItem = currentList[slotIndex - 5];
-                  //  itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
+                    //  itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
                     if (itemSlots[0].GetComponentInChildren<Text>())
                         itemSlots[0].GetComponentInChildren<Text>().text = itemSlots[0].refItem.NAME;
                     else if (itemSlots[0].GetComponentInChildren<TextMeshProUGUI>())
@@ -987,9 +987,9 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = ScriptableObject.CreateInstance<WeaponScript>();
                 // itemType.TYPE = 0;
                 useType = 0;
-                for (int i = 0; i < liveObject.GetComponent<InventoryScript>().WEAPONS.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.WEAPONS.Count; i++)
                 {
-                    currentList.Add(liveObject.GetComponent<InventoryScript>().WEAPONS[i]);
+                    currentList.Add(liveObject.INVENTORY.WEAPONS[i]);
                 }
                 break;
             case 1:
@@ -1011,7 +1011,7 @@ public class InventoryMangager : MonoBehaviour
                 // itemType = new ItemScript();
                 // itemType.TYPE = 3;
                 useType = 4;
-               // currentList.Add(genericMove);
+                // currentList.Add(genericMove);
                 currentList.Add(genericAtk);
 
                 for (int i = 0; i < liveObject.GetComponent<InventoryScript>().CSKILLS.Count; i++)
@@ -1133,6 +1133,7 @@ public class InventoryMangager : MonoBehaviour
                             else
                             {
                                 proText.enableAutoSizing = false;
+                                proText.fontSize = 25.0f;
                             }
                         }
                     }
@@ -1156,9 +1157,18 @@ public class InventoryMangager : MonoBehaviour
                             {
 
                                 proText.text = newText;
+                                if (item.NAME.Length > 7)
+                                {
+                                    proText.enableAutoSizing = true;
+                                }
+                                else
+                                {
+                                    proText.enableAutoSizing = false;
+                                    proText.fontSize = 25.0f;
+                                }
                                 if (((CommandSkill)item).ETYPE == EType.physical)
                                 {
-                                  //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                    //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
                                     if (cmd.COST > 0)
                                     {
                                         extraText = (cmd.COST * lastObject.STATS.FTCHARGECHANGE).ToString();
@@ -1167,19 +1177,12 @@ public class InventoryMangager : MonoBehaviour
                                     }
                                     else
                                     {
-                                       // extraText = (cmd.COST * -1).ToString();
-                                        extraText = (-1 *(cmd.COST * lastObject.STATS.FTCOSTCHANGE)).ToString();
+                                        // extraText = (cmd.COST * -1).ToString();
+                                        extraText = (-1 * (cmd.COST * lastObject.STATS.FTCOSTCHANGE)).ToString();
                                         proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>- </size>" + extraText + "</color>";
 
                                     }
-                                    if (item.NAME.Length > 7)
-                                    {
-                                        proText.enableAutoSizing = true;
-                                    }
-                                    else
-                                    {
-                                        proText.enableAutoSizing = false;
-                                    }
+                                   
                                 }
                                 else
                                 {
@@ -1251,10 +1254,10 @@ public class InventoryMangager : MonoBehaviour
                     selectableItem.refItem = item;
                     if (index == 3)
                     {
-                     //   if (item == genericMove)
+                        //   if (item == genericMove)
                         {
 
-                       //     selectableItem.refItem.DESC = "Move a number of tiles";
+                            //     selectableItem.refItem.DESC = "Move a number of tiles";
 
                         }
 

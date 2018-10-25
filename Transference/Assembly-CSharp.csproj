@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\DetailsScreen.cs" />
     <Compile Include="Assets\Scripts\DetailsTabController.cs" />
     <Compile Include="Assets\Scripts\DmgTextObj.cs" />
+    <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\EffectScript.cs" />
     <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\EnemySetup.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Assets\Scripts\GridAnimationObj.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
     <Compile Include="Assets\Scripts\HazardScript.cs" />
+    <Compile Include="Assets\Scripts\HazardSetup.cs" />
     <Compile Include="Assets\Scripts\Healthbar.cs" />
     <Compile Include="Assets\Scripts\ImgObj.cs" />
     <Compile Include="Assets\Scripts\InventoryMangager.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Assets\Scripts\TempObject.cs" />
     <Compile Include="Assets\Scripts\TextEventManager.cs" />
     <Compile Include="Assets\Scripts\TextObj.cs" />
+    <Compile Include="Assets\Scripts\TileManager.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
     <Compile Include="Assets\Scripts\UsableScript.cs" />
     <Compile Include="Assets\Scripts\WeaponEquip.cs" />

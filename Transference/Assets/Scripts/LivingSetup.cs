@@ -6,11 +6,11 @@ public class LivingSetup : MonoBehaviour
 {
 
     [SerializeField]
-    int[] startingSkills;
+   protected int[] startingSkills;
     [SerializeField]
-    int[] startingWeapons;
+   protected int[] startingWeapons;
     [SerializeField]
-    int[] startingArmors;
+    protected int[] startingArmors;
     [SerializeField]
     int[] startingAccessories;
     [SerializeField]
@@ -73,9 +73,9 @@ public class LivingSetup : MonoBehaviour
             {
                 GetComponent<LivingObject>().Setup();
             }
-            Setup();
         }
 
+            Setup();
     }
 
 }

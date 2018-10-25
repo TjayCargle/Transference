@@ -27,6 +27,13 @@ public class DatabaseManager : MonoBehaviour
     TextAsset actorFile;
 
     [SerializeField]
+    TextAsset hazardFile;
+
+
+    [SerializeField]
+    TextAsset mapFile;
+
+    [SerializeField]
     string[] skillLines;
 
     [SerializeField]
@@ -44,12 +51,20 @@ public class DatabaseManager : MonoBehaviour
     [SerializeField]
     string[] actorLines;
 
+    [SerializeField]
+    string[] hazardLines;
+
+    [SerializeField]
+    string[] mapLines;
+
     private Dictionary<int, string> skillDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> weaponDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> armorDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> itemDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> enemyDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> actorDictionary = new Dictionary<int, string>();
+    private Dictionary<int, string> hazardDictionary = new Dictionary<int, string>();
+    private Dictionary<int, string> mapDictionary = new Dictionary<int, string>();
     public bool isSetup = false;
     public void Setup()
     {
@@ -67,10 +82,7 @@ public class DatabaseManager : MonoBehaviour
                     if (line[0] != '-')
                     {
                         string[] parsed = line.Split(',');
-                        if(skillDictionary.ContainsKey(Int32.Parse(parsed[0])))
-                        {
-                            int yo = 0;
-                        }
+                     
                         skillDictionary.Add(Int32.Parse(parsed[0]), skillLines[i]);
                     }
                 }
@@ -93,6 +105,8 @@ public class DatabaseManager : MonoBehaviour
             file = armorFile.text;
             armorLines = file.Split('\n');
             if (armorDictionary.Count == 0)
+            {
+
                 for (int i = 1; i < armorLines.Length; i++)
                 {
                     string line = armorLines[i];
@@ -102,10 +116,12 @@ public class DatabaseManager : MonoBehaviour
                         armorDictionary.Add(Int32.Parse(parsed[0]), line);
                     }
                 }
+            }
 
             file = enemyFile.text;
             enemyLines = file.Split('\n');
             if (enemyDictionary.Count == 0)
+            {
                 for (int i = 1; i < enemyLines.Length; i++)
                 {
                     string line = enemyLines[i];
@@ -115,11 +131,12 @@ public class DatabaseManager : MonoBehaviour
                         enemyDictionary.Add(Int32.Parse(parsed[0]), line);
                     }
                 }
+            }
 
             if (itemDictionary.Count == 0)
             {
-            file = itemFile.text;
-            itemLines = file.Split('\n');
+                file = itemFile.text;
+                itemLines = file.Split('\n');
 
                 for (int i = 1; i < itemLines.Length; i++)
                 {
@@ -134,8 +151,8 @@ public class DatabaseManager : MonoBehaviour
 
             if (actorDictionary.Count == 0)
             {
-            file = actorFile.text;
-            actorLines = file.Split('\n');
+                file = actorFile.text;
+                actorLines = file.Split('\n');
 
                 for (int i = 1; i < actorLines.Length; i++)
                 {
@@ -148,6 +165,37 @@ public class DatabaseManager : MonoBehaviour
                 }
             }
 
+            if (hazardDictionary.Count == 0)
+            {
+                file = hazardFile.text;
+                hazardLines = file.Split('\n');
+
+                for (int i = 1; i < hazardLines.Length; i++)
+                {
+                    string line = hazardLines[i];
+                    if (line[0] != '-')
+                    {
+                        string[] parsed = line.Split(',');
+                        hazardDictionary.Add(Int32.Parse(parsed[0]), line);
+                    }
+                }
+            }
+
+            if (mapDictionary.Count == 0)
+            {
+                file = mapFile.text;
+                mapLines = file.Split('\n');
+
+                for (int i = 1; i < mapLines.Length; i++)
+                {
+                    string line = mapLines[i];
+                    if (line[0] != '-')
+                    {
+                        string[] parsed = line.Split(',');
+                      //  mapDictionary.Add(Int32.Parse(parsed[0]), line);
+                    }
+                }
+            }
             isSetup = true;
         }
     }
@@ -493,7 +541,7 @@ public class DatabaseManager : MonoBehaviour
                             return command;
                         }
                         skill.OWNER = livingObject;
-                   
+
 
                     }
                 }
@@ -507,7 +555,7 @@ public class DatabaseManager : MonoBehaviour
         return null;
     }
 
-    public void GetWeapon(int id, LivingObject livingObject)
+    public WeaponScript GetWeapon(int id, LivingObject livingObject)
     {
         // string path = "Assets/Resources/weapons.csv";
 
@@ -515,9 +563,6 @@ public class DatabaseManager : MonoBehaviour
 
         if (livingObject.GetComponent<InventoryScript>())
         {
-
-            //Read the text from directly from the test.txt file
-            //  StreamReader reader = new StreamReader(path);
 
             string lines = "";
             if (weaponDictionary.TryGetValue(id, out lines))
@@ -559,6 +604,7 @@ public class DatabaseManager : MonoBehaviour
                     {
                         livingObject.WEAPON.Equip(weapon);
                     }
+                    return weapon;
                 }
             }
 
@@ -567,6 +613,7 @@ public class DatabaseManager : MonoBehaviour
 
             //   reader.Close();
         }
+        return null;
     }
 
     public void GetArmor(int id, LivingObject livingObject)
@@ -634,10 +681,6 @@ public class DatabaseManager : MonoBehaviour
     public void GetItem(int id, LivingObject livingObject)
     {
 
-
-
-
-
         if (livingObject.GetComponent<InventoryScript>())
         {
 
@@ -666,6 +709,51 @@ public class DatabaseManager : MonoBehaviour
 
         // reader.Close();
 
+    }
+
+    public void GetHazard(int id, HazardScript newHazard)
+    {
+
+
+        if (newHazard.GetComponent<InventoryScript>())
+        {
+
+            string lines = "";
+            if (hazardDictionary.TryGetValue(id, out lines))
+            {
+                string[] parsed = lines.Split(',');
+                if (Int32.Parse(parsed[0]) == id)
+                {
+                    int fileIndex = 1;
+                    newHazard.FullName = parsed[fileIndex];
+                    fileIndex++;
+                    newHazard.BASE_STATS.LEVEL = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int numofskills = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int numofweapons = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int glyphAtk = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newHazard.REWARD = glyphAtk;
+                    if (numofskills > 0)
+                    {
+                        LearnSkill(glyphAtk, newHazard, true);
+                        fileIndex++;
+                    }
+
+                    if (numofweapons > 0)
+                    {
+                        GetWeapon(glyphAtk, newHazard);
+                        fileIndex++;
+                    }
+
+           
+                }
+            }
+
+
+        }
     }
 
     public void GetEnemy(int id, EnemyScript newEnemy)
@@ -744,7 +832,7 @@ public class DatabaseManager : MonoBehaviour
 
     public void GetActor(int id, LivingObject living)
     {
-
+   
 
         if (living.GetComponent<InventoryScript>())
         {

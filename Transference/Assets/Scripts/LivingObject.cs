@@ -36,6 +36,9 @@ public class LivingObject : GridObject
     [SerializeField]
     private InventoryScript inventory;
     public int refreshState;
+    private int physLevel = 1;
+    private int magLevel = 1;
+    private int skillLevel = 1;
     public InventoryScript INVENTORY
     {
         get { return inventory; }
@@ -196,6 +199,18 @@ public class LivingObject : GridObject
     {
         get { return BASE_STATS.LEVEL; }
     }
+    public int PHYSLEVEL
+    {
+        get { return physLevel; }
+    }
+    public int MAGLEVEL
+    {
+        get { return magLevel; }
+    }
+    public int SKLEVEL
+    {
+        get { return skillLevel; }
+    }
 
     //public bool IsEnenmy
     //{
@@ -222,14 +237,16 @@ public class LivingObject : GridObject
     }
     public bool ChangeMana(int val)
     {
-        if (val > 0 && STATS.MANA > STATS.MAX_MANA)
+        if (val > 0 && STATS.MANA >= STATS.MAX_MANA)
         {
             return false;
         }
         STATS.MANA += val;
         if(MANA > MAX_MANA)
         {
-            STATS.MANA = 0;
+            STATS.MANA =  MAX_MANA - BASE_STATS.MANA;
+
+
         }
         if (MANA < 0)
         {
@@ -240,7 +257,7 @@ public class LivingObject : GridObject
     }
     public bool ChangeFatigue(int val)
     {
-        if (val > 0 && STATS.FATIGUE > STATS.MAX_FATIGUE)
+        if (val > 0 && STATS.FATIGUE >= STATS.MAX_FATIGUE)
         {
             return false;
         }
@@ -364,6 +381,11 @@ public class LivingObject : GridObject
             if (GetComponent<ActorSetup>())
             {
                 GetComponent<ActorSetup>().Setup();
+
+            }
+            if (GetComponent<HazardSetup>())
+            {
+                GetComponent<HazardSetup>().Setup();
 
             }
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
@@ -490,10 +512,17 @@ public class LivingObject : GridObject
     public void LevelUp()
     {
         BASE_STATS.LEVEL++;
-        BASE_STATS.MAX_HEALTH += 5;
-        BASE_STATS.MAX_MANA += 5;
-        BASE_STATS.MAX_FATIGUE += 5;
+        BASE_STATS.MAX_HEALTH += 5 + skillLevel;
+        BASE_STATS.MAX_MANA += 5 + magLevel;
+        BASE_STATS.MAX_FATIGUE += 5 + physLevel;
         BASE_STATS.EXP -= 100;
+        BASE_STATS.STRENGTH++;
+        BASE_STATS.DEFENSE++;
+        BASE_STATS.MAGIC++;
+        BASE_STATS.RESIESTANCE++;
+        BASE_STATS.SPEED++;
+        BASE_STATS.SKILL++;
+     
     }
 
     public void GainExp(int val)
@@ -501,18 +530,78 @@ public class LivingObject : GridObject
         BASE_STATS.EXP += val;
 
     }
+    public void GainPhysExp(int val)
+    {
+        BASE_STATS.PHYSEXP += val;
+        if(BASE_STATS.PHYSEXP > 100)
+        {
+            float chance = Random.Range(0,2);
+            if(chance > 0)
+            {
+            BASE_STATS.STRENGTH++;
 
+            }
+            else
+            {
+                BASE_STATS.DEFENSE++;
+            }
+            BASE_STATS.PHYSEXP = 0;
+            physLevel++;
+        }
+    }
+    public void GainMagExp(int val)
+    {
+        BASE_STATS.MAGEXP += val;
+        if (BASE_STATS.MAGEXP > 100)
+        {
+            float chance = Random.Range(0, 2);
+            if (chance > 0)
+            {
+                BASE_STATS.MAGIC++;
+
+            }
+            else
+            {
+                BASE_STATS.RESIESTANCE++;
+            }
+            BASE_STATS.MAGEXP = 0;
+            magLevel++;
+        }
+    }
+    public void GainSklExp(int val)
+    {
+        BASE_STATS.SKILLEXP += val;
+        if (BASE_STATS.SKILLEXP > 100)
+        {
+            float chance = Random.Range(0, 2);
+            if (chance > 0)
+            {
+                BASE_STATS.SPEED++;
+
+            }
+            else
+            {
+                BASE_STATS.SKILL++;
+            }
+            BASE_STATS.SKILLEXP = 0;
+            skillLevel++;
+        }
+    }
     public override void Die()
     {
         base.Die();
         myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart);
     }
     protected bool isdoneDying = false;
+    protected bool startedDeathAnimation = false;
     public void DeathStart()
     {
-        myManager.PlaySquishSnd();
-        isdoneDying = false;
-        StartCoroutine(FadeOut());
+        if (!startedDeathAnimation)
+        {
+            myManager.PlaySquishSnd();
+            isdoneDying = false;
+            StartCoroutine(FadeOut());
+        }
     }
 
     public bool DieEvent(Object data) 
@@ -522,8 +611,9 @@ public class LivingObject : GridObject
     }
     public virtual IEnumerator FadeOut()
     {
+        startedDeathAnimation = true;
     //    Debug.Log("living dying");
-        if(GetComponent<SpriteRenderer>())
+        if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
             Color subtract = new Color(0, 0, 0, 0.1f);

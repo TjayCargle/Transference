@@ -53,6 +53,46 @@ public class DetailsScreen : MonoBehaviour
     private GridObject lastObj;
     private DetailType lastDetail;
     private List<EHitType> selectedHitlist;
+    [SerializeField]
+    GameObject SkillsObj;
+    [SerializeField]
+    GameObject expObj;
+
+    [SerializeField]
+    Text lvLevelText;
+
+    [SerializeField]
+    Slider lvSlider;
+
+    [SerializeField]
+    Text lvsliderText;
+
+    [SerializeField]
+    Text physLevelText;
+
+    [SerializeField]
+    Slider physSlider;
+
+    [SerializeField]
+    Text physsliderText;
+
+    [SerializeField]
+    Text magLevelText;
+
+    [SerializeField]
+    Slider magSlider;
+
+    [SerializeField]
+    Text magsliderText;
+
+    [SerializeField]
+    Text skLevelText;
+
+    [SerializeField]
+    Slider skSlider;
+
+    [SerializeField]
+    Text sksliderText;
     void Start()
     {
 
@@ -88,7 +128,7 @@ public class DetailsScreen : MonoBehaviour
             lastObj = currentObj;
             lastSelectedContent = selectedContent;
 
-          
+
         }
     }
 
@@ -97,7 +137,9 @@ public class DetailsScreen : MonoBehaviour
         if (!currentObj)
             return;
         selectedHitlist = currentObj.ARMOR.HITLIST;
+
         descriptionText.text = "";
+
         for (int i = 0; i < selectableContent.Length; i++)
         {
             if (i == selectedContent)
@@ -113,96 +155,142 @@ public class DetailsScreen : MonoBehaviour
         {
             nameText.text = currentObj.NAME;
         }
-
-
-
-        if (skills != null)
+        switch (selectedContent)
         {
-            skillSlots currentSlot = null;
-            switch (detail)
+            case 8:
+                descriptionText.text = "Str = Strength. Strength determines how much damage is delt with a physical attack.";
+                break;
+            case 9:
+                descriptionText.text = "Def = Defense. Defense reduces damage from physical attacks.";
+                break;
+            case 10:
+                descriptionText.text = "Mag = Magic. Magic determines how much damage is delt with a magical attack.";
+                break;
+            case 11:
+                descriptionText.text = "Res = Resistance. Resistance reduces damage from magical attacks.";
+                break;
+            case 12:
+                descriptionText.text = "Spd = Speed. Speed affects your action count and slightly affects accurracy/evasion. Every 10 speed generates 1 action.";
+                break;
+            case 13:
+                descriptionText.text = "Skl = Skill. Skill increases your chances of auto skills activating and ailments such as burn going off.";
+                break;
+            case 14:
+                descriptionText.text = "Water. Moves with \"Aqu\" are generally water based moves.";
+                break;
+            case 15:
+                descriptionText.text = "Fire Moves with \"Pyr\" are generally fire based moves.";
+                break;
+            case 16:
+                descriptionText.text = "Ice Moves with \"Gel\" are generally ice based moves.";
+                break;
+            case 17:
+                descriptionText.text = "Elec Moves with \"Rik\" are generally elec based moves.";
+                break;
+            case 18:
+                descriptionText.text = "Slash Moves with \"Sur\" are generally slash based moves.";
+                break;
+            case 19:
+                descriptionText.text = "Pierce Moves with \"Tsu\" are generally pierce based moves.";
+                break;
+            case 20:
+                descriptionText.text = "Blunt Moves with \"Don\" are generally blunt based moves.";
+                break;
+
+            case 28:
+                descriptionText.text = "Wards have strength. Once a ward's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
+                break;
+
+            case 29:
+                descriptionText.text = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=lime>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                break;
+            case 30:
+                descriptionText.text = "This is your Physical level. This is increased by using <color=yellow>physical skills</color>. Leveling this up randomly increases <color=#ff117a>Strength</color> or <color=orange>Defense</color>.";
+                break;
+            case 31:
+                descriptionText.text = "This is your magical level. This is increased by using <color=yellow>magical skills</color>. Leveling this up randomly increases <color=#b400e9>Magic</color> or <color=#ce0e96>Resistance</color>.";
+                break;
+            case 32:
+                descriptionText.text = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=cyan>Speed</color> or <color=#00FF00>Skill</color>.";
+                break;
+
+        }
+        if (detail != DetailType.exp)
+        {
+            if (expObj)
             {
-                case DetailType.Command:
-                    currentSlot = currentObj.BATTLE_SLOTS;
-                    sectionText.text = "Command Skills";
-                    if(selectedContent < 3)
-                    {
-                        descriptionText.text = "Command Skills are usable skills that require a cost and take up 1 action when used.";
-                    }
-                    break;
-                case DetailType.Passive:
-                    currentSlot = currentObj.PASSIVE_SLOTS;
-                    sectionText.text = "Passive Skills";
-                    if (selectedContent < 3)
-                    {
-                        descriptionText.text = "Pasive Skills are non-useable skills that are always active when equipped.";
-                    }
-                    break;
-                case DetailType.Auto:
-                    currentSlot = currentObj.AUTO_SLOTS;
-                    sectionText.text = "Auto Skills";
-                    if (selectedContent < 3)
-                    {
-                        descriptionText.text = "Auto Skills are skills that has a chance to activate after using a basic attack while equipped.";
-                    }
-                    break;
-                case DetailType.Opportunity:
-                    currentSlot = currentObj.OPP_SLOTS;
-                    sectionText.text = "Opportunity Skills";
-                    if (selectedContent < 3)
-                    {
-                        descriptionText.text = "Opportunity Skills grant a free action after an ally uses a specified type of move.";
-                    }
-                    break;
-                case DetailType.BasicAtk:
-                    sectionText.text = "Basic Attacks";
-                    if (selectedContent < 3)
-                    {
-                        descriptionText.text = "Basic Attacks when equipped replace the default Attack option and doesn't require any cost to use.";
-                    }
-                    break;
-                case DetailType.Armor:
-                    sectionText.text = "Wards";
-                    if (selectedContent < 3)
-                    {
-                        descriptionText.text = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
-                    }
-                    break;
+                expObj.gameObject.SetActive(false);
             }
-            for (int i = 0; i < skills.Length; i++)
+            if (SkillsObj)
             {
-                if (currentSlot)
-                {
+                SkillsObj.gameObject.SetActive(true);
+            }
 
-                    if (currentSlot.SKILLS.Count > i)
-                    {
-                        skills[i].text = currentSlot.SKILLS[i].NAME;
-                        if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+            if (skills != null)
+            {
+                skillSlots currentSlot = null;
+                switch (detail)
+                {
+                    case DetailType.Command:
+                        currentSlot = currentObj.BATTLE_SLOTS;
+                        sectionText.text = "Command Skills";
+                        if (selectedContent < 3)
                         {
-                            if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
-                            {
-                                descriptionText.text = currentSlot.SKILLS[i].DESC;
-                            }
+                            descriptionText.text = "Command Skills are usable skills that require a cost and take up 1 action when used.";
                         }
-                    }
-                    else
-                    {
-                        skills[i].text = "-";
-                    }
-                }
-
-                else
-                {
-                    if (detail == DetailType.Armor)
-                    {
-                        if (currentObj.INVENTORY.ARMOR.Count > i)
+                        break;
+                    case DetailType.Passive:
+                        currentSlot = currentObj.PASSIVE_SLOTS;
+                        sectionText.text = "Passive Skills";
+                        if (selectedContent < 3)
                         {
-                            skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME;
+                            descriptionText.text = "Pasive Skills are non-useable skills that are always active when equipped.";
+                        }
+                        break;
+                    case DetailType.Auto:
+                        currentSlot = currentObj.AUTO_SLOTS;
+                        sectionText.text = "Auto Skills";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Auto Skills are skills that has a chance to activate after using a basic attack while equipped.";
+                        }
+                        break;
+                    case DetailType.Opportunity:
+                        currentSlot = currentObj.OPP_SLOTS;
+                        sectionText.text = "Opportunity Skills";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Opportunity Skills grant a free action after an ally uses a specified type of move.";
+                        }
+                        break;
+                    case DetailType.BasicAtk:
+                        sectionText.text = "Basic Attacks";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Basic Attacks when equipped replace the default Attack option and doesn't require any cost to use.";
+                        }
+                        break;
+                    case DetailType.Armor:
+                        sectionText.text = "Wards";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
+                        }
+                        break;
+                }
+                for (int i = 0; i < skills.Length; i++)
+                {
+                    if (currentSlot)
+                    {
+
+                        if (currentSlot.SKILLS.Count > i)
+                        {
+                            skills[i].text = currentSlot.SKILLS[i].NAME;
                             if (selectableContent[selectedContent].GetComponentInChildren<Text>())
                             {
                                 if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                 {
-                                    descriptionText.text = currentObj.INVENTORY.ARMOR[i].DESC;
-                                    selectedHitlist = currentObj.INVENTORY.ARMOR[i].HITLIST;
+                                    descriptionText.text = currentSlot.SKILLS[i].DESC;
                                 }
                             }
                         }
@@ -211,40 +299,141 @@ public class DetailsScreen : MonoBehaviour
                             skills[i].text = "-";
                         }
                     }
-                    else if (detail == DetailType.BasicAtk)
+
+                    else
                     {
-                        if (currentObj.INVENTORY.WEAPONS.Count > i)
+                        if (detail == DetailType.Armor)
                         {
-                            skills[i].text = currentObj.INVENTORY.WEAPONS[i].NAME + " LV: " + currentObj.INVENTORY.WEAPONS[i].LEVEL;
-                            if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                            if (currentObj.INVENTORY.ARMOR.Count > i)
                             {
-                                if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME;
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
                                 {
-                                    descriptionText.text = currentObj.INVENTORY.WEAPONS[i].DESC;
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        descriptionText.text = currentObj.INVENTORY.ARMOR[i].DESC;
+                                        selectedHitlist = currentObj.INVENTORY.ARMOR[i].HITLIST;
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
+                            }
+                        }
+                        else if (detail == DetailType.BasicAtk)
+                        {
+                            if (currentObj.INVENTORY.WEAPONS.Count > i)
+                            {
+                                skills[i].text = currentObj.INVENTORY.WEAPONS[i].NAME + " LV: " + currentObj.INVENTORY.WEAPONS[i].LEVEL;
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                                {
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        descriptionText.text = currentObj.INVENTORY.WEAPONS[i].DESC;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
                             }
                         }
                         else
                         {
-                            skills[i].text = "-";
+                            Debug.Log("Whats thes actuals fucks");
                         }
                     }
-                    else
-                    {
-                        Debug.Log("Whats thes actuals fucks");
-                    }
+                }
+
+            }
+        }
+        else
+        {
+            sectionText.text = "Levels and XP";
+            if (expObj)
+            {
+                expObj.gameObject.SetActive(true);
+            }
+            if (SkillsObj)
+            {
+                SkillsObj.gameObject.SetActive(false);
+            }
+            if (selectedContent < 3)
+            {
+                descriptionText.text = "Levels show growth in a character and XP shows how close an area is to leveling up.";
+            }
+            if (lvSlider)
+            {
+                lvLevelText.text = "Exp LV: " + currentObj.LEVEL;
+                lvSlider.gameObject.SetActive(true);
+                lvSlider.maxValue = 100;
+                lvSlider.value = currentObj.BASE_STATS.EXP;
+                if (lvsliderText)
+                {
+                    float trueAmt = lvSlider.value / lvSlider.maxValue;
+                    trueAmt *= 100.0f;
+                    trueAmt = Mathf.Round(trueAmt);
+                    lvsliderText.text = "" + trueAmt + "%";
                 }
             }
 
+            if (physSlider)
+            {
+                physLevelText.text = "Phys LV: " + currentObj.PHYSLEVEL;
+                physSlider.gameObject.SetActive(true);
+                physSlider.maxValue = 100;
+                physSlider.value = currentObj.BASE_STATS.PHYSEXP;
+                if (physsliderText)
+                {
+                    float trueAmt = physSlider.value / physSlider.maxValue;
+                    trueAmt *= 100.0f;
+                    trueAmt = Mathf.Round(trueAmt);
+                    physsliderText.text = "" + trueAmt + "%";
+                }
+
+            }
+
+            if (magSlider)
+            {
+                magLevelText.text = "Mag LV: " + currentObj.MAGLEVEL;
+                magSlider.gameObject.SetActive(true);
+                magSlider.maxValue = 100;
+                magSlider.value = currentObj.BASE_STATS.MAGEXP;
+                if (magsliderText)
+                {
+                    float trueAmt = magSlider.value / magSlider.maxValue;
+                    trueAmt *= 100.0f;
+                    trueAmt = Mathf.Round(trueAmt);
+                    magsliderText.text = "" + trueAmt + "%";
+                }
+
+            }
+
+            if (skSlider)
+            {
+                skLevelText.text = "SK LV: " + currentObj.SKLEVEL;
+                skSlider.gameObject.SetActive(true);
+                skSlider.maxValue = 100;
+                skSlider.value = currentObj.BASE_STATS.SKILLEXP;
+                if (sksliderText)
+                {
+                    float trueAmt = skSlider.value / skSlider.maxValue;
+                    trueAmt *= 100.0f;
+                    trueAmt = Mathf.Round(trueAmt);
+                    sksliderText.text = "" + trueAmt + "%";
+                }
+
+            }
         }
         if (selectedHitlist != null)
         {
             for (int i = 0; i < selectedHitlist.Count; i++)
             {
                 armorreacts[i].sprite = armorSprites[(int)selectedHitlist[i]];
-                if(selectableContent[selectedContent] == armorreacts[i])
+                if (selectableContent[selectedContent] == armorreacts[i].transform.parent.GetComponent<Image>())
                 {
-                    switch((int)selectedHitlist[i])
+                    switch ((int)selectedHitlist[i])
                     {
                         case 0:
                             descriptionText.text = "Abs = Absorb. Absorbing an element allows it to heal by the damage it would have delt.";
@@ -274,7 +463,7 @@ public class DetailsScreen : MonoBehaviour
                             descriptionText.text = "Lthl = Lethal.  Lethal damage heavyily increases damage it would have delt, reduces generated action count by 1, and puts target into crippled state for 1 turn.";
                             break;
                         default:
-                          
+
 
                             break;
                     }
@@ -289,14 +478,14 @@ public class DetailsScreen : MonoBehaviour
             }
         }
 
-        if(wardSlider)
+        if (wardSlider)
         {
-            if(currentObj.ARMOR.NAME != "none")
+            if (currentObj.ARMOR.NAME != "none")
             {
                 wardSlider.gameObject.SetActive(true);
                 wardSlider.maxValue = currentObj.ARMOR.MAX_HEALTH;
                 wardSlider.value = currentObj.ARMOR.HEALTH;
-                if(sliderText)
+                if (sliderText)
                 {
                     float trueAmt = wardSlider.value / wardSlider.maxValue;
                     trueAmt *= 100.0f;
@@ -316,7 +505,7 @@ public class DetailsScreen : MonoBehaviour
         else if (val == 0)
             attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH;
         else
-            attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val+ ")";
+            attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
 
 
         val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
@@ -328,29 +517,29 @@ public class DetailsScreen : MonoBehaviour
             attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
 
 
-        val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
-        if (val > 0)
-            attributes[2].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (+" + val + ")";
-        else if (val == 0)
-            attributes[2].text = "Spd: " + currentObj.BASE_STATS.SPEED;
-        else
-            attributes[2].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (" + val + ")";
-
         val = currentObj.STATS.MAGIC;
         if (val > 0)
-            attributes[3].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (+" + val + ")";
+            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (+" + val + ")";
         else if (val == 0)
-            attributes[3].text = "Mag: " + currentObj.BASE_STATS.MAGIC;
+            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC;
         else
-            attributes[3].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
+            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
 
         val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         if (val > 0)
-            attributes[4].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (+" + val + ")";
+            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (+" + val + ")";
         else if (val == 0)
-            attributes[4].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE;
+            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE;
         else
-            attributes[4].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
+            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
+
+        val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
+        if (val > 0)
+            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (+" + val + ")";
+        else if (val == 0)
+            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED;
+        else
+            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (" + val + ")";
 
         val = currentObj.STATS.SKILL;
         if (val > 0)

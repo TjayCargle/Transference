@@ -1,2 +1,2 @@
--maptype s= start/n=norm/b=boss, map width, map height, num of actors, num of enemies, actor x, actor y, enenmy x, enemy y
-s,10,10, 2, 2, 3,5, 5, 5, 3,6,4,6
+-id, name, map width, map height, num of doors, num of enemies, num of hazards, door x, door y, enenmy x, enemy y, hazard x, hazard y, p1-p8xy  maptype s= start/n=norm/b=boss,
+1, Study Room, 4,4, 
