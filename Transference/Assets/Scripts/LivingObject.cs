@@ -39,6 +39,7 @@ public class LivingObject : GridObject
     private int physLevel = 1;
     private int magLevel = 1;
     private int skillLevel = 1;
+    private bool tookAction = false;
     public InventoryScript INVENTORY
     {
         get { return inventory; }
@@ -134,7 +135,7 @@ public class LivingObject : GridObject
     public int ACTIONS
     {
         get { return actions; }
-        set { actions = value; }
+        set { actions = value; tookAction = false; }
     }
     public int GENERATED
     {
@@ -294,7 +295,10 @@ public class LivingObject : GridObject
             }
             equipedArmor = GetComponent<ArmorEquip>();
             equipedArmor.USER = this;
-            equipedArmor. HITLIST = new List<EHitType>();
+            if (equipedArmor.HITLIST == null)
+                equipedArmor.HITLIST = new List<EHitType>();
+            else
+                equipedArmor.HITLIST.Clear();
             for (int i = 0; i < 7; i++)
             {
                 equipedArmor.HITLIST.Add(EHitType.normal);
@@ -448,9 +452,13 @@ public class LivingObject : GridObject
         }
 
     }
-
     public void TakeAction()
     {
+        myManager.CreateEvent(this, null, "Neo take action", TakeActionEvent);
+    }
+    public void TakeRealAction()
+    {
+        tookAction = true;
         if(GetComponent<EnemyScript>())
         {
 
@@ -462,7 +470,7 @@ public class LivingObject : GridObject
             //  myManager.doubleAdjOppTiles.Clear();
             if (ACTIONS <= 0)
             {
-                myManager.NextTurn(FullName);
+                myManager.NextTurn(FullName, myManager.currentState);
                 //myManager.CreateEvent(this, null, "clean state state event", myManager.BufferedCleanEvent);
 
                 //  myManager.CleanMenuStack(true);
@@ -474,13 +482,18 @@ public class LivingObject : GridObject
             }
         }
     }
+    public bool TakeActionEvent(Object data)
+    {
+        TakeRealAction();
+        return true;
+    }
     public void Wait()
     {
         // STATS.HEALTH += 5;
         // STATS.MANA += 2;
-        STATS.HEALTH += (int)(0.2 * MAX_HEALTH) * (actions + 1);
-        STATS.MANA += (int)(0.2 * MAX_MANA) * (actions + 1);
-        STATS.FATIGUE -= (int)(0.2 * MAX_FATIGUE) * (actions + 1);
+        STATS.HEALTH += (int)(0.125 * MAX_HEALTH) * (actions + 1);
+        STATS.MANA += (int)(0.125 * MAX_MANA) * (actions + 1);
+        STATS.FATIGUE -= (int)(0.125 * MAX_FATIGUE) * (actions + 1);
         if (HEALTH > MAX_HEALTH)
         {
             STATS.HEALTH = STATS.MAX_HEALTH;
@@ -496,9 +509,11 @@ public class LivingObject : GridObject
         float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
         spd = (int)(spd / 10);
        
-        if (actions == spd || actions == spd + 2)
+     //   if (actions == spd || actions == (spd + 2))
+     if(tookAction == false)
         {
             GENERATED += 2;
+
 
         }
         ACTIONS = 0;
@@ -596,8 +611,9 @@ public class LivingObject : GridObject
     protected bool startedDeathAnimation = false;
     public void DeathStart()
     {
-        if (!startedDeathAnimation)
+      //  if (!startedDeathAnimation)
         {
+            startedDeathAnimation = false;
             myManager.PlaySquishSnd();
             isdoneDying = false;
             StartCoroutine(FadeOut());
@@ -630,6 +646,7 @@ public class LivingObject : GridObject
                 yield return null;
             }
             isdoneDying = true;
+       
         }
     }
 }

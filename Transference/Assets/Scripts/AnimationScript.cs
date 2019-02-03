@@ -12,9 +12,10 @@ public class AnimationScript : MonoBehaviour
     public bool isSetup = false;
     LivingObject me;
     PlayerController controller;
-    CameraScript camera;
+    CameraScript cam;
     [SerializeField]
     Animator anim;
+    private bool repeat = true;
     public void Setup()
     {
         if (!isSetup)
@@ -49,7 +50,7 @@ public class AnimationScript : MonoBehaviour
                 render.sprite = currentList[index];
             }
             me = GetComponent<LivingObject>();
-            camera = GameObject.FindObjectOfType<CameraScript>();
+            cam = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();
             anim = GetComponent<Animator>();
             isSetup = true;
@@ -60,22 +61,30 @@ public class AnimationScript : MonoBehaviour
         Setup();
 
     }
-    public void LoadList(string path)
+    public void LoadList(string path, bool repeation = true)
     {
         index = 0;
         Resources.UnloadUnusedAssets();
         currentList = Resources.LoadAll<Sprite>(path);
+        repeat = repeation;
 
     }
     public void NextImage()
     {
         if (currentList.Length > 0)
         {
+            if(repeat == false)
+            {
+                if(index == currentList.Length - 1)
+                {
+                    return;
+                }
+            }
             if (me)
             {
-                if (camera)
+                if (cam)
                 {
-                    if (camera.infoObject == me)
+                    if (cam.infoObject == me)
                     {
                         index++;
                         if (index >= currentList.Length)
@@ -105,9 +114,9 @@ public class AnimationScript : MonoBehaviour
 
             if (me)
             {
-                if (camera)
+                if (cam)
                 {
-                    if (camera.infoObject == me)
+                    if (cam.infoObject == me)
                     {
                         anim.speed = 1;
                     }

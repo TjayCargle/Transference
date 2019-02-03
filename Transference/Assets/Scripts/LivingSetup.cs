@@ -77,5 +77,8 @@ public class LivingSetup : MonoBehaviour
 
             Setup();
     }
-
+    public void Unset()
+    {
+        isSetup = false;
+    }
 }

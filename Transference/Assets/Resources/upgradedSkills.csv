@@ -1,0 +1,13 @@
+-cmd id,name,element,SubSkillType, side effect,cost,etype,range type,level,uses, accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy, aug count, augments
+-0 buffs-debuffs - use of buffs/debufs
+-1 rng / multi-hit - use of multi-hit
+-2 aoe - use of area
+-3 ailment - use of skills with ailments
+-4 raw dmg - killing enemies
+-100,Ralli Str,Buff,none,none,4,magical,any,1,30,1, str,1,0,1
+100,Slice,Slash,Buff,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+101,Deep Cut,Slash,RngAtk,none,10,physical,single,1,0,75,medium,1,0,1,0,1
+102,Dice,Slash,Attack,none,12,physical,area,1,0,75,medium,2,0,1,0,1
+103,mince,Slash,Ailment,none,14,physical,multi,2,0,80,severe,1,0,1,0,1
+104,Surcron,Slash,Attack,none,18,physical,multi,2,0,80,severe,2,0,1,0,1
+105,Surega,Slash,Attack,bleed,24,physical,area,3,0,85,collassal,2,0,1,0,1

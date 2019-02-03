@@ -11,13 +11,15 @@ public class TileScript : MonoBehaviour, IComparable
     MeshRenderer myRender;
     public int listindex = -1;
     [SerializeField]
-    Mesh mesh;
-    [SerializeField]
-    Vector3[] vertices;
-    [SerializeField]
-    Vector2[] uvs;
-    [SerializeField]
-    float uFloat;
+    Material mat;
+   // [SerializeField]
+  // Mesh mesh;
+    //[SerializeField]
+    //Vector3[] vertices;
+    //[SerializeField]
+    //Vector2[] uvs;
+    //[SerializeField]
+    //float uFloat;
 
     [SerializeField]
     float vFloat;
@@ -29,13 +31,11 @@ public class TileScript : MonoBehaviour, IComparable
         if (GetComponent<MeshRenderer>())
         {
             myRender = GetComponent<MeshRenderer>();
-            mesh = GetComponent<MeshFilter>().mesh;
-            vertices = mesh.vertices;
-            uvs = new Vector2[vertices.Length];
+            mat = myRender.material;
         }
         myColor = Color.black;
-        lastU = uFloat;
-        lastV = vFloat;
+
+    
     }
 
     // Update is called once per frame
@@ -47,20 +47,34 @@ public class TileScript : MonoBehaviour, IComparable
             myRender.material.color = myColor;
         }
 
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-
-            mesh = GetComponent<MeshFilter>().mesh;
-            vertices = mesh.vertices;
-            mesh.uv = uvs;
-            uvs = new Vector2[vertices.Length];
-
-        }
-
 
 
     }
+    [SerializeField]
+    private string mapNmae;
+    [SerializeField]
+    private int roomIndex;
+    public string MAP
+    {
+        get { return mapNmae; }
+        set { mapNmae = value; }
+    }
 
+    public int ROOM
+    {
+        get { return roomIndex; }
+        set { roomIndex = value; }
+    }
+    public Material MAT
+    {
+        get { return mat; }
+        set { mat = value; }
+    }
+    public void BreakRooms()
+    {
+        MAP = "";
+        ROOM = -1;
+    }
     public int CompareTo(object obj)
     {
         TileScript other = obj as TileScript;

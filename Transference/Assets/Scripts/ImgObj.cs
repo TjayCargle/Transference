@@ -14,7 +14,7 @@ public class ImgObj : MonoBehaviour {
     {
         myImage = GetComponent<Image>();
     }
-    public void StartCountDown(float t = 1.00f)
+    public virtual void StartCountDown(float t = 1.00f)
     {
         if (isShowing == false)
         {
@@ -24,7 +24,7 @@ public class ImgObj : MonoBehaviour {
         }
     }
 
-    public void StopCountDown()
+    public virtual void StopCountDown()
     {
         time = 0;
         isShowing = false;

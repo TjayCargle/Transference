@@ -17,7 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/GameOver.unity
     guid: 698c164a266012a4fb9e555ade5ad69b
-  - enabled: 1
+  - enabled: 0
     path: Assets/DemoMap2.unity
     guid: e10f05a0706ddd5499a9f443d6c6d43c
+  - enabled: 1
+    path: Assets/DemoMap3.unity
+    guid: 6e3e5ef255f4fc44f8a189acb8b05dbd
   m_configObjects: {}

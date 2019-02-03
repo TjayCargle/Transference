@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour {
    public List<TileScript> tiles;
+    public Texture defaultTexture;
+
     public GameObject Tile;
     public bool isSetup = false;
     public void Setup()
@@ -26,6 +28,9 @@ public class TileManager : MonoBehaviour {
             for (int i = 0; i < num; i++)
             {
                 tiles[i].gameObject.SetActive(true);
+                tiles[i].BreakRooms();
+                tiles[i].MAT.mainTexture = defaultTexture;
+                tiles[i].isOccupied = false;
                 subTiles.Add(tiles[i]);
             }
         }
@@ -34,6 +39,9 @@ public class TileManager : MonoBehaviour {
             for (int i = 0; i < tiles.Count; i++)
             {
                 tiles[i].gameObject.SetActive(true);
+                tiles[i].BreakRooms();
+                tiles[i].MAT.mainTexture = defaultTexture;
+                tiles[i].isOccupied = false;
                 subTiles.Add(tiles[i]);
             }
             while (tiles.Count < num)
@@ -42,6 +50,8 @@ public class TileManager : MonoBehaviour {
                 TileScript tile = temp.AddComponent<TileScript>();
                 tile.Setup();
                 tiles.Add(tile);
+                tile.BreakRooms();
+                tile.MAT.mainTexture = defaultTexture;
                 subTiles.Add(tile);
             }
         }

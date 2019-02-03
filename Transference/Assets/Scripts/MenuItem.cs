@@ -19,11 +19,11 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(eventData.button == PointerEventData.InputButton.Left)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
 
-        if (myManager)
-            myManager.SelectMenuItem(this);
+            if (myManager)
+                myManager.SelectMenuItem(this);
         }
     }
 
@@ -66,16 +66,16 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void ApplyAction(GridObject invokingObject)
     {
-        if(myManager.currentState == State.ChangeOptions)
+        if (myManager.currentState == State.ChangeOptions)
         {
             return;
         }
-        if(invokingObject == null)
+        if (invokingObject == null)
         {
             return;
         }
         MenuItemType item = (MenuItemType)itemType;
-       // Debug.Log("Menu item :" + item);
+        // Debug.Log("Menu item :" + item);
         switch (item)
         {
             case MenuItemType.Move:
@@ -127,6 +127,36 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                     {
                                         myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
 
+                                        myManager.myCamera.potentialDamage = 0;
+                                        myManager.myCamera.UpdateCamera();
+                                        myManager.anchorHpBar();
+
+                                        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+                                        if (griddy)
+                                        {
+                                            if (griddy.GetComponent<LivingObject>())
+                                            {
+                                                LivingObject livvy = griddy.GetComponent<LivingObject>();
+                                                if (livvy.FACTION != myManager.player.current.FACTION)
+                                                {
+                                                    DmgReaction reac;
+                                                    if(myManager.player.currentSkill)
+                                                        reac= myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
+                                                    else
+                                                        reac= myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                                                    if (reac.reaction > Reaction.weak)
+                                                        reac.damage = 0;
+                                                    myManager.myCamera.potentialDamage = reac.damage;
+                                                    myManager.myCamera.UpdateCamera();
+                                                    if (myManager.potential)
+                                                    {
+                                                        myManager.potential.pulsing = true;
+                                                    }
+                                                    if (reac.damage == 0)
+                                                        Debug.Log("Zero " + " /" + reac.reaction);
+                                                }
+                                            }
+                                        }
                                     }
 
                                 }
@@ -152,6 +182,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             //entry.index = myManager.invManager.currentIndex;
                             //entry.menu = currentMenu.command;
                             //myManager.enterState(entry);
+                       
                             myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
 
                         }
@@ -337,7 +368,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //entry.index = myManager.invManager.currentIndex;
                     //entry.menu = currentMenu.skillsMain;
                     //myManager.enterState(entry);
-                    myManager.StackNewSelection(State.PlayerEquipping, currentMenu.act);
+                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
@@ -346,7 +377,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                             myMenuManager.ShowItemCanvas(7, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(7, liveInvokingObject);
 
                         }
                     }
@@ -395,7 +426,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(8, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(2, liveInvokingObject);
                             myMenuManager.ShowExtraCanvas(1, invokingObject.GetComponent<LivingObject>());
                         }
                     }
@@ -429,23 +460,23 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.special:
                 break;
             case MenuItemType.prevMenu:
-             
+
                 myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
                 myManager.currentState = State.PlayerTransition;
                 break;
             case MenuItemType.generated:
-     
-                if(myManager.currentState == State.PlayerOppOptions)
+
+                if (myManager.currentState == State.PlayerOppOptions)
                 {
                     myManager.player.useOppAction(myManager.oppObj);
                 }
                 else
                 {
-                myManager.player.useOrEquip();
+                    myManager.player.useOrEquip();
 
                 }
 
-                
+
                 break;
 
             case MenuItemType.selectItem:
@@ -484,6 +515,41 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
         }
     }
+    public bool ComfirmAction(GridObject invokingObject, MenuItemType itemType)
+    {
+        MenuItemType item = itemType;
+        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+        switch (item)
+        {
+            case MenuItemType.Move:
+                {
+                    TileScript checkTile = myManager.GetTile(invokingObject);
+                    if (checkTile.isOccupied == false)
+                    {
+
+                        myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
+                        // myManager.currentState = State.PlayerInput;
+                        // myManager.returnState();
+                        myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                break;
+
+
+            default:
+                // myManager.returnState();// myManager.currentState = State.PlayerInput;
+                myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+
+                return true;
+                break;
+
+        }
+    }
     public bool ComfirmAction(GridObject invokingObject)
     {
         MenuItemType item = (MenuItemType)itemType;
@@ -491,24 +557,29 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         switch (item)
         {
             case MenuItemType.Move:
-                if (myManager.GetTile(invokingObject).isOccupied == false)
                 {
+                    TileScript checkTile = myManager.GetTile(invokingObject);
+                    if (checkTile.isOccupied == false)
+                    {
 
-                    myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
-                    // myManager.currentState = State.PlayerInput;
-                    myManager.returnState();
-                   
-                    return true;
-                }
-                else
-                {
-                    return false;
+                        myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
+                        // myManager.currentState = State.PlayerInput;
+                        // myManager.returnState();
+                         myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 break;
 
-           
+
             default:
-                myManager.returnState();// myManager.currentState = State.PlayerInput;
+                // myManager.returnState();// myManager.currentState = State.PlayerInput;
+                myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+
                 return true;
                 break;
 

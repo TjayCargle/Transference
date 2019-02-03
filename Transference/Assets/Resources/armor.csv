@@ -1,8 +1,8 @@
 id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect
 0,Dragon Ward,Hardened skinned, 12, 8, 10, weak, nulls, cripples, normal, resists, resists, normal
 1,Witch Ward,Hardened skinned, 8, 12, 10, normal, resists, resists, normal, weak, cripples, normal
-2,Bumblebee Ward,Hardened skinned, 10, 6, 14, normal, leathal, cripples, normal, normal, weak, savage
-3,Scorpion Ward,Hardened skinned, 8, 12, 10, savage, absorbs, leathal, normal, normal, cripples, weak
+2,Bumblebee Ward,Hardened skinned, 10, 6, 7, normal, leathal, cripples, normal, normal, weak, savage
+3,Scorpion Ward,Hardened skinned, 8, 12, 5, savage, absorbs, leathal, normal, normal, cripples, weak
 4,Phoenix Ward,Fire, 10, 8, 10, weak, reflects, cripples, normal, normal, savage, normal
 5,Pixie Ward,Fire, 10, 8, 10, normal, normal, reflects, normal, resists, leathal, normal
 6,Neutral Ward,Purely Neutral, 5, 5, 20, normal,normal,normal,normal,normal,normal, normal

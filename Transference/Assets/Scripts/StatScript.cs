@@ -331,7 +331,9 @@ public class StatScript : MonoBehaviour
             MAX_HEALTH = 0;
             MAX_MANA = 0;
             MAX_FATIGUE = 0;
-
+            HEALTH = 0;
+            MANA = 0;
+            FATIGUE = 0;
         }
 
     }

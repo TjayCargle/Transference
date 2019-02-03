@@ -24,7 +24,8 @@ public class CameraScript : MonoBehaviour
     public int y = -5;
     public int z = 7;
 
-
+    public int potentialDamage = 0;
+    public bool attackingCheck = false;
 
     public Sprite[] resSprites;
     public Sprite[] weakSprites;
@@ -36,6 +37,7 @@ public class CameraScript : MonoBehaviour
     Color transparent;
     Color opaque;
     public float smoothSpd = 0.5f;
+    public ArmorSet armorSet;
     void Start()
     {
         transform.Rotate(new Vector3(35, 5, 0));
@@ -85,11 +87,12 @@ public class CameraScript : MonoBehaviour
                             if (!infoObject.GetComponent<TempObject>())
                             {
 
-                                if (!infoCanvas.gameObject.activeInHierarchy)
-                                {
-                                    infoCanvas.gameObject.SetActive(true);
-                                }
-                                if (!actionText.gameObject.activeInHierarchy)
+                                //if (!infoCanvas.gameObject.activeInHierarchy)
+                                //{
+                                //    infoCanvas.gameObject.SetActive(true);
+                                //}
+                        
+                                if (actionText.transform.parent.gameObject.activeInHierarchy)
                                 {
                                     actionText.gameObject.SetActive(true);
                                 }
@@ -98,15 +101,22 @@ public class CameraScript : MonoBehaviour
                                 {
 
                                     LivingObject liver = infoObject.GetComponent<LivingObject>();
+
+                                    if (armorSet)
+                                    {
+                                        armorSet.currentObj = liver;
+                                        armorSet.updateDetails();
+                                    }
+
                                     infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
                                     if (!actionText.IsActive())
                                     {
-                                        actionText.transform.parent.gameObject.SetActive(true);
+                                        //  actionText.transform.parent.gameObject.SetActive(true);
                                     }
                                     actionText.text = "Actions: " + liver.ACTIONS;
                                     if (showActions)
                                     {
-                                  
+
 
                                     }
                                     else
@@ -122,8 +132,16 @@ public class CameraScript : MonoBehaviour
                                     }
                                     if (healthSlider)
                                     {
-                                        healthSlider.value = (float)liver.HEALTH / (float)liver.MAX_HEALTH;
-                                        healthText.text = liver.HEALTH.ToString() + "/" + liver.MAX_HEALTH.ToString();
+                                        healthSlider.value = (float)(liver.HEALTH - potentialDamage) / (float)liver.MAX_HEALTH;
+                                        if (attackingCheck == false)
+                                        {
+                                            healthText.text = (liver.HEALTH).ToString() + "/" + liver.MAX_HEALTH.ToString();
+
+                                        }
+                                        else
+                                        {
+                                            healthText.text = liver.HEALTH + " - " + potentialDamage;
+                                        }
                                     }
                                     if (mansSlider)
                                     {
@@ -134,7 +152,7 @@ public class CameraScript : MonoBehaviour
                                     {
                                         fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
                                         fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
-                                    }                           
+                                    }
 
                                     if (manager.currentState == State.PlayerEquipping)
                                     {
@@ -146,7 +164,7 @@ public class CameraScript : MonoBehaviour
                                             {
                                                 if (manager.invManager.selectedMenuItem.refItem)
                                                 {
-                                                    DescriptionCanvas.gameObject.SetActive(true);
+                                                 //   DescriptionCanvas.gameObject.SetActive(true);
                                                     Text txt = DescriptionCanvas.GetComponentInChildren<Text>();
                                                     string newText = "";
 
@@ -206,14 +224,14 @@ public class CameraScript : MonoBehaviour
                                                                         newText += skil.ACCURACY.ToString();
                                                                         newText += "\n Base Damage: " + ((int)skil.DAMAGE);
                                                                         newText += "\n Side effect: " + skil.EFFECT;
-                                                                   
+
                                                                     }
                                                                     break;
 
                                                                 case descState.equipped:
                                                                     {
                                                                         CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
-                                                                    
+
                                                                         newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
 
                                                                     }
@@ -231,15 +249,15 @@ public class CameraScript : MonoBehaviour
                                         }
                                         else
                                         {
-                                            DescriptionCanvas.gameObject.SetActive(false);
+                                       //     DescriptionCanvas.gameObject.SetActive(false);
                                         }
                                     }
                                     else
                                     {
-                                        DescriptionCanvas.gameObject.SetActive(false);
+                                //        DescriptionCanvas.gameObject.SetActive(false);
                                     }
 
-                      
+
 
                                 }
                                 else if (infoObject.GetComponent<StatScript>())
@@ -255,19 +273,19 @@ public class CameraScript : MonoBehaviour
                             }
                             else
                             {
-                                if (actionText.gameObject.activeInHierarchy)
-                                {
+                                //if (actionText.gameObject.activeInHierarchy)
+                                //{
 
-                                    actionText.gameObject.SetActive(false);
-                                }
-                                if (infoCanvas.gameObject.activeInHierarchy)
-                                {
-                                    infoCanvas.gameObject.SetActive(false);
-                                }
-                                if (DescriptionCanvas.gameObject.activeInHierarchy)
-                                {
-                                    DescriptionCanvas.gameObject.SetActive(false);
-                                }
+                                //    actionText.gameObject.SetActive(false);
+                                //}
+                                //if (infoCanvas.gameObject.activeInHierarchy)
+                                //{
+                                //    infoCanvas.gameObject.SetActive(false);
+                                //}
+                                //if (DescriptionCanvas.gameObject.activeInHierarchy)
+                                //{
+                                //    DescriptionCanvas.gameObject.SetActive(false);
+                                //}
                             }
 
                         }
@@ -278,25 +296,25 @@ public class CameraScript : MonoBehaviour
 
                                 infoObject = null;
                                 infoText.text = "";
-                                infoCanvas.gameObject.SetActive(false);
+                                //  infoCanvas.gameObject.SetActive(false);
                             }
 
                         }
                     }
                     else
                     {
-                        if (actionText.gameObject.activeInHierarchy)
-                        {
+                        //if (actionText.gameObject.activeInHierarchy)
+                        //{
 
-                            actionText.gameObject.SetActive(false);
-                        }
+                        //    actionText.gameObject.SetActive(false);
+                        //}
                         if (infoCanvas.gameObject.activeInHierarchy)
                         {
-                            infoCanvas.gameObject.SetActive(false);
+                            //  infoCanvas.gameObject.SetActive(false);
                         }
                         if (DescriptionCanvas.gameObject.activeInHierarchy)
                         {
-                            DescriptionCanvas.gameObject.SetActive(false);
+                       //     DescriptionCanvas.gameObject.SetActive(false);
                         }
                     }
 
@@ -317,11 +335,11 @@ public class CameraScript : MonoBehaviour
         {
             if (actionText.gameObject.activeInHierarchy)
             {
-                actionText.gameObject.SetActive(false);
+                // actionText.gameObject.SetActive(false);
             }
             if (infoCanvas.gameObject.activeInHierarchy)
             {
-                infoCanvas.gameObject.SetActive(false);
+                //    infoCanvas.gameObject.SetActive(false);
             }
         }
     }

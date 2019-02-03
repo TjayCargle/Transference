@@ -148,4 +148,12 @@ public class AutoSkill : SkillScript
         return Reaction.none;
     }
 
+    public override void AugmentSkill(Augment augment)
+    {
+        if(augment == Augment.autoAugment)
+        {
+            CHANCE *= 2;
+        }
+    }
+
 }

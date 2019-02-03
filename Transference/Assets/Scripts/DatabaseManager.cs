@@ -82,7 +82,7 @@ public class DatabaseManager : MonoBehaviour
                     if (line[0] != '-')
                     {
                         string[] parsed = line.Split(',');
-                     
+
                         skillDictionary.Add(Int32.Parse(parsed[0]), skillLines[i]);
                     }
                 }
@@ -192,7 +192,7 @@ public class DatabaseManager : MonoBehaviour
                     if (line[0] != '-')
                     {
                         string[] parsed = line.Split(',');
-                      //  mapDictionary.Add(Int32.Parse(parsed[0]), line);
+                        mapDictionary.Add(Int32.Parse(parsed[0]), line);
                     }
                 }
             }
@@ -265,6 +265,7 @@ public class DatabaseManager : MonoBehaviour
         //    }
     }
 
+
     public SkillScript LearnSkill(int id, LivingObject livingObject, bool equip = false)
     {
         if (skill == null)
@@ -280,267 +281,391 @@ public class DatabaseManager : MonoBehaviour
                 string[] parsed = lines.Split(',');
                 if (Int32.Parse(parsed[0]) == id)
                 {
+                    skill.OWNER = livingObject;
                     skill.INDEX = id;
                     skill.OWNER = livingObject;
-                    skill.NAME = parsed[3];
-                    skill.DESC = parsed[4];
-                    skill.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[5]);
+                    skill.NAME = parsed[1];
+                    //   skill.DESC = parsed[4];
+                    skill.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[2]);
+                    skill.SUBTYPE = (SubSkillType)Enum.Parse(typeof(SubSkillType), parsed[3]);
+                    skill.AUGMENTS = ScriptableObject.CreateInstance<AugmentScript>();
                     //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                     skill.TYPE = 4;
                     if (!livingObject.INVENTORY.ContainsSkillName(skill.NAME))
                     {
+                        switch (skill.ELEMENT)
+                        {
 
+                            case Element.Buff:
+                                {
+
+                                    int index = 14;
+                                    int count = Int32.Parse(parsed[13]);
+                                    CommandSkill buff = ScriptableObject.CreateInstance<CommandSkill>();
+                                    skill.Transfer(buff);
+                                    //buff.FRIEND = Int32.Parse(parsed[1]);
+                                    //buff.FRIEND_NEXT = Int32.Parse(parsed[2]);
+                                    buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
+                                    buff.COST = Int32.Parse(parsed[5]);
+                                    buff.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
+                                    buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+
+                                    //buff.NEXT = Int32.Parse(parsed[10]);
+                                    buff.ACCURACY = 100;
+                                    //if (buff.NEXT >= 0)
+                                    //{
+                                    //    buff.NEXT = buff.INDEX + 1;
+                                    //}
+                                    //buff.NEXTCOUNT = Int32.Parse(parsed[11]);
+                                    //if (buff.NEXTCOUNT > 0)
+                                    //{
+                                    //    buff.NEXTCOUNT = 2;
+                                    //}
+                                    // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
+                                    buff.HITS = Int32.Parse(parsed[11]);
+                                    buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
+                                    buff.TILES = new System.Collections.Generic.List<Vector2>();
+
+                                    Modification mod = new Modification();
+                                    switch (buff.BUFF)
+                                    {
+                                        case BuffType.attack:
+                                            mod.affectedStat = ModifiedStat.Atk;
+                                            break;
+                                        case BuffType.speed:
+                                            mod.affectedStat = ModifiedStat.Speed;
+                                            break;
+                                        case BuffType.defense:
+                                            mod.affectedStat = ModifiedStat.Def;
+                                            break;
+                                        case BuffType.resistance:
+                                            mod.affectedStat = ModifiedStat.Res;
+                                            break;
+                                        case BuffType.skill:
+                                            mod.affectedStat = ModifiedStat.Skill;
+                                            break;
+                                        case BuffType.none:
+                                            break;
+                                        case BuffType.str:
+                                            mod.affectedStat = ModifiedStat.Str;
+                                            break;
+                                        case BuffType.mag:
+                                            mod.affectedStat = ModifiedStat.Mag;
+                                            break;
+                                        case BuffType.all:
+                                            mod.affectedStat = ModifiedStat.all;
+                                            break;
+                                    }
+                                    mod.editValue = (float)Double.Parse(parsed[10]);
+
+                                    buff.BUFFEDSTAT = mod.affectedStat;
+                                    buff.BUFFVAL = mod.editValue;
+
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        Vector2 v = new Vector2();
+                                        v.x = Int32.Parse(parsed[index]);
+                                        index++;
+                                        v.y = Int32.Parse(parsed[index]);
+                                        index++;
+                                        buff.TILES.Add(v);
+                                    }
+                                    livingObject.GetComponent<InventoryScript>().CSKILLS.Add(buff);
+                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(buff);
+                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(buff);
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.BATTLE_SLOTS.CanAdd())
+                                            livingObject.BATTLE_SLOTS.SKILLS.Add(buff);
+                                    }
+                                    if (buff.SUBTYPE == SubSkillType.Buff)
+                                    {
+                                        buff.DESC = "Increases " + buff.BUFFEDSTAT + " of yourself or ally by " + buff.BUFFVAL + "% for 3 turns";
+                                    }
+                                    else if (buff.SUBTYPE == SubSkillType.Debuff)
+                                    {
+                                        buff.DESC = "Decreases " + buff.BUFFEDSTAT + " of enemy by " + buff.BUFFVAL + "% for 3 turns";
+                                    }
+                                    else
+                                    {
+                                        buff.DESC = "You shouldnt see this";
+                                    }
+                                    return buff;
+                                }
+                                break;
+                            case Element.Heal:
+                                break;
+                            case Element.Passive:
+                                {
+
+                                    int index = 10;
+                                    int count = Int32.Parse(parsed[9]);
+
+                                    PassiveSkill passive = ScriptableObject.CreateInstance<PassiveSkill>();
+                                    skill.Transfer(passive);
+                                    passive.ModElements = new List<Element>();
+                                    passive.ModValues = new List<float>();
+                                    passive.DESC = parsed[4];
+                                    passive.PERCENT = (float)Double.Parse(parsed[5]);
+                                    if (count > 0)
+                                    {
+
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            Modification mod = new Modification();
+                                            mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
+                                            mod.affectedElement = (Element)Enum.Parse(typeof(Element), parsed[index]);
+                                            mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
+                                            index++;
+                                            passive.ModStat = mod.affectedStat;
+                                            passive.ModValues.Add(mod.editValue);
+                                            passive.ModElements.Add(mod.affectedElement);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Modification mod = new Modification();
+                                        mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
+                                        mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
+                                        passive.ModStat = mod.affectedStat;
+                                        passive.ModValues.Add(mod.editValue);
+                                        passive.ModElements.Add(mod.affectedElement);
+                                    }
+                                    livingObject.INVENTORY.USEABLES.Add(passive);
+                                    livingObject.INVENTORY.PASSIVES.Add(passive);
+                                    livingObject.INVENTORY.SKILLS.Add(passive);
+
+
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.PASSIVE_SLOTS.CanAdd())
+                                        {
+                                            livingObject.PASSIVE_SLOTS.SKILLS.Add(passive);
+                                            livingObject.ApplyPassives();
+                                        }
+                                    }
+                                    return passive;
+                                }
+                                break;
+                            case Element.Opp:
+                                {
+
+                                    OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
+                                    skill.Transfer(opp);
+                                    opp.TRIGGER = (Element)Enum.Parse(typeof(Element), parsed[4]);
+                                    opp.MOD = (float)Double.Parse(parsed[5]);
+                                    opp.DESC = "Allows a free attack after an ally hits with a "+opp.TRIGGER+" attack.";
+
+                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
+                                    livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
+                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.OPP_SLOTS.CanAdd())
+                                            livingObject.OPP_SLOTS.SKILLS.Add(opp);
+                                    }
+                                    return opp;
+                                }
+                                break;
+                            case Element.Ailment:
+                                {
+
+                                    int index = 14;
+                                    int count = Int32.Parse(parsed[13]);
+                                    CommandSkill ailment = ScriptableObject.CreateInstance<CommandSkill>();
+                                    skill.Transfer(ailment);
+
+                                    ailment.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
+                                    ailment.COST = Int32.Parse(parsed[5]);
+                                    ailment.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
+                                    ailment.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+
+                                    ailment.ACCURACY = 100;
+
+                                    ailment.HITS = Int32.Parse(parsed[11]);
+                                
+                                    ailment.TILES = new System.Collections.Generic.List<Vector2>();
+
+                                 
+
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        Vector2 v = new Vector2();
+                                        v.x = Int32.Parse(parsed[index]);
+                                        index++;
+                                        v.y = Int32.Parse(parsed[index]);
+                                        index++;
+                                        ailment.TILES.Add(v);
+                                    }
+                                    livingObject.GetComponent<InventoryScript>().CSKILLS.Add(ailment);
+                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(ailment);
+                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(ailment);
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.BATTLE_SLOTS.CanAdd())
+                                            livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
+                                    }
+
+                                    ailment.DESC = "Has an " + ailment.ACCURACY + "% chance to inflict enemy with " + ailment.EFFECT;
+                                    
+                                    return ailment;
+                                }
+                                break;
+                            case Element.Auto:
+                                {
+
+                                    AutoSkill auto = ScriptableObject.CreateInstance<AutoSkill>();
+                                    skill.Transfer(auto);
+                                    auto.DESC = parsed[4];
+                                    auto.CHANCE = (float)Double.Parse(parsed[5]);
+                                    auto.ACT = (AutoAct)Enum.Parse(typeof(AutoAct), parsed[6]);
+                                    auto.REACT = (AutoReact)Enum.Parse(typeof(AutoReact), parsed[7]);
+
+                               //     auto.NEXT = Int32.Parse(parsed[9]);
+                                 //   auto.NEXTCOUNT = Int32.Parse(parsed[10]);
+                                    auto.VAL = Int32.Parse(parsed[8]);
+                                    auto.OWNER = livingObject;
+                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(auto);
+                                    livingObject.GetComponent<InventoryScript>().AUTOS.Add(auto);
+                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(auto);
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.AUTO_SLOTS.CanAdd())
+                                            livingObject.AUTO_SLOTS.SKILLS.Add(auto);
+                                    }
+                                    return auto;
+                                }
+                                break;
+                            case Element.none:
+                                break;
+                            default:
+                                {
+
+                                    int index = 15;
+                                    int count = Int32.Parse(parsed[14]);
+                                    CommandSkill command = ScriptableObject.CreateInstance<CommandSkill>();
+                                    skill.Transfer(command);
+                                    //command.FRIEND = Int32.Parse(parsed[1]);
+                                    //command.FRIEND_NEXT = Int32.Parse(parsed[2]);
+
+                                    //command.NEXT = Int32.Parse(parsed[10]);
+                                    //if (command.NEXT >= 0)
+                                    {
+                                        //    command.NEXT = command.INDEX + 1;
+                                    }
+                                    // command.NEXTCOUNT = Int32.Parse(parsed[11]);
+                                    //if (command.NEXTCOUNT > 0)
+                                    //{
+                                    //    command.NEXTCOUNT = 2;
+                                    //}
+
+                                    command.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
+                                    command.COST = Int32.Parse(parsed[5]);
+                                    command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
+                                    command.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                                    command.ACCURACY = Int32.Parse(parsed[10]);
+
+                                    command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
+                                    command.HITS = Int32.Parse(parsed[12]);
+                                    command.CRIT_RATE = Int32.Parse(parsed[13]);
+                                    command.TILES = new System.Collections.Generic.List<Vector2>();
+
+
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        Vector2 v = new Vector2();
+                                        v.x = Int32.Parse(parsed[index]);
+                                        index++;
+                                        v.y = Int32.Parse(parsed[index]);
+                                        index++;
+                                        command.TILES.Add(v);
+                                    }
+                                    if (command.SUBTYPE == SubSkillType.RngAtk)
+                                    {
+                                        command.MIN_HIT = Int32.Parse(parsed[index]);
+                                        index++;
+                                        command.MAX_HIT = Int32.Parse(parsed[index]);
+
+                                    }
+                                    if (command.RTYPE == RanngeType.single)
+                                    {
+                                        command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to a single enemy";
+                                        if (command.HITS > 1)
+                                        {
+                                            command.DESC += " " + command.HITS + " times";
+                                        }
+                                    }
+                                    if (command.RTYPE == RanngeType.area)
+                                    {
+                                        command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to all enemies in range";
+
+                                    }
+                                    if (command.RTYPE == RanngeType.multi)
+                                    {
+                                        command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to an enemy in range";
+
+                                    }
+                                    // if (command.HITS == 1)
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " enemy";
+                                    //else
+                                    //{
+
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to enemy " + command.HITS + " times";
+
+                                    //}
+                                    if (command.SUBTYPE == SubSkillType.RngAtk)
+                                    {
+                                        command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to enemy " + command.MIN_HIT + "-" + command.MAX_HIT + " times";
+                                    }
+                                    if (command.EFFECT != SideEffect.none)
+                                    {
+                                        if (command.EFFECT < SideEffect.reduceStr)
+                                        {
+                                            command.DESC += " with a chance of " + command.EFFECT.ToString();
+                                        }
+                                        else
+                                        {
+                                            command.DESC += " with a chance to debuff " + Common.GetSideEffectText(command.EFFECT);
+                                            command.BUFFEDSTAT = Common.GetSideEffectMod(command.EFFECT);
+                                            command.BUFFVAL = -1 * command.CRIT_RATE;
+                                            command.EFFECT = SideEffect.debuff;
+                                        }
+                                    }
+
+                                    livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);
+                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(command);
+                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
+                                    if (equip == true)
+                                    {
+                                        if (livingObject.BATTLE_SLOTS.CanAdd())
+                                            livingObject.BATTLE_SLOTS.SKILLS.Add(command);
+                                    }
+                                    return command;
+                                }
+                                break;
+                        }
                         if (skill.ELEMENT == Element.Auto)
                         {
-                            AutoSkill auto = ScriptableObject.CreateInstance<AutoSkill>();
-                            skill.Transfer(auto);
 
-                            auto.CHANCE = (float)Double.Parse(parsed[6]);
-                            auto.ACT = (AutoAct)Enum.Parse(typeof(AutoAct), parsed[7]);
-                            auto.REACT = (AutoReact)Enum.Parse(typeof(AutoReact), parsed[8]);
-
-                            auto.NEXT = Int32.Parse(parsed[9]);
-                            auto.NEXTCOUNT = Int32.Parse(parsed[10]);
-                            auto.VAL = Int32.Parse(parsed[11]);
-                            auto.OWNER = livingObject;
-                            livingObject.GetComponent<InventoryScript>().USEABLES.Add(auto);
-                            livingObject.GetComponent<InventoryScript>().AUTOS.Add(auto);
-                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(auto);
-                            if (equip == true)
-                            {
-                                if (livingObject.AUTO_SLOTS.CanAdd())
-                                    livingObject.AUTO_SLOTS.SKILLS.Add(auto);
-                            }
-                            return auto;
                         }
                         else if (skill.ELEMENT == Element.Opp)
                         {
-                            OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
-                            skill.Transfer(opp);
-                            opp.TRIGGER = (Element)Enum.Parse(typeof(Element), parsed[6]);
-                            opp.MOD = (float)Double.Parse(parsed[7]);
 
-                            livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
-                            livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
-                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
-                            if (equip == true)
-                            {
-                                if (livingObject.OPP_SLOTS.CanAdd())
-                                    livingObject.OPP_SLOTS.SKILLS.Add(opp);
-                            }
-                            return opp;
                         }
                         else if (skill.ELEMENT == Element.Buff)
                         {
 
-                            int index = 17;
-                            int count = Int32.Parse(parsed[16]);
-                            CommandSkill buff = ScriptableObject.CreateInstance<CommandSkill>();
-                            skill.Transfer(buff);
-                            buff.FRIEND = Int32.Parse(parsed[1]);
-                            buff.FRIEND_NEXT = Int32.Parse(parsed[2]);
-                            buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[6]);
-                            buff.COST = Int32.Parse(parsed[7]);
-                            buff.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[8]);
-                            buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[9]);
-                            buff.NEXT = Int32.Parse(parsed[10]);
-                            buff.ACCURACY = 100;
-                            if (buff.NEXT >= 0)
-                            {
-                                buff.NEXT = buff.INDEX + 1;
-                            }
-                            buff.NEXTCOUNT = Int32.Parse(parsed[11]);
-                            if (buff.NEXTCOUNT > 0)
-                            {
-                                buff.NEXTCOUNT = 2;
-                            }
-                            // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
-                            buff.HITS = Int32.Parse(parsed[12]);
-                            buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[15]);
-                            buff.TILES = new System.Collections.Generic.List<Vector2>();
 
-                            Modification mod = new Modification();
-                            switch (buff.BUFF)
-                            {
-                                case BuffType.attack:
-                                    mod.affectedStat = ModifiedStat.Atk;
-                                    break;
-                                case BuffType.speed:
-                                    mod.affectedStat = ModifiedStat.Speed;
-                                    break;
-                                case BuffType.defense:
-                                    mod.affectedStat = ModifiedStat.Def;
-                                    break;
-                                case BuffType.resistance:
-                                    mod.affectedStat = ModifiedStat.Res;
-                                    break;
-                                case BuffType.skill:
-                                    mod.affectedStat = ModifiedStat.Skill;
-                                    break;
-                                case BuffType.none:
-                                    break;
-                                case BuffType.str:
-                                    mod.affectedStat = ModifiedStat.Str;
-                                    break;
-                                case BuffType.mag:
-                                    mod.affectedStat = ModifiedStat.Mag;
-                                    break;
-                                case BuffType.all:
-                                    mod.affectedStat = ModifiedStat.all;
-                                    break;
-                            }
-                            mod.editValue = (float)Double.Parse(parsed[13]);
-
-                            buff.BUFFEDSTAT = mod.affectedStat;
-                            buff.BUFFVAL = mod.editValue;
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                buff.TILES.Add(v);
-                            }
-                            livingObject.GetComponent<InventoryScript>().CSKILLS.Add(buff);
-                            livingObject.GetComponent<InventoryScript>().USEABLES.Add(buff);
-                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(buff);
-                            if (equip == true)
-                            {
-                                if (livingObject.BATTLE_SLOTS.CanAdd())
-                                    livingObject.BATTLE_SLOTS.SKILLS.Add(buff);
-                            }
-                            return buff;
                         }
                         else if (skill.ELEMENT == Element.Passive)
                         {
-                            int index = 11;
-                            int count = Int32.Parse(parsed[10]);
 
-                            PassiveSkill passive = ScriptableObject.CreateInstance<PassiveSkill>();
-                            skill.Transfer(passive);
-                            passive.ModElements = new List<Element>();
-                            passive.PERCENT = (float)Double.Parse(parsed[6]);
-                            passive.ModValues = new List<float>();
-                            if (count > 0)
-                            {
-
-                                for (int i = 0; i < count; i++)
-                                {
-                                    Modification mod = new Modification();
-                                    mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
-                                    mod.affectedElement = (Element)Enum.Parse(typeof(Element), parsed[index]);
-                                    mod.editValue = (float)Double.Parse(parsed[7]) * passive.PERCENT;
-                                    index++;
-                                    passive.ModStat = mod.affectedStat;
-                                    passive.ModValues.Add(mod.editValue);
-                                    passive.ModElements.Add(mod.affectedElement);
-                                }
-                            }
-                            else
-                            {
-                                Modification mod = new Modification();
-                                mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
-                                mod.editValue = (float)Double.Parse(parsed[7]) * passive.PERCENT;
-                                passive.ModStat = mod.affectedStat;
-                                passive.ModValues.Add(mod.editValue);
-                                passive.ModElements.Add(mod.affectedElement);
-                            }
-                            livingObject.GetComponent<InventoryScript>().USEABLES.Add(passive);
-                            livingObject.GetComponent<InventoryScript>().PASSIVES.Add(passive);
-                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(passive);
-
-
-                            if (equip == true)
-                            {
-                                if (livingObject.PASSIVE_SLOTS.CanAdd())
-                                {
-                                    livingObject.PASSIVE_SLOTS.SKILLS.Add(passive);
-                                    livingObject.ApplyPassives();
-                                }
-                            }
-                            return passive;
                         }
                         else
                         {
-                            int index = 17;
-                            int count = Int32.Parse(parsed[16]);
-                            CommandSkill command = ScriptableObject.CreateInstance<CommandSkill>();
-                            skill.Transfer(command);
-                            command.FRIEND = Int32.Parse(parsed[1]);
-                            command.FRIEND_NEXT = Int32.Parse(parsed[2]);
 
-                            command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[8]);
-                            command.NEXT = Int32.Parse(parsed[10]);
-                            if (command.NEXT >= 0)
-                            {
-                                command.NEXT = command.INDEX + 1;
-                            }
-                            command.NEXTCOUNT = Int32.Parse(parsed[11]);
-                            if (command.NEXTCOUNT > 0)
-                            {
-                                command.NEXTCOUNT = 2;
-                            }
-
-                            command.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[6]);
-                            command.COST = Int32.Parse(parsed[7]);
-                            command.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[9]);
-                            command.ACCURACY = Int32.Parse(parsed[12]);
-
-                            command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[13]);
-                            command.HITS = Int32.Parse(parsed[14]);
-                            command.CRIT_RATE = Int32.Parse(parsed[15]);
-                            command.TILES = new System.Collections.Generic.List<Vector2>();
-
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                command.TILES.Add(v);
-                            }
-                            if (command.RTYPE == RanngeType.area)
-                            {
-                                command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + skill.DESC + " in range";
-
-                            }
-                            else if (command.HITS == 1)
-                                command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " " + skill.DESC;
-                            else
-                            {
-                                command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + skill.DESC + " " + command.HITS + " times";
-
-                            }
-                            if (command.EFFECT != SideEffect.none)
-                            {
-                                if (command.EFFECT < SideEffect.reduceStr)
-                                {
-                                    command.DESC += " with a chance of " + command.EFFECT.ToString();
-                                }
-                                else
-                                {
-                                    command.DESC += " with a chance to debuff " + Common.GetSideEffectText(command.EFFECT);
-                                    command.BUFFEDSTAT = Common.GetSideEffectMod(command.EFFECT);
-                                    command.BUFFVAL = -1 * command.CRIT_RATE;
-                                    command.EFFECT = SideEffect.debuff;
-                                }
-                            }
-
-                            livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);
-                            livingObject.GetComponent<InventoryScript>().USEABLES.Add(command);
-                            livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
-                            if (equip == true)
-                            {
-                                if (livingObject.BATTLE_SLOTS.CanAdd())
-                                    livingObject.BATTLE_SLOTS.SKILLS.Add(command);
-                            }
-                            return command;
                         }
-                        skill.OWNER = livingObject;
+
 
 
                     }
@@ -735,20 +860,20 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     int glyphAtk = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
-                    newHazard.REWARD = glyphAtk;
-                    if (numofskills > 0)
+                    glyphAtk = newHazard.REWARD;
+                    if (newHazard)
                     {
                         LearnSkill(glyphAtk, newHazard, true);
                         fileIndex++;
                     }
 
-                    if (numofweapons > 0)
+                    else
                     {
                         GetWeapon(glyphAtk, newHazard);
                         fileIndex++;
                     }
 
-           
+
                 }
             }
 
@@ -769,6 +894,9 @@ public class DatabaseManager : MonoBehaviour
                 string[] parsed = lines.Split(',');
                 if (Int32.Parse(parsed[0]) == id)
                 {
+                    newEnemy.BASE_STATS.Reset(true);
+                    newEnemy.STATS.Reset(true);
+                    newEnemy.DEAD = false;
                     int fileIndex = 1;
                     newEnemy.FullName = parsed[fileIndex];
                     fileIndex++;
@@ -803,6 +931,9 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     int numofarmors = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
+
+
+
                     for (int i = 0; i < numofskills; i++)
                     {
                         LearnSkill(Int32.Parse(parsed[fileIndex]), newEnemy, true);
@@ -832,7 +963,7 @@ public class DatabaseManager : MonoBehaviour
 
     public void GetActor(int id, LivingObject living)
     {
-   
+
 
         if (living.GetComponent<InventoryScript>())
         {
@@ -910,5 +1041,70 @@ public class DatabaseManager : MonoBehaviour
 
             // reader.Close();
         }
+    }
+
+    public MapDetail GetMap(int id)
+    {
+        MapDetail map = new MapDetail();
+        map.doorIndexes = new List<int>();
+        map.roomNames = new List<string>();
+        map.roomIndexes = new List<int>();
+        map.enemyIndexes = new List<int>();
+        map.hazardIndexes = new List<int>();
+        string lines = "";
+        if (mapDictionary.TryGetValue(id, out lines))
+        {
+            string[] parsed = lines.Split(',');
+            if (Int32.Parse(parsed[0]) == id)
+            {
+                int fileIndex = 1;
+                map.mapName = parsed[fileIndex];
+                fileIndex++;
+                map.width = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                map.height = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+
+                int numOfDoors = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                for (int i = 0; i < numOfDoors; i++)
+                {
+                    map.doorIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+                for (int i = 0; i < numOfDoors; i++)
+                {
+                    map.roomNames.Add(parsed[fileIndex]);
+                    fileIndex++;
+                }
+
+                for (int i = 0; i < numOfDoors; i++)
+                {
+                    map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+                int numOfEnemies = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                for (int i = 0; i < numOfEnemies; i++)
+                {
+                    map.enemyIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+                int numOfHazards = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                for (int i = 0; i < numOfHazards; i++)
+                {
+                    map.hazardIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+
+            }
+        }
+
+        return map;
     }
 }

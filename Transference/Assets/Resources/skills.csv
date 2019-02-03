@@ -1,622 +1,121 @@
--id,friendindex, friendnext,name,description,element,effect,cost,etype,range type, next, next count,  accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy
-0,6,12,Sura,foe,Slash,none,6,physical,single,1,2,84, minute,1,0,1,0,1
-1,-1,-1,Sureta,foe,Slash,none,8,physical,single,2,4,87, small,1,0,1,0,1
-2,-1,-1,Surpa,foe,Slash,none,10,physical,single,3,6,90, medium,1,0,1,1,1
-3,-1,-1,Suricron,foe,Slash,bleed,12,physical,single,4,8,93, heavy,1,0,1,0,1
-4,-1,-1,Surgma,foe,Slash,bleed,14, physical,single,5,10,96, severe,1,0,1,0,1
-5,-1,-1,Surega,foe,Slash,bleed,16, physical,single,-1,0,99, collassal,1,0,1,0,1
--
-6,0,12,Surasha,foe,Slash,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
-7,13,18,Surasheta,foe,Slash,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
-8,-1,-1,Surashpa,foe,Slash,none,-25,physical,multi,9,6,80, small,3,0,2,0,1,0,2
-9,-1,-1,Surashicron,foe,Slash,bleed,-30,physical,multi,10,8,85, small,4,0,2,0,1,0,2
-10,-1,-1,Surashgma,foe,Slash,bleed,-45,physical,multi,11,10,90, medium,4,0,2,0,1,0,2
-11,-1,-1,Surashega,foe,Slash,bleed,-50,physical,multi,-1,0,95, medium,5,0,2,0,1,0,2
-- 
-12,-1,-1,Surmua,foes,Slash,bleed,-7,physical,area,13,5,60, minute,1,0,3,0,1,1,1,-1,1
-13,13,18,Surmueta,foes,Slash,bleed,-14,physical,area,14,10,67,small,1,0,3,0,1,1,1,-1,1
-14,-1,-1,Surmupa,foes,Slash,bleed,-21,physical,area,15,20,74, medium,1,0,3,0,1,1,1,-1,1
-15,-1,-1,Surmuicron,foes,Slash,bleed,-28,physical,area,16,40,81, heavy,1,0,3,0,1,1,1,-1,1
-16,-1,-1,Surmugma,foes,Slash,bleed,-34,physical,area,17,80,89, severe,1,0,3,0,1,1,1,-1,1
-17,-1,-1,Surmuega,foes,Slash,bleed,-41,physical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-18,-1,-1,Surina,foe,Slash,reduceStr,6,physical,single,19,2,84, minute,1,75,1,0,1
-19,-1,-1,Surineta,foe,Slash,reduceStr,12,physical,single,20,4,87, small,1,80,1,0,1
-20,-1,-1,Surinpa,foe,Slash,reduceStr,18,physical,single,21,6,90, medium,1,85,1,0,1
-21,-1,-1,Surincron,foe,Slash,reduceStr,24,physical,single,22,8,93, heavy,1,90,1,0,1
-22,-1,-1,Suringma,foe,Slash,reduceStr,30, physical,single,23,10,96, severe,1,95,1,0,1
-23,-1,-1,Surinega,foe,Slash,reduceStr,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-24,30,36,Suri,foe,Slash,none,5,magical,single,25,2,84, small,1,0,1,0,1
-25,-1,-1,ZeSuri,foe,Slash,none,10,magical,single,26,4,87, small,2,0,2,0,1,0,2
-26,-1,-1,Surho,foe,Slash,none,15,magical,single,27,6,90, medium,1,0,1,1,1
-27,-1,-1,ZeSurho,foe,Slash,bleed,20,magical,single,28,8,93, medium,2,0,2,0,1,0,2
-28,-1,-1,Surlon,foe,Slash,bleed,25, magical,single,29,10,96, heavy,1,0,1,0,1
-29,-1,-1,ZeSurlon,foe,Slash,bleed,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-30,24,36,Surashi,foe,Slash,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-31,37,42,ZeSurashi,foe,Slash,none,20,magical,multiarea,32,4,75,small,2,0,2,0,1,2,2
-32,-1,-1,Surashho,foe,Slash,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-33,-1,-1,ZeSurashho,foe,Slash,bleed,40,magical,multiarea,34,8,85, heavy,3,0,2,0,1,0,2
-34,-1,-1,Surashilon,foe,Slash,bleed,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-35,-1,-1,ZeSurashilon,foe,Slash,bleed,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-36,-1,-1,Surmui,foes,Slash,bleed,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-37,31,42,ZeSurmui,foes,Slash,bleed,20,magical,multiarea,38,10,67,small,1,0,3,0,1,1,1,-1,1
-38,-1,-1,Surmuho,foes,Slash,bleed,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-39,-1,-1,ZeSurmuho,foes,Slash,bleed,40,magical,multiarea,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-40,-1,-1,Surmulon,foes,Slash,bleed,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-41,-1,-1,ZeSurmulon,foes,Slash,bleed,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-42,-1,-1,Surini,foe,Slash,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
-43,-1,-1,ZeSurini,foe,Slash,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
-44,-1,-1,Surinho,foe,Slash,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
-45,-1,-1,ZeSurinho,foe,Slash,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
-46,-1,-1,Surinlon,foe,Slash,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-47,-1,-1,ZeSurinlon,foe,Slash,reduceMag,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2
--
-48,-1,-1,Tsua,foe,Pierce,none,3,physical,single,49,2,85, minute,1,0,1,0,1
-49,-1,-1,Tsueta,foe,Pierce,none,6,physical,single,50,4,88, small,1,0,1,0,1
-50,-1,-1,Tsupa,foe,Pierce,none,9,physical,single,51,6,91, medium,1,0,1,1,1
-51,-1,-1,Tsuicron,foe,Pierce,paralyze,12,physical,single,52,8,94, heavy,1,0,1,0,1
-52,-1,-1,Tsugma,foe,Pierce,paralyze,15, physical,single,53,10,97, severe,1,0,1,0,1
-53,-1,-1,Tsuega,foe,Pierce,paralyze,18, physical,single,-1,0,100, collassal,1,0,1,0,1
--  
-54,-1,-1,Tsuasha,foe,Pierce,none,-5,physical,multi,55,2,80, minute,2,0,2,0,1,0,2
-55,-1,-1,Tsuasheta,foe,Pierce,none,-10,physical,multi,56,4,84,minute,3,0,2,0,1,0,2
-56,-1,-1,Tsuashpa,foe,Pierce,none,-25,physical,multi,57,6,88, small,3,0,2,0,1,0,2
-57,-1,-1,Tsuashicron,foe,Pierce,paralyze,-30,physical,multi,58,8,92, small,4,0,2,0,1,0,2
-58,-1,-1,Tsuashgma,foe,Pierce,paralyze,-45,physical,multi,59,10,96, medium,4,0,2,0,1,0,2
-59,-1,-1,Tsuashega,foe,Pierce,paralyze,-50,physical,multi,-1,0,100, medium,5,0,2,0,1,0,2
--  
-60,-1,-1,Tsumua,foe,Pierce,paralyze,-7,physical,area,61,5,75, minute,1,0,3,0,1,0,2,0,3
-61,-1,-1,Tsumueta,foe,Pierce,paralyze,-14,physical,area,62,10,80,small,1,0,3,0,1,0,2,0,3
-62,-1,-1,Tsumupa,foe,Pierce,paralyze,-21,physical,area,63,20,85, medium,1,0,3,0,1,0,2,0,3
-63,-1,-1,Tsumuicron,foe,Pierce,paralyze,-28,physical,area,64,40,90, heavy,1,0,3,0,1,0,2,0,3
-64,-1,-1,Tsumugma,foe,Pierce,paralyze,-34,physical,area,65,80,95, severe,1,0,3,0,1,0,2,0,3
-65,-1,-1,Tsumuega,foe,Pierce,paralyze,-41,physical,area,-1,0,100, collassal,1,0,3,0,1,0,2,0,3
--
-66,-1,-1,Tsuina,foe,Pierce,reduceSpd,6,physical,single,66,2,84, minute,1,75,1,0,1
-67,-1,-1,Tsuineta,foe,Pierce,reduceSpd,12,physical,single,67,4,87, small,1,80,1,0,1
-68,-1,-1,Tsuinpa,foe,Pierce,reduceSpd,18,physical,single,68,6,90, medium,1,85,1,1,1
-69,-1,-1,Tsuincron,foe,Pierce,reduceSpd,24,physical,single,69,8,93, heavy,1,90,1,0,1
-70,-1,-1,Tsuingma,foe,Pierce,reduceSpd,30, physical,single,70,10,96, severe,1,95,1,0,1
-71,-1,-1,Tsuinega,foe,Pierce,reduceSpd,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-72,78,84,Tsui,foe,Pierce,none,3,magical,single,73,2,84, small,1,0,1,0,1
-73,-1,-1,ZeTsui,foe,Pierce,none,6,magical,single,74,4,87, small,2,0,2,0,1,0,2
-74,-1,-1,Tsuho,foe,Pierce,none,15,magical,single,75,6,90, medium,1,0,1,1,1
-75,-1,-1,ZeTsuho,foe,Pierce,none,30,magical,single,76,8,93, medium,2,0,2,0,1,0,2
-76,-1,-1,Tsulon,foe,Pierce,none,35, magical,single,77,10,96, heavy,1,0,1,0,1
-77,-1,-1,ZeTsulon,foe,Pierce,none,70, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-78,72,84,Tsuashi,foe,Pierce,none,10,magical,multi,79,2,70, minute,2,0,2,0,1,0,2
-79,85,90,ZeTsuashi,foe,Pierce,none,20,magical,multiarea,80,4,75,small,2,0,2,0,1,2,2
-80,-1,-1,Tsuashho,foe,Pierce,none,30,magical,multi,81,6,80, medium,2,0,2,0,1,0,2
-81,-1,-1,ZeTsuashho,foe,Pierce,paralyze,40,magical,multiarea,82,8,85, heavy,3,0,2,0,1,0,2
-82,-1,-1,Tsuashilon,foe,Pierce,paralyze,50,magical,multi,83,10,90, severe,3,0,2,0,1,0,2
-83,-1,-1,ZeTsuashilon,foe,Pierce,paralyze,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-84,-1,-1,Tsumui,foes,Pierce,paralyze,10,magical,area,85,5,60, minute,1,0,3,0,1,1,1,-1,1
-85,79,90,ZeTsumui,foes,Pierce,paralyze,20,magical,multiarea,86,10,67,small,1,0,3,0,1,1,1,-1,1
-86,-1,-1,Tsumuho,foes,Pierce,paralyze,30,magical,area,87,20,74, medium,1,0,3,0,1,1,1,-1,1
-87,-1,-1,ZeTsumuho,foes,Pierce,paralyze,40,magical,multiarea,88,40,81, heavy,1,0,3,0,1,1,1,-1,1
-88,-1,-1,Tsumulon,foes,Pierce,paralyze,50,magical,area,89,80,89, severe,1,0,3,0,1,1,1,-1,1
-89,-1,-1,ZeTsumulon,foes,Pierce,paralyze,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-90,-1,-1,Tsuni,foe,Pierce,reduceSkill,15,magical,single,91,2,84, heavy,1,70,1,0,1
-91,-1,-1,ZeTsuini,foe,Pierce,reduceSkill,30,magical,area,92,4,87, heavy,2,75,2,0,1,0,2
-92,-1,-1,Tsuinho,foe,Pierce,reduceSkill,45,magical,multi,93,6,90, severe,1,80,1,1,1
-93,-1,-1,ZeTsuinho,foe,Pierce,reduceSkill,60,magical,area,94,8,93, severe,2,85,2,0,1,0,2
-94,-1,-1,Tsuinlon,foe,Pierce,reduceSkill,75, magical,multi,95,10,96, collassal,1,90,1,0,1
-95,-1,-1,ZeTsuinlon,foe,Pierce,reduceSkill,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2
--  
-96,-1,-1,Dona,foe,Blunt,none,3,physical,single,37,2,80, minute,1,0,1,0,1
-97,-1,-1,Doneta,foe,Blunt,none,6,physical,single,38,4,83, small,1,0,1,0,1
-98,-1,-1,Donpa,foe,Blunt,none,9,physical,single,39,6,86, medium,1,0,1,0,1
-99,-1,-1,Donicron,foe,Blunt,confusion,12,physical,single,40,8,89, heavy,1,0,1,0,1
-100,-1,-1,Dongma,foe,Blunt,confusion,15, physical,single,41,10,92, severe,1,0,1,0,1
-101,-1,-1,Donega,foe,Blunt,confusion,18, physical,single,-1,0,95, collassal,1,0,1,0,1
--  -1,-1,
-102,-1,-1,Donasha,foe,Blunt,none,-5,physical,multi,43,2,100, minute,2,0,1,0,1
-103,-1,-1,Donasheta,foe,Blunt,none,-10,physical,multi,44,4,100,minute,3,0,1,0,1
-104,-1,-1,Donashpa,foe,Blunt,none,-25,physical,multi,45,6,100, small,3,0,1,0,1
-105,-1,-1,Donashicron,foe,Blunt,confusion,-30,physical,multi,46,8,100, small,4,0,1,0,1
-106,-1,-1,Donashgma,foe,Blunt,confusion,-45,physical,multi,47,10,100, medium,4,0,1,0,1
-107,-1,-1,Donashega,foe,Blunt,confusion,-50,physical,multi,-1,0,100, medium,5,0,1,0,1
--  
-108,-1,-1,Donmua,foe,Blunt,confusion,-7,physical,area,49,5,100, minute,1,0,4,0,1,0,2,1,1,1,2
-109,-1,-1,Donmueta,foe,Blunt,confusion,-14,physical,area,50,10,100,small,1,0,4,0,1,0,2,1,1,1,2
-110,-1,-1,Donmupa,foe,Blunt,confusion,-21,physical,area,51,20,100, medium,1,0,4,0,1,0,2,1,1,1,2
-111,-1,-1,Donmuicron,foe,Blunt,confusion,-28,physical,area,52,40,100, heavy,1,0,4,0,1,0,2,1,1,1,2
-112,-1,-1,Donmugma,foe,Blunt,confusion,-34,physical,area,53,80,100, severe,1,0,4,0,1,0,2,1,1,1,2
-113,-1,-1,Donmuega,foe,Blunt,confusion,-41,physical,area,-1,0,100, collassal,1,0,4,0,1,0,2,1,1,1,2
-- 
-114,-1,-1,Donina,foe,Blunt,reduceDef,6,physical,single,67,2,84, minute,1,75,1,0,1
-115,-1,-1,Donineta,foe,Blunt,reduceDef,12,physical,single,68,4,87, small,1,80,1,0,1
-116,-1,-1,Doninpa,foe,Blunt,reduceDef,18,physical,single,69,6,90, medium,1,85,1,1,1
-117,-1,-1,Donincron,foe,Blunt,reduceDef,24,physical,single,70,8,93, heavy,1,90,1,0,1
-118,-1,-1,Doningma,foe,Blunt,reduceDef,30, physical,single,71,10,96, severe,1,95,1,0,1
-119,-1,-1,Doninega,foe,Blunt,reduceDef,36, physical,single,-1,0,99, collassal,1,100,1,0,1
-- 
-120,126,132,Doni,foe,Blunt,none,5,magical,single,73,2,84, small,1,0,1,0,1
-121,-1,-1,ZeDoni,foe,Blunt,none,10,magical,single,74,4,87, small,2,0,2,0,1,0,2
-122,-1,-1,Donho,foe,Blunt,none,15,magical,single,75,6,90, medium,1,0,1,1,1
-123,-1,-1,ZeDonho,foe,Blunt,none,20,magical,single,76,8,93, medium,2,0,2,0,1,0,2
-124,-1,-1,Donlon,foe,Blunt,none,25, magical,single,77,10,96, heavy,1,0,1,0,1
-125,-1,-1,ZeDonlon,foe,Blunt,none,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-126,120,132,Donashi,foe,Blunt,none,10,magical,multi,79,2,70, minute,2,0,2,0,1,0,2
-127,133,138,ZeDonashi,foe,Blunt,none,20,magical,multiarea,80,4,75,small,2,0,2,0,1,2,2
-128,-1,-1,Donashho,foe,Blunt,none,30,magical,multi,81,6,80, medium,2,0,2,0,1,0,2
-129,-1,-1,ZeDonashho,foe,Blunt,confusion,40,magical,multiarea,82,8,85, heavy,3,0,2,0,1,0,2
-130,-1,-1,Donashilon,foe,Blunt,confusion,50,magical,multi,83,10,90, severe,3,0,2,0,1,0,2
-131,-1,-1,ZeDonashilon,foe,Blunt,confusion,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-132,-1,-1,Donmui,foes,Blunt,confusion,10,magical,area,85,5,60, minute,1,0,3,0,1,1,1,-1,1
-133,127,138,ZeDonmui,foes,Blunt,confusion,20,magical,multiarea,86,10,67,small,1,0,3,0,1,1,1,-1,1
-134,-1,-1,Donmuho,foes,Blunt,confusion,30,magical,area,87,20,74, medium,1,0,3,0,1,1,1,-1,1
-135,-1,-1,ZeDonmuho,foes,Blunt,confusion,40,magical,multiarea,88,40,81, heavy,1,0,3,0,1,1,1,-1,1
-136,-1,-1,Donmulon,foes,Blunt,confusion,50,magical,area,89,80,89, severe,1,0,3,0,1,1,1,-1,1
-137,-1,-1,ZeDonmulon,foes,Blunt,confusion,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-138,-1,-1,Donni,foe,Blunt,reduceRes,15,magical,single,91,2,84, heavy,1,70,1,0,1
-139,-1,-1,ZeDonini,foe,Blunt,reduceRes,30,magical,area,92,4,87, heavy,2,75,2,0,1,0,2
-140,-1,-1,Doninho,foe,Blunt,reduceRes,45,magical,multi,93,6,90, severe,1,80,1,1,1
-141,-1,-1,ZeDoninho,foe,Blunt,reduceRes,60,magical,area,94,8,93, severe,2,85,2,0,1,0,2
-142,-1,-1,Doninlon,foe,Blunt,reduceRes,75, magical,multi,95,10,96, collassal,1,90,1,0,1
-143,-1,-1,ZeDoninlon,foe,Blunt,reduceRes,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2
--
-144,150,156,Aqua,foe,Water,none,6,physical,single,1,2,84, minute,1,0,1,0,1
-145,-1,-1,Aqueta,foe,Water,none,8,physical,single,2,4,87, small,1,0,1,0,1
-146,-1,-1,Aqupa,foe,Water,none,10,physical,single,3,6,90, medium,1,0,1,1,1
-147,-1,-1,Aquicron,foe,Water,confusion,12,physical,single,4,8,93, heavy,1,0,1,0,1
-148,-1,-1,Aqugma,foe,Water,confusion,14, physical,single,5,10,96, severe,1,0,1,0,1
-149,-1,-1,Aquega,foe,Water,confusion,16, physical,single,-1,0,99, collassal,1,0,1,0,1
--
-150,144,156,Aquasha,foe,Water,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
-151,157,162,Aquasheta,foe,Water,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
-152,-1,-1,Aquashpa,foe,Water,none,-25,physical,multi,9,6,80, small,3,0,2,0,1,0,2
-153,-1,-1,Aquashicron,foe,Water,confusion,-30,physical,multi,10,8,85, small,4,0,2,0,1,0,2
-154,-1,-1,Aquashgma,foe,Water,confusion,-45,physical,multi,11,10,90, medium,4,0,2,0,1,0,2
-155,-1,-1,Aquashega,foe,Water,confusion,-50,physical,multi,-1,0,95, medium,5,0,2,0,1,0,2
-- 
-156,-1,-1,Aqumua,foes,Water,confusion,-7,physical,area,13,5,60, minute,1,0,3,0,1,1,1,-1,1
-157,151,162,Aqumueta,foes,Water,confusion,-14,physical,area,14,10,67,small,1,0,3,0,1,1,1,-1,1
-158,-1,-1,Aqumupa,foes,Water,confusion,-21,physical,area,15,20,74, medium,1,0,3,0,1,1,1,-1,1
-159,-1,-1,Aqumuicron,foes,Water,confusion,-28,physical,area,16,40,81, heavy,1,0,3,0,1,1,1,-1,1
-160,-1,-1,Aqumugma,foes,Water,confusion,-34,physical,area,17,80,89, severe,1,0,3,0,1,1,1,-1,1
-161,-1,-1,Aqumuega,foes,Water,confusion,-41,physical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-162,-1,-1,Aquina,foe,Water,reduceAtk,6,physical,single,19,2,84, minute,1,75,1,0,1
-163,-1,-1,Aquineta,foe,Water,reduceAtk,12,physical,single,20,4,87, small,1,80,1,0,1
-164,-1,-1,Aquinpa,foe,Water,reduceAtk,18,physical,single,21,6,90, medium,1,85,1,1,1
-165,-1,-1,Aquincron,foe,Water,reduceAtk,24,physical,single,22,8,93, heavy,1,90,1,0,1
-166,-1,-1,Aquingma,foe,Water,reduceAtk,30, physical,single,23,10,96, severe,1,95,1,0,1
-167,-1,-1,Aquinega,foe,Water,reduceAtk,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-168,30,36,Aqui,foe,Water,none,5,magical,single,25,2,84, small,1,0,1,0,1
-169,-1,-1,ZeAqui,foe,Water,none,10,magical,single,26,4,87, small,2,0,2,0,1,0,2
-170,-1,-1,Aquho,foe,Water,none,15,magical,single,27,6,90, medium,1,0,1,1,1
-171,-1,-1,ZeAquho,foe,Water,confusion,20,magical,single,28,8,93, medium,2,0,2,0,1,0,2
-172,-1,-1,Aqulon,foe,Water,confusion,25, magical,single,29,10,96, heavy,1,0,1,0,1
-173,-1,-1,ZeAqulon,foe,Water,confusion,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-174,24,36,Aquashi,foe,Water,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-175,37,42,ZeAquashi,foe,Water,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
-176,-1,-1,Aquashho,foe,Water,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-177,-1,-1,ZeAquashho,foe,Water,confusion,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
-178,-1,-1,Aquashilon,foe,Water,confusion,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-179,-1,-1,ZeAquashilon,foe,Water,confusion,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-180,-1,-1,Aqumui,foes,Water,confusion,4,magical,area,37,5,60, minute,1,0,2,0,1,1,1
-181,31,42,ZeAqumui,foes,Water,confusion,8,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
-182,-1,-1,Aqumuho,foes,Water,confusion,15,magical,area,39,20,74, medium,1,0,2,0,1,1,1
-183,-1,-1,ZeAqumuho,foes,Water,confusion,30,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-184,-1,-1,Aqumulon,foes,Water,confusion,50,magical,area,41,80,89, severe,1,0,2,0,1,1,1
-185,-1,-1,ZeAqumulon,foes,Water,confusion,75,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-186,-1,-1,Aquini,foe,Water,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
-187,-1,-1,ZeAquini,foe,Water,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
-188,-1,-1,Aquinho,foe,Water,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
-189,-1,-1,ZeAquinho,foe,Water,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
-190,-1,-1,Aquinlon,foe,Water,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-191,-1,-1,ZeAquinlon,foe,Water,reduceMag,90, magical,area,-1,0,99, collassal,2,95,2,0,1,0,2  
--
-192,150,156,Pyra,foe,Fire,none,6,physical,single,1,2,84, minute,1,0,1,0,1
-193,-1,-1,Pyreta,foe,Fire,none,8,physical,single,2,4,87, small,1,0,1,0,1
-194,-1,-1,Pyrpa,foe,Fire,none,10,physical,single,3,6,90, medium,1,0,1,1,1
-195,-1,-1,Pyricron,foe,Fire,burn,12,physical,single,4,8,93, heavy,1,0,1,0,1
-196,-1,-1,Pyrgma,foe,Fire,burn,14, physical,single,5,10,96, severe,1,0,1,0,1
-197,-1,-1,Pyrega,foe,Fire,burn,16, physical,single,-1,0,99, collassal,1,0,1,0,1
--
-198,144,156,Pyrasha,foe,Fire,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
-199,157,162,Pyrasheta,foe,Fire,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
-200,-1,-1,Pyrashpa,foe,Fire,none,-25,physical,multi,9,6,80, small,3,0,2,0,1,0,2
-201,-1,-1,Pyrashicron,foe,Fire,burn,-30,physical,multi,10,8,85, small,4,0,2,0,1,0,2
-202,-1,-1,Pyrashgma,foe,Fire,burn,-45,physical,multi,11,10,90, medium,4,0,2,0,1,0,2
-203,-1,-1,Pyrashega,foe,Fire,burn,-50,physical,multi,-1,0,95, medium,5,0,2,0,1,0,2
-- 
-204,-1,-1,Pyrmua,foes,Fire,burn,-7,physical,area,13,5,60, minute,1,0,3,0,1,1,1,-1,1
-205,151,162,Pyrmueta,foes,Fire,burn,-14,physical,area,14,10,67,small,1,0,3,0,1,1,1,-1,1
-206,-1,-1,Pyrmupa,foes,Fire,burn,-21,physical,area,15,20,74, medium,1,0,3,0,1,1,1,-1,1
-207,-1,-1,Pyrmuicron,foes,Fire,burn,-28,physical,area,16,40,81, heavy,1,0,3,0,1,1,1,-1,1
-208,-1,-1,Pyrmugma,foes,Fire,burn,-34,physical,area,17,80,89, severe,1,0,3,0,1,1,1,-1,1
-209,-1,-1,Pyrmuega,foes,Fire,burn,-41,physical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-210,-1,-1,Pyrina,foe,Fire,reduceAtk,6,physical,single,19,2,84, minute,1,75,1,0,1
-211,-1,-1,Pyrineta,foe,Fire,reduceAtk,12,physical,single,20,4,87, small,1,80,1,0,1
-212,-1,-1,Pyrinpa,foe,Fire,reduceAtk,18,physical,single,21,6,90, medium,1,85,1,1,1
-213,-1,-1,Pyrincron,foe,Fire,reduceAtk,24,physical,single,22,8,93, heavy,1,90,1,0,1
-214,-1,-1,Pyringma,foe,Fire,reduceAtk,30, physical,single,23,10,96, severe,1,95,1,0,1
-215,-1,-1,Pyrinega,foe,Fire,reduceAtk,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-216,30,36,Pyri,foe,Fire,none,5,magical,single,25,2,84, small,1,0,1,0,1
-217,-1,-1,ZePyri,foe,Fire,none,10,magical,single,26,4,87, small,2,0,2,0,1,0,2
-218,-1,-1,Pyrho,foe,Fire,none,15,magical,single,27,6,90, medium,1,0,1,1,1
-219,-1,-1,ZePyrho,foe,Fire,burn,20,magical,single,28,8,93, medium,2,0,2,0,1,0,2
-220,-1,-1,Pyrlon,foe,Fire,burn,25, magical,single,29,10,96, heavy,1,0,1,0,1
-221,-1,-1,ZePyrlon,foe,Fire,burn,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-222,24,36,Pyrashi,foe,Fire,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-223,37,42,ZePyrashi,foe,Fire,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
-224,-1,-1,Pyrashho,foe,Fire,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-225,-1,-1,ZePyrashho,foe,Fire,burn,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
-226,-1,-1,Pyrashilon,foe,Fire,burn,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-227,-1,-1,ZePyrashilon,foe,Fire,burn,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-228,-1,-1,Pyrmui,foes,Fire,burn,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-229,31,42,ZePyrmui,foes,Fire,burn,20,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
-230,-1,-1,Pyrmuho,foes,Fire,burn,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-231,-1,-1,ZePyrmuho,foes,Fire,burn,40,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-232,-1,-1,Pyrmulon,foes,Fire,burn,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-233,-1,-1,ZePyrmulon,foes,Fire,burn,60,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-234,-1,-1,Pyrini,foe,Fire,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
-235,-1,-1,ZePyrini,foe,Fire,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
-236,-1,-1,Pyrinho,foe,Fire,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
-237,-1,-1,ZePyrinho,foe,Fire,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
-238,-1,-1,Pyrinlon,foe,Fire,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-239,-1,-1,ZePyrinlon,foe,Fire,reduceMag,90, magical,area,-1,0,99, collassal,2,95,2,0,1,0,2  
--
-240,150,156,Gela,foe,Ice,none,6,physical,single,1,2,84, minute,1,0,1,0,2
-241,-1,-1,Geleta,foe,Ice,none,8,physical,single,2,4,87, small,1,0,1,0,2
-242,-1,-1,Gelpa,foe,Ice,none,10,physical,single,3,6,90, medium,1,0,1,1,2
-243,-1,-1,Gelicron,foe,Ice,burn,12,physical,single,4,8,93, heavy,1,0,1,0,2
-244,-1,-1,Gelgma,foe,Ice,burn,14, physical,single,5,10,96, severe,1,0,1,0,2
-245,-1,-1,Gelega,foe,Ice,burn,16, physical,single,-1,0,99, collassal,1,0,1,0,2
--
-246,144,156,Gelasha,foe,Ice,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
-247,157,162,Gelasheta,foe,Ice,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
-248,-1,-1,Gelashpa,foe,Ice,none,-25,physical,multi,9,6,80, small,3,0,2,0,1,0,2
-249,-1,-1,Gelashicron,foe,Ice,burn,-30,physical,multi,10,8,85, small,4,0,2,0,1,0,2
-250,-1,-1,Gelashgma,foe,Ice,burn,-45,physical,multi,11,10,90, medium,4,0,2,0,1,0,2
-251,-1,-1,Gelashega,foe,Ice,burn,-50,physical,multi,-1,0,95, medium,5,0,2,0,1,0,2
-- 
-252,-1,-1,Gelmua,foes,Ice,burn,-7,physical,area,13,5,60, minute,1,0,3,0,1,1,1,-1,1
-253,151,162,Gelmueta,foes,Ice,burn,-14,physical,area,14,10,67,small,1,0,3,0,1,1,1,-1,1
-254,-1,-1,Gelmupa,foes,Ice,burn,-21,physical,area,15,20,74, medium,1,0,3,0,1,1,1,-1,1
-255,-1,-1,Gelmuicron,foes,Ice,burn,-28,physical,area,16,40,81, heavy,1,0,3,0,1,1,1,-1,1
-256,-1,-1,Gelmugma,foes,Ice,burn,-34,physical,area,17,80,89, severe,1,0,3,0,1,1,1,-1,1
-257,-1,-1,Gelmuega,foes,Ice,burn,-41,physical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-258,-1,-1,Gelina,foe,Ice,reduceAtk,6,physical,single,19,2,84, minute,1,75,1,0,1
-259,-1,-1,Gelineta,foe,Ice,reduceAtk,12,physical,single,20,4,87, small,1,80,1,0,1
-300,-1,-1,Gelinpa,foe,Ice,reduceAtk,18,physical,single,21,6,90, medium,1,85,1,1,1
-301,-1,-1,Gelincron,foe,Ice,reduceAtk,24,physical,single,22,8,93, heavy,1,90,1,0,1
-302,-1,-1,Gelingma,foe,Ice,reduceAtk,30, physical,single,23,10,96, severe,1,95,1,0,1
-303,-1,-1,Gelinega,foe,Ice,reduceAtk,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-304,30,36,Geli,foe,Ice,none,5,magical,single,25,2,84, small,1,0,1,0,1
-305,-1,-1,ZeGeli,foe,Ice,none,10,magical,single,26,4,87, small,2,0,2,0,1,0,2
-306,-1,-1,Gelho,foe,Ice,none,15,magical,single,27,6,90, medium,1,0,1,1,1
-307,-1,-1,ZeGelho,foe,Ice,burn,20,magical,single,28,8,93, medium,2,0,2,0,1,0,2
-308,-1,-1,Gellon,foe,Ice,burn,25, magical,single,29,10,96, heavy,1,0,1,0,1
-309,-1,-1,ZeGellon,foe,Ice,burn,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-310,24,36,Gelashi,foe,Ice,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-311,37,42,ZeGelashi,foe,Ice,none,20,magical,area,32,4,75,small,2,0,2,0,1,2,2
-312,-1,-1,Gelashho,foe,Ice,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-313,-1,-1,ZeGelashho,foe,Ice,burn,40,magical,area,34,8,85, heavy,3,0,2,0,1,0,2
-314,-1,-1,Gelashilon,foe,Ice,burn,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-315,-1,-1,ZeGelashilon,foe,Ice,burn,60,magical,area,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-316,-1,-1,Gelmui,foes,Ice,burn,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-317,31,42,ZeGelmui,foes,Ice,burn,20,magical,area,38,10,67,small,1,0,3,0,1,1,1,-1,1
-318,-1,-1,Gelmuho,foes,Ice,burn,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-319,-1,-1,ZeGelmuho,foes,Ice,burn,40,magical,area,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-320,-1,-1,Gelmulon,foes,Ice,burn,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-321,-1,-1,ZeGelmulon,foes,Ice,burn,60,magical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-322,-1,-1,Gelini,foe,Ice,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
-323,-1,-1,ZeGelini,foe,Ice,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
-324,-1,-1,Gelinho,foe,Ice,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
-325,-1,-1,ZeGelinho,foe,Ice,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
-326,-1,-1,Gelinlon,foe,Ice,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-327,-1,-1,ZeGelinlon,foe,Ice,reduceMag,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2  
--
-328,150,156,Rika,foe,Electric,none,6,physical,single,1,2,84, minute,1,0,1,0,1
-329,-1,-1,Riketa,foe,Electric,none,8,physical,single,2,4,87, small,1,0,1,0,1
-330,-1,-1,Rikpa,foe,Electric,none,10,physical,single,3,6,90, medium,1,0,1,1,1
-331,-1,-1,Rikicron,foe,Electric,burn,12,physical,single,4,8,93, heavy,1,0,1,0,1
-332,-1,-1,Rikgma,foe,Electric,burn,14, physical,single,5,10,96, severe,1,0,1,0,1
-333,-1,-1,Rikega,foe,Electric,burn,16, physical,single,-1,0,99, collassal,1,0,1,0,1
--
-334,144,156,Rikasha,foe,Electric,none,-5,physical,multi,7,2,70, minute,2,0,2,0,1,0,2
-335,157,162,Rikasheta,foe,Electric,none,-10,physical,multi,8,4,75,minute,3,0,2,0,1,2,2
-336,-1,-1,Rikashpa,foe,Electric,none,-25,physical,multi,9,6,80, small,3,0,2,0,1,0,2
-337,-1,-1,Rikashicron,foe,Electric,burn,-30,physical,multi,10,8,85, small,4,0,2,0,1,0,2
-338,-1,-1,Rikashgma,foe,Electric,burn,-45,physical,multi,11,10,90, medium,4,0,2,0,1,0,2
-339,-1,-1,Rikashega,foe,Electric,burn,-50,physical,multi,-1,0,95, medium,5,0,2,0,1,0,2
-- 
-340,-1,-1,Rikmua,foes,Electric,burn,-7,physical,area,13,5,60, minute,1,0,3,0,1,1,1,-1,1
-341,151,162,Rikmueta,foes,Electric,burn,-14,physical,area,14,10,67,small,1,0,3,0,1,1,1,-1,1
-342,-1,-1,Rikmupa,foes,Electric,burn,-21,physical,area,15,20,74, medium,1,0,3,0,1,1,1,-1,1
-343,-1,-1,Rikmuicron,foes,Electric,burn,-28,physical,area,16,40,81, heavy,1,0,3,0,1,1,1,-1,1
-344,-1,-1,Rikmugma,foes,Electric,burn,-34,physical,area,17,80,89, severe,1,0,3,0,1,1,1,-1,1
-345,-1,-1,Rikmuega,foes,Electric,burn,-41,physical,area,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-346,-1,-1,Rikina,foe,Electric,reduceAtk,6,physical,single,19,2,84, minute,1,75,1,0,1
-347,-1,-1,Rikineta,foe,Electric,reduceAtk,12,physical,single,20,4,87, small,1,80,1,0,1
-348,-1,-1,Rikinpa,foe,Electric,reduceAtk,18,physical,single,21,6,90, medium,1,85,1,1,1
-349,-1,-1,Rikincron,foe,Electric,reduceAtk,24,physical,single,22,8,93, heavy,1,90,1,0,1
-350,-1,-1,Rikingma,foe,Electric,reduceAtk,30, physical,single,23,10,96, severe,1,95,1,0,1
-351,-1,-1,Rikinega,foe,Electric,reduceAtk,36, physical,single,-1,0,99, collassal,1,100,1,0,1
--
-352,30,36,Riki,foe,Electric,none,5,magical,single,25,2,84, small,1,0,1,0,1
-353,-1,-1,ZeRiki,foe,Electric,none,10,magical,single,26,4,87, small,2,0,2,0,1,0,2
-354,-1,-1,Rikho,foe,Electric,none,15,magical,single,27,6,90, medium,1,0,1,1,1
-355,-1,-1,ZeRikho,foe,Electric,burn,20,magical,single,28,8,93, medium,2,0,2,0,1,0,2
-356,-1,-1,Riklon,foe,Electric,burn,25, magical,single,29,10,96, heavy,1,0,1,0,1
-357,-1,-1,ZeRiklon,foe,Electric,burn,30, magical,single,-1,0,99, heavy,2,0,2,0,1,0,2
--
-358,24,36,Rikashi,foe,Electric,none,10,magical,multi,31,2,70, minute,2,0,2,0,1,0,2
-359,37,42,ZeRikashi,foe,Electric,none,20,magical,multiarea,32,4,75,small,2,0,2,0,1,2,2
-360,-1,-1,Rikashho,foe,Electric,none,30,magical,multi,33,6,80, medium,2,0,2,0,1,0,2
-361,-1,-1,ZeRikashho,foe,Electric,burn,40,magical,multiarea,34,8,85, heavy,3,0,2,0,1,0,2
-362,-1,-1,Rikashilon,foe,Electric,burn,50,magical,multi,35,10,90, severe,3,0,2,0,1,0,2
-363,-1,-1,ZeRikashilon,foe,Electric,burn,60,magical,multiarea,-1,0,95, collassal,3,0,2,0,1,0,2
-- 
-364,-1,-1,Rikmui,foes,Electric,burn,10,magical,area,37,5,60, minute,1,0,3,0,1,1,1,-1,1
-365,31,42,ZeRikmui,foes,Electric,burn,20,magical,multiarea,38,10,67,small,1,0,3,0,1,1,1,-1,1
-366,-1,-1,Rikmuho,foes,Electric,burn,30,magical,area,39,20,74, medium,1,0,3,0,1,1,1,-1,1
-367,-1,-1,ZeRikmuho,foes,Electric,burn,40,magical,multiarea,40,40,81, heavy,1,0,3,0,1,1,1,-1,1
-368,-1,-1,Rikmulon,foes,Electric,burn,50,magical,area,41,80,89, severe,1,0,3,0,1,1,1,-1,1
-369,-1,-1,ZeRikmulon,foes,Electric,burn,60,magical,multiarea,-1,0,96, collassal,1,0,3,0,1,1,1,-1,1
--
-370,-1,-1,Rikini,foe,Electric,reduceMag,15,magical,single,42,2,84, heavy,1,70,1,0,1
-371,-1,-1,ZeRikini,foe,Electric,reduceMag,30,magical,area,43,4,87, heavy,2,75,2,0,1,0,2
-372,-1,-1,Rikinho,foe,Electric,reduceMag,45,magical,multi,44,6,90, severe,1,80,1,1,1
-373,-1,-1,ZeRikinho,foe,Electric,reduceMag,60,magical,area,45,8,93, severe,2,85,2,0,1,0,2
-374,-1,-1,Rikinlon,foe,Electric,reduceMag,75, magical,multi,46,10,96, collassal,1,90,1,0,1
-375,-1,-1,ZeRikinlon,foe,Electric,reduceMag,90, magical,multiarea,-1,0,99, collassal,2,95,2,0,1,0,2    
--
-376,216,191,Ralli Str,Increases str by 30% for 3 turns,Buff,none,4,magical,any,162,5,1,30,1, str,1,0,1
-377,-1,-1,ZeRali Str,Increases str by 30% for 3 turns in range,Buff,none,8,magical,anyarea,163,5,1,30,1, str,4,0,1,1,1,-1,1,0,2
-378,-1,-1,Rallho Str,Increases str by 40% for 3 turns,Buff,none,6,magical,any,164,15,1,40,1, str,4,0,1,1,1,-1,1,0,2
-379,-1,-1,ZeRallho Str,Increases str by 40% for 3 turns in range,Buff,none,10,magical, anyarea,165,5,1,40,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-380,-1,-1,Rallega Str,Increases str by 50% for 3 turns,Buff,none,8,magical,any,166,15,1,50,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-381,-1,-1,ZeRallega Str,Increases str by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, str,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-382,210,191,Ralli Mag,Increases mag by 30% for 3 turns,Buff,none,4,magical,any,168,5,1,30,1, mag,1,0,1
-383,-1,-1,ZeRali Mag,Increases mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,169,5,1,30,1, mag,4,0,1,1,1,-1,1,0,2
-384,-1,-1,Rallho Mag,Increases mag by 40% for 3 turns,Buff,none,6,magical,any,170,15,1,40,1, mag,4,0,1,1,1,-1,1,0,2
-385,-1,-1,ZeRallho Mag,Increases mag by 40% for 3 turns in range,Buff,none,10,magical, anyarea,171,5,1,40,1, mag,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-386,-1,-1,Rallega Mag,Increases mag by 50% for 3 turns,Buff,none,8,magical,any,172,15,1,50,1, mag,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-387,-1,-1,ZeRallega Mag,Increases mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, mag,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-388,-1,-1,Ralli Def,Increases Def by 30% for 3 turns,Buff,none,4,magical,any,150,5,1,30,1, defense,1,0,1
-389,-1,-1,ZeRali Def,Increases Def by 30% for 3 turns in range,Buff,none,8,magical,anyarea,151,5,1,30,1, defense,4,0,1,1,1,-1,1,0,2
-390,-1,-1,Rallho Def,Increases Def by 40% for 3 turns,Buff,none,6,magical,any,152,15,1,40,1, defense,4,0,1,1,1,-1,1,0,2
-391,-1,-1,ZeRallho Def,Increases Def by 40% for 3 turns in range,Buff,none,10,magical,anyarea,153,5,1,40,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-392,-1,-1,Rallon Def,Increases Def by 50% for 3 turns,Buff,none,8,magical,any,154,15,1,50,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-393,-1,-1,ZeRallon Def,Increases Def by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, defense,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-394,-1,-1,Ralli Res,Increases Res by 30% for 3 turns,Buff,none,4,magical,any,150,5,1,30,1, Resistance,1,0,1
-395,-1,-1,ZeRali Res,Increases Res by 30% for 3 turns in range,Buff,none,8,magical,anyarea,151,5,1,30,1, Resistance,4,0,1,1,1,-1,1,0,2
-396,-1,-1,Rallho Res,Increases Res by 40% for 3 turns,Buff,none,6,magical,any,152,15,1,40,1, Resistance,4,0,1,1,1,-1,1,0,2
-397,-1,-1,ZeRallho Res,Increases Res by 40% for 3 turns in range,Buff,none,10,magical,anyarea,153,5,1,40,1, Resistance,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-398,-1,-1,Rallon Res,Increases Res by 50% for 3 turns,Buff,none,8,magical,any,154,15,1,50,1, Resistance,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-399,-1,-1,ZeRallon Res,Increases Res by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, Resistance,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-400,-1,-1,Ralli Spd,Increases Speed by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, speed,1,0,1
-401,-1,-1,ZeRali Spd,Increases Speed by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, speed,4,0,1,1,1,-1,1,0,2
-402,-1,-1,Rallho Spd,Increases Speed by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, speed,4,0,1,1,1,-1,1,0,2
-403,-1,-1,ZeRallho Spd,Increases Speed by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-404,-1,-1,Rallon Spd,Increases Speed by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-405,-1,-1,ZeRallon Spd,Increases Speed by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-406,-1,-1,Ralli Skl,Increases skill by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, skill,1,0,1
-407,-1,-1,ZeRali Skl,Increases skill by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, skill,4,0,1,1,1,-1,1,0,2
-408,-1,-1,Rallho Skl,Increases skill by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, skill,4,0,1,1,1,-1,1,0,2
-409,-1,-1,ZeRallho Skl,Increases skill by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, skill,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-410,-1,-1,Rallon Skl,Increases skill by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, skill,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-411,-1,-1,ZeRallon Skl,Increases skill by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, skill,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-412,-1,-1,Ralli Aggro,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, attack,1,0,1
-413,-1,-1,ZeRali Aggro,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, attack,4,0,1,1,1,-1,1,0,2
-414,-1,-1,Rallho Aggro,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, attack,4,0,1,1,1,-1,1,0,2
-415,-1,-1,ZeRallho Aggro,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-416,-1,-1,Rallega Aggro,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-417,-1,-1,ZeRallega Aggro,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, attack,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-418,-1,-1,Ralli Gaurd,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, guard,1,0,1
-419,-1,-1,ZeRali Gaurd,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, guard,4,0,1,1,1,-1,1,0,2
-420,-1,-1,Rallho Gaurd,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, guard,4,0,1,1,1,-1,1,0,2
-421,-1,-1,ZeRallho Gaurd,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, guard,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-422,-1,-1,Rallega Gaurd,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, guard,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-423,-1,-1,ZeRallega Gaurd,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, guard,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-424,-1,-1,Ralli Act,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, act,1,0,1
-425,-1,-1,ZeRali Act,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, act,4,0,1,1,1,-1,1,0,2
-426,-1,-1,Rallho Act,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, act,4,0,1,1,1,-1,1,0,2
-427,-1,-1,ZeRallho Act,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, act,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-428,-1,-1,Rallega Act,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, act,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-429,-1,-1,ZeRallega Act,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, act,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-430,-1,-1,Ralli Stats,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, all,1,0,1
-431,-1,-1,ZeRali Stats,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, all,4,0,1,1,1,-1,1,0,2
-432,-1,-1,Rallho Stats,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, all,4,0,1,1,1,-1,1,0,2
-433,-1,-1,ZeRallho Stats,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, all,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-434,-1,-1,Rallega Stats,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, all,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-435,-1,-1,ZeRallega Stats,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, all,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-436,216,191,Regress Str,Increases str by 30% for 3 turns,Buff,none,4,magical,any,162,5,1,30,1, str,1,0,1
-437,-1,-1,ZeRali Str,Increases str by 30% for 3 turns in range,Buff,none,8,magical,anyarea,163,5,1,30,1, str,4,0,1,1,1,-1,1,0,2
-438,-1,-1,Rallho Str,Increases str by 40% for 3 turns,Buff,none,6,magical,any,164,15,1,40,1, str,4,0,1,1,1,-1,1,0,2
-439,-1,-1,ZeRallho Str,Increases str by 40% for 3 turns in range,Buff,none,10,magical, anyarea,165,5,1,40,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-440,-1,-1,Rallega Str,Increases str by 50% for 3 turns,Buff,none,8,magical,any,166,15,1,50,1, str,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-441,-1,-1,ZeRallega Str,Increases str by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, str,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-442,210,191,Regress Mag,Increases mag by 30% for 3 turns,Buff,none,4,magical,any,168,5,1,30,1, mag,1,0,1
-443,-1,-1,ZeRali Mag,Increases mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,169,5,1,30,1, mag,4,0,1,1,1,-1,1,0,2
-444,-1,-1,Rallho Mag,Increases mag by 40% for 3 turns,Buff,none,6,magical,any,170,15,1,40,1, mag,4,0,1,1,1,-1,1,0,2
-445,-1,-1,ZeRallho Mag,Increases mag by 40% for 3 turns in range,Buff,none,10,magical, anyarea,171,5,1,40,1, mag,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-446,-1,-1,Rallega Mag,Increases mag by 50% for 3 turns,Buff,none,8,magical,any,172,15,1,50,1, mag,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-447,-1,-1,ZeRallega Mag,Increases mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, mag,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-448,-1,-1,Regress Def,Increases Def by 30% for 3 turns,Buff,none,4,magical,any,150,5,1,30,1, defense,1,0,1
-449,-1,-1,ZeRali Def,Increases Def by 30% for 3 turns in range,Buff,none,8,magical,anyarea,151,5,1,30,1, defense,4,0,1,1,1,-1,1,0,2
-450,-1,-1,Rallho Def,Increases Def by 40% for 3 turns,Buff,none,6,magical,any,152,15,1,40,1, defense,4,0,1,1,1,-1,1,0,2
-451,-1,-1,ZeRallho Def,Increases Def by 40% for 3 turns in range,Buff,none,10,magical,anyarea,153,5,1,40,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-452,-1,-1,Rallon Def,Increases Def by 50% for 3 turns,Buff,none,8,magical,any,154,15,1,50,1, defense,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-453,-1,-1,ZeRallon Def,Increases Def by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, defense,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-454,-1,-1,Regress Res,Increases Res by 30% for 3 turns,Buff,none,4,magical,any,150,5,1,30,1, Resistance,1,0,1
-455,-1,-1,ZeRali Res,Increases Res by 30% for 3 turns in range,Buff,none,8,magical,anyarea,151,5,1,30,1, Resistance,4,0,1,1,1,-1,1,0,2
-456,-1,-1,Rallho Res,Increases Res by 40% for 3 turns,Buff,none,6,magical,any,152,15,1,40,1, Resistance,4,0,1,1,1,-1,1,0,2
-457,-1,-1,ZeRallho Res,Increases Res by 40% for 3 turns in range,Buff,none,10,magical,anyarea,153,5,1,40,1, Resistance,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-458,-1,-1,Rallon Res,Increases Res by 50% for 3 turns,Buff,none,8,magical,any,154,15,1,50,1, Resistance,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-459,-1,-1,ZeRallon Res,Increases Res by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, Resistance,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-460,-1,-1,Regress Spd,Increases Speed by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, speed,1,0,1
-461,-1,-1,ZeRali Spd,Increases Speed by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, speed,4,0,1,1,1,-1,1,0,2
-462,-1,-1,Rallho Spd,Increases Speed by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, speed,4,0,1,1,1,-1,1,0,2
-463,-1,-1,ZeRallho Spd,Increases Speed by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-464,-1,-1,Rallon Spd,Increases Speed by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, speed,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-465,-1,-1,ZeRallon Spd,Increases Speed by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, speed,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-466,-1,-1,Regress Skl,Increases skill by 30% for 3 turns,Buff,none,4,magical,any,156,5,1,30,1, skill,1,0,1
-467,-1,-1,ZeRali Skl,Increases skill by 30% for 3 turns in range,Buff,none,8,magical,anyarea,157,5,1,30,1, skill,4,0,1,1,1,-1,1,0,2
-468,-1,-1,Rallho Skl,Increases skill by 40% for 3 turns,Buff,none,6,magical,any,158,15,1,40,1, skill,4,0,1,1,1,-1,1,0,2
-469,-1,-1,ZeRallho Skl,Increases skill by 40% for 3 turns in range,Buff,none,10,magical, anyarea,159,5,1,40,1, skill,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-470,-1,-1,Rallon Skl,Increases skill by 50% for 3 turns,Buff,none,8,magical,any,160,15,1,50,1, skill,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-471,-1,-1,ZeRallon Skl,Increases skill by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, skill,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-472,-1,-1,Regress Aggro,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, attack,1,0,1
-473,-1,-1,ZeRali Aggro,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, attack,4,0,1,1,1,-1,1,0,2
-474,-1,-1,Rallho Aggro,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, attack,4,0,1,1,1,-1,1,0,2
-475,-1,-1,ZeRallho Aggro,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-476,-1,-1,Rallega Aggro,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, attack,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-477,-1,-1,ZeRallega Aggro,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, attack,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-478,-1,-1,Regress Gaurd,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, guard,1,0,1
-479,-1,-1,ZeRali Gaurd,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, guard,4,0,1,1,1,-1,1,0,2
-480,-1,-1,Rallho Gaurd,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, guard,4,0,1,1,1,-1,1,0,2
-481,-1,-1,ZeRallho Gaurd,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, guard,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-482,-1,-1,Rallega Gaurd,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, guard,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-483,-1,-1,ZeRallega Gaurd,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, guard,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-484,-1,-1,Regress Act,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, act,1,0,1
-485,-1,-1,ZeRali Act,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, act,4,0,1,1,1,-1,1,0,2
-486,-1,-1,Rallho Act,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, act,4,0,1,1,1,-1,1,0,2
-487,-1,-1,ZeRallho Act,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, act,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-488,-1,-1,Rallega Act,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, act,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-489,-1,-1,ZeRallega Act,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, act,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
-490,-1,-1,Regress Stats,Increases Str and Mag by 30% for 3 turns,Buff,none,4,magical,any,144,5,1,30,1, all,1,0,1
-491,-1,-1,ZeRali Stats,Increases  Str and Mag by 30% for 3 turns in range,Buff,none,8,magical,anyarea,145,5,1,30,1, all,4,0,1,1,1,-1,1,0,2
-492,-1,-1,Rallho Stats,Increases  Str and Mag by 40% for 3 turns,Buff,none,6,magical,any,146,15,1,40,1, all,4,0,1,1,1,-1,1,0,2
-493,-1,-1,ZeRallho Stats,Increases  Str and Mag by 40% for 3 turns in range,Buff,none,10,magical,anyarea,147,5,1,40,1, all,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-494,-1,-1,Rallega Stats,Increases  Str and Mag by 50% for 3 turns,Buff,none,8,magical,any,148,15,1,50,1, all,9,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1
-495,-1,-1,ZeRallega Stats,Increases  Str and Mag by 50% for 3 turns in range,Buff,none,12,magical,anyarea,-1,5,1,50,1, all,14,0,1,1,1,-1,1,0,2,1,2,-1,2,0,3,2,1,-2,1,2,2,1,3,0,4,-1,3,-2,2
--
--496, heal small
--497, heal small area
--498, heal medium
--499, heal medium area
--500, heal large
--501, heal large area
--
--502, resurrection with small
--503, resurrection small area
--504, resurrection medium
--505, resurrection medium area
--506, resurrection large
--507, resurrection large area
--
--508, poison with small
--509, poison small area
--510, poison medium
--511, poison medium area
--512, poison large
--513, poison large area
--514, paralyze with small
--515, paralyze small area
--516, paralyze medium
--517, paralyze medium area
--518, paralyze large
--519, paralyze large area
--520, sleep with small
--522, sleep small area
--523, sleep medium
--524, sleep medium area
--525, sleep large
--526, sleep large area
--
-526,-1,-1,HP Up,Increases max HP by 25,Passive,1,25,0,Health,0
-527,-1,-1,SP Up,Increases max SP by 25,Passive,1,25,0,SP,0
-528,-1,-1,FT Up,Increases max FT by 25,Passive,1,25,0,FT,0
-529,-1,-1,FT Cost Up,Increases FT cost by 50%,Passive,-1,50,0,FTTCharge,0
-530,-1,-1,FT Charge Up,Increases FT charge by 50%,Passive,-1,50,0,FTCharge,0
-531,-1,-1,SP Cost Down,Decreases mana cost by 50%,Passive,1,50,0,SPCost,0
-532,-1,-1,FT Cost Down,Decreases FT cost by 50%,Passive,1,50,0,FTCost,0
-533,-1,-1,FT Charge Down,Decreases FT charge by 50%,Passive,1,50,0,FTCharge,
-534,-1,-1,Movement Up,Increases movement by 1,Passive,1,1,0,Movement,0
-535,-1,-1,DragonStone,Fire and Slash attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Fire, Slash
-536,-1,-1,WitchStone,Fire and Water attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Fire, Water
-537,-1,-1,PhoenixStone,Fire and Pierce attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Fire, Pierce
-538,-1,-1,PixieStone,Ice and Pierce attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Ice, Pierce
-539,-1,-1,GorgonStone,Elec and Blunt attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Electric, Blunt
-540,-1,-1,ArachnidStone,Water and Blunt attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Water, Blunt
-541,-1,-1,FairyStone,Ice and Slash attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Ice, Slash
-542,-1,-1,MoonlightStone,Ice and Elec attacks do 75% more dmg,Passive,1,0.75,0,ElementDmg,2, Ice, Electric
--543
--544
--545
--546
--547
--548
--549
--550
--551
--552
--553
--
-553,-1,-1,Slash Opportunity,Allows a free attack after an ally hits with a Slash attack.,Opp,Slash,1.0
-554,-1,-1,Pierce Opportunity,Allows a free attack after an ally hits with a Pierce attack..,Opp,Pierce,1.0
-555,-1,-1,Blunt Opportunity,Allows a free attack after an ally hits with a Blunt attack..,Opp,Blunt,1.0
-556,-1,-1,Water Opportunity,Allows a free attack after an ally hits with a Water attack..,Opp,Water,1.0
-557,-1,-1,Fire Opportunity,Allows a free attack after an ally hits with a Fire attack.,Opp,Fire,1.0
-558,-1,-1,Ice Opportunity,Allows a free attack after an ally hits with a Ice attack..,Opp,Ice,1.0
-559,-1,-1,Elec Opportunity,Allows a free attack after an ally hits with a Elec attack..,Opp,Electric,1.0
--
-560,-1,-1,LifeStrip,20% chance + skl to heal the damage you delt after a basic attack.,Auto,20.0,afterDmg,healByDmg,210,5,0
-561,-1,-1,LifeLift,30% chance + skl to heal the damage you delt after a basic attack.,Auto,30.0,afterDmg,healByDmg,211,10,0
-562,-1,-1,LifeSteal,40% chance + skl to heal the damage you delt after a basic attack.,Auto,40.0,afterDmg,healByDmg,-1,0,0
--
-563,-1,-1,ManaStrip,20% chance + skl to gain mana by the damage you delt after a basic attack.,Auto,20.0,afterDmg,GainManaByDmg,210,5,0
-564,-1,-1,ManaLift,30% chance + skl to gain mana by the damage you delt after a basic attack.,Auto,30.0,afterDmg,GainManaByDmg,211,10,0
-565,-1,-1,ManaSteal,40% chance + skl to gain mana by the damage you delt after a basic attack.,Auto,40.0,afterDmg,GainManaByDmg,-1,0,0
--
-566,-1,-1,FatigueStrip,20% chance to charge FT by the damage you delt after a basic attack.,Auto,20.0,afterDmg,ChargeFTByDmg,210,5,0
-567,-1,-1,FatigueLift,30% chance to charge FT by the damage you delt after a basic attack.,Auto,30.0,afterDmg,ChargeFTByDmg,211,10,0
-568,-1,-1,FatigueSteal,40% chance to charge FT by the damage you delt after a basic attack.,Auto,40.0,afterDmg,ChargeFTByDmg,-1,0,0
--
-569,-1,-1,Small Profit,20% chance to discover an item after a basic attack.,Auto,20.0,afterDmg,discoverItem,213,5,0
-570,-1,-1,Good Profit,30% chance to discover an item after a basic attack.,Auto,30.0,afterDmg,discoverItem,214,10,0
-571,-1,-1,Mass Profit,40% chance to discover an item after a basic attack.,Auto,40.0,afterDmg,discoverItem,-1,0,0
--
-572,-1,-1,Mana rage,20% chance to gain mana equal to the damage you delt. .,Auto,20.0,afterDmg,GainManaByDmg,213,5,20
-573,-1,-1,Mana fury,30% chance to gain mana equal to the damage you delt.,Auto,30.0,afterDmg,GainManaByDmg,214,10,30
-574,-1,-1,Mana outburst,40% chance to gain mana equal to the damage you delt.,Auto,40.0,afterDmg,GainManaByDmg,-1,0,40
+-cmd id,name,element,SubSkillType, side effect,cost,etype,range type,level,uses, accuraccy, dmg, hits, critRate, affecttedTilesCount, affectedx, affectedy,can be aug, aug count, augments
+-Buff
+-Ailment
+-Rng, min atk, max
+-Passive
+-Auto
+-Opp
+-Heal
+-
+-Slash
+10,Slice,Slash,Attack,none,3,physical,single,0,0,70,tiny,1,0,1,0,1
+11,Angry Blade,Slash,Attack,none,-6,physical,single,0,0,80,tiny,1,0,1,0,1
+12,Mystic Cut,Slash,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+13,Quick Slice,Slash,Attack,none,6,physical,single,0,0,70,small,1,0,1,0,1
+14,Raging Blades,Slash,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+15,Arcane Cut,Slash,Attack,none,12,magical,multi,0,0,70,small,1,0,2,0,1,0,2
+-
+-Pierce
+20,Sting,Pierce,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+21,Close Shot,Pierce,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+22,Mystic Bullet,Pierce,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+23,Quick Sting,Pierce,Attack,none,6,physical,single,0,0,70,small,1,0,1,0,1
+24,Pinpoint Shot,Pierce,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+25,Arcane Bullet,Pierce,Attack,none,12,magical,multi,0,0,70,small,1,0,2,0,1,0,2
+-
+-Blunt
+30,Bash,Blunt,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+31,Overhead Swing,Blunt,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+32,Mystic Hammer,Blunt,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+33,Quick Bash,Blunt,Attack,none,6,physical,single,0,0,70,small,1,0,1,0,1
+34,Overbody Swing,Blunt,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+35,Arcane Hammer,Blunt,Attack,none,12,magical,multi,0,0,70,small,1,0,2,0,1,0,2
+-
+-Water
+40,Aqua Punch,Water,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+41,Bubble Bomb,Water,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+42,Water,Water,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+43,Hydro Punch,Water,Attack,none,6,physical,single,0,0,70,Small,1,0,1,0,1
+44,Bubble Bombardment,Water,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+45,Waterfall,Water,Attack,none,12,magical,area,0,0,70,small,1,0,3,0,1,1,1,-1,1
+-
+-Fire
+50,Pyro kick,Fire,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+51,Ash Bomb,Fire,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+52,Fire,Fire,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+53,Blazing Kick,Fire,Attack,none,6,physical,single,0,0,70,Small,1,0,1,0,1
+54,Ash Bombardment,Fire,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+55,Flame,Fire,Attack,none,12,magical,multi,0,0,70,small,1,0,3,0,1,1,1,-1,1
+-
+-Ice
+60,Frost Slap,Ice,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+61,Ice Bomb,Ice,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+62,Ice,Ice,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+63,Frozen Slap,Ice,Attack,none,6,physical,single,0,0,70,Small,1,0,1,0,1
+64,Ice Bombardment,Ice,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+65,Glacier,Ice,Attack,none,12,magical,multi,0,0,70,small,1,0,2,0,1,0,2
+-
+-Elec
+70,Static Slam,Electric,Attack,none,6,physical,single,0,0,70,tiny,1,0,1,0,1
+71,Circuit Bomb ,Electric,Attack,none,-5,physical,single,0,0,80,tiny,1,0,1,0,1
+72,Storm,Electric,Attack,none,6,magical,single,0,0,70,tiny,1,0,1,0,1
+73,Lightning Slam,Ice,Attack,none,6,physical,single,0,0,70,Small,1,0,1,0,1
+74,Circuit Bombardment,Ice,Attack,none,-12,physical,single,0,0,80,small,2,0,1,0,1
+75,ThunderStorm,Electric,RngAtk,none,12,magical,single,1,0,85,small,1,0,1,0,1,1,3
+-
+-Buffs
+80,Ralli Str,Buff,Buff,none,4,magical,any,1,0,30,1,str,1,0,1
+81,Ralli Mag,Buff,Buff,none,4,magical,any,1,0,30,1,mag,1,0,1
+82,Ralli Spd,Buff,Buff,none,4,magical,any,1,0,30,1,speed,1,0,1
+83,Ralli Def,Buff,Buff,none,4,magical,any,1,0,30,1,defense,1,0,1
+84,Ralli Res,Buff,Buff,none,4,magical,any,1,0,30,1,resistance,1,0,1
+85,Ralli Skl,Buff,Buff,none,4,magical,any,1,0,30,1,skill,1,0,1
+-
+-Debuffs
+90,Regress Str,Buff,Debuff,none,4,magical,single,1,0,-30,1,str,1,0,1
+91,Regress Mag,Buff,Debuff,none,4,magical,single,1,0,-30,1,mag,1,0,1
+92,Regress Spd,Buff,Debuff,none,4,magical,single,1,0,-30,1,speed,1,0,1
+93,Regress Def,Buff,Debuff,none,4,magical,single,1,0,-30,1,defense,1,0,1
+94,Regress Res,Buff,Debuff,none,4,magical,single,1,0,-30,1,resistance,1,0,1
+95,Regress Skl,Buff,Debuff,none,4,magical,single,1,0,-30,1,skill,1,0,1
+-
+-Aliments
+-100,Poison,Ailment,Ailment,poison,4,magical,single,1,30,1,poison,1,0,1
+-101,Burn,Ailment,Ailment,burn,4,magical,single,1,30,1,burn,1,0,1
+-102,Sleep,Ailment,Ailment,sleep,4,magical,single,1,30,1,sleep,1,0,1
+-103,Paralyze,Ailment,Ailment,paralyze,4,magical,single,1,30,1,paralyze,1,0,1
+-104,Freeze,Ailment,Ailment,freeze,4,magical,single,1,30,1,freeze,1,0,1
+-105,Bleed,Ailment,Ailment,bleed,4,magical,single,1,30,1,bleed,1,0,1
+-106,Confuse,Ailment,Ailment,confusion,4,magical,single,1,30,1,confusion,1,0,1
+-
+-Opportunity
+1,Slash Opportunity,Opp,None,Slash,1.0
+2,Pierce Opportunity,Opp,None,Pierce,1.0
+3,Blunt Opportunity,Opp,None,Blunt,1.0
+4,Water Opportunity,Opp,None,Water,1.0
+5,Fire Opportunity,Opp,None,Fire,1.0
+6,Ice Opportunity,Opp,None,Ice,1.0
+7,Elec Opportunity,Opp,None,Electric,1.0
+-
+-Auto
+110,LifeStrip,Auto,None,20% chance + skl to heal the damage you delt after a basic attack.,20.0,afterDmg,healByDmg,0,210,5
+111,ManaStrip,Auto,None,20% chance + skl to gain mana by the damage you delt after a basic attack.,20.0,afterDmg,GainManaByDmg,0,210,5
+112,FatigueStrip,Auto,None,20% chance + skl to charge FT by the damage you delt after a basic attack.,20.0,afterDmg,ChargeFTByDmg,0,210,5
+113,Small Profit,Auto,None,20% chance + skl to discover an item after a basic attack.,20.0,afterDmg,discoverItem,0,213,5
+114,Encore,Auto,None,5% chance + skl to gain an extra action after a basic attack.,5.0,afterDmg,extraAction,0,213,5
+115,Fear,Auto,None,10% chance + skl to reduce enemy defense before damage when doing a basic attack.,20.0,beforeDmg,reduceDef,0,213,5
+116,Authority,Auto,None,10% chance + skl to reduce enemy resistance before damage when doing a basic attack.,20.0,beforeDmg,reduceRes,0,213,5
+-
+-Passives
+200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
+201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
+202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
+203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,50,0,FTCharge,
+204,DragonStone,Passive,None,Fire and Slash attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Slash
+205,WitchStone,Passive,None,Fire and Water attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Water
+206,PhoenixStone,Passive,None,Fire and Pierce attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Pierce
+207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Pierce
+208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Electric, Blunt
+209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Water, Blunt
+210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Slash
+211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Electric

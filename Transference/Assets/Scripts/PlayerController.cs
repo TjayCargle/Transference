@@ -178,6 +178,26 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                     break;
+                case State.playerUsingSkills:
+                    {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            useOrEquip();
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
+                            myManager.CancelMenuAction(current);
+                            currentSkill = null;
+
+                        }
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            currentSkill = null;
+                            myManager.CancelMenuAction(current);
+                        }
+                        break;
+                    }
                 case State.PlayerWait:
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
@@ -405,7 +425,7 @@ public class PlayerController : MonoBehaviour
                                             {
                                                 for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
                                                 {
-                                                    if (currentSkill.ELEMENT == Element.Buff)
+                                                    if (currentSkill.SUBTYPE == SubSkillType.Buff)
                                                     {
                                                         myManager.attackableTiles[i][j].myColor = Common.lime;
 
@@ -421,7 +441,7 @@ public class PlayerController : MonoBehaviour
 
                                             for (int i = 0; i < myManager.currentAttackList.Count; i++)
                                             {
-                                                if (currentSkill.ELEMENT == Element.Buff)
+                                                if (currentSkill.SUBTYPE == SubSkillType.Buff)
                                                 {
                                                     myManager.currentAttackList[i].myColor = Common.green;
 
@@ -435,6 +455,8 @@ public class PlayerController : MonoBehaviour
                                             myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
                                             myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
                                             myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+
+
                                         }
 
                                         else
@@ -444,17 +466,47 @@ public class PlayerController : MonoBehaviour
                                             myManager.tempObject.transform.position = myManager.currentObject.transform.position;
                                             myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
                                         }
+                                        myManager.myCamera.potentialDamage = 0;
+                                        myManager.myCamera.UpdateCamera();
+                                        myManager.anchorHpBar();
 
+                                        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+                                        if (griddy)
+                                        {
+                                            if (griddy.GetComponent<LivingObject>())
+                                            {
+                                                LivingObject livvy = griddy.GetComponent<LivingObject>();
+                                                if (livvy.FACTION != myManager.player.current.FACTION)
+                                                {
+                                                    DmgReaction reac;
+                                                    if (myManager.player.currentSkill)
+                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
+                                                    else
+                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                                                    if (reac.reaction > Reaction.weak)
+                                                        reac.damage = 0;
+                                                    myManager.myCamera.potentialDamage = reac.damage;
+                                                    myManager.myCamera.UpdateCamera();
+                                                    if (myManager.potential)
+                                                    {
+                                                        myManager.potential.pulsing = true;
+                                                    }
+                                      
+                                                }
+                                            }
+                                        }
                                         MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
                                         if (myMenuManager)
                                         {
                                             myMenuManager.ShowNone();
                                         }
-                                        menuStackEntry entry = new menuStackEntry();
-                                        entry.state = State.PlayerAttacking;
-                                        entry.index = invm.currentIndex;
-                                        entry.menu = currentMenu.CmdSkills;
-                                        myManager.enterState(entry);
+                                      //  menuStackEntry entry = new menuStackEntry();
+                                      //  entry.state = State.PlayerAttacking;
+                                      //  entry.index = invm.currentIndex;
+                                      //  entry.menu = currentMenu.CmdSkills;
+                                      //  myManager.enterState(entry);
+
+                                        myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
                                     }
                                     else
                                     {

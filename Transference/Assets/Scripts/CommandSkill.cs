@@ -51,9 +51,9 @@ public class CommandSkill : SkillScript
     protected int nextCount;
 
     [SerializeField]
-    protected int friendIndex = -1;
+    protected int minHit = -1;
     [SerializeField]
-    protected int friendIndexNext = -1;
+    protected int maxHit = -1;
 
     public int COST
     {
@@ -143,16 +143,16 @@ public class CommandSkill : SkillScript
         set { nextCount = value; }
     }
 
-    public int FRIEND
+    public int MIN_HIT
     {
-        get { return friendIndex; }
-        set { friendIndex = value; }
+        get { return minHit; }
+        set { minHit = value; }
     }
 
-    public int FRIEND_NEXT
+    public int MAX_HIT
     {
-        get { return friendIndexNext; }
-        set { friendIndexNext = value; }
+        get { return maxHit; }
+        set { maxHit = value; }
     }
     public int GetCost(LivingObject user, float modification = 1.0f)
     {
@@ -177,43 +177,15 @@ public class CommandSkill : SkillScript
         {
             OWNER.STATS.FATIGUE += (int)(COST * modification);
         }
-        // OWNER.TakeAction();
+
         if (NEXT > 0)
         {
             if (NEXTCOUNT > 0)
             {
                 NEXTCOUNT--;
-                if (NEXTCOUNT <= 0)
-                {
-
-                    DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
-
-                    if (friendIndex >= 0)
-                    {
-                        CommandSkill friendSkill = OWNER.INVENTORY.ContainsCommandIndex(FRIEND);
-                        if (friendSkill)
-                        {
-                            if (friendSkill.NEXT > 0)
-                            {
-                                if (friendSkill.NEXTCOUNT <= 0)
-                                {
-                                    if (database != null)
-                                    {
-                                        database.LearnSkill(FRIEND_NEXT, user);
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-
-                    if (database != null)
-                    {
-                        return database.LearnSkill(NEXT, user);
-                        // true; //to check if a new skill was learned
-
-                    }
-                }
+            
+                         
+                
             }
         }
         return null;
@@ -250,5 +222,89 @@ public class CommandSkill : SkillScript
                 break;
         }
         return can;
+    }
+
+    public void UpdateDesc()
+    {
+        this.DESC = PossibleDesc(RTYPE, DAMAGE, HITS, EFFECT);
+    }
+
+    public string PossibleDesc(RanngeType pRtype, DMG pDMG, int pHits, SideEffect pEffect)
+    {
+        string potentialDesc;
+        if (pRtype == RanngeType.area)
+        {
+            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.DESC + " in range";
+        }
+        else if (pHits == 1)
+        {
+            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.TILES.Count + " " + this.DESC;
+        }
+        else
+        {
+            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.DESC + " " + this.HITS + " times";
+
+        }
+        if (pEffect != SideEffect.none)
+        {
+            if (this.EFFECT < SideEffect.reduceStr)
+            {
+                potentialDesc += " with a chance of " + this.EFFECT.ToString();
+            }
+            else
+            {
+                potentialDesc += " with a chance to debuff " + Common.GetSideEffectText(this.EFFECT);
+            }
+        }
+        return potentialDesc;
+    }
+    public override void AugmentSkill(Augment augment)
+    {
+        switch (augment)
+        {
+            case Augment.damageAugment:
+                DAMAGE = DAMAGE + 1;
+                break;
+            case Augment.accurracyAugment:
+                ACCURACY = (int)((float)ACCURACY * 1.2f);
+                break;
+            case Augment.sideEffectAugment:
+                EFFECT = effect;
+                break;
+            case Augment.rangeAument:
+                //todo
+                break;
+            case Augment.attackCountAugment:
+                HITS++;
+                break;
+            case Augment.costAugment:
+                COST = (int)((float)COST * 0.5f);
+                break;
+            case Augment.chargeIncreaseAugment:
+                COST = (int)((float)COST * 1.5f);
+                break;
+            case Augment.chargeDecreaseAugment:
+                COST = (int)((float)COST * 0.5f);
+                break;
+            case Augment.buffAugment:
+                BUFFVAL *= 2;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public override BoolConatainer CheckAugment()
+    {
+            BoolConatainer conatainer = Common.container;
+        conatainer.name = "none";
+        conatainer.result = false;
+        if(AUGMENTS.costTrigger == 2)
+        {
+            // AugmentSkill(Augment.costAugment);
+            conatainer.result = true;
+            conatainer.name = "Damage Augment";
+        }
+            return conatainer;
     }
 }

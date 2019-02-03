@@ -1,10 +1,12 @@
 id, name, description,auto skill ,attack, attack_type,affinity, distance, range, accurracy, luck
 0, Tail Strike,El: Pierce. Phys. Str: 4. Hit: 100% Crit: 0. Range: 2. Dist: 2, 10, physical, Pierce, 2, 1, 100, 10
 1, Claw Slash,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1,10, physical, Slash, 1, 1, 90, 10
-2, Dragon Breath,El: Fire. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Fire, 3, 3, 80, 10
+2, Dragon Breath,El: Fire. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Fire, 2, 2, 80, 10
 3, Kick,El: Blunt. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1. ,10, physical, Blunt, 1, 1, 90, 10
 4, Fire Tome,El: Fire. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Fire, 2, 2, 80, 10
-7, Crossbow,Low physical decent range. ,10, physical, Pierce, 3, 1, 90, 10
-5, Longbow, Long range ,10, magical, Pierce, 5, 1, 90, 10
-6, Stinger, El: Pierce. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, physical, Pierce, 1, 1, 90, 10
+5, Frost Punch,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Ice, 1, 1, 80, 10
+6, Mystic Arrow, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Pierce, 1, 1, 90, 10
 8, Ice Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Ice, 2, 1, 80, 10
+7, Hydro Lance,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Water, 2, 1, 80, 10
+9, Water Tome, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Water, 1, 1, 90, 10
+10, Elec Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Electric, 2, 1, 80, 10

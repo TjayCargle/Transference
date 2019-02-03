@@ -18,21 +18,33 @@ public class EnemyScript : LivingObject
 
     public void MoveStart()
     {
-      //  Debug.Log(FullName+" move start");
+        //  Debug.Log(FullName+" move start");
         myManager.ShowGridObjectMoveArea(this);
-      
-        
+
+
 
     }
     public bool MoveEvent(Object target)
     {
+
         bool isDone = false;
         path pathTarget = target as path;
-
+        myManager.MoveCameraAndShow(this);
         TileScript realTarget = pathTarget.realTarget;
 
         pathTarget.currentPath = DeterminePath(pathTarget);
         headCount = pathTarget.currentPath.Count;
+        if(headCount == 0)
+        {
+            isDone = true;
+            TakeAction();
+            if (ACTIONS <= 0)
+            {
+                isPerforming = false;
+            }
+            myManager.myCamera.currentTile = currentTile;
+            return isDone;
+        }
         nextTile = pathTarget.currentPath.Peek();
         //  myManager.myCamera.currentTile = nextTile;
         // myManager.myCamera.infoObject = this;
@@ -73,6 +85,7 @@ public class EnemyScript : LivingObject
             }
             //Debug.Log("Move Event Done!");
         }
+
         myManager.myCamera.currentTile = currentTile;
         return isDone;
     }
@@ -92,11 +105,11 @@ public class EnemyScript : LivingObject
 
     public bool EAtkEvent(Object target)
     {
-        Debug.Log(FullName + " atacking");
+       // Debug.Log(FullName + " atacking");
         bool isDone = true;
         //if(ACTIONS > 0)
         {
-
+            myManager.MoveCameraAndShow(this);
             LivingObject realTarget = target as LivingObject;
             if (SSTATUS == SecondaryStatus.confusion)
             {
@@ -109,7 +122,7 @@ public class EnemyScript : LivingObject
                     realTarget = this;
                 }
             }
-          
+
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
             manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
             myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
@@ -121,7 +134,7 @@ public class EnemyScript : LivingObject
                 conatiner.attackingObject = this;
                 conatiner.dmgObject = realTarget;
                 conatiner.attackingElement = bestReaction.dmgElement;
-                myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent,null,1);
+                myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
             }
             // Debug.Log(FullName + " used " + bestReaction.atkName);
@@ -163,14 +176,18 @@ public class EnemyScript : LivingObject
                     }
                     else
                     {
-                        if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>())
+                        if (manager.GetObjectAtTile(checkTile))
                         {
-                            if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>().FACTION == Faction.enemy)
+
+                            if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>())
                             {
-                                LivingObject living = manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>();
-                                if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
+                                if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>().FACTION == Faction.enemy)
                                 {
-                                    current = checkTile;
+                                    LivingObject living = manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>();
+                                    if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
+                                    {
+                                        current = checkTile;
+                                    }
                                 }
                             }
                         }
@@ -312,7 +329,7 @@ public class EnemyScript : LivingObject
                 {
                     if (skill.COST > 0)
                     {
-                        modification =STATS.FTCHARGECHANGE;
+                        modification = STATS.FTCHARGECHANGE;
                     }
                     else
                     {
@@ -322,7 +339,7 @@ public class EnemyScript : LivingObject
                 if (skill.CanUse(modification))
                 {
                     bool inrange = false;
-                    if(checkdistance)
+                    if (checkdistance)
                     {
                         inrange = (Vector3.Distance(target.transform.position, calcLocation) <= skill.TILES.Count);
                     }
@@ -341,7 +358,7 @@ public class EnemyScript : LivingObject
                             bestReaction = aReaction;
                             bestReaction.atkName = skill.NAME;
                             usedSkill = skill;
-                           
+
                             if (usedSkill.ETYPE == EType.magical)
                                 modification = STATS.SPCHANGE;
                             if (usedSkill.ETYPE == EType.physical)
@@ -375,7 +392,7 @@ public class EnemyScript : LivingObject
     {
         isPerforming = true;
         //  Debug.Log(FullName + " is Determining actions");
-      
+
         psudeoActions = ACTIONS;
         calcLocation = transform.position;
         if (psudeoActions == 0)
@@ -474,7 +491,7 @@ public class EnemyScript : LivingObject
     public override IEnumerator FadeOut()
     {
         startedDeathAnimation = true;
-       // Debug.Log("enemy dying");
+        // Debug.Log("enemy dying");
         if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -495,8 +512,18 @@ public class EnemyScript : LivingObject
 
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
-            currentTile.isOccupied = false;
-           // Destroy(gameObject);
+
+            // Destroy(gameObject);
         }
+    }
+
+    public void Unset()
+    {
+        isSetup = false;
+        DEAD = false;
+        STATS.Reset(true);
+        BASE_STATS.Reset();
+        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
     }
 }

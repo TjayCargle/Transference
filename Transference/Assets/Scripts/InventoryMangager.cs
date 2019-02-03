@@ -1142,7 +1142,7 @@ public class InventoryMangager : MonoBehaviour
                         newText = item.NAME;
                         if (windowType == 3 || windowType == -1)
                         {
-                            if (manager.currentState == State.PlayerEquipping)
+                            if (manager.currentState == State.PlayerEquipping || manager.currentState == State.playerUsingSkills)
                             {
                                 if (attr)
                                 {

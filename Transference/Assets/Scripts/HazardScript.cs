@@ -30,9 +30,8 @@ public class HazardScript : LivingObject
         {
 
             base.Setup();
-            STATS.MANA = 0;
-            STATS.MAX_MANA = 0;
-            STATS.MAX_FATIGUE = 0;
+            BASE_STATS.MANA = 0;
+            BASE_STATS.MAX_MANA = 0;
             FACTION = Faction.hazard;
             FullName = "Glyph";
             isSetup = true;
@@ -103,6 +102,7 @@ public class HazardScript : LivingObject
 
     public bool HAtkEvent(Object target)
     {
+        myManager.MoveCameraAndShow(this); 
         Debug.Log(FullName + " atacking");
         bool isDone = true;
         {
@@ -133,7 +133,7 @@ public class HazardScript : LivingObject
 
     public DmgReaction DetermineBestDmgOutput(LivingObject target, bool checkdistance = true)
     {
-        Debug.Log("determining best output");
+      //  Debug.Log("determining best output");
         DmgReaction bestReaction;
         CommandSkill usedSkill = null;
         if (INVENTORY.CSKILLS.Count > 0)
@@ -174,14 +174,14 @@ public class HazardScript : LivingObject
     }
     public void DetermineActions()
     {
-        Debug.Log("determining actions");
+      //  Debug.Log("determining actions");
 
         isPerforming = true;
         int psudeoActions = -1;
         psudeoActions = ACTIONS;
 
         List<EActType> etypes = new List<EActType>();
-        path p = null;
+      
         LivingObject liveObj = null;
         for (int i = 0; i < psudeoActions; i++)
         {
@@ -189,15 +189,17 @@ public class HazardScript : LivingObject
             liveObj = FindNearestEnemy();
             if (liveObj)
             {
+                Debug.Log("glyph creatign atk event");
                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent);
             }
         }
         if(!liveObj)
         {
-            Debug.Log("decide to wait");
-            myManager.CreateEvent(this, this, "" + FullName + "Next event", myManager.NextTurnEvent);
+            Debug.Log("glyph decide to wait");
+            //myManager.CreateEvent(this, this, "" + FullName + " Next event", myManager.NextTurnEvent,null, 0);
 
             Wait();
+            TakeAction();
         }
 
         isPerforming = false;
@@ -253,10 +255,24 @@ public class HazardScript : LivingObject
 
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
+            if(currentTile)
+            {
             currentTile.isOccupied = false;
+
+            }
 
             //   Destroy(gameObject);
         }
+    }
+    public void Unset()
+    {
+        isSetup = false;
+        isSetup = false;
+        DEAD = false;
+        STATS.Reset(true);
+        BASE_STATS.Reset();
+        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
     }
 
 }

@@ -10,6 +10,7 @@ public enum State
     PlayerAttacking,
     PlayerEquippingMenu,
     PlayerEquipping,
+    playerUsingSkills,
     PlayerEquippingSkills,
     PlayerSkillsMenu,
     PlayerWait,
@@ -22,6 +23,7 @@ public enum State
     PlayerTransition,
     CheckDetails,
     AquireNewSkill,
+    GotoNewRoom,
     EnemyTurn,
     HazardTurn
 
@@ -122,6 +124,47 @@ public enum BuffType
 
 
 }
+public enum SkillType
+{
+    Command,
+    Passive,
+    Auto,
+    Opp,
+    None
+}
+public enum PhysType
+{
+    charge,
+    cost
+}
+public enum SubSkillType
+{
+    Attack,
+    Buff,
+    Debuff,
+    Ailment,
+    Heal,
+    Revive,
+    RngAtk,
+    RngSupp,
+    None
+}
+public enum Augment
+{
+    damageAugment,
+    accurracyAugment,
+    sideEffectAugment,
+    rangeAument,
+    attackCountAugment,
+    costAugment,
+    chargeIncreaseAugment,
+    chargeDecreaseAugment,
+    buffAugment,
+    autoAugment,
+    oppAugment,
+    randAugment
+
+}
 public enum Element
 {
     Water,
@@ -160,6 +203,7 @@ public enum Reaction
 {
     none,
     buff,
+    debuff,
     bonusAction,
     knockback,
     snatched,
@@ -180,7 +224,7 @@ public enum Reaction
 }
 public enum DMG
 {
-    minute =   10,
+    tiny =   10,
     small =    20,
     medium =   40,
     heavy =    80,
@@ -350,12 +394,18 @@ public struct DmgReaction
     public Reaction reaction;
     public string atkName;
     public Element dmgElement;
+    public SkillScript usedSkill;
 }
 public struct Modification
 {
     public ModifiedStat affectedStat;
     public Element affectedElement;
     public float editValue;
+}
+public struct BoolConatainer
+{
+   public bool result;
+   public string name;
 }
 public enum currentMenu
 {
@@ -404,6 +454,18 @@ public struct menuStackEntry
     public State state;
     public int index;
     public currentMenu menu;
+}
+
+public struct MapDetail
+{
+    public string mapName;
+    public int width;
+    public int height;
+    public List<int> doorIndexes;
+    public List<string> roomNames;
+    public List<int> roomIndexes;
+    public List<int> enemyIndexes;
+    public List<int> hazardIndexes;
 }
 public enum descState
 {
@@ -502,6 +564,8 @@ public class Common : ScriptableObject
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+    public static BoolConatainer container = new BoolConatainer();
+
     public static int maxDmg = 999;
     public static List<EHitType> noAmor = new List<EHitType>()
     {
@@ -568,7 +632,7 @@ public class Common : ScriptableObject
         int returnInt = -1;
         switch (dmg)
         {
-            case DMG.minute:
+            case DMG.tiny:
                 returnInt = 1;
                 break;
             case DMG.small:

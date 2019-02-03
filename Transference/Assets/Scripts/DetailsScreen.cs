@@ -93,6 +93,8 @@ public class DetailsScreen : MonoBehaviour
 
     [SerializeField]
     Text sksliderText;
+    [SerializeField]
+    Text statusText;
     void Start()
     {
 
@@ -142,21 +144,43 @@ public class DetailsScreen : MonoBehaviour
 
         for (int i = 0; i < selectableContent.Length; i++)
         {
-            if (i == selectedContent)
+            if (i >= 8 && i <= 13)
             {
-                selectableContent[i].color = Color.yellow;
+                continue;
             }
-            else
+            if (selectableContent[i])
             {
-                selectableContent[i].color = Color.white;
+
+                if (i == selectedContent)
+                {
+                    selectableContent[i].color = Color.yellow;
+                }
+                else
+                {
+                    selectableContent[i].color = Color.white;
+                }
             }
         }
         if (nameText)
         {
             nameText.text = currentObj.NAME;
         }
+        if(statusText)
+        {
+            statusText.text ="Current Status: " + currentObj.PSTATUS.ToString();
+        }
         switch (selectedContent)
         {
+            case 33:
+                if(currentObj.PSTATUS == PrimaryStatus.normal)
+                {
+                    descriptionText.text = "Staus is normal. No modifaction to movement or damage output";
+                }
+                else if (currentObj.PSTATUS == PrimaryStatus.crippled)
+                {
+                    descriptionText.text = "Staus is crippled! While crippled target will do half damage, take double damage, and movement will be reduced to 1";
+                }
+                break;
             case 8:
                 descriptionText.text = "Str = Strength. Strength determines how much damage is delt with a physical attack.";
                 break;
@@ -500,55 +524,62 @@ public class DetailsScreen : MonoBehaviour
         }
 
         int val = currentObj.STATS.STRENGTH;
-        if (val > 0)
-            attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (+" + val + ")";
-        else if (val == 0)
-            attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH;
-        else
-            attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
+        //if (val > 0)
+        //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH;
+        //else
+        //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
+        attributes[0].text = "Str: " + (currentObj.BASE_STATS.STRENGTH + currentObj.STATS.STRENGTH);
+
+        //val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
+        //if (val > 0)
+        //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE;
+        //else
+        //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
+        attributes[1].text = "Def: " + (currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+
+        //val = currentObj.STATS.MAGIC;
+        //if (val > 0)
+        //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC;
+        //else
+        //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
+
+        attributes[2].text = "Spd: " + (currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+
+        //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
+        //if (val > 0)
+        //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE;
+        //else
+        //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
+
+        attributes[3].text = "Mag: " + (currentObj.BASE_STATS.MAGIC + currentObj.STATS.MAGIC);
+        attributes[4].text = "Res: " + (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+
+        //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
+        //if (val > 0)
+        //    attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED;
+        //else
+        //    attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (" + val + ")";
 
 
-        val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
-        if (val > 0)
-            attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (+" + val + ")";
-        else if (val == 0)
-            attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE;
-        else
-            attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
+        // val = currentObj.STATS.SKILL;
+        //if (val > 0)
+        //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (+" + val + ")";
+        //else if (val == 0)
+        //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL;
+        //else
+        //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
-
-        val = currentObj.STATS.MAGIC;
-        if (val > 0)
-            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (+" + val + ")";
-        else if (val == 0)
-            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC;
-        else
-            attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
-
-        val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
-        if (val > 0)
-            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (+" + val + ")";
-        else if (val == 0)
-            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE;
-        else
-            attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
-
-        val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
-        if (val > 0)
-            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (+" + val + ")";
-        else if (val == 0)
-            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED;
-        else
-            attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (" + val + ")";
-
-        val = currentObj.STATS.SKILL;
-        if (val > 0)
-            attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (+" + val + ")";
-        else if (val == 0)
-            attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL;
-        else
-            attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
-
+        attributes[5].text = "Skl: " + (currentObj.BASE_STATS.SKILL + currentObj.STATS.SKILL);
 
     }
 }
