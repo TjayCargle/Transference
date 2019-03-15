@@ -12,17 +12,22 @@ public class TileScript : MonoBehaviour, IComparable
     public int listindex = -1;
     [SerializeField]
     Material mat;
-   // [SerializeField]
-  // Mesh mesh;
-    //[SerializeField]
-    //Vector3[] vertices;
-    //[SerializeField]
-    //Vector2[] uvs;
+    [SerializeField]
+    MeshFilter filter;
+    [SerializeField]
+   Mesh mesh;
+    [SerializeField]
+    Vector3[] vertices;
+    [SerializeField]
+    Vector2[] uvs;
     //[SerializeField]
     //float uFloat;
 
     [SerializeField]
     float vFloat;
+
+    [SerializeField]
+    Texture texture;
     // Use this for initialization
     float lastU = -1f;
     float lastV = -1f;
@@ -32,9 +37,17 @@ public class TileScript : MonoBehaviour, IComparable
         {
             myRender = GetComponent<MeshRenderer>();
             mat = myRender.material;
+            texture = mat.mainTexture;
         }
         myColor = Color.black;
 
+        if(GetComponent<MeshFilter>())
+        {
+
+        filter = GetComponent<MeshFilter>();
+            mesh = filter.mesh;
+        uvs = mesh.uv;
+        }
     
     }
 
@@ -47,6 +60,12 @@ public class TileScript : MonoBehaviour, IComparable
             myRender.material.color = myColor;
         }
 
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+      
+                mesh.uv = uvs;
+      
+        }
 
 
     }
@@ -79,5 +98,31 @@ public class TileScript : MonoBehaviour, IComparable
     {
         TileScript other = obj as TileScript;
         return listindex.CompareTo(other.listindex);
+    }
+
+    public void setTexture(Texture t)
+    {
+        texture = t;
+        mat.mainTexture = texture;
+    }
+    public void setUVs(float startX, float finaleX, float startY, float finaleY)
+    {
+        if(uvs.Length != 4)
+        {
+            uvs = new Vector2[4];
+        }
+        uvs[0].x = startX;
+        uvs[0].y = startY;
+
+        uvs[1].x = finaleX;
+        uvs[1].y = finaleY;
+
+        uvs[2].x = finaleX;
+        uvs[2].y = startY;
+
+        uvs[3].x = startX;
+        uvs[3].y = finaleY;
+
+        mesh.uv = uvs;
     }
 }

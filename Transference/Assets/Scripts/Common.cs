@@ -59,10 +59,10 @@ public enum Resists
 }
 public enum Weaks
 {
-    weak, 
-    savage, 
-    cripples, 
-    leathal 
+    weak,
+    savage,
+    cripples,
+    leathal
 }
 public enum ModifiedStat
 {
@@ -132,19 +132,16 @@ public enum SkillType
     Opp,
     None
 }
-public enum PhysType
-{
-    charge,
-    cost
-}
+
 public enum SubSkillType
 {
-    Attack,
+    Charge,
+    Cost,
+    Magic,
     Buff,
     Debuff,
     Ailment,
     Heal,
-    Revive,
     RngAtk,
     RngSupp,
     None
@@ -176,10 +173,10 @@ public enum Element
     Pierce,
     Blunt,
     Buff,
-    Heal,
+    Support,
+    Ailment,
     Passive,
     Opp,
-    Ailment,
     Auto,
     none
 
@@ -191,8 +188,21 @@ public enum DetailType
     Auto,
     Opportunity,
     BasicAtk,
-    Armor, 
-    exp
+    Armor,
+    Exp,
+    Buffs,
+    Debuffs,
+    Effects
+}
+public enum ShopWindow
+{
+    none,
+    main,
+    learn,
+    alter,
+    enhance,
+    buying,
+    confirm,
 }
 public enum EType
 {
@@ -202,17 +212,13 @@ public enum EType
 public enum Reaction
 {
     none,
+    AilmentOnly,
     buff,
     debuff,
     bonusAction,
     knockback,
     snatched,
-    reduceStr,
-    reduceDef,
-    reduceMag,
-    reduceRes,
-    reduceSpd,
-    reduceLuck,
+    ApplyEffect,
     turnloss,
     cripple,
     turnAndcrip,
@@ -220,15 +226,16 @@ public enum Reaction
     nulled,
     reflected,
     absorb,
-    missed
+    missed,
+    Heal,
 }
 public enum DMG
 {
-    tiny =   10,
-    small =    20,
-    medium =   40,
-    heavy =    80,
-    severe =   160,
+    tiny = 10,
+    small = 20,
+    medium = 40,
+    heavy = 80,
+    severe = 160,
     collassal = 320
 }
 public enum ItemType
@@ -338,7 +345,8 @@ public enum StatusEffect
     frozen,
     burned,
     poisoned,
-    bleeding
+    bleeding,
+    confused
 
 }
 public enum SideEffect
@@ -364,8 +372,37 @@ public enum SideEffect
     reduceAtk,
     reduceGuard,
     reduceAct,
-    debuff
+    debuff,
+    heal,
+    barrier
 
+}
+
+public enum StatusIcon
+{
+    AtkUP,
+    DefUP,
+    SpdUp,
+    MagUp,
+    ResUp,
+    SklUp,
+
+    AtkDown,
+    DefDown,
+    SpdDown,
+    MagDown,
+    ResDown,
+    SklDown,
+
+    Poison,
+    Burn,
+    Sleep,
+    Paralyze,
+    Freeze,
+    Bleed,
+    Confuse,
+
+    Crippled
 }
 public class MassAtkConatiner : ScriptableObject
 {
@@ -380,7 +417,21 @@ public class AtkConatiner : ScriptableObject
     public int dmg;
     public Reaction alteration;
     public CommandSkill command;
+    public DmgReaction react;
+    private AtkConatiner container;
 
+    public AtkConatiner(AtkConatiner container)
+    {
+        this.attackingObject = container.attackingObject;
+        this.dmgObject = container.dmgObject;
+        this.attackingElement = container.attackingElement;
+        this.attackType = container.attackType;
+        this.dmg = container.dmg;
+        this.alteration = container.alteration;
+        this.command = container.command;
+        this.react = container.react;
+        this.container = container.container;
+    }
 }
 public class LearnContainer : ScriptableObject
 {
@@ -404,8 +455,8 @@ public struct Modification
 }
 public struct BoolConatainer
 {
-   public bool result;
-   public string name;
+    public bool result;
+    public string name;
 }
 public enum currentMenu
 {
@@ -466,6 +517,7 @@ public struct MapDetail
     public List<int> roomIndexes;
     public List<int> enemyIndexes;
     public List<int> hazardIndexes;
+    public Texture texture;
 }
 public enum descState
 {
@@ -561,11 +613,18 @@ public class Common : ScriptableObject
     public static Color pink = new Color(1, 0.678f, 0.925f);
     public static Color lime = new Color(0.802f, 1, 0.825f);
     public static Color green = new Color(0.220f, 1, 0.230f);
+    public static Color cyan = new Color(0.1647f, 0.8215f, 1f);
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+    public static CommandSkill CommonDebuffStr = CreateInstance<CommandSkill>();
+    public static CommandSkill CommonDebuffDef = CreateInstance<CommandSkill>();
+    public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
+
     public static BoolConatainer container = new BoolConatainer();
 
+    public static int MaxSkillLevel = 30;
     public static int maxDmg = 999;
     public static List<EHitType> noAmor = new List<EHitType>()
     {
@@ -577,13 +636,31 @@ public class Common : ScriptableObject
         EHitType.normal,
         EHitType.normal
     };
-    
+    public static Color GetFactionColor(Faction faction)
+    {
+        switch (faction)
+        {
+            case Faction.ally:
+                return cyan;
+                break;
+            case Faction.enemy:
+                return pink;
+                break;
+            case Faction.hazard:
+                return Color.yellow;
+                break;
+            case Faction.other:
+                return orange;
+                break;
+        }
+        return Color.magenta;
+    }
     public static string GetSideEffectText(SideEffect effect)
     {
         string text = "";
         switch (effect)
         {
-  
+
             case SideEffect.reduceDef:
                 text = "defense";
                 break;
@@ -599,6 +676,61 @@ public class Common : ScriptableObject
             case SideEffect.reduceSkill:
                 text = "skill";
                 break;
+            case SideEffect.none:
+                break;
+            case SideEffect.paralyze:
+                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase. Also makes target resist elec but weak to water.";
+                break;
+            case SideEffect.sleep:
+                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
+                break;
+            case SideEffect.freeze:
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to fire.";
+                break;
+            case SideEffect.burn:
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist fire but weak to ice. ";
+                break;
+            case SideEffect.poison:
+                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
+                break;
+            case SideEffect.bleed:
+                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%.  Also makes target resist pierce but weak to blunt.";
+                break;
+            case SideEffect.confusion:
+                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies.  Also makes target resist blunt but weak to pierce.";
+                break;
+        }
+        return text;
+    }
+
+    public static string GetStatusffectText(StatusEffect effect)
+    {
+        string text = "";
+        switch (effect)
+        {
+            case StatusEffect.none:
+                break;
+            case StatusEffect.paralyzed:
+                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase. Also makes target resist elec but weak to water.";
+                break;
+            case StatusEffect.sleep:
+                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
+                break;
+            case StatusEffect.frozen:
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to fire.";
+                break;
+            case StatusEffect.burned:
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist fire but weak to ice. ";
+                break;
+            case StatusEffect.poisoned:
+                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
+                break;
+            case StatusEffect.bleeding:
+                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%.  Also makes target resist pierce but weak to blunt.";
+                break;
+            case StatusEffect.confused:
+                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies.  Also makes target resist blunt but weak to pierce.";
+                break;
         }
         return text;
     }
@@ -610,7 +742,7 @@ public class Common : ScriptableObject
         {
 
             case SideEffect.reduceDef:
-                 stat = ModifiedStat.Def;
+                stat = ModifiedStat.Def;
                 break;
             case SideEffect.reduceMag:
                 stat = ModifiedStat.Mag;

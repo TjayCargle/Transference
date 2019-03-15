@@ -189,13 +189,13 @@ public class HazardScript : LivingObject
             liveObj = FindNearestEnemy();
             if (liveObj)
             {
-                Debug.Log("glyph creatign atk event");
+               // Debug.Log("glyph creatign atk event");
                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent);
             }
         }
         if(!liveObj)
         {
-            Debug.Log("glyph decide to wait");
+        //    Debug.Log("glyph decide to wait");
             //myManager.CreateEvent(this, this, "" + FullName + " Next event", myManager.NextTurnEvent,null, 0);
 
             Wait();

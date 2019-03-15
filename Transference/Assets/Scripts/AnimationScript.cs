@@ -7,21 +7,34 @@ public class AnimationScript : MonoBehaviour
 
     public Sprite[] currentList;
     public SpriteRenderer render;
+    public SpriteRenderer ShadowRender;
     public GridObject obj;
     public int index;
     public bool isSetup = false;
     LivingObject me;
     PlayerController controller;
     CameraScript cam;
-    [SerializeField]
-    Animator anim;
+   public Animator anim;
+    Animator shadowAnimator;
+    public Animator SHADOWANIM
+    {
+        get { return shadowAnimator; }
+        set { shadowAnimator = value; }
+    }
     private bool repeat = true;
     public void Setup()
     {
         if (!isSetup)
         {
-            obj = GetComponent<GridObject>();
-            render = GetComponent<SpriteRenderer>();
+            if (!obj)
+            {
+                obj = GetComponent<GridObject>();
+            }
+            if (!render)
+            {
+                render = obj.gameObject.GetComponent<SpriteRenderer>();
+
+            }
             if (!obj)
             {
                 return;
@@ -52,7 +65,7 @@ public class AnimationScript : MonoBehaviour
             me = GetComponent<LivingObject>();
             cam = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();
-            anim = GetComponent<Animator>();
+            anim = obj.GetComponent<Animator>();
             isSetup = true;
         }
     }
@@ -73,9 +86,9 @@ public class AnimationScript : MonoBehaviour
     {
         if (currentList.Length > 0)
         {
-            if(repeat == false)
+            if (repeat == false)
             {
-                if(index == currentList.Length - 1)
+                if (index == currentList.Length - 1)
                 {
                     return;
                 }
@@ -123,6 +136,17 @@ public class AnimationScript : MonoBehaviour
                     else
                     {
                         anim.speed = 0;
+                    }
+                }
+                if(SHADOWANIM)
+                {
+                    if (cam.infoObject == me)
+                    {
+                        SHADOWANIM.speed = 1;
+                    }
+                    else
+                    {
+                        SHADOWANIM.speed = 0;
                     }
                 }
             }

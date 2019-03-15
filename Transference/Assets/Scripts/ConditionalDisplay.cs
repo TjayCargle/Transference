@@ -7,7 +7,7 @@ public class ConditionalDisplay : MonoBehaviour
 
     public State[] displayStates;
     public bool requiresSelected = false;
-
+    public bool isAffectDisplay = false;
     ManagerScript manager;
     // Use this for initialization
     void Start()
@@ -38,7 +38,33 @@ public class ConditionalDisplay : MonoBehaviour
     {
         manager = newmanager;
         gameObject.SetActive(false);
+        bool found = false;
+        if (requiresSelected == true)
+        {
+            if (manager.myCamera.infoObject == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            if (isAffectDisplay)
+            {
+                if (manager)
+                {
+                    LivingObject livvy = manager.myCamera.infoObject.GetComponent<LivingObject>();
+                    if (livvy)
+                    {
+                        if (livvy.INVENTORY.DEBUFFS.Count > 0 || livvy.INVENTORY.BUFFS.Count > 0 || livvy.GetComponent<EffectScript>() || livvy.GetComponent<SecondStatusScript>())
+                        {
+                            gameObject.SetActive(true);
+                        }
 
+                    }
+                }
+            }
+
+         
+
+        }
         if (manager)
         {
             for (int i = 0; i < displayStates.Length; i++)
@@ -46,19 +72,20 @@ public class ConditionalDisplay : MonoBehaviour
                 if (manager.currentState == displayStates[i])
                 {
                     gameObject.SetActive(true);
-
+                    found = true;
                     break;
                 }
             }
 
-
-            if (requiresSelected == true)
+            if (found == false)
             {
-                if (manager.myCamera.infoObject == null)
-                {
-                    gameObject.SetActive(false);
-                }
+                gameObject.SetActive(false);
             }
+
+
+
+
+
         }
 
     }

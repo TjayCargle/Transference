@@ -63,7 +63,7 @@ public class EventManager : EventRunner
             if (currentEvent.RUNABLE(currentEvent.data) == true)
             {
                 // completed.Add(eve.name);
-               // Debug.Log("Finished event: " + currentEvent.name + " from " + currentEvent.caller);
+              //  Debug.Log("Finished event: " + currentEvent.name + " from " + currentEvent.caller);
                 currentEvent.isRunning = false;
                 currentEvent.caller = null;
                 currentEvent.isRunning = false;

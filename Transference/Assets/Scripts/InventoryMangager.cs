@@ -271,6 +271,30 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
                     break;
+                case State.playerUsingSkills:
+                    {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            IncreaseScroll();
+
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();
+
+                        }
+                        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        {
+                            IncreaseScroll();
+                        }
+
+                        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                        {
+                            DecreaseScroll();
+                        }
+                    }
+                    break;
             }
 
         }
@@ -544,6 +568,12 @@ public class InventoryMangager : MonoBehaviour
                 {
                     Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    Image attr = null;
+                    if(selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
+                    {
+
+                        attr = selectedMenuItem.GetComponentsInChildren<Image>()[2];
+                    }
                     Vector2 pos;
                     selectedMenuItem.GetComponent<Image>().color = Color.black;
                     if (selectedText)
@@ -560,10 +590,20 @@ public class InventoryMangager : MonoBehaviour
                         pos.x = 0;
                         proText.GetComponent<RectTransform>().localPosition = pos;
                     }
-
+                    if(attr)
+                    {
+                        pos = attr.GetComponent<RectTransform>().localPosition;
+                        pos.x = 113;
+                        attr.GetComponent<RectTransform>().localPosition = pos;
+                    }
                     selectedMenuItem = hoveritem;
                     selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                    attr = null;
+                    if (selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
+                    {
+                        attr = selectedMenuItem.GetComponentsInChildren<Image>()[2];
+                    }
                     currentContent = content;
                     currentIndex = currentContent.transform.GetSiblingIndex();
                     if (trueExtra)
@@ -597,7 +637,12 @@ public class InventoryMangager : MonoBehaviour
                         pos.x = 15;
                         proText.GetComponent<RectTransform>().localPosition = pos;
                     }
-
+                    if (attr)
+                    {
+                        pos = attr.GetComponent<RectTransform>().localPosition;
+                        pos.x = 128;
+                        attr.GetComponent<RectTransform>().localPosition = pos;
+                    }
                 }
 
                 if (menuManager)
@@ -1042,7 +1087,7 @@ public class InventoryMangager : MonoBehaviour
 
             case 6:
                 useType = 4;
-                windowType = 2; //all passive skills
+                windowType = 5; //all passive skills
                 for (int i = 0; i < liveObject.INVENTORY.PASSIVES.Count; i++)
                 {
                     currentList.Add(liveObject.INVENTORY.PASSIVES[i]);
@@ -1101,7 +1146,7 @@ public class InventoryMangager : MonoBehaviour
         {
             MenuItem selectableItem = itemSlots[useCount];
             selectableItem.itemType = 15;
-            Image attr = selectableItem.GetComponentsInChildren<Image>()[1];
+            Image attr = selectableItem.GetComponentsInChildren<Image>()[2];
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
             TextMeshProUGUI proText = selectableItem.GetComponentInChildren<TextMeshProUGUI>();
             string newText = "";

@@ -103,23 +103,8 @@ public class AutoSkill : SkillScript
                 OWNER.ChangeFatigue(VAL);
                 return Reaction.none;
                 break;
-            case AutoReact.reduceDef:
-                return Reaction.reduceDef;
-                break;
             case AutoReact.reduceStr:
-                return Reaction.reduceStr;
-                break;
-            case AutoReact.reduceSpd:
-                return Reaction.reduceSpd;
-                break;
-            case AutoReact.reduceMag:
-                return Reaction.reduceMag;
-                break;
-            case AutoReact.reduceRes:
-                return Reaction.reduceRes;
-                break;
-            case AutoReact.reduceLuck:
-                return Reaction.reduceLuck;
+                return Reaction.ApplyEffect;
                 break;
             case AutoReact.ChargeFTByAmount:
                 OWNER.ChangeFatigue(-VAL);

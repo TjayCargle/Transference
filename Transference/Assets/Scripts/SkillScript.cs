@@ -16,8 +16,7 @@ public class SkillScript : UsableScript
     [SerializeField]
     protected SubSkillType subskilltype;
 
-    [SerializeField]
-    protected int index;
+
 
     [SerializeField]
     protected AugmentScript augments;
@@ -46,11 +45,7 @@ public class SkillScript : UsableScript
         set { subskilltype = value; }
     }
 
-    public int INDEX
-    {
-        get { return index; }
-        set { index = value; }
-    }
+
 
     public AugmentScript AUGMENTS
     {
@@ -80,4 +75,6 @@ public class SkillScript : UsableScript
         container.result = false;
             return container;
     }
+
+ 
 }

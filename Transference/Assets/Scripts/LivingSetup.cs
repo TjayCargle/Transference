@@ -64,6 +64,7 @@ public class LivingSetup : MonoBehaviour
             }
             isSetup = true;
         }
+
     }
     void Start()
     {

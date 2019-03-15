@@ -10,11 +10,13 @@ public class Expbar : MonoBehaviour
     public bool updating = false;
     public Slider slider;
     public Text text;
+   public ManagerScript manager;
     private void Start()
     {
         slider = GetComponent<Slider>();
         text = GetComponentInChildren<Text>();
         gameObject.SetActive(false);
+
     }
     void Update()
     {
@@ -36,6 +38,11 @@ public class Expbar : MonoBehaviour
                         {
                             currentUser.LevelUp();
                             slider.value = 0;
+                            if(manager)
+                            {
+                                manager.CreateTextEvent(this, currentUser.NAME + " leveled up!", "level up event", manager.CheckText, manager.TextStart);
+                            }
+
                         }
                     }
                     if (slider.value >= currentUser.BASE_STATS.EXP)

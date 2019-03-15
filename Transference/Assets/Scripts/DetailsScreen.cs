@@ -200,25 +200,25 @@ public class DetailsScreen : MonoBehaviour
                 descriptionText.text = "Skl = Skill. Skill increases your chances of auto skills activating and ailments such as burn going off.";
                 break;
             case 14:
-                descriptionText.text = "Water. Moves with \"Aqu\" are generally water based moves.";
+                descriptionText.text = "Water Element. Water based moves generally hit all targets in the area.";
                 break;
             case 15:
-                descriptionText.text = "Fire Moves with \"Pyr\" are generally fire based moves.";
+                descriptionText.text = "Fire Element. Fire based moves generally have larger targeting areas.";
                 break;
             case 16:
-                descriptionText.text = "Ice Moves with \"Gel\" are generally ice based moves.";
+                descriptionText.text = "Ice Element. Ice based moves generally hit distant tiles.";
                 break;
             case 17:
-                descriptionText.text = "Elec Moves with \"Rik\" are generally elec based moves.";
+                descriptionText.text = "Electric Element. Electric moves generally hit a random amount of times within a range.";
                 break;
             case 18:
-                descriptionText.text = "Slash Moves with \"Sur\" are generally slash based moves.";
+                descriptionText.text = "Slash Element. Slash based moves generally hit more than once.";
                 break;
             case 19:
-                descriptionText.text = "Pierce Moves with \"Tsu\" are generally pierce based moves.";
+                descriptionText.text = "Pierce Element. Pierce based moves generally hits multiple targets in range.";
                 break;
             case 20:
-                descriptionText.text = "Blunt Moves with \"Don\" are generally blunt based moves.";
+                descriptionText.text = "Blunt Element. Blunt based moves generally hit 1 tile away.";
                 break;
 
             case 28:
@@ -239,7 +239,7 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
         }
-        if (detail != DetailType.exp)
+        if (detail != DetailType.Exp)
         {
             if (expObj)
             {
@@ -301,6 +301,27 @@ public class DetailsScreen : MonoBehaviour
                             descriptionText.text = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
                         }
                         break;
+                    case DetailType.Buffs:
+                        sectionText.text = "Buffs";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Buffs are temorary stat boosts that generally last 3 turns. While you can stack buffs, you cannot stack the same buff on a character.";
+                        }
+                        break;
+                    case DetailType.Debuffs:
+                        sectionText.text = "Debuffs";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Debuffs are temorary stat drops that generally last 3 turns. The same debuff cannot be applied more than ocne on a character.";
+                        }
+                        break;
+                    case DetailType.Effects:
+                        sectionText.text = "Ailments";
+                        if (selectedContent < 3)
+                        {
+                            descriptionText.text = "Ailments are negative status effects that disrupt the character's turn or cause them to take damage.";
+                        }
+                        break;
                 }
                 for (int i = 0; i < skills.Length; i++)
                 {
@@ -355,6 +376,60 @@ public class DetailsScreen : MonoBehaviour
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
                                         descriptionText.text = currentObj.INVENTORY.WEAPONS[i].DESC;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
+                            }
+                        }
+                        else if (detail == DetailType.Buffs)
+                        {
+                            if (currentObj.INVENTORY.BUFFS.Count > i)
+                            {
+                                skills[i].text = currentObj.INVENTORY.BUFFS[i].NAME;
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                                {
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        descriptionText.text = currentObj.INVENTORY.BUFFS[i].DESC;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
+                            }
+                        }
+                        else if (detail == DetailType.Debuffs)
+                        {
+                            if (currentObj.INVENTORY.DEBUFFS.Count > i)
+                            {
+                                skills[i].text = currentObj.INVENTORY.DEBUFFS[i].NAME;
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                                {
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        descriptionText.text = currentObj.INVENTORY.DEBUFFS[i].DESC;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
+                            }
+                        }
+                        else if (detail == DetailType.Effects)
+                        {
+                            if (currentObj.INVENTORY.EFFECTS.Count > i)
+                            {
+                                skills[i].text = currentObj.INVENTORY.EFFECTS[i].EFFECT.ToString();
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                                {
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        descriptionText.text = Common.GetSideEffectText(currentObj.INVENTORY.EFFECTS[i].EFFECT);
                                     }
                                 }
                             }

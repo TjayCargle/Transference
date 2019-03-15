@@ -32,7 +32,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
             if (type == 2) //right
             {
                 currDetail++;
-                if(currDetail > (int)DetailType.exp)
+                if(currDetail > (int)DetailType.Effects)
                 {
                     currDetail = 0;
                 }
@@ -42,7 +42,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
                 currDetail--;
                 if (currDetail < 0)
                 {
-                    currDetail = 6;
+                    currDetail = 9;
                 }
             }
             detailsScreen.detail = (DetailType)currDetail;

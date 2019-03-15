@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +17,10 @@ public class NonCombatController : MonoBehaviour
     // Image siloute;
     public int buttonIndex = 0;
     public int controlIndex = 0;
+
+    public CtrlsTitle title;
+    public CtrlsDesc desc;
+    public CtrlsButton selectedCtrlButton;
     // Use this for initialization
     void Start()
     {
@@ -52,9 +55,23 @@ public class NonCombatController : MonoBehaviour
 
                 case 1:
                     // selectedButton.PressControls();
-                    controlIndex = 0;
-                    currControl.sprite = controls[controlIndex];
+                    // controlIndex = 0;
+                    //  currControl.sprite = controls[controlIndex];
                     ctrlCnvs.gameObject.SetActive(true);
+                    if (selectedCtrlButton)
+                    {
+
+                        if (selectedCtrlButton.myImage)
+                        {
+                            selectedCtrlButton.myImage.color = Color.yellow;
+                        }
+                        if (selectedCtrlButton.pro)
+                        {
+                            selectedCtrlButton.pro.color = Color.yellow;
+                        }
+
+                        selectedCtrlButton.ForceSelect();
+                    }
                     break;
 
                 case 2:
@@ -123,7 +140,7 @@ public class NonCombatController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyUp(KeyCode.Return))
         {
             HitButton();
         }

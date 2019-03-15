@@ -426,7 +426,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(2, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(6, liveInvokingObject);
                             myMenuManager.ShowExtraCanvas(1, invokingObject.GetComponent<LivingObject>());
                         }
                     }

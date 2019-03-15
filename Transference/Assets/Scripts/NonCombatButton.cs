@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NonCombatButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
+public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 {
 
     public int type;
@@ -25,10 +25,10 @@ public class NonCombatButton : MonoBehaviour, IPointerDownHandler, IPointerEnter
             controller.currTarget = controller.targets[type];
         }
     }
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        controller.HitButton();
-    }
+  //  public void OnPointerDown(PointerEventData eventData)
+  //  {
+   //     controller.HitButton();
+   // }
    public void PressStart()
    {
 
@@ -51,4 +51,8 @@ public class NonCombatButton : MonoBehaviour, IPointerDownHandler, IPointerEnter
        SceneManager.LoadScene("start");
    }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        controller.HitButton();
+    }
 }

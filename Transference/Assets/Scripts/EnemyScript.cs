@@ -19,8 +19,8 @@ public class EnemyScript : LivingObject
     public void MoveStart()
     {
         //  Debug.Log(FullName+" move start");
-        myManager.ShowGridObjectMoveArea(this);
-
+  
+        myManager.MoveCameraAndShow(this);
 
 
     }
@@ -29,7 +29,7 @@ public class EnemyScript : LivingObject
 
         bool isDone = false;
         path pathTarget = target as path;
-        myManager.MoveCameraAndShow(this);
+
         TileScript realTarget = pathTarget.realTarget;
 
         pathTarget.currentPath = DeterminePath(pathTarget);
@@ -250,7 +250,7 @@ public class EnemyScript : LivingObject
     {
         // Debug.Log(FullName + " is Determining move location");
         TileScript newTile = null;
-        List<TileScript> myTiles = myManager.GetMoveAbleTiles(calcLocation, MOVE_DIST);
+        List<TileScript> myTiles = myManager.GetMoveAbleTiles(calcLocation, MOVE_DIST, this);
         for (int i = 0; i < myTiles.Count; i++)
         {
 
@@ -480,7 +480,7 @@ public class EnemyScript : LivingObject
         //   else
 
 
-
+        myManager.ShowGridObjectMoveArea(this);
         isPerforming = false;
     }
     public override void Die()

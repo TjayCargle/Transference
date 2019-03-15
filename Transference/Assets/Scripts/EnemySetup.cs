@@ -31,10 +31,7 @@ public class EnemySetup : LivingSetup
             if (dm != null)
             {
                 dm.GetEnemy(enemyId, myself);
-                if (gameObject.GetComponent<AnimationScript>())
-                {
-                    gameObject.GetComponent<AnimationScript>().Setup();
-                }
+              
             }
 
             if (!manager.gridObjects.Contains(myself))

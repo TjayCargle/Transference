@@ -91,7 +91,7 @@ public class CameraScript : MonoBehaviour
                                 //{
                                 //    infoCanvas.gameObject.SetActive(true);
                                 //}
-                        
+
                                 if (actionText.transform.parent.gameObject.activeInHierarchy)
                                 {
                                     actionText.gameObject.SetActive(true);
@@ -164,83 +164,86 @@ public class CameraScript : MonoBehaviour
                                             {
                                                 if (manager.invManager.selectedMenuItem.refItem)
                                                 {
-                                                 //   DescriptionCanvas.gameObject.SetActive(true);
+                                                    //   DescriptionCanvas.gameObject.SetActive(true);
                                                     Text txt = DescriptionCanvas.GetComponentInChildren<Text>();
                                                     string newText = "";
-
-                                                    switch (manager.invManager.selectedMenuItem.refItem.TYPE)
+                                                    if (txt)
                                                     {
-                                                        case 0:
-                                                            switch (manager.descriptionState)
-                                                            {
 
-                                                                case descState.stats:
-                                                                    {
-                                                                        newText = manager.invManager.selectedMenuItem.refItem.DESC;
+                                                        switch (manager.invManager.selectedMenuItem.refItem.TYPE)
+                                                        {
+                                                            case 0:
+                                                                switch (manager.descriptionState)
+                                                                {
 
-                                                                    }
-                                                                    break;
-                                                                case descState.skills:
-                                                                    {
+                                                                    case descState.stats:
+                                                                        {
+                                                                            newText = manager.invManager.selectedMenuItem.refItem.DESC;
 
-                                                                        WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
-                                                                        newText = "Accuracy: ";
-                                                                        newText += wep.ACCURACY.ToString();
-                                                                        newText += "\n Element: " + wep.AFINITY.ToString();
-                                                                        newText += "\n Type: " + wep.ATTACK_TYPE.ToString();
-                                                                    }
-                                                                    break;
+                                                                        }
+                                                                        break;
+                                                                    case descState.skills:
+                                                                        {
 
-                                                                case descState.equipped:
-                                                                    {
+                                                                            WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
+                                                                            newText = "Accuracy: ";
+                                                                            newText += wep.ACCURACY.ToString();
+                                                                            newText += "\n Element: " + wep.AFINITY.ToString();
+                                                                            newText += "\n Type: " + wep.ATTACK_TYPE.ToString();
+                                                                        }
+                                                                        break;
 
-                                                                        WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
-                                                                        newText = "Uses: ";
-                                                                        newText += wep.USECOUNT.ToString();
-                                                                        newText += "\n Level: " + wep.LEVEL.ToString();
-                                                                    }
-                                                                    break;
+                                                                    case descState.equipped:
+                                                                        {
 
-                                                            }
-                                                            txt.text = newText;
-                                                            txt.resizeTextForBestFit = true;
-                                                            break;
+                                                                            WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
+                                                                            newText = "Uses: ";
+                                                                            newText += wep.USECOUNT.ToString();
+                                                                            newText += "\n Level: " + wep.LEVEL.ToString();
+                                                                        }
+                                                                        break;
+
+                                                                }
+                                                                txt.text = newText;
+                                                                txt.resizeTextForBestFit = true;
+                                                        break;
 
                                                         case 4:
                                                             switch (manager.descriptionState)
-                                                            {
+                                                        {
 
-                                                                case descState.stats:
-                                                                    {
-                                                                        newText = manager.invManager.selectedMenuItem.refItem.DESC;
+                                                            case descState.stats:
+                                                                {
+                                                                    newText = manager.invManager.selectedMenuItem.refItem.DESC;
 
-                                                                    }
-                                                                    break;
-                                                                case descState.skills:
-                                                                    {
+                                                                }
+                                                                break;
+                                                            case descState.skills:
+                                                                {
 
-                                                                        CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
-                                                                        newText = "Accuracy: ";
-                                                                        newText += skil.ACCURACY.ToString();
-                                                                        newText += "\n Base Damage: " + ((int)skil.DAMAGE);
-                                                                        newText += "\n Side effect: " + skil.EFFECT;
+                                                                    CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+                                                                    newText = "Accuracy: ";
+                                                                    newText += skil.ACCURACY.ToString();
+                                                                    newText += "\n Base Damage: " + ((int)skil.DAMAGE);
+                                                                    newText += "\n Side effect: " + skil.EFFECT;
 
-                                                                    }
-                                                                    break;
+                                                                }
+                                                                break;
 
-                                                                case descState.equipped:
-                                                                    {
-                                                                        CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+                                                            case descState.equipped:
+                                                                {
+                                                                    CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
 
-                                                                        newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
+                                                                    newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
 
-                                                                    }
-                                                                    break;
+                                                                }
+                                                                break;
 
-                                                            }
-                                                            txt.text = newText;
-                                                            txt.resizeTextForBestFit = true;
-                                                            break;
+                                                        }
+                                                        txt.text = newText;
+                                                        txt.resizeTextForBestFit = true;
+                                                        break;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -249,12 +252,12 @@ public class CameraScript : MonoBehaviour
                                         }
                                         else
                                         {
-                                       //     DescriptionCanvas.gameObject.SetActive(false);
+                                            //     DescriptionCanvas.gameObject.SetActive(false);
                                         }
                                     }
                                     else
                                     {
-                                //        DescriptionCanvas.gameObject.SetActive(false);
+                                        //        DescriptionCanvas.gameObject.SetActive(false);
                                     }
 
 
@@ -314,7 +317,7 @@ public class CameraScript : MonoBehaviour
                         }
                         if (DescriptionCanvas.gameObject.activeInHierarchy)
                         {
-                       //     DescriptionCanvas.gameObject.SetActive(false);
+                            //     DescriptionCanvas.gameObject.SetActive(false);
                         }
                     }
 

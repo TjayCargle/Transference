@@ -173,5 +173,3 @@ C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\UnityEngin
 C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\UnityEngine.VFXModule.xml
 C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\UnityEngine.TestRunner.xml
 C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\nunit.framework.xml
-C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
-C:\Users\tjcar\Desktop\repos\Transference\Transference\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml

@@ -183,9 +183,9 @@ public class CommandSkill : SkillScript
             if (NEXTCOUNT > 0)
             {
                 NEXTCOUNT--;
-            
-                         
-                
+
+
+
             }
         }
         return null;
@@ -296,15 +296,22 @@ public class CommandSkill : SkillScript
 
     public override BoolConatainer CheckAugment()
     {
-            BoolConatainer conatainer = Common.container;
+        BoolConatainer conatainer = Common.container;
         conatainer.name = "none";
         conatainer.result = false;
-        if(AUGMENTS.costTrigger == 2)
+        if (AUGMENTS.costTrigger == 2)
         {
             // AugmentSkill(Augment.costAugment);
             conatainer.result = true;
             conatainer.name = "Damage Augment";
         }
-            return conatainer;
+        return conatainer;
+    }
+
+    public override void LevelUP()
+    {
+        base.LevelUP();
+     
+
     }
 }

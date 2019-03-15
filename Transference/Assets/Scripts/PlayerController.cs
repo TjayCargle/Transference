@@ -510,8 +510,10 @@ public class PlayerController : MonoBehaviour
                                     }
                                     else
                                     {
+                                        myManager.ShowCantUseText(selectedSkil);
                                         myManager.PlayExitSnd();
                                     }
+                        
                                 }
                                 break;
 
@@ -629,6 +631,10 @@ public class PlayerController : MonoBehaviour
                         currentSkill = null;
 
                 }
+                else
+                {
+                    myManager.ShowCantUseText(currentSkill);
+                }
             }
         }
         else
@@ -658,12 +664,12 @@ public class PlayerController : MonoBehaviour
 
         if (check == true)
         {
-            myManager.currentState = State.PlayerTransition;
+            myManager.enterStateTransition();
             myManager.oppEvent.caller = null;
             // myManager.CleanMenuStack();
 
         }
-         //   current.TakeAction();
+        //   current.TakeAction();
     }
 
     public void UseOrAttack(bool takeAction = true)
@@ -728,6 +734,10 @@ public class PlayerController : MonoBehaviour
 
                     }
 
+                }
+                else
+                {
+                  myManager.ShowCantUseText(currentSkill);
                 }
             }
         }

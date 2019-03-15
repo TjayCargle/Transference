@@ -30,13 +30,14 @@ public class HazardSetup : LivingSetup
             if (dm != null)
             {
                  dm.GetHazard(hazardid, myself);
-   
            
-                    dm.GetArmor(8, myself);
+
+                dm.GetArmor(8, myself);
                 
 
             }
             myself.FACTION = Faction.hazard;
+
             if (!manager.gridObjects.Contains(myself))
             {
                 manager.gridObjects.Add(myself);

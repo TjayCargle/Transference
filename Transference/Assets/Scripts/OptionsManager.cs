@@ -9,6 +9,7 @@ public class OptionsManager : MonoBehaviour
     public AudioSource master;
     public AudioSource music;
     public AudioSource sfx;
+    public AudioSource voices;
 
     public bool battleAnims = true;
     public bool dmgAnims = true;
@@ -18,55 +19,70 @@ public class OptionsManager : MonoBehaviour
     public Slider masterSlider;
     public Slider musicSlider;
     public Slider sfxSlider;
+    public Slider voiceSlider;
 
     public Toggle battleAnimToggle;
     public Toggle dmgAnimToggle;
     public Toggle displayToggle;
     public Toggle dispalyExp;
+    public bool isSetup = false;
+    public void Setup()
+    {
+        if(!isSetup)
+        {
+            if (masterSlider)
+            {
 
+                masterSlider.value = master.volume;
+
+            }
+            if (musicSlider)
+            {
+
+                musicSlider.value = music.volume;
+
+            }
+
+            if (sfxSlider)
+            {
+                sfxSlider.value = sfx.volume;
+            }
+
+
+            if (voiceSlider)
+            {
+                voiceSlider.value = voices.volume;
+            }
+
+            if (battleAnimToggle)
+            {
+                battleAnimToggle.isOn = battleAnims;
+                battleAnimToggle.onValueChanged.AddListener(delegate { ChangeBattleAnim(battleAnimToggle); });
+            }
+
+            if (dmgAnimToggle)
+            {
+                dmgAnimToggle.isOn = dmgAnims;
+                dmgAnimToggle.onValueChanged.AddListener(delegate { ChangeDmgAnim(dmgAnimToggle); });
+            }
+
+            if (displayToggle)
+            {
+                displayToggle.isOn = displayMessages;
+                displayToggle.onValueChanged.AddListener(delegate { ChangeDisplayMessages(displayToggle); });
+            }
+
+            if (dispalyExp)
+            {
+                dispalyExp.isOn = showExp;
+                dispalyExp.onValueChanged.AddListener(delegate { ChangeDisplayExp(dispalyExp); });
+            }
+            isSetup = true;
+        }
+    }
     private void Start()
     {
-        if (masterSlider)
-        {
-
-            masterSlider.value = master.volume;
-
-        }
-        if (musicSlider)
-        {
-
-            musicSlider.value = music.volume;
-
-        }
-
-        if (sfxSlider)
-        {
-            sfxSlider.value = sfx.volume;
-        }
-
-        if(battleAnimToggle)
-        {
-            battleAnimToggle.isOn = battleAnims;
-            battleAnimToggle.onValueChanged.AddListener(delegate { ChangeBattleAnim(battleAnimToggle); });
-        }
-
-        if (dmgAnimToggle)
-        {
-            dmgAnimToggle.isOn = dmgAnims;
-            dmgAnimToggle.onValueChanged.AddListener(delegate { ChangeDmgAnim(dmgAnimToggle); });
-        }
-
-        if (displayToggle)
-        {
-            displayToggle.isOn = displayMessages;
-            displayToggle.onValueChanged.AddListener(delegate { ChangeDisplayMessages(displayToggle); });
-        }
-
-        if(dispalyExp)
-        {
-            dispalyExp.isOn = showExp;
-            dispalyExp.onValueChanged.AddListener(delegate { ChangeDisplayExp(dispalyExp); });
-        }
+        Setup();
     }
     void ChangeBattleAnim(Toggle change)
     {
@@ -111,6 +127,15 @@ public class OptionsManager : MonoBehaviour
                 sfx.volume = sfxSlider.value;
             }
         }
+
+        if (voiceSlider)
+        {
+
+            if (voiceSlider.value != voices.volume)
+            {
+                voices.volume = voiceSlider.value;
+            }
+        }
         if (musicSlider.value > masterSlider.value)
         {
             musicSlider.value = masterSlider.value;
@@ -119,7 +144,10 @@ public class OptionsManager : MonoBehaviour
         {
             sfxSlider.value = masterSlider.value;
         }
-
+        if (voiceSlider.value > masterSlider.value)
+        {
+            voiceSlider.value = masterSlider.value;
+        }
 
         if (music.volume > master.volume)
         {
@@ -131,6 +159,75 @@ public class OptionsManager : MonoBehaviour
             sfx.volume = master.volume;
         }
 
+        if (voices.volume > master.volume)
+        {
+            voices.volume = master.volume;
+        }
+    }
+    public void ForceUpdate()
+    {
+        if(!isSetup)
+        {
+            Setup();
+        }
+        if (masterSlider)
+        {
+            if (masterSlider.value != master.volume)
+            {
+                master.volume = masterSlider.value;
+            }
+        }
+        if (musicSlider)
+        {
+            if (musicSlider.value != music.volume)
+            {
+                music.volume = musicSlider.value;
+            }
+        }
 
+        if (sfxSlider)
+        {
+
+            if (sfxSlider.value != sfx.volume)
+            {
+                sfx.volume = sfxSlider.value;
+            }
+        }
+
+        if (voiceSlider)
+        {
+
+            if (voiceSlider.value != voices.volume)
+            {
+                voices.volume = voiceSlider.value;
+            }
+        }
+
+        if (musicSlider.value > masterSlider.value)
+        {
+            musicSlider.value = masterSlider.value;
+        }
+        if (sfxSlider.value > masterSlider.value)
+        {
+            sfxSlider.value = masterSlider.value;
+        }
+        if (voiceSlider.value > masterSlider.value)
+        {
+            voiceSlider.value = masterSlider.value;
+        }
+
+        if (music.volume > master.volume)
+        {
+            music.volume = master.volume;
+        }
+
+        if (sfx.volume > master.volume)
+        {
+            sfx.volume = master.volume;
+        }
+        if (voices.volume > master.volume)
+        {
+            voices.volume = master.volume;
+        }
     }
 }

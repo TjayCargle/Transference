@@ -40,6 +40,12 @@ public class LivingObject : GridObject
     private int magLevel = 1;
     private int skillLevel = 1;
     private bool tookAction = false;
+    protected GameObject shadow;
+    public GameObject SHADOW
+    {
+        get { return shadow; }
+        set { shadow = value; }
+    }
     public InventoryScript INVENTORY
     {
         get { return inventory; }
@@ -56,7 +62,7 @@ public class LivingObject : GridObject
         set
         {
             pStatus = value;
-            if(PSTATUS != PrimaryStatus.normal)
+            if (PSTATUS != PrimaryStatus.normal)
             {
                 refreshState = 2;
             }
@@ -243,15 +249,15 @@ public class LivingObject : GridObject
             return false;
         }
         STATS.MANA += val;
-        if(MANA > MAX_MANA)
+        if (MANA > MAX_MANA)
         {
-            STATS.MANA =  MAX_MANA - BASE_STATS.MANA;
+            STATS.MANA = MAX_MANA - BASE_STATS.MANA;
 
 
         }
         if (MANA < 0)
         {
-            STATS.MANA =  -1 * MAX_MANA;
+            STATS.MANA = -1 * MAX_MANA;
 
         }
         return true;
@@ -274,6 +280,7 @@ public class LivingObject : GridObject
 
         if (!isSetup)
         {
+            base.Setup();
             // Debug.Log("Living setup " + FullName);
             if (!GetComponent<InventoryScript>())
             {
@@ -392,10 +399,34 @@ public class LivingObject : GridObject
                 GetComponent<HazardSetup>().Setup();
 
             }
+            if (!gameObject.GetComponent<AnimationScript>())
+            {
+                gameObject.AddComponent<AnimationScript>();
+            }
+            gameObject.GetComponent<AnimationScript>().Setup();
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
 
             ACTIONS = (int)(spd / 10) + 2;
-            base.Setup();
+            if (SHADOW == null)
+            {
+             
+                shadow = new GameObject();
+                shadow.transform.parent = this.transform;
+                shadow.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
+                shadow.transform.localPosition = new Vector3(0,0,0.1f);
+                SpriteRenderer shadowRender = shadow.AddComponent<SpriteRenderer>();
+                shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
+                shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
+                shadowRender.material = myManager.ShadowMaterial;
+                AnimationScript ShadowAnimation = shadow.AddComponent<AnimationScript>();
+                ShadowAnimation.obj = this;
+                ShadowAnimation.render = shadowRender;
+               Animator shadowAnimator = shadow.gameObject.AddComponent<Animator>();
+                shadowAnimator.runtimeAnimatorController = GetComponent<AnimationScript>().anim.runtimeAnimatorController;
+                GetComponent<AnimationScript>().SHADOWANIM = shadowAnimator;
+            }
+
+
         }
         //  Debug.Log("Setup done");
         isSetup = true;
@@ -407,7 +438,7 @@ public class LivingObject : GridObject
         List<CommandSkill> buffs = inventory.BUFFS;
         List<CommandSkill> debuffs = inventory.DEBUFFS;
         modifiedStats.MODS.Clear();
-        modifiedStats.Reset(true);
+        modifiedStats.Reset();
 
         if (atkPassives.Count > 0)
         {
@@ -436,33 +467,21 @@ public class LivingObject : GridObject
 
         }
 
-        if (HEALTH > MAX_HEALTH)
-        {
-            STATS.HEALTH = 0;
-        }
 
-        if (MANA > MAX_MANA)
-        {
-            STATS.MANA = 0;
-        }
-
-        if (FATIGUE > MAX_FATIGUE)
-        {
-            STATS.FATIGUE = MAX_FATIGUE;
-        }
 
     }
     public void TakeAction()
     {
         myManager.CreateEvent(this, null, "Neo take action", TakeActionEvent);
+
     }
     public void TakeRealAction()
     {
         tookAction = true;
-        if(GetComponent<EnemyScript>())
+        if (GetComponent<EnemyScript>())
         {
 
-        //   Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
+            //   Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
         }
         ACTIONS--;
         if (myManager)
@@ -485,6 +504,7 @@ public class LivingObject : GridObject
     public bool TakeActionEvent(Object data)
     {
         TakeRealAction();
+        myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
         return true;
     }
     public void Wait()
@@ -508,9 +528,9 @@ public class LivingObject : GridObject
         }
         float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
         spd = (int)(spd / 10);
-       
-     //   if (actions == spd || actions == (spd + 2))
-     if(tookAction == false)
+
+        //   if (actions == spd || actions == (spd + 2))
+        if (tookAction == false)
         {
             GENERATED += 2;
 
@@ -537,7 +557,7 @@ public class LivingObject : GridObject
         BASE_STATS.RESIESTANCE++;
         BASE_STATS.SPEED++;
         BASE_STATS.SKILL++;
-     
+
     }
 
     public void GainExp(int val)
@@ -548,12 +568,12 @@ public class LivingObject : GridObject
     public void GainPhysExp(int val)
     {
         BASE_STATS.PHYSEXP += val;
-        if(BASE_STATS.PHYSEXP > 100)
+        if (BASE_STATS.PHYSEXP > 100)
         {
-            float chance = Random.Range(0,2);
-            if(chance > 0)
+            float chance = Random.Range(0, 2);
+            if (chance > 0)
             {
-            BASE_STATS.STRENGTH++;
+                BASE_STATS.STRENGTH++;
 
             }
             else
@@ -611,7 +631,7 @@ public class LivingObject : GridObject
     protected bool startedDeathAnimation = false;
     public void DeathStart()
     {
-      //  if (!startedDeathAnimation)
+        //  if (!startedDeathAnimation)
         {
             startedDeathAnimation = false;
             myManager.PlaySquishSnd();
@@ -620,7 +640,7 @@ public class LivingObject : GridObject
         }
     }
 
-    public bool DieEvent(Object data) 
+    public bool DieEvent(Object data)
     {
 
         return isdoneDying;
@@ -628,16 +648,16 @@ public class LivingObject : GridObject
     public virtual IEnumerator FadeOut()
     {
         startedDeathAnimation = true;
-    //    Debug.Log("living dying");
+        //    Debug.Log("living dying");
         if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
             Color subtract = new Color(0, 0, 0, 0.1f);
             int num = 0;
-            while(renderer.color.a > 0)
+            while (renderer.color.a > 0)
             {
-                num++; 
-                if( num > 999)
+                num++;
+                if (num > 999)
                 {
                     Debug.Log("time expired");
                     break;
@@ -646,7 +666,7 @@ public class LivingObject : GridObject
                 yield return null;
             }
             isdoneDying = true;
-       
+
         }
     }
 }

@@ -29,10 +29,7 @@ public class ActorSetup: LivingSetup
             if (dm != null)
             {
                 dm.GetActor(characterId, me);
-                if (gameObject.GetComponent<AnimationScript>())
-                {
-                    gameObject.GetComponent<AnimationScript>().Setup();
-                }
+             
             }
             if (!manager.gridObjects.Contains(me))
             {

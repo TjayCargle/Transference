@@ -35,6 +35,9 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<ItemScript> items;
 
+    [SerializeField]
+    List<EffectScript> effects;
+
     public List<UsableScript> USEABLES
     {
         get { return usables; }
@@ -83,6 +86,11 @@ public class InventoryScript : MonoBehaviour {
         set { activeDeBuffs = value; }
     }
 
+    public List<EffectScript> EFFECTS
+    {
+        get { return effects; }
+        set { effects = value; }
+    }
     public List<OppSkill> OPPS
     {
         get { return oppSkills; }

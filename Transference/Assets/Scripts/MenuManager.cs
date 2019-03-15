@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +12,7 @@ public class MenuManager : MonoBehaviour
     public Canvas skillCanvas;
     public Canvas extraCanvas;
     public Canvas optionsCanvas;
-    private Text descText;
+    private TextMeshProUGUI descText;
     public ScrollRect ItemRect;
     public InventoryMangager inManager;
     public bool isSetup = false;
@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
     public Canvas detailCanvas;
     public Canvas newSkillCanvas;
     GridObject prevObj;
-    public Text DESC
+    public TextMeshProUGUI DESC
     {
         get { return descText; }
     }
@@ -30,9 +30,9 @@ public class MenuManager : MonoBehaviour
 
         if (descCanvas)
         {
-            if (descCanvas.GetComponentInChildren<Text>())
+            if (descCanvas.GetComponentInChildren<TextMeshProUGUI>(true))
             {
-                descText = descCanvas.GetComponentInChildren<Text>();
+                descText = descCanvas.GetComponentInChildren<TextMeshProUGUI>(true);
             }
             descCanvas.gameObject.SetActive(false);
         }

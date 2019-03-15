@@ -82,6 +82,8 @@
     <Compile Include="Assets\Scripts\Common.cs" />
     <Compile Include="Assets\Scripts\ConditionalDisplay.cs" />
     <Compile Include="Assets\Scripts\CtrlsButton.cs" />
+    <Compile Include="Assets\Scripts\CtrlsDesc.cs" />
+    <Compile Include="Assets\Scripts\CtrlsTitle.cs" />
     <Compile Include="Assets\Scripts\DatabaseManager.cs" />
     <Compile Include="Assets\Scripts\DebuffScript.cs" />
     <Compile Include="Assets\Scripts\DetailsScreen.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Assets\Scripts\NonCombatButton.cs" />
     <Compile Include="Assets\Scripts\NonCombatController.cs" />
     <Compile Include="Assets\Scripts\OppSkill.cs" />
+    <Compile Include="Assets\Scripts\OptionsCtrl.cs" />
     <Compile Include="Assets\Scripts\OptionsManager.cs" />
     <Compile Include="Assets\Scripts\PassiveSkill.cs" />
     <Compile Include="Assets\Scripts\PathScript.cs" />
@@ -131,16 +134,20 @@
     <Compile Include="Assets\Scripts\PotentialSlider.cs" />
     <Compile Include="Assets\Scripts\SecondStatusScript.cs" />
     <Compile Include="Assets\Scripts\SFXManager.cs" />
+    <Compile Include="Assets\Scripts\ShopScreen.cs" />
     <Compile Include="Assets\Scripts\SkillManager.cs" />
     <Compile Include="Assets\Scripts\SkillScript.cs" />
     <Compile Include="Assets\Scripts\skillSlots.cs" />
+    <Compile Include="Assets\Scripts\StatIcon.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
+    <Compile Include="Assets\Scripts\StatusIconManager.cs" />
     <Compile Include="Assets\Scripts\TempObject.cs" />
     <Compile Include="Assets\Scripts\TextEventManager.cs" />
     <Compile Include="Assets\Scripts\TextObj.cs" />
     <Compile Include="Assets\Scripts\TileManager.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
     <Compile Include="Assets\Scripts\UsableScript.cs" />
+    <Compile Include="Assets\Scripts\VoicesManager.cs" />
     <Compile Include="Assets\Scripts\WeaponEquip.cs" />
     <Compile Include="Assets\Scripts\WeaponManager.cs" />
     <Compile Include="Assets\Scripts\WeaponScript.cs" />

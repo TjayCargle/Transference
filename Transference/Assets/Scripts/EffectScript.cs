@@ -5,9 +5,9 @@ using UnityEngine;
 public class EffectScript : MonoBehaviour
 {
     [SerializeField]
-    StatusEffect effect;
+    SideEffect effect;
 
-    public StatusEffect EFFECT
+    public SideEffect EFFECT
     {
         get { return effect; }
         set { effect = value; }
@@ -19,7 +19,7 @@ public class EffectScript : MonoBehaviour
         Debug.Log("Status Effect Chance = " + chance);
         switch (effect)
         {
-            case StatusEffect.paralyzed:
+            case SideEffect.paralyze:
                 Debug.Log(living.FullName + " is paralyzed");
                 if (chance <= 0)
                 {
@@ -27,6 +27,7 @@ public class EffectScript : MonoBehaviour
                     int dmg = (int)(living.HEALTH * 0.1);
                     manager.DamageLivingObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.yellow, living);
+                    living.ACTIONS--;
                     manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is stunned", "stun effect", manager.CheckText, manager.TextStart);
 
@@ -35,7 +36,7 @@ public class EffectScript : MonoBehaviour
                 manager.CreateTextEvent(this, "" + living.FullName + " is no longer paralyzed", "no longer paralyzed effect", manager.CheckText, manager.TextStart);
                 Destroy(this);
                 break;
-            case StatusEffect.sleep:
+            case SideEffect.sleep:
                 Debug.Log(living.FullName + " is sleep");
                 if (chance <= 0)
                 {
@@ -43,6 +44,7 @@ public class EffectScript : MonoBehaviour
                     int dmg = -(int)(living.HEALTH * 0.1);
                     manager.DamageLivingObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.blue, living);
+                    living.ACTIONS = 0;
                     manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is sleeping", "sleep effect", manager.CheckText, manager.TextStart);
                     return;
@@ -50,12 +52,13 @@ public class EffectScript : MonoBehaviour
                 manager.CreateTextEvent(this, "" + living.FullName + " woke up", "no longer sleep effect", manager.CheckText, manager.TextStart);
                 Destroy(this);
                 break;
-            case StatusEffect.frozen:
+            case SideEffect.freeze:
                 Debug.Log(living.FullName + " is frozen");
                 if (chance <= 0)
                 {
                     Debug.Log(living.FullName + " is frozen solid");
                     manager.CreateDmgTextEvent("Frozen", Color.cyan, living);
+                    living.ACTIONS = 0;
                     manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is frozen", "frozen effect", manager.CheckText, manager.TextStart);
                     return;
@@ -63,11 +66,12 @@ public class EffectScript : MonoBehaviour
                 manager.CreateTextEvent(this, "" + living.FullName + " thawed out", "no longer frozen effect", manager.CheckText, manager.TextStart);
                 Destroy(this);
                 break;
-            case StatusEffect.burned:
+            case SideEffect.burn:
                 {
 
                     Debug.Log(living.FullName + " is burned");
                     int dmg = (int)(living.HEALTH * 0.2);
+                    living.ACTIONS++;
                     manager.DamageLivingObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.red, living);
                     manager.CreateTextEvent(this, "" + living.FullName + " took damage from their burn", "burned effect", manager.CheckText, manager.TextStart);
@@ -79,14 +83,36 @@ public class EffectScript : MonoBehaviour
                     }
                 }
                 break;
-            case StatusEffect.poisoned:
+            case SideEffect.poison:
                 Debug.Log(living.FullName + " is poisoned");
                 manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
+                if (!living.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
+                {
+                    Common.CommonDebuffStr.EFFECT = SideEffect.debuff;
+                    Common.CommonDebuffStr.BUFF = BuffType.str;
+                    Common.CommonDebuffStr.BUFFVAL = -10f;
+                    Common.CommonDebuffStr.ELEMENT = Element.Buff;
+                    Common.CommonDebuffStr.SUBTYPE = SubSkillType.Debuff;
+
+                    living.INVENTORY.DEBUFFS.Add(Common.CommonDebuffStr);
+                    DebuffScript buff = living.gameObject.AddComponent<DebuffScript>();
+                    buff.SKILL = Common.CommonDebuffStr;
+                    buff.BUFF = Common.CommonDebuffStr.BUFF;
+                    buff.COUNT = 1;
+                    living.ApplyPassives();
+
+                }
                 if (chance > 0)
                 {
                     Debug.Log(living.FullName + " is no longer poisoned");
                     Destroy(this);
                 }
+                break;
+
+            case SideEffect.slow:
+                living.MOVE_DIST = (int)(living.MOVE_DIST * 0.5f);
+                break;
+            case SideEffect.bleed:
                 break;
             default:
                 break;

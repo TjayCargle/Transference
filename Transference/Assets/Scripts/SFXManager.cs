@@ -5,7 +5,7 @@ using UnityEngine;
 public class SFXManager : MonoBehaviour {
 
     public bool isSetup = false;
-    private AudioSource source;
+    protected AudioSource source;
 
     public AudioSource SOURCE
     {
