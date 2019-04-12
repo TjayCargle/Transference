@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\ArmorManager.cs" />
     <Compile Include="Assets\Scripts\ArmorScript.cs" />
     <Compile Include="Assets\Scripts\ArmorSet.cs" />
+    <Compile Include="Assets\Scripts\AugBtn.cs" />
     <Compile Include="Assets\Scripts\AugmentScript.cs" />
     <Compile Include="Assets\Scripts\AutoSkill.cs" />
     <Compile Include="Assets\Scripts\BaseStats.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Assets\Scripts\HazardScript.cs" />
     <Compile Include="Assets\Scripts\HazardSetup.cs" />
     <Compile Include="Assets\Scripts\Healthbar.cs" />
+    <Compile Include="Assets\Scripts\IconImage.cs" />
     <Compile Include="Assets\Scripts\ImgObj.cs" />
     <Compile Include="Assets\Scripts\InvArrow.cs" />
     <Compile Include="Assets\Scripts\InventoryMangager.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Assets\Scripts\PotentialSlider.cs" />
     <Compile Include="Assets\Scripts\SecondStatusScript.cs" />
     <Compile Include="Assets\Scripts\SFXManager.cs" />
+    <Compile Include="Assets\Scripts\shopBtn.cs" />
     <Compile Include="Assets\Scripts\ShopScreen.cs" />
     <Compile Include="Assets\Scripts\SkillManager.cs" />
     <Compile Include="Assets\Scripts\SkillScript.cs" />

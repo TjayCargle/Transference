@@ -19,8 +19,8 @@ public class EnemyScript : LivingObject
     public void MoveStart()
     {
         //  Debug.Log(FullName+" move start");
-  
-        myManager.MoveCameraAndShow(this);
+
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
 
 
     }
@@ -48,13 +48,15 @@ public class EnemyScript : LivingObject
         nextTile = pathTarget.currentPath.Peek();
         //  myManager.myCamera.currentTile = nextTile;
         // myManager.myCamera.infoObject = this;
-
+       
         Vector3 directionVector = (nextTile.transform.position - transform.position);
         directionVector.y = 0.0f;
+       
         float dist = Vector3.Distance(nextTile.transform.position, transform.position);
         if (dist > 0.5f)
         {
-            transform.Translate(directionVector * 0.5f);
+           transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.1f);
+            //transform.Translate(directionVector * 0.5f);
         }
         else
         {
@@ -393,6 +395,7 @@ public class EnemyScript : LivingObject
         isPerforming = true;
         //  Debug.Log(FullName + " is Determining actions");
 
+
         psudeoActions = ACTIONS;
         calcLocation = transform.position;
         if (psudeoActions == 0)
@@ -448,7 +451,7 @@ public class EnemyScript : LivingObject
                     {
                         //        Debug.Log("Doing an attack event");
                         //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
-                        etypes.Add(EActType.atk);
+                        etypes.Insert(0,EActType.atk);
                         //   TakeAction();
                     }
                 }
@@ -468,17 +471,21 @@ public class EnemyScript : LivingObject
             {
                 case EActType.move:
                     //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent, MoveStart);
+                    myManager.CreateEvent(this, p, "" + FullName + "move event " + i, MoveEvent, MoveStart, 0);
                     break;
 
                 case EActType.atk:
                     // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent);
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, null, 0);
                     break;
+
+             
+
             }
         }
         //   else
 
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
 
         myManager.ShowGridObjectMoveArea(this);
         isPerforming = false;
@@ -524,6 +531,11 @@ public class EnemyScript : LivingObject
         STATS.Reset(true);
         BASE_STATS.Reset();
         BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        INVENTORY.Clear();
+        BATTLE_SLOTS.SKILLS.Clear();
+        PASSIVE_SLOTS.SKILLS.Clear();
+        OPP_SLOTS.SKILLS.Clear();
+        AUTO_SLOTS.SKILLS.Clear();
 
     }
 }

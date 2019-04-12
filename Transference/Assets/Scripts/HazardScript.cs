@@ -272,7 +272,11 @@ public class HazardScript : LivingObject
         STATS.Reset(true);
         BASE_STATS.Reset();
         BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
-
+        INVENTORY.Clear();
+        BATTLE_SLOTS.SKILLS.Clear();
+        PASSIVE_SLOTS.SKILLS.Clear();
+        OPP_SLOTS.SKILLS.Clear();
+        AUTO_SLOTS.SKILLS.Clear();
     }
 
 }

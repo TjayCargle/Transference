@@ -26,7 +26,8 @@ public class ArmorScript : UsableScript
     [SerializeField]
     private float maxHealthPercent = 100.0f;
     private LivingObject owner;
-
+    [SerializeField]
+    private int breakCount = 0;
 
     public List<EHitType> HITLIST
     {
@@ -53,6 +54,11 @@ public class ArmorScript : UsableScript
     {
         get { return mySpeed; }
         set { mySpeed = value; }
+    }
+    public int BREAKS
+    {
+        get { return breakCount; }
+        set { breakCount = value; }
     }
     public float MAX_HEALTH
     {
@@ -83,5 +89,79 @@ public class ArmorScript : UsableScript
             }
         }
     }
-
+    public override void LevelUP()
+    {
+        base.LevelUP();
+        if(LEVEL < Common.MaxSkillLevel)
+        {
+            LEVEL++;
+            DEFENSE++;
+            RESISTANCE++;
+            SPEED++;
+        }
+    }
+    public override void UpdateDesc()
+    {
+        base.UpdateDesc();
+        DESC = "Def +" + DEFENSE + ", Res+" + RESISTANCE + " Spd +" + SPEED;
+        for (int i = 0; i < HITLIST.Count; i++)
+        {
+            if (HITLIST[i] != EHitType.normal)
+            {
+                if (HITLIST[i] < EHitType.normal)
+                {
+                    DESC += ", " + HITLIST[i].ToString() + " " + (Element)i;
+                }
+                else
+                {
+                    DESC += ", " + HITLIST[i].ToString() + " to " + (Element)i;
+                }
+            }
+        }
+    }
+    public override void ApplyAugment(Augment aug)
+    {
+        base.ApplyAugment(aug);
+        switch (aug)
+        {
+     
+            case Augment.levelAugment:
+                for (int i = 0; i < 5; i++)
+                {
+                    LevelUP();
+                }
+                break;
+           
+            case Augment.effectAugment1:
+                for (int i = 0; i < HITLIST.Count; i++)
+                {
+                    if(HITLIST[i] < EHitType.normal && HITLIST[i] > EHitType.absorbs)
+                    {
+                        HITLIST[i] = HITLIST[i] - 1;
+                    }
+                    else if (HITLIST[i] > EHitType.normal && HITLIST[i] < EHitType.leathal)
+                    {
+                        HITLIST[i] = HITLIST[i] + 1;
+                    }
+                }
+                break;
+           
+            case Augment.strAugment:
+                break;
+            case Augment.magAugment:
+                break;
+            case Augment.sklAugment:
+                break;
+            case Augment.defAugment:
+                DEFENSE += 5;
+                break;
+            case Augment.resAugment:
+                RESISTANCE += 5;
+                break;
+            case Augment.spdAugment:
+                SPEED += 5;
+                break;
+         
+        }
+    }
 }

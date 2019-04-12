@@ -156,11 +156,11 @@ public class LivingObject : GridObject
 
     public int STRENGTH
     {
-        get { return STATS.STRENGTH + BASE_STATS.STRENGTH; }
+        get { return STATS.STRENGTH + BASE_STATS.STRENGTH + (WEAPON.BOOST == ModifiedStat.Str? WEAPON.BOOSTVAL : 0); }
     }
     public int MAGIC
     {
-        get { return STATS.MAGIC + BASE_STATS.MAGIC; }
+        get { return STATS.MAGIC + BASE_STATS.MAGIC + (WEAPON.BOOST == ModifiedStat.Mag ? WEAPON.BOOSTVAL : 0); }
     }
     public int DEFENSE
     {
@@ -176,7 +176,7 @@ public class LivingObject : GridObject
     }
     public int SKILL
     {
-        get { return STATS.SKILL + BASE_STATS.SKILL; }
+        get { return STATS.SKILL + BASE_STATS.SKILL + (WEAPON.BOOST == ModifiedStat.Skill ? WEAPON.BOOSTVAL : 0); }
     }
     public int MAX_HEALTH
     {
@@ -228,34 +228,47 @@ public class LivingObject : GridObject
     public bool ChangeHealth(int val)
     {
 
-        if (val > 0 && HEALTH >= BASE_STATS.MAX_HEALTH)
+        if (val > 0 && HEALTH >= MAX_HEALTH)
         {
             STATS.HEALTH = 0;
             return false;
         }
         STATS.HEALTH += val;
-
-        if (HEALTH < 0)
+        if (HEALTH > MAX_HEALTH)
         {
-            STATS.HEALTH = BASE_STATS.MAX_HEALTH * -1;
+
+            STATS.HEALTH = STATS.MAX_HEALTH;
+            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        }
+        if (HEALTH <= 0)
+        {
+            STATS.HEALTH = MAX_HEALTH * -1;
+
             DEAD = true;
+            if (currentTile)
+            {
+
+                currentTile.isOccupied = false;
+                currentTile = null;
+            }
+            myManager.gridObjects.Remove(this);
+            Die();
         }
         return true;
     }
     public bool ChangeMana(int val)
     {
-        if (val > 0 && STATS.MANA >= STATS.MAX_MANA)
+        if (val > 0 && MANA >= MAX_MANA)
         {
             return false;
         }
         STATS.MANA += val;
         if (MANA > MAX_MANA)
         {
-            STATS.MANA = MAX_MANA - BASE_STATS.MANA;
-
-
+            STATS.MANA = STATS.MAX_MANA;
+            BASE_STATS.MANA = BASE_STATS.MAX_MANA;
         }
-        if (MANA < 0)
+        if (MANA <= 0)
         {
             STATS.MANA = -1 * MAX_MANA;
 
@@ -264,14 +277,20 @@ public class LivingObject : GridObject
     }
     public bool ChangeFatigue(int val)
     {
-        if (val > 0 && STATS.FATIGUE >= STATS.MAX_FATIGUE)
+        if (val > 0 && STATS.FATIGUE >= MAX_FATIGUE)
         {
             return false;
         }
         STATS.FATIGUE -= val;
-        if (STATS.FATIGUE > MAX_FATIGUE)
+        if (FATIGUE > MAX_FATIGUE)
         {
-            STATS.FATIGUE = MAX_FATIGUE;
+            STATS.FATIGUE = STATS.MAX_FATIGUE;
+            BASE_STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
+        }
+
+        if (FATIGUE < 0)
+        {
+            STATS.FATIGUE = -1 * MAX_FATIGUE;
         }
         return true;
     }
@@ -294,6 +313,9 @@ public class LivingObject : GridObject
             }
             equippedWeapon = GetComponent<WeaponEquip>();
             equippedWeapon.USER = this;
+            WeaponScript defaultWeapon = Common.noWeapon;
+            defaultWeapon.NAME = "default";
+            equippedWeapon.Equip(defaultWeapon);
             if (!GetComponent<ArmorEquip>())
             {
                 gameObject.AddComponent<ArmorEquip>();
@@ -302,14 +324,12 @@ public class LivingObject : GridObject
             }
             equipedArmor = GetComponent<ArmorEquip>();
             equipedArmor.USER = this;
-            if (equipedArmor.HITLIST == null)
-                equipedArmor.HITLIST = new List<EHitType>();
-            else
-                equipedArmor.HITLIST.Clear();
-            for (int i = 0; i < 7; i++)
-            {
-                equipedArmor.HITLIST.Add(EHitType.normal);
-            }
+
+
+            ArmorScript defaultArmor = Common.noArmor;
+            defaultArmor.NAME = "default";
+            defaultArmor.HITLIST = Common.noHitList;
+            equipedArmor.Equip(defaultArmor);
 
             if (!GetComponent<BaseStats>())
             {
@@ -409,11 +429,11 @@ public class LivingObject : GridObject
             ACTIONS = (int)(spd / 10) + 2;
             if (SHADOW == null)
             {
-             
+
                 shadow = new GameObject();
                 shadow.transform.parent = this.transform;
                 shadow.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
-                shadow.transform.localPosition = new Vector3(0,0,0.1f);
+                shadow.transform.localPosition = new Vector3(0, 0, 0.1f);
                 SpriteRenderer shadowRender = shadow.AddComponent<SpriteRenderer>();
                 shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
                 shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
@@ -421,11 +441,12 @@ public class LivingObject : GridObject
                 AnimationScript ShadowAnimation = shadow.AddComponent<AnimationScript>();
                 ShadowAnimation.obj = this;
                 ShadowAnimation.render = shadowRender;
-               Animator shadowAnimator = shadow.gameObject.AddComponent<Animator>();
+                Animator shadowAnimator = shadow.gameObject.AddComponent<Animator>();
                 shadowAnimator.runtimeAnimatorController = GetComponent<AnimationScript>().anim.runtimeAnimatorController;
                 GetComponent<AnimationScript>().SHADOWANIM = shadowAnimator;
             }
-
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            transform.Rotate(new Vector3(90, 0, 0));
 
         }
         //  Debug.Log("Setup done");

@@ -188,7 +188,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         }
                         else
                         {
-                            Debug.Log("Couldnt find tiles");
+                            //  Debug.Log("Couldnt find tiles");
+                            myManager.CreateTextEvent(this, "No weapon equipped for " + invokingObject.NAME, "no weapon", myManager.CheckText, myManager.TextStart);
                         }
 
                     }
@@ -473,7 +474,6 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 else
                 {
                     myManager.player.useOrEquip();
-
                 }
 
 
@@ -509,6 +509,21 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //myManager.menuManager.ShowActCanvas();
 
                     myManager.StackActSelection();
+                }
+                break;
+            case MenuItemType.selectDetails:
+                {
+                    myManager.StackDetails();
+                }
+                break;
+            case MenuItemType.shop:
+                {
+                    myManager.StackShop();
+                }
+                break;
+            case MenuItemType.door:
+                {
+                    myManager.CheckDoorPrompt();
                 }
                 break;
             default:

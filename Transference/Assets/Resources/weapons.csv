@@ -1,12 +1,15 @@
-id, name, description,auto skill ,attack, attack_type,affinity, distance, range, accurracy, luck
-0, Tail Strike,El: Pierce. Phys. Str: 4. Hit: 100% Crit: 0. Range: 2. Dist: 2, 10, physical, Pierce, 2, 1, 100, 10
-1, Claw Slash,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1,10, physical, Slash, 1, 1, 90, 10
-2, Dragon Breath,El: Fire. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Fire, 2, 2, 80, 10
-3, Kick,El: Blunt. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1. ,10, physical, Blunt, 1, 1, 90, 10
-4, Fire Tome,El: Fire. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Fire, 2, 2, 80, 10
-5, Frost Punch,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Ice, 1, 1, 80, 10
-6, Mystic Arrow, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Pierce, 1, 1, 90, 10
-8, Ice Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Ice, 2, 1, 80, 10
-7, Hydro Lance,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Water, 2, 1, 80, 10
-9, Water Tome, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Water, 1, 1, 90, 10
-10, Elec Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Electric, 2, 1, 80, 10
+id, name, description,attack, attack_type,affinity, distance, range, accurracy, crit,boost type, boost amt
+0, Tail Strike,El: Pierce. Phys. Str: 4. Hit: 100% Crit: 0. Range: 2. Dist: 2, 10, physical, Pierce, 2, 1, 100, 10, Str, 2
+1, Claw Slash,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1,10, physical, Slash, 1, 1, 90, 10, Str, 2
+2, Dragon Breath,El: Fire. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Fire, 2, 2, 80, 10, Str, 2
+3, Kick,El: Blunt. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1. ,10, physical, Blunt, 1, 1, 90, 10, Str, 2
+4, Fire Tome,El: Fire. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Fire, 2, 2, 80, 10, Mag, 2
+5, Frost Punch,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Ice, 1, 1, 80, 10, Str, 2
+6, Mystic Arrow, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Pierce, 1, 1, 90, 10, Mag, 2
+8, Ice Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Ice, 2, 1, 80, 10, Mag, 2
+7, Hydro Lance,El: Ice. Phys. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Water, 2, 1, 80, 10, Str, 2
+9, Water Tome, El: Pierce. Mag. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1 ,1, magical, Water, 1, 1, 90, 10, Mag, 2
+10, Elec Tome,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, magical, Electric, 2, 1, 80, 10, Mag, 2
+11, Static Punch,El: Ice. Mag. Str: 10. Hit: 80% Crit: 0. Range: 2. Dist: 2, 10, physical, Electric, 1, 1, 80, 10, Str, 2
+12, Mystic Blade,El: Slash. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1,10, magical, Slash, 2, 1, 90, 10, Mag, 2
+13, Mystic Hammer,El: Blunt. Phys. Str: 8. Hit: 90% Crit: 0. Range: 1. Dist: 1. ,10, magical, Blunt, 2, 1, 90, 10, Mag, 2

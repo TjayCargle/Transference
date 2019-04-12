@@ -23,7 +23,13 @@ public class UsableScript : ScriptableObject
     protected int refType;
 
     [SerializeField]
-    protected int augmentPoints;
+    protected List<Augment> augments;
+
+    public List<Augment> AUGMENTS
+    {
+        get { return augments; }
+        set { augments = value; }
+    }
 
     public string DESC
     {
@@ -55,10 +61,7 @@ public class UsableScript : ScriptableObject
         if (LEVEL < Common.MaxSkillLevel)
         {
             LEVEL++;
-            if ((level - 1 % 5) == 0)
-            {
-                AVAILABLEUPGRADES++;
-            }
+       
         }
     }
     public virtual void GrantXP(float amount)
@@ -70,9 +73,15 @@ public class UsableScript : ScriptableObject
             exp = 2 + (level * 2);
         }
     }
-    public int AVAILABLEUPGRADES
+  
+    public virtual void ApplyAugment(Augment aug)
     {
-        get { return augmentPoints; }
-        set { augmentPoints = value; }
+
     }
+
+    public virtual void UpdateDesc()
+    {
+
+    }
+
 }

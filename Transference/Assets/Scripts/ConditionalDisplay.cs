@@ -8,6 +8,8 @@ public class ConditionalDisplay : MonoBehaviour
     public State[] displayStates;
     public bool requiresSelected = false;
     public bool isAffectDisplay = false;
+    public bool requiresDoorTile = false;
+    public bool requiresShopTile = false;
     ManagerScript manager;
     // Use this for initialization
     void Start()
@@ -62,11 +64,38 @@ public class ConditionalDisplay : MonoBehaviour
                 }
             }
 
-         
+
 
         }
+
         if (manager)
         {
+
+            if (requiresDoorTile == true)
+            {
+                if (manager.myCamera.currentTile.TTYPE != TileType.door)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
+
+            if (requiresShopTile == true)
+            {
+                if (manager.myCamera)
+                {
+                    if (manager.myCamera.currentTile)
+                    {
+                        if (manager.myCamera.currentTile.TTYPE != TileType.shop)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                }
+            }
+            gameObject.SetActive(true);
+
             for (int i = 0; i < displayStates.Length; i++)
             {
                 if (manager.currentState == displayStates[i])

@@ -214,4 +214,20 @@ public class InventoryScript : MonoBehaviour {
 
         }
     }
+
+    public void Clear()
+    {
+        this.ARMOR.Clear();
+        this.AUTOS.Clear();
+        this.BUFFS.Clear();
+        this.DEBUFFS.Clear();
+        this.CSKILLS.Clear();
+        this.EFFECTS.Clear();
+        this.ITEMS.Clear();
+        this.OPPS.Clear();
+        this.PASSIVES.Clear();
+        this.SKILLS.Clear();
+        this.USEABLES.Clear();
+        this.WEAPONS.Clear();
+    }
 }

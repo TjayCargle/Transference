@@ -28,7 +28,7 @@ public class OptionsManager : MonoBehaviour
     public bool isSetup = false;
     public void Setup()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
             if (masterSlider)
             {
@@ -104,69 +104,11 @@ public class OptionsManager : MonoBehaviour
     }
     private void Update()
     {
-        if (masterSlider)
-        {
-            if (masterSlider.value != master.volume)
-            {
-                master.volume = masterSlider.value;
-            }
-        }
-        if (musicSlider)
-        {
-            if (musicSlider.value != music.volume)
-            {
-                music.volume = musicSlider.value;
-            }
-        }
-
-        if (sfxSlider)
-        {
-
-            if (sfxSlider.value != sfx.volume)
-            {
-                sfx.volume = sfxSlider.value;
-            }
-        }
-
-        if (voiceSlider)
-        {
-
-            if (voiceSlider.value != voices.volume)
-            {
-                voices.volume = voiceSlider.value;
-            }
-        }
-        if (musicSlider.value > masterSlider.value)
-        {
-            musicSlider.value = masterSlider.value;
-        }
-        if (sfxSlider.value > masterSlider.value)
-        {
-            sfxSlider.value = masterSlider.value;
-        }
-        if (voiceSlider.value > masterSlider.value)
-        {
-            voiceSlider.value = masterSlider.value;
-        }
-
-        if (music.volume > master.volume)
-        {
-            music.volume = master.volume;
-        }
-
-        if (sfx.volume > master.volume)
-        {
-            sfx.volume = master.volume;
-        }
-
-        if (voices.volume > master.volume)
-        {
-            voices.volume = master.volume;
-        }
+        ForceUpdate();
     }
     public void ForceUpdate()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
             Setup();
         }
@@ -176,58 +118,69 @@ public class OptionsManager : MonoBehaviour
             {
                 master.volume = masterSlider.value;
             }
-        }
-        if (musicSlider)
-        {
-            if (musicSlider.value != music.volume)
+            if (musicSlider)
             {
-                music.volume = musicSlider.value;
+                if (musicSlider.value != music.volume)
+                {
+                    music.volume = musicSlider.value;
+                }
+
+                if (musicSlider.value > masterSlider.value)
+                {
+                    musicSlider.value = masterSlider.value;
+                }
+
+                if (music.volume > master.volume)
+                {
+                    music.volume = master.volume;
+                }
+
+
             }
-        }
 
-        if (sfxSlider)
-        {
-
-            if (sfxSlider.value != sfx.volume)
+            if (sfxSlider)
             {
-                sfx.volume = sfxSlider.value;
+
+                if (sfxSlider.value != sfx.volume)
+                {
+                    sfx.volume = sfxSlider.value;
+                }
+
+                if (sfxSlider.value > masterSlider.value)
+                {
+                    sfxSlider.value = masterSlider.value;
+                }
+
+                if (sfx.volume > master.volume)
+                {
+                    sfx.volume = master.volume;
+                }
+
             }
-        }
 
-        if (voiceSlider)
-        {
-
-            if (voiceSlider.value != voices.volume)
+            if (voiceSlider)
             {
-                voices.volume = voiceSlider.value;
+
+                if (voiceSlider.value != voices.volume)
+                {
+                    voices.volume = voiceSlider.value;
+                }
+
+                if (voiceSlider.value > masterSlider.value)
+                {
+                    voiceSlider.value = masterSlider.value;
+                }
+                if (voices.volume > master.volume)
+                {
+                    voices.volume = master.volume;
+                }
             }
-        }
 
-        if (musicSlider.value > masterSlider.value)
-        {
-            musicSlider.value = masterSlider.value;
-        }
-        if (sfxSlider.value > masterSlider.value)
-        {
-            sfxSlider.value = masterSlider.value;
-        }
-        if (voiceSlider.value > masterSlider.value)
-        {
-            voiceSlider.value = masterSlider.value;
-        }
 
-        if (music.volume > master.volume)
-        {
-            music.volume = master.volume;
-        }
 
-        if (sfx.volume > master.volume)
-        {
-            sfx.volume = master.volume;
-        }
-        if (voices.volume > master.volume)
-        {
-            voices.volume = master.volume;
+
+       
+          
         }
     }
 }

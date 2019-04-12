@@ -123,6 +123,16 @@ public class AutoSkill : SkillScript
             case AutoReact.HealFTByDmg:
                 OWNER.ChangeFatigue((int)amount);
                 break;
+            case AutoReact.reduceDef:
+                break;
+            case AutoReact.reduceMag:
+                break;
+            case AutoReact.reduceRes:
+                break;
+            case AutoReact.reduceSpd:
+                break;
+            case AutoReact.reduceLuck:
+                break;
             default:
                 Debug.Log("No reaction error");
                 return Reaction.none;
@@ -133,12 +143,75 @@ public class AutoSkill : SkillScript
         return Reaction.none;
     }
 
-    public override void AugmentSkill(Augment augment)
+    public override void ApplyAugment(Augment augment)
     {
-        if(augment == Augment.autoAugment)
+        switch (augment)
         {
-            CHANCE *= 2;
+          
+            case Augment.effectAugment1:
+                CHANCE += 20.0f;
+                break;
+            case Augment.effectAugment2:
+                CHANCE += 20.0f;
+                break;
+            case Augment.effectAugment3:
+                CHANCE += 20.0f;
+                break;
+         
         }
+    }
+    public override void UpdateDesc()
+    {
+        base.UpdateDesc();
+        DESC = CHANCE + " % chance + skl to ";
+
+        switch (REACT)
+        {
+            case AutoReact.healByDmg:
+                DESC += "heal the damage you delt";
+                break;
+   
+            case AutoReact.GainManaByDmg:
+                DESC += "gain mana by the damage you delt";
+                break;
+
+            case AutoReact.ChargeFTByDmg:
+                DESC += "charge FT by the damage you delt";
+                break;
+      
+            case AutoReact.HealFTByDmg:
+                DESC += "reduce FT by the damage you delt";
+                break;
+ 
+            case AutoReact.extraAction:
+                DESC += "gain an additional action";
+                break;
+   
+            case AutoReact.reduceDef:
+                DESC += "deal damage as if enemy def has halved";
+                break;
+       
+            case AutoReact.reduceRes:
+                DESC += "deal damage as if enemy res has halved";
+                break;
+       
+         
+            case AutoReact.discoverItem:
+                DESC += "discover a random item";
+                break;
+        }
+
+        switch (ACT)
+        {
+            case AutoAct.beforeDmg:
+                DESC += " before doing ";
+                break;
+            case AutoAct.afterDmg:
+                DESC += " after hiting with ";
+                break;
+        
+        }
+        DESC += " a basic attack";
     }
 
 }

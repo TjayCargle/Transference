@@ -25,7 +25,9 @@ public enum State
     AquireNewSkill,
     GotoNewRoom,
     EnemyTurn,
-    HazardTurn
+    HazardTurn,
+    ShopCanvas,
+    PlayerUsingItems
 
 
 }
@@ -66,6 +68,7 @@ public enum Weaks
 }
 public enum ModifiedStat
 {
+    none,
     Health,
     SP,
     FT,
@@ -83,7 +86,6 @@ public enum ModifiedStat
     Speed,
     Skill,
     dmg,
-    none,
     all
 
 }
@@ -148,7 +150,8 @@ public enum SubSkillType
 }
 public enum Augment
 {
-    damageAugment,
+    none,
+    levelAugment,
     accurracyAugment,
     sideEffectAugment,
     rangeAument,
@@ -156,11 +159,17 @@ public enum Augment
     costAugment,
     chargeIncreaseAugment,
     chargeDecreaseAugment,
-    buffAugment,
-    autoAugment,
-    oppAugment,
-    randAugment
-
+    elementAugment,
+    effectAugment1,
+    effectAugment2,
+    effectAugment3,
+    strAugment,
+    magAugment,
+    sklAugment,
+    defAugment,
+    resAugment,
+    spdAugment,
+    end
 }
 public enum Element
 {
@@ -189,10 +198,10 @@ public enum DetailType
     Opportunity,
     BasicAtk,
     Armor,
-    Exp,
     Buffs,
     Debuffs,
-    Effects
+    Effects,
+    Exp
 }
 public enum ShopWindow
 {
@@ -200,7 +209,9 @@ public enum ShopWindow
     main,
     learn,
     alter,
-    enhance,
+    forget,
+    augmenting,
+    removingItem,
     buying,
     confirm,
 }
@@ -228,6 +239,8 @@ public enum Reaction
     absorb,
     missed,
     Heal,
+    reduceDef,
+    reduceRes
 }
 public enum DMG
 {
@@ -245,9 +258,34 @@ public enum ItemType
     fatiguePotion,
     cure,
     buff,
-    dmg
+    dmg,
+    actionBoost,
+    random
 }
 
+public enum IconSet
+{
+    physical,
+    magical,
+    health,
+    ward,
+    weapon,
+    command,
+    passive,
+    auto,
+    opp,
+    lv,
+    shop,
+    resists,
+    nulls,
+    absorbs,
+    reflects,
+    weak,
+    savage,
+    cripple,
+    leathal,
+    item
+}
 
 public enum WepSkillType
 {
@@ -283,7 +321,10 @@ public enum MenuItemType
     selectItem,
     trade,
     prevMenu,
-    selectAct
+    selectAct,
+    selectDetails,
+    shop,
+    door
 }
 public enum AutoAct
 {
@@ -404,6 +445,16 @@ public enum StatusIcon
 
     Crippled
 }
+
+public enum TileType
+{
+    regular = 0,
+    door,
+    shop,
+    unit,
+    special
+}
+
 public class MassAtkConatiner : ScriptableObject
 {
     public List<AtkConatiner> atkConatiners;
@@ -517,6 +568,7 @@ public struct MapDetail
     public List<int> roomIndexes;
     public List<int> enemyIndexes;
     public List<int> hazardIndexes;
+    public List<int> shopIndexes;
     public Texture texture;
 }
 public enum descState
@@ -622,11 +674,14 @@ public class Common : ScriptableObject
     public static CommandSkill CommonDebuffDef = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
 
+    public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
+    public static ArmorScript noArmor = CreateInstance<ArmorScript>();
+
     public static BoolConatainer container = new BoolConatainer();
 
     public static int MaxSkillLevel = 30;
     public static int maxDmg = 999;
-    public static List<EHitType> noAmor = new List<EHitType>()
+    public static List<EHitType> noHitList = new List<EHitType>()
     {
         EHitType.normal,
         EHitType.normal,
@@ -702,6 +757,7 @@ public class Common : ScriptableObject
         }
         return text;
     }
+
 
     public static string GetStatusffectText(StatusEffect effect)
     {
@@ -784,5 +840,350 @@ public class Common : ScriptableObject
                 break;
         }
         return returnInt;
+    }
+
+    public static DMG GetNextDmg(DMG damage)
+    {
+        switch (damage)
+        {
+            case DMG.tiny:
+                return DMG.small;
+                break;
+            case DMG.small:
+                return DMG.medium;
+                break;
+            case DMG.medium:
+                return DMG.heavy;
+                break;
+            case DMG.heavy:
+                return DMG.severe;
+                break;
+            case DMG.severe:
+                return DMG.collassal;
+                break;
+            case DMG.collassal:
+                return DMG.collassal;
+                break;
+        }
+        return DMG.tiny;
+    }
+
+    public static List<Augment> GetAttackAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.elementAugment);
+        augs.Add(Augment.levelAugment);
+        augs.Add(Augment.accurracyAugment);
+        augs.Add(Augment.rangeAument);
+        return augs;
+    }
+    public static List<Augment> GetArmorAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.levelAugment);
+        augs.Add(Augment.effectAugment1);
+        augs.Add(Augment.defAugment);
+        augs.Add(Augment.resAugment);
+        augs.Add(Augment.spdAugment);
+        return augs;
+    }
+
+
+    public static List<Augment> GetPhysChargeAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.elementAugment);
+        augs.Add(Augment.levelAugment);
+        augs.Add(Augment.accurracyAugment);
+        augs.Add(Augment.chargeDecreaseAugment);
+        augs.Add(Augment.chargeIncreaseAugment);
+        return augs;
+    }
+
+    public static List<Augment> GetPhysCostAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.elementAugment);
+        augs.Add(Augment.levelAugment);
+        augs.Add(Augment.accurracyAugment);
+        augs.Add(Augment.attackCountAugment);
+        augs.Add(Augment.costAugment);
+        augs.Add(Augment.sideEffectAugment);
+        return augs;
+    }
+
+    public static List<Augment> GetMagicAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.elementAugment);
+        augs.Add(Augment.levelAugment);
+        augs.Add(Augment.attackCountAugment);
+        augs.Add(Augment.costAugment);
+        augs.Add(Augment.sideEffectAugment);
+        augs.Add(Augment.rangeAument);
+
+        return augs;
+    }
+
+    public static List<Augment> GetSkillAugments()
+    {
+        List<Augment> augs = new List<Augment>();
+        augs.Add(Augment.effectAugment1);
+        augs.Add(Augment.effectAugment2);
+        augs.Add(Augment.effectAugment3);
+        return augs;
+    }
+
+    public static string GetAugmentText(Augment aug)
+    {
+        string returnText = "";
+
+        switch (aug)
+        {
+            case Augment.levelAugment:
+                returnText = "increase the level of ";
+                break;
+            case Augment.accurracyAugment:
+                returnText = "increase the accurracy of ";
+                break;
+            case Augment.sideEffectAugment:
+                returnText = "add an ailment to ";
+                break;
+            case Augment.rangeAument:
+                returnText = "increase the range of ";
+                break;
+            case Augment.attackCountAugment:
+                returnText = "increase the hit count of ";
+                break;
+            case Augment.costAugment:
+                returnText = "reduce the cost of ";
+                break;
+            case Augment.chargeIncreaseAugment:
+                returnText = "increase the charge of ";
+                break;
+            case Augment.chargeDecreaseAugment:
+                returnText = "reduce the charge of ";
+                break;
+            case Augment.elementAugment:
+                returnText = "randomly change the element of ";
+                break;
+            case Augment.effectAugment1:
+                returnText = "boost the effect of ";
+                break;
+            case Augment.effectAugment2:
+                returnText = "boost the effect of ";
+                break;
+            case Augment.effectAugment3:
+                returnText = "boost the effect of ";
+                break;
+            case Augment.end:
+                break;
+            case Augment.none:
+                break;
+            case Augment.strAugment:
+                returnText = "increase the strength boost of ";
+                break;
+            case Augment.magAugment:
+                returnText = "increase the magic boost of ";
+                break;
+            case Augment.sklAugment:
+                returnText = "increase the skill boost of ";
+                break;
+            case Augment.defAugment:
+                returnText = "increase the defense boost of ";
+                break;
+            case Augment.resAugment:
+                returnText = "increase the resistance boost of ";
+                break;
+            case Augment.spdAugment:
+                returnText = "increase the speed boost of ";
+                break;
+            default:
+                break;
+        }
+        return returnText;
+    }
+    public static string GetAugmentEffectText(Augment aug, UsableScript useable)
+    {
+        string returnText = "";
+        string boostText = "";
+        if (useable.GetType().IsSubclassOf(typeof(SkillScript)))
+        {
+            SkillScript askill = useable as SkillScript;
+            switch (askill.ELEMENT)
+            {
+         
+                case Element.Buff:
+                    boostText = "Doubles the effect of the buff. ";
+                    break;
+                case Element.Support:
+                    break;
+                case Element.Ailment:
+                    boostText = "Increases the chance of inflicting the ailment. ";
+                    break;
+                case Element.Passive:
+                    boostText = "Boosts the effects of the passive skill by 15%. ";
+                    break;
+             
+                case Element.Auto:
+                    boostText = "Increases the chance of the auto skill triggering by 20% ";
+                    break;
+       
+            }
+        }
+        else if(useable.GetType() == typeof(ArmorScript))
+        {
+            boostText = "Gain improved resistances but also greater weaknesses to attacks.";
+        }
+        switch (aug)
+        {
+            case Augment.levelAugment:
+                returnText = "Increases the level of the skill, ward, or basic attack. Boosting its stats and/or abilities.";
+                break;
+            case Augment.accurracyAugment:
+                returnText = "Increases the accurracy of the skill.";
+                break;
+            case Augment.sideEffectAugment:
+                {
+                    string ailmentText = "";
+                    if (useable.GetType().IsSubclassOf(typeof(SkillScript)))
+                    {
+                        SkillScript skill = useable as SkillScript;
+                        switch (skill.ELEMENT)
+                        {
+                            case Element.Water:
+                                ailmentText = "confusion";
+                                break;
+                            case Element.Fire:
+                                ailmentText = "burn";
+                                break;
+                            case Element.Ice:
+                                ailmentText = "frozen";
+                                break;
+                            case Element.Electric:
+                                ailmentText = "paralyze";
+                                break;
+                            case Element.Slash:
+                                ailmentText = "bleed";
+                                break;
+                            case Element.Pierce:
+                                ailmentText = "poison";
+                                break;
+                            case Element.Blunt:
+                                ailmentText = "sleep";
+                                break;
+
+                        }
+                    }
+                    returnText = "Adds a chance to inflict " + ailmentText + " on target when using skill.";
+                }
+                break;
+            case Augment.rangeAument:
+                returnText = "Increases the range of the skill or basic attack.";
+                break;
+            case Augment.attackCountAugment:
+                returnText = "Increases the amount of times the skill will try to hit the target.";
+                break;
+            case Augment.costAugment:
+                returnText = "Reduces the MP/FT cost of the skill.";
+                break;
+            case Augment.chargeIncreaseAugment:
+                returnText = "Increases the amount of FT that will be charged by the skill.";
+                break;
+            case Augment.chargeDecreaseAugment:
+                returnText = "Reduces the amount of FT that will be charged by the skill.";
+                break;
+            case Augment.elementAugment:
+                returnText = "Randomly change the element of the skill to a new element.";
+                break;
+            case Augment.effectAugment1:
+                returnText = boostText;
+                break;
+            case Augment.effectAugment2:
+                returnText = boostText;
+                break;
+            case Augment.effectAugment3:
+                returnText = boostText;
+                break;
+            case Augment.end:
+                break;
+            case Augment.none:
+                break;
+            case Augment.strAugment:
+                returnText = "Increases the strength boost of the basic attack.";
+                break;
+            case Augment.magAugment:
+                returnText = "Increases the magic boost  of the basic attack. ";
+                break;
+            case Augment.sklAugment:
+                returnText = "Increases the skill boost  of the basic attack.";
+                break;
+            case Augment.defAugment:
+                returnText = "Increases the defense boost of the ward.";
+                break;
+            case Augment.resAugment:
+                returnText = "Increases the resistance boost of the ward. ";
+                break;
+            case Augment.spdAugment:
+                returnText = "Increases the speed boost of the ward. ";
+                break;
+            default:
+                break;
+        }
+        return returnText;
+    }
+    public static int GetIconType(UsableScript useable)
+    {
+        if (useable.GetType() == typeof(WeaponScript))
+            return (int)IconSet.weapon;
+
+        if (useable.GetType() == typeof(ArmorScript))
+            return (int)IconSet.ward;
+
+
+        if (useable.GetType() == typeof(CommandSkill))
+            return (int)IconSet.command;
+
+        if (useable.GetType() == typeof(PassiveSkill))
+            return (int)IconSet.passive;
+
+        if (useable.GetType() == typeof(AutoSkill))
+            return (int)IconSet.auto;
+
+        if (useable.GetType() == typeof(OppSkill))
+            return (int)IconSet.opp;
+
+        if (useable.GetType() == typeof(ItemScript))
+            return (int)IconSet.item;
+        return -1;
+    }
+
+    public static Vector2 GetNextTileRange(List<Vector2> currentTiles)
+    {
+        Vector2 nextTile = Vector2.zero;
+        for (int i = 0; i < currentTiles.Count; i++)
+        {
+            if (currentTiles[i].x > nextTile.x)
+            {
+                nextTile.x = currentTiles[i].x + 1;
+            }
+            if (currentTiles[i].y > nextTile.y)
+            {
+                nextTile.y = currentTiles[i].y + 1;
+            }
+
+        }
+        return nextTile;
+    }
+
+    public static Element ChangeElement(Element element)
+    {
+        Element newElement = Element.none;
+        newElement = (Element)Random.Range(0, 6);
+        if (newElement == element)
+        {
+            newElement = ChangeElement(element);
+        }
+        return newElement;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class DetailsScreen : MonoBehaviour
 {
 
@@ -24,6 +25,9 @@ public class DetailsScreen : MonoBehaviour
 
     [SerializeField]
     Text descriptionText;
+
+    [SerializeField]
+    TextMeshProUGUI descriptionText2;
 
     [SerializeField]
     Sprite[] armorSprites;
@@ -95,6 +99,7 @@ public class DetailsScreen : MonoBehaviour
     Text sksliderText;
     [SerializeField]
     Text statusText;
+    private ArmorScript selectedArmor;
     void Start()
     {
 
@@ -139,9 +144,14 @@ public class DetailsScreen : MonoBehaviour
         if (!currentObj)
             return;
         selectedHitlist = currentObj.ARMOR.HITLIST;
-
+        selectedArmor = currentObj.ARMOR.SCRIPT;
+        if (descriptionText)
         descriptionText.text = "";
 
+        if (descriptionText2)
+            descriptionText2.text = "";
+
+        string finalText = "";
         for (int i = 0; i < selectableContent.Length; i++)
         {
             if (i >= 8 && i <= 13)
@@ -169,73 +179,74 @@ public class DetailsScreen : MonoBehaviour
         {
             statusText.text ="Current Status: " + currentObj.PSTATUS.ToString();
         }
+      
         switch (selectedContent)
         {
             case 33:
                 if(currentObj.PSTATUS == PrimaryStatus.normal)
                 {
-                    descriptionText.text = "Staus is normal. No modifaction to movement or damage output";
+                    finalText = "Staus is normal. No modifaction to movement or damage output";
                 }
                 else if (currentObj.PSTATUS == PrimaryStatus.crippled)
                 {
-                    descriptionText.text = "Staus is crippled! While crippled target will do half damage, take double damage, and movement will be reduced to 1";
+                    finalText = "Staus is crippled! While crippled target will do half damage, take double damage, and movement will be reduced to 1";
                 }
                 break;
             case 8:
-                descriptionText.text = "Str = Strength. Strength determines how much damage is delt with a physical attack.";
+                finalText = "Str = Strength. Strength determines how much damage is delt with a physical attack.";
                 break;
             case 9:
-                descriptionText.text = "Def = Defense. Defense reduces damage from physical attacks.";
+                finalText = "Def = Defense. Defense reduces damage from physical attacks. This number your total defense from your base def and ward's def";
                 break;
             case 10:
-                descriptionText.text = "Mag = Magic. Magic determines how much damage is delt with a magical attack.";
+                finalText = "Mag = Magic. Magic determines how much damage is delt with a magical attack.";
                 break;
             case 11:
-                descriptionText.text = "Res = Resistance. Resistance reduces damage from magical attacks.";
+                finalText = "Res = Resistance. Resistance reduces damage from magical attacks. This number your total resistance from your base res and ward's res";
                 break;
             case 12:
-                descriptionText.text = "Spd = Speed. Speed affects your action count and slightly affects accurracy/evasion. Every 10 speed generates 1 action.";
+                finalText = "Spd = Speed. Speed affects your action count and slightly affects accurracy/evasion. Every 10 speed generates 1 action. This number your total speed from your base spd and ward's spd";
                 break;
             case 13:
-                descriptionText.text = "Skl = Skill. Skill increases your chances of auto skills activating and ailments such as burn going off.";
+                finalText = "Skl = Skill. Skill increases your chances of auto skills activating and ailments such as burn going off.";
                 break;
             case 14:
-                descriptionText.text = "Water Element. Water based moves generally hit all targets in the area.";
+                finalText = "Water Element. Water based moves generally hit all targets in the area.";
                 break;
             case 15:
-                descriptionText.text = "Fire Element. Fire based moves generally have larger targeting areas.";
+                finalText = "Fire Element. Fire based moves generally have larger targeting areas.";
                 break;
             case 16:
-                descriptionText.text = "Ice Element. Ice based moves generally hit distant tiles.";
+                finalText = "Ice Element. Ice based moves generally hit distant tiles.";
                 break;
             case 17:
-                descriptionText.text = "Electric Element. Electric moves generally hit a random amount of times within a range.";
+                finalText = "Electric Element. Electric moves generally hit a random amount of times within a range.";
                 break;
             case 18:
-                descriptionText.text = "Slash Element. Slash based moves generally hit more than once.";
+                finalText = "Slash Element. Slash based moves generally hit more than once.";
                 break;
             case 19:
-                descriptionText.text = "Pierce Element. Pierce based moves generally hits multiple targets in range.";
+                finalText = "Pierce Element. Pierce based moves generally hits multiple targets in range.";
                 break;
             case 20:
-                descriptionText.text = "Blunt Element. Blunt based moves generally hit 1 tile away.";
+                finalText = "Blunt Element. Blunt based moves generally hit 1 tile away.";
                 break;
 
             case 28:
-                descriptionText.text = "Wards have strength. Once a ward's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
+                finalText = "Wards have strength. Once a ward's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
                 break;
 
             case 29:
-                descriptionText.text = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=lime>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=lime>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
-                descriptionText.text = "This is your Physical level. This is increased by using <color=yellow>physical skills</color>. Leveling this up randomly increases <color=#ff117a>Strength</color> or <color=orange>Defense</color>.";
+                finalText = "This is your Physical level. This is increased by using <color=yellow>physical skills</color>. Leveling this up randomly increases <color=#ff117a>Strength</color> or <color=orange>Defense</color>.";
                 break;
             case 31:
-                descriptionText.text = "This is your magical level. This is increased by using <color=yellow>magical skills</color>. Leveling this up randomly increases <color=#b400e9>Magic</color> or <color=#ce0e96>Resistance</color>.";
+                finalText = "This is your magical level. This is increased by using <color=yellow>magical skills</color>. Leveling this up randomly increases <color=#b400e9>Magic</color> or <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
-                descriptionText.text = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=cyan>Speed</color> or <color=#00FF00>Skill</color>.";
+                finalText = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=cyan>Speed</color> or <color=#00FF00>Skill</color>.";
                 break;
 
         }
@@ -260,7 +271,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Command Skills";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Command Skills are usable skills that require a cost and take up 1 action when used.";
+                            finalText = "Command Skills are usable skills that require a cost and take up 1 action when used.";
                         }
                         break;
                     case DetailType.Passive:
@@ -268,7 +279,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Passive Skills";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Pasive Skills are non-useable skills that are always active when equipped.";
+                            finalText = "Pasive Skills are non-useable skills that are always active when equipped.";
                         }
                         break;
                     case DetailType.Auto:
@@ -276,7 +287,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Auto Skills";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Auto Skills are skills that has a chance to activate after using a basic attack while equipped.";
+                            finalText = "Auto Skills are skills that has a chance to activate after using a basic attack while equipped.";
                         }
                         break;
                     case DetailType.Opportunity:
@@ -284,42 +295,42 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Opportunity Skills";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Opportunity Skills grant a free action after an ally uses a specified type of move.";
+                            finalText = "Opportunity Skills grant a free action after an ally uses a specified type of move.";
                         }
                         break;
                     case DetailType.BasicAtk:
                         sectionText.text = "Basic Attacks";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Basic Attacks when equipped replace the default Attack option and doesn't require any cost to use.";
+                            finalText = "Basic Attacks when equipped replace the default Attack option and doesn't require any cost to use.";
                         }
                         break;
                     case DetailType.Armor:
                         sectionText.text = "Wards";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
+                            finalText = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
                         }
                         break;
                     case DetailType.Buffs:
                         sectionText.text = "Buffs";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Buffs are temorary stat boosts that generally last 3 turns. While you can stack buffs, you cannot stack the same buff on a character.";
+                            finalText = "Buffs are temorary stat boosts that generally last 3 turns. While you can stack buffs, you cannot stack the same buff on a character.";
                         }
                         break;
                     case DetailType.Debuffs:
                         sectionText.text = "Debuffs";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Debuffs are temorary stat drops that generally last 3 turns. The same debuff cannot be applied more than ocne on a character.";
+                            finalText = "Debuffs are temorary stat drops that generally last 3 turns. The same debuff cannot be applied more than ocne on a character.";
                         }
                         break;
                     case DetailType.Effects:
                         sectionText.text = "Ailments";
                         if (selectedContent < 3)
                         {
-                            descriptionText.text = "Ailments are negative status effects that disrupt the character's turn or cause them to take damage.";
+                            finalText = "Ailments are negative status effects that disrupt the character's turn or cause them to take damage.";
                         }
                         break;
                 }
@@ -335,7 +346,7 @@ public class DetailsScreen : MonoBehaviour
                             {
                                 if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                 {
-                                    descriptionText.text = currentSlot.SKILLS[i].DESC;
+                                    finalText = currentSlot.SKILLS[i].DESC;
                                 }
                             }
                         }
@@ -356,8 +367,9 @@ public class DetailsScreen : MonoBehaviour
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
-                                        descriptionText.text = currentObj.INVENTORY.ARMOR[i].DESC;
+                                        finalText = currentObj.INVENTORY.ARMOR[i].DESC;
                                         selectedHitlist = currentObj.INVENTORY.ARMOR[i].HITLIST;
+                                        selectedArmor = currentObj.INVENTORY.ARMOR[i];
                                     }
                                 }
                             }
@@ -375,7 +387,7 @@ public class DetailsScreen : MonoBehaviour
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
-                                        descriptionText.text = currentObj.INVENTORY.WEAPONS[i].DESC;
+                                        finalText = currentObj.INVENTORY.WEAPONS[i].DESC;
                                     }
                                 }
                             }
@@ -393,7 +405,7 @@ public class DetailsScreen : MonoBehaviour
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
-                                        descriptionText.text = currentObj.INVENTORY.BUFFS[i].DESC;
+                                        finalText = currentObj.INVENTORY.BUFFS[i].DESC;
                                     }
                                 }
                             }
@@ -411,7 +423,7 @@ public class DetailsScreen : MonoBehaviour
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
-                                        descriptionText.text = currentObj.INVENTORY.DEBUFFS[i].DESC;
+                                        finalText = currentObj.INVENTORY.DEBUFFS[i].DESC;
                                     }
                                 }
                             }
@@ -429,7 +441,7 @@ public class DetailsScreen : MonoBehaviour
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
-                                        descriptionText.text = Common.GetSideEffectText(currentObj.INVENTORY.EFFECTS[i].EFFECT);
+                                        finalText = Common.GetSideEffectText(currentObj.INVENTORY.EFFECTS[i].EFFECT);
                                     }
                                 }
                             }
@@ -460,7 +472,7 @@ public class DetailsScreen : MonoBehaviour
             }
             if (selectedContent < 3)
             {
-                descriptionText.text = "Levels show growth in a character and XP shows how close an area is to leveling up.";
+                finalText = "Levels show growth in a character and XP shows how close an area is to leveling up.";
             }
             if (lvSlider)
             {
@@ -535,31 +547,31 @@ public class DetailsScreen : MonoBehaviour
                     switch ((int)selectedHitlist[i])
                     {
                         case 0:
-                            descriptionText.text = "Abs = Absorb. Absorbing an element allows it to heal by the damage it would have delt.";
+                            finalText = "Abs = Absorb. Absorbing an element allows it to heal by the damage it would have delt.";
                             break;
                         case 1:
-                            descriptionText.text = "Null = Nullify. Nullifying an element reduces the damage to 0.";
+                            finalText = "Null = Nullify. Nullifying an element reduces the damage to 0.";
                             break;
                         case 2:
-                            descriptionText.text = "Rpl = Repel. Repeling an element sends it back to the attacker.";
+                            finalText = "Rpl = Repel. Repeling an element sends it back to the attacker.";
                             break;
                         case 3:
-                            descriptionText.text = "RS = Resist. Resisting an element reduces the damage it would have delt.";
+                            finalText = "RS = Resist. Resisting an element reduces the damage it would have delt.";
                             break;
                         case 4:
-                            descriptionText.text = "Damage applied normally. Str against Def and Mag against Res.";
+                            finalText = "Damage applied normally. Str against Def and Mag against Res.";
                             break;
                         case 5:
-                            descriptionText.text = "WK = Weak. Weakening damage slightly increases the damage it would have delt.";
+                            finalText = "WK = Weak. Weakening damage slightly increases the damage it would have delt.";
                             break;
                         case 6:
-                            descriptionText.text = "Svg = Savage. Savage damage moderately increases damage it would have delt and reduces generated action count by 1.";
+                            finalText = "Svg = Savage. Savage damage moderately increases damage it would have delt and reduces generated action count by 1.";
                             break;
                         case 7:
-                            descriptionText.text = "Cpl = Cripple. Crippling damage moderately increases damage it would have delt and puts target in crippled state for 1 turn.";
+                            finalText = "Cpl = Cripple. Crippling damage moderately increases damage it would have delt and puts target in crippled state for 1 turn.";
                             break;
                         case 8:
-                            descriptionText.text = "Lthl = Lethal.  Lethal damage heavyily increases damage it would have delt, reduces generated action count by 1, and puts target into crippled state for 1 turn.";
+                            finalText = "Lthl = Lethal.  Lethal damage heavyily increases damage it would have delt, reduces generated action count by 1, and puts target into crippled state for 1 turn.";
                             break;
                         default:
 
@@ -598,14 +610,14 @@ public class DetailsScreen : MonoBehaviour
             }
         }
 
-        int val = currentObj.STATS.STRENGTH;
+        int val = currentObj.STRENGTH;
         //if (val > 0)
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (+" + val + ")";
         //else if (val == 0)
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH;
         //else
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
-        attributes[0].text = "Str: " + (currentObj.BASE_STATS.STRENGTH + currentObj.STATS.STRENGTH);
+        attributes[0].text = "Str: " + val;
 
         //val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
         //if (val > 0)
@@ -614,7 +626,12 @@ public class DetailsScreen : MonoBehaviour
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE;
         //else
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
-        attributes[1].text = "Def: " + (currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+        val = (currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+        if(selectedArmor != null)
+        {
+            val += selectedArmor.DEFENSE;
+        }
+        attributes[1].text = "Def: " + val;
 
         //val = currentObj.STATS.MAGIC;
         //if (val > 0)
@@ -623,8 +640,12 @@ public class DetailsScreen : MonoBehaviour
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC;
         //else
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
-
-        attributes[2].text = "Spd: " + (currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+        val = (currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+        if (selectedArmor != null)
+        {
+            val += selectedArmor.SPEED;
+        }
+        attributes[2].text = "Spd: " +val;
 
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         //if (val > 0)
@@ -634,8 +655,14 @@ public class DetailsScreen : MonoBehaviour
         //else
         //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
 
-        attributes[3].text = "Mag: " + (currentObj.BASE_STATS.MAGIC + currentObj.STATS.MAGIC);
-        attributes[4].text = "Res: " + (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+        attributes[3].text = "Mag: " + currentObj.MAGIC;
+
+        val = (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+        if (selectedArmor != null)
+        {
+            val += selectedArmor.RESISTANCE;
+        }
+        attributes[4].text = "Res: " + val;
 
         //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
         //if (val > 0)
@@ -654,7 +681,10 @@ public class DetailsScreen : MonoBehaviour
         //else
         //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
-        attributes[5].text = "Skl: " + (currentObj.BASE_STATS.SKILL + currentObj.STATS.SKILL);
-
+        attributes[5].text = "Skl: " + currentObj.SKILL;
+        if (descriptionText)
+            descriptionText.text = finalText;
+        if (descriptionText2)
+            descriptionText2.text = finalText;
     }
 }

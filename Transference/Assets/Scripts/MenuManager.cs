@@ -20,6 +20,7 @@ public class MenuManager : MonoBehaviour
     public Canvas actCanvas;
     public Canvas detailCanvas;
     public Canvas newSkillCanvas;
+    public Canvas shopCanvas;
     GridObject prevObj;
     public TextMeshProUGUI DESC
     {
@@ -100,6 +101,10 @@ public class MenuManager : MonoBehaviour
         {
             optionsCanvas.gameObject.SetActive(false);
         }
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
+        }
         if (actCanvas)
         {
             actCanvas.gameObject.SetActive(true);
@@ -114,6 +119,10 @@ public class MenuManager : MonoBehaviour
 
     public void ShowOptions()
     {
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
+        }
         if (optionsCanvas)
         {
             optionsCanvas.gameObject.SetActive(true);
@@ -124,6 +133,21 @@ public class MenuManager : MonoBehaviour
         if (optionsCanvas)
         {
             optionsCanvas.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowShop()
+    {
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(true);
+        }
+    }
+    public void DontShowShop()
+    {
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
         }
     }
     public void ShowDetails()
@@ -161,8 +185,11 @@ public class MenuManager : MonoBehaviour
     }
     public void ShowNone()
     {
-
-     if(myCamera)
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
+        }
+        if (myCamera)
         {
             myCamera.showActions = false;
         }
@@ -207,7 +234,11 @@ public class MenuManager : MonoBehaviour
         {
             optionsCanvas.gameObject.SetActive(false);
         }
-        if(detailCanvas)
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
+        }
+        if (detailCanvas)
         {
             detailCanvas.gameObject.SetActive(false);
         }
@@ -249,6 +280,10 @@ public class MenuManager : MonoBehaviour
         if (optionsCanvas)
         {
             optionsCanvas.gameObject.SetActive(false);
+        }
+        if (shopCanvas)
+        {
+            shopCanvas.gameObject.SetActive(false);
         }
         if (inventoryCanvas)
         {

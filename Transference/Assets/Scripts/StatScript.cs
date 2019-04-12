@@ -144,6 +144,7 @@ public class StatScript : MonoBehaviour
             {
                 myHealth = MAX_HEALTH;
             }
+
         }
     }
     public int MAX_MANA

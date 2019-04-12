@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
-public class CtrlsButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public class CtrlsButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler
 {
 
     public int type;
@@ -52,36 +52,40 @@ public class CtrlsButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
             //  }
 
         }
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+
+            if (controller == null)
+            {
+                controller = GameObject.FindObjectOfType<NonCombatController>();
+            }
+            if (controller)
+            {
+                if (controller.selectedCtrlButton != this)
+                {
+                    if (controller.selectedCtrlButton.myImage)
+                    {
+                        controller.selectedCtrlButton.myImage.color = Color.white;
+                    }
+                    if (controller.selectedCtrlButton.pro)
+                    {
+                        controller.selectedCtrlButton.pro.color = Color.white;
+                    }
+                }
+                controller.selectedCtrlButton = this;
+            }
+   
+        }
+    }
+    public void ForceSelect()
+    {
         if (controller == null)
         {
             controller = GameObject.FindObjectOfType<NonCombatController>();
         }
         if (controller)
         {
-            if (controller.selectedCtrlButton != this)
-            {
-                if (controller.selectedCtrlButton.myImage)
-                {
-                    controller.selectedCtrlButton.myImage.color = Color.white;
-                }
-                if (controller.selectedCtrlButton.pro)
-                {
-                    controller.selectedCtrlButton.pro.color = Color.white;
-                }
-            }
-            controller.selectedCtrlButton = this;
-        }
-        ForceSelect();
-    }
-    public void ForceSelect()
-    {
-        if(controller == null)
-        {
-            controller = GameObject.FindObjectOfType<NonCombatController>();
-        }
-        if (controller)
-        {
-           
+
             if (controller.title)
             {
                 TextMeshProUGUI titletext = controller.title.GetComponentInChildren<TextMeshProUGUI>();
@@ -140,5 +144,10 @@ public class CtrlsButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
                 pro.color = Color.white;
             }
         }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        ForceSelect();
     }
 }

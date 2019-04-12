@@ -80,7 +80,7 @@ public class ArmorSet : MonoBehaviour
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH;
         //else
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
-        attributes[0].text = "Str: " + (currentObj.BASE_STATS.STRENGTH + currentObj.STATS.STRENGTH);
+        attributes[0].text = "Str: " + currentObj.STRENGTH;
 
         //val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
         //if (val > 0)
@@ -89,7 +89,7 @@ public class ArmorSet : MonoBehaviour
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE;
         //else
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
-        attributes[1].text = "Def: " + (currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+        attributes[1].text = "Def: " + currentObj.DEFENSE;//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
 
         //val = currentObj.STATS.MAGIC;
         //if (val > 0)
@@ -99,7 +99,7 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
 
-        attributes[2].text = "Spd: " + (currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+        attributes[2].text = "Spd: " + currentObj.SPEED;//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
 
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         //if (val > 0)
@@ -109,8 +109,8 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
 
-        attributes[3].text = "Mag: " + (currentObj.BASE_STATS.MAGIC + currentObj.STATS.MAGIC);
-        attributes[4].text = "Res: " + (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+        attributes[3].text = "Mag: " + currentObj.MAGIC;
+        attributes[4].text = "Res: " + currentObj.RESIESTANCE;// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
 
         //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
         //if (val > 0)
@@ -129,7 +129,7 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
-        attributes[5].text = "Skl: " + (currentObj.BASE_STATS.SKILL + currentObj.STATS.SKILL);
+        attributes[5].text = "Skl: " + currentObj.SKILL;
 
     }
 }

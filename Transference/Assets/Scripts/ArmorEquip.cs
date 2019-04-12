@@ -27,26 +27,36 @@ public class ArmorEquip : Equipable
         get { return owner; }
         set { owner = value; }
     }
+    public ArmorScript SCRIPT
+    {
+        get { return equipped; }
+      
+    }
     public int DEFENSE
     {
-        get { return myDefense; }
-        set { myDefense = value; }
+        get { return equipped.DEFENSE; }
+        
     }
     public int RESISTANCE
     {
-        get { return myRes; }
-        set { myRes = value; }
+        get { return equipped.RESISTANCE; }
+    
     }
     public int SPEED
     {
-        get { return mySpeed; }
-        set { mySpeed = value; }
+        get { return equipped.SPEED; }
+ 
     }
 
     public List<EHitType> HITLIST
     {
-        get { return hitList; }
-        set { hitList = value; }
+        get { return equipped.HITLIST; }
+   
+    }
+    public int ARMORID
+    {
+        get { return equipped.INDEX; }
+
     }
     public float MAX_HEALTH
     {
@@ -89,10 +99,7 @@ public class ArmorEquip : Equipable
     public void Equip(ArmorScript armor)
     {
         base.Equip(armor);
-        this.DEFENSE = armor.DEFENSE;
-        this.RESISTANCE = armor.RESISTANCE;
-        this.SPEED = armor.SPEED;
-        this.HITLIST = armor.HITLIST;
+
         maxHealthPercent = armor.MAX_HEALTH;
         healthPercent = armor.HEALTH;
         equipped = armor;
@@ -100,13 +107,11 @@ public class ArmorEquip : Equipable
 
     public void unEquip()
     {
-        this.NAME = "none";
-        this.DEFENSE = 0;
-        this.RESISTANCE = 0;
-        this.SPEED = 0;
-        this.HITLIST = Common.noAmor;
-        this.DESC = "No armor equipped";
-        equipped = null;
+        ArmorScript noArmor = Common.noArmor;
+        noArmor.NAME = "none";
+        noArmor.HITLIST = Common.noHitList;
+        noArmor.DESC = "No armor equipped";
+        equipped = noArmor;
     }
     public bool DamageArmor(float amt)
     {
@@ -120,6 +125,11 @@ public class ArmorEquip : Equipable
                 equipped.HEALTH -= trueAmount;
                 if (equipped.HEALTH <= 0)
                 {
+                    equipped.BREAKS++;
+                    if(equipped.BREAKS % 2 == 0)
+                    {
+                        equipped.LevelUP();
+                    }
                     unEquip();
                     broken = true;
                 }

@@ -11,3 +11,9 @@
 9, Passionfruit (Small), restores 25% of MP, manaPotion,allyAndSelf,0.25,none, none, none
 10, Passionfruit (medium), restores 50% of MP, manaPotion,allyAndSelf,0.50,none, none, none
 11, Passionfruit (large), restores 75% of MP, manaPotion,allyAndSelf,0.75,none, none, none
+12, Grapefruit (Small), 25% chance to grant 2 additional action points, actionBoost,allyAndSelf,0.25,none, none, none
+13, Grapefruit (medium), 50% chance to grant 2 additional action points, actionBoost,allyAndSelf,0.50,none, none, none
+14, Grapefruit (large), 75% chance to grant 2 additional action points, actionBoost,allyAndSelf,0.75,none, none, none
+15, Miraclefruit (Small), grants 1 random effect, random,allyAndSelf,1,none, none, none
+16, Miraclefruit (medium), grants 2 random effects, random,allyAndSelf,2,none, none, none
+17, Miraclefruit (large), grants 3 random effects, random,allyAndSelf,3,none, none, none

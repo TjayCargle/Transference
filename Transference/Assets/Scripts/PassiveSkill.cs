@@ -42,4 +42,94 @@ public class PassiveSkill : SkillScript
 
         set { percent = value; }
     }
+
+    public override void ApplyAugment(Augment augment)
+    {
+        float enhanceAmount = 15.0f;
+        
+        switch (augment)
+        {
+
+            case Augment.effectAugment1:
+                for (int i = 0; i < ModValues.Count; i++)
+                {
+                    ModValues[i] += enhanceAmount;
+                }
+          
+                break;
+            case Augment.effectAugment2:
+                for (int i = 0; i < ModValues.Count; i++)
+                {
+                    ModValues[i] += enhanceAmount;
+                }
+                break;
+            case Augment.effectAugment3:
+                for (int i = 0; i < ModValues.Count; i++)
+                {
+                    ModValues[i] += enhanceAmount;
+                }
+                break;
+
+        }
+    }
+
+    public override void UpdateDesc()
+    {
+        base.UpdateDesc();
+        switch (ModStat)
+        {
+            case ModifiedStat.Health:
+                break;
+            case ModifiedStat.SP:
+                break;
+            case ModifiedStat.FT:
+                break;
+            case ModifiedStat.FTCost:
+                DESC = "Decreases FT cost by " + ModValues[0].ToString() + "%";
+
+                break;
+            case ModifiedStat.FTCharge:
+                if(PERCENT < 0)
+                {
+                DESC = "Decreases FT charge by " + ModValues[0].ToString() + "%";
+                }
+                else
+                {
+                    DESC = "Increases FT charge by " + ModValues[0].ToString() + "%";
+                }
+                break;
+            case ModifiedStat.SPCost:
+                DESC = "Decreases mana cost by " + ModValues[0].ToString() + "%";
+
+                break;
+            case ModifiedStat.ElementDmg:
+                DESC = ModElements[0] + " and "+ModElements[1]+" attacks do "+ModValues[0].ToString()+"% more dmg ";
+
+                break;
+            case ModifiedStat.Movement:
+                break;
+            case ModifiedStat.Str:
+                break;
+            case ModifiedStat.Mag:
+                break;
+            case ModifiedStat.Atk:
+                break;
+            case ModifiedStat.Def:
+                break;
+            case ModifiedStat.Res:
+                break;
+            case ModifiedStat.Guard:
+                break;
+            case ModifiedStat.Speed:
+                break;
+            case ModifiedStat.Skill:
+                break;
+            case ModifiedStat.dmg:
+                break;
+            case ModifiedStat.none:
+                break;
+            case ModifiedStat.all:
+                break;
+        }
+    }
 }

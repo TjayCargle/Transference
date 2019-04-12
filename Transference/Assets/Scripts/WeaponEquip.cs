@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponEquip : Equipable {
+public class WeaponEquip : Equipable
+{
 
     [SerializeField]
     private int myAttack;
     [SerializeField]
     private int myAccurracy;
     [SerializeField]
-    private int myLuck;
+    private int myCritChance;
     [SerializeField]
     private int myStartkDist;
     [SerializeField]
@@ -23,10 +24,12 @@ public class WeaponEquip : Equipable {
     [SerializeField]
     private int level = 1;
     [SerializeField]
+    private int weaponid = 1;
+    [SerializeField]
     private WeaponScript equipped;
     private GridObject owner;
 
- 
+
     public GridObject USER
     {
         get { return owner; }
@@ -34,95 +37,94 @@ public class WeaponEquip : Equipable {
     }
     public Element AFINITY
     {
-        get { return myAfinity; }
-        set { myAfinity = value; }
+        get { return equipped.AFINITY; }
+      
     }
     public EType ATTACK_TYPE
     {
 
-        get { return eType; }
-        set { eType = value; }
+        get { return equipped.ATTACK_TYPE; }
+      
     }
-     
 
-        
+
+
     public int ATTACK
     {
-        get { return myAttack + LEVEL; }
-        set { myAttack = value; }
+        get { return equipped.ATTACK + LEVEL; }
+       
     }
     public int ACCURACY
     {
-        get { return myAccurracy; }
-        set { myAccurracy = value; }
+        get { return equipped.ACCURACY; }
+       
     }
-    public int LUCK
+    public int CRIT
     {
-        get { return myLuck; }
-        set { myLuck = value; }
+        get { return equipped.CRIT; }
+      
     }
     public int DIST
     {
-        get { return myStartkDist; }
-        set { myStartkDist = value; }
+        get { return equipped.DIST; }
+       
     }
     public int Range
     {
-        get { return myAttackRange; }
-        set { myAttackRange = value; }
+        get { return equipped.Range; }
     }
     public int USECOUNT
     {
-        get { return useCount; }
-        set { useCount = value; }
+        get { return equipped.USECOUNT; }
+     
+    }
+    public ModifiedStat BOOST    
+    {
+        get { return equipped.BOOST; }
+
+    }
+    public int BOOSTVAL
+    {
+        get { return equipped.BOOSTVAL; }
+
     }
 
     public int LEVEL
     {
-        get { if(equipped)
+        get
+        {
+            if (equipped)
             {
                 return equipped.LEVEL;
             }
-            return level; }
-        set { level = value; }
+            return level;
+        }
+      
+    }
+
+    public int WEPID
+    {
+        get { return equipped.INDEX; }
+
     }
     public void Equip(WeaponScript weapon)
     {
-        base.Equip(weapon);
-        this.ATTACK = weapon.ATTACK;
-        this.ACCURACY = weapon.ACCURACY;
-        this.AFINITY = weapon.AFINITY;
-        this.ATTACK_TYPE = weapon.ATTACK_TYPE;
-        this.DIST = weapon.DIST;
-        this.Range = weapon.Range;
-        this.USECOUNT = weapon.USECOUNT;
-        this.LEVEL = weapon.LEVEL;
+        base.Equip(weapon);       
+       
         equipped = weapon;
+    }
+    public void unEquip()
+    {
+        WeaponScript weapon = Common.noWeapon;
+        weapon.INDEX = -1;
+        weapon.name = "none";
+        weapon.DESC = "No weapon equipped";
+        Equip(weapon);
+
     }
     public void Use()
     {
-        useCount++;
-        equipped.USECOUNT++;
-        if (USECOUNT % 2 == 0)
-        {
-            equipped.LEVEL++;
-            equipped.ATTACK++;
-            equipped.ACCURACY++;
-            if(equipped.LEVEL > 50)
-            {
-                equipped.LEVEL = 50;
-            }
-            if (equipped.ATTACK > (int)DMG.collassal)
-            {
-                equipped.ATTACK = (int)DMG.collassal;
-            }
-            if (equipped.ACCURACY > 100)
-            {
-                equipped.ACCURACY = 100;
-            }
-            LEVEL = equipped.LEVEL;
-            ATTACK = equipped.ATTACK;
-            ACCURACY = equipped.ACCURACY;
-        }
+        equipped.Use();
+
     }
 }

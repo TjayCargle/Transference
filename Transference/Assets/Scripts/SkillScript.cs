@@ -18,8 +18,7 @@ public class SkillScript : UsableScript
 
 
 
-    [SerializeField]
-    protected AugmentScript augments;
+
 
     public LivingObject OWNER
     {
@@ -47,11 +46,7 @@ public class SkillScript : UsableScript
 
 
 
-    public AugmentScript AUGMENTS
-    {
-        get { return augments; }
-        set { augments = value; }
-    }
+   
     public void Transfer(SkillScript skill)
     {
         skill.NAME = this.NAME;
@@ -64,17 +59,13 @@ public class SkillScript : UsableScript
         skill.SUBTYPE = this.SUBTYPE;
         skill.AUGMENTS = this.AUGMENTS;
     }
-    public virtual void AugmentSkill(Augment augment)
-    {
 
-    }
-    public virtual BoolConatainer CheckAugment()
+
+    public override void UpdateDesc()
     {
-        BoolConatainer container = Common.container;
-        container.name = "default";
-        container.result = false;
-            return container;
+        base.UpdateDesc();
     }
 
- 
+
+
 }

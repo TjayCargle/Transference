@@ -40,7 +40,8 @@ public class CameraScript : MonoBehaviour
     public ArmorSet armorSet;
     void Start()
     {
-        transform.Rotate(new Vector3(35, 5, 0));
+        transform.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.Rotate(new Vector3(90, 0, 0));
         manager = GameObject.FindObjectOfType<ManagerScript>();
         if (manager)
         {
@@ -48,6 +49,7 @@ public class CameraScript : MonoBehaviour
         }
         transparent = new Color(0, 0, 0, 0);
         opaque = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        SetCameraPosDefault();
     }
 
     void FixedUpdate()
@@ -64,6 +66,34 @@ public class CameraScript : MonoBehaviour
             transform.position = smooth;
 
         }
+    }
+
+    public void SetCameraPosDefault()
+    {
+        x = 0;
+        y = 6;
+        z = 0;
+    }
+
+    public void SetCameraPosSlightZoom()
+    {
+        x = 0;
+        y = 5;
+        z = 0;
+    } 
+
+    public void SetCameraPosZoom()
+    {
+        x = 0;
+        y = 4;
+        z = 0;
+    }
+
+    public void SetCameraPosFar()
+    {
+        x = 0;
+        y = 8;
+        z = -1;
     }
 
     public void UpdateCamera()
@@ -206,43 +236,43 @@ public class CameraScript : MonoBehaviour
                                                                 }
                                                                 txt.text = newText;
                                                                 txt.resizeTextForBestFit = true;
-                                                        break;
-
-                                                        case 4:
-                                                            switch (manager.descriptionState)
-                                                        {
-
-                                                            case descState.stats:
-                                                                {
-                                                                    newText = manager.invManager.selectedMenuItem.refItem.DESC;
-
-                                                                }
-                                                                break;
-                                                            case descState.skills:
-                                                                {
-
-                                                                    CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
-                                                                    newText = "Accuracy: ";
-                                                                    newText += skil.ACCURACY.ToString();
-                                                                    newText += "\n Base Damage: " + ((int)skil.DAMAGE);
-                                                                    newText += "\n Side effect: " + skil.EFFECT;
-
-                                                                }
                                                                 break;
 
-                                                            case descState.equipped:
+                                                            case 4:
+                                                                switch (manager.descriptionState)
                                                                 {
-                                                                    CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
 
-                                                                    newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
+                                                                    case descState.stats:
+                                                                        {
+                                                                            newText = manager.invManager.selectedMenuItem.refItem.DESC;
+
+                                                                        }
+                                                                        break;
+                                                                    case descState.skills:
+                                                                        {
+
+                                                                            CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+                                                                            newText = "Accuracy: ";
+                                                                            newText += skil.ACCURACY.ToString();
+                                                                            newText += "\n Base Damage: " + ((int)skil.DAMAGE);
+                                                                            newText += "\n Side effect: " + skil.EFFECT;
+
+                                                                        }
+                                                                        break;
+
+                                                                    case descState.equipped:
+                                                                        {
+                                                                            CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
+
+                                                                            newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
+
+                                                                        }
+                                                                        break;
 
                                                                 }
+                                                                txt.text = newText;
+                                                                txt.resizeTextForBestFit = true;
                                                                 break;
-
-                                                        }
-                                                        txt.text = newText;
-                                                        txt.resizeTextForBestFit = true;
-                                                        break;
                                                         }
                                                     }
                                                 }

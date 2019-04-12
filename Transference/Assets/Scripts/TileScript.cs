@@ -11,11 +11,13 @@ public class TileScript : MonoBehaviour, IComparable
     MeshRenderer myRender;
     public int listindex = -1;
     [SerializeField]
+    private TileType myType;
+    [SerializeField]
     Material mat;
     [SerializeField]
     MeshFilter filter;
     [SerializeField]
-   Mesh mesh;
+    Mesh mesh;
     [SerializeField]
     Vector3[] vertices;
     [SerializeField]
@@ -31,6 +33,13 @@ public class TileScript : MonoBehaviour, IComparable
     // Use this for initialization
     float lastU = -1f;
     float lastV = -1f;
+
+    public TileType TTYPE
+    {
+        get { return myType; }
+        set { myType = value; }
+    }
+
     public void Setup()
     {
         if (GetComponent<MeshRenderer>())
@@ -41,14 +50,14 @@ public class TileScript : MonoBehaviour, IComparable
         }
         myColor = Color.black;
 
-        if(GetComponent<MeshFilter>())
+        if (GetComponent<MeshFilter>())
         {
 
-        filter = GetComponent<MeshFilter>();
+            filter = GetComponent<MeshFilter>();
             mesh = filter.mesh;
-        uvs = mesh.uv;
+            uvs = mesh.uv;
         }
-    
+
     }
 
     // Update is called once per frame
@@ -60,11 +69,11 @@ public class TileScript : MonoBehaviour, IComparable
             myRender.material.color = myColor;
         }
 
-        if(Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J))
         {
-      
-                mesh.uv = uvs;
-      
+
+            mesh.uv = uvs;
+
         }
 
 
@@ -107,7 +116,7 @@ public class TileScript : MonoBehaviour, IComparable
     }
     public void setUVs(float startX, float finaleX, float startY, float finaleY)
     {
-        if(uvs.Length != 4)
+        if (uvs.Length != 4)
         {
             uvs = new Vector2[4];
         }

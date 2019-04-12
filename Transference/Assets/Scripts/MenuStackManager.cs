@@ -14,6 +14,7 @@ public class MenuStackManager : MonoBehaviour {
     menuStackEntry topEntry;
     menuStackEntry playerOptions;
     menuStackEntry detailsScreen;
+    menuStackEntry shopScreen;
 
     public bool isSetup = false;
 
@@ -30,12 +31,13 @@ public class MenuStackManager : MonoBehaviour {
             playerOptions = new menuStackEntry();
             act = new menuStackEntry();
             detailsScreen = new menuStackEntry();
+            shopScreen = new menuStackEntry();
 
             cmd.state = State.PlayerInput;
             cmd.menu = currentMenu.act;
 
             act.state = State.PlayerInput;
-            act.menu = currentMenu.none;
+            act.menu = currentMenu.command;
 
             skillsMain.state = State.PlayerEquippingMenu;
             skillsMain.menu = currentMenu.invMain;
@@ -54,7 +56,10 @@ public class MenuStackManager : MonoBehaviour {
 
             detailsScreen.state = State.CheckDetails;
             detailsScreen.menu = currentMenu.none;
-         
+
+            shopScreen.state = State.ShopCanvas;
+            shopScreen.menu = currentMenu.none;
+
             isSetup = true;
         }
     }
@@ -85,6 +90,7 @@ public class MenuStackManager : MonoBehaviour {
     {
         return playerOptions;
     }
+   
 
     public menuStackEntry GetOppOptionsStack()
     {
@@ -104,5 +110,9 @@ public class MenuStackManager : MonoBehaviour {
     public menuStackEntry GetDetailStack()
     {
         return detailsScreen;
+    }
+    public menuStackEntry GetShopStack()
+    {
+        return shopScreen;
     }
 }

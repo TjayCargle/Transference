@@ -224,7 +224,7 @@ public class CommandSkill : SkillScript
         return can;
     }
 
-    public void UpdateDesc()
+    public override void UpdateDesc()
     {
         this.DESC = PossibleDesc(RTYPE, DAMAGE, HITS, EFFECT);
     }
@@ -232,19 +232,79 @@ public class CommandSkill : SkillScript
     public string PossibleDesc(RanngeType pRtype, DMG pDMG, int pHits, SideEffect pEffect)
     {
         string potentialDesc;
-        if (pRtype == RanngeType.area)
+        if(SUBTYPE == SubSkillType.Buff)
         {
-            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.DESC + " in range";
+            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns";
         }
-        else if (pHits == 1)
+        else if(SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.TILES.Count + " " + this.DESC;
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns";
+        }
+        else if (SUBTYPE == SubSkillType.Ailment)
+        {
+            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT;
+        }
+        else if (ELEMENT == Element.Support)
+        {
+            switch (EFFECT)
+            {
+                case SideEffect.heal:
+                    {
+                        potentialDesc = "Heals " + DAMAGE + " amount of health to target";
+                    }
+                    break;
+                default:
+                    potentialDesc = "u messed up ";
+                    break;
+            }
+  
         }
         else
         {
-            potentialDesc = "Deals " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to " + this.DESC + " " + this.HITS + " times";
+            potentialDesc = ACCURACY + "% chance to deal " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to";
+        }
+
+        switch (RTYPE)
+        {
+            case RanngeType.single:
+                if(TILES.Count > 1)
+                {
+                    potentialDesc += " targets in range ";
+                }
+                else
+                {
+                    potentialDesc += " target ";
+                }
+                break;
+            case RanngeType.multi:
+                potentialDesc += " target ";
+                break;
+            case RanngeType.area:
+                potentialDesc += " everyone in range ";
+                break;
+            case RanngeType.any:
+                potentialDesc += " yourself or target ";
+                break;
+            case RanngeType.anyarea:
+                potentialDesc += " everyone including yourself in range ";
+                break;
+            case RanngeType.multiarea:
+                potentialDesc += " everyone in selected area ";
+                break;
+            default:
+                break;
+        }
+
+        if (SUBTYPE == SubSkillType.RngAtk)
+        {
+            potentialDesc += "" + MIN_HIT + "-" + MAX_HIT + " times";
+        }
+        else if (HITS > 1)
+        {
+            potentialDesc += "" + HITS + " times";
 
         }
+   
         if (pEffect != SideEffect.none)
         {
             if (this.EFFECT < SideEffect.reduceStr)
@@ -258,12 +318,16 @@ public class CommandSkill : SkillScript
         }
         return potentialDesc;
     }
-    public override void AugmentSkill(Augment augment)
+    public override void ApplyAugment(Augment augment)
     {
         switch (augment)
         {
-            case Augment.damageAugment:
-                DAMAGE = DAMAGE + 1;
+            case Augment.levelAugment:
+                // DAMAGE = Common.GetNextDmg(DAMAGE);
+                for (int i = 0; i < 5; i++)
+                {
+                    LevelUP();
+                }
                 break;
             case Augment.accurracyAugment:
                 ACCURACY = (int)((float)ACCURACY * 1.2f);
@@ -275,7 +339,15 @@ public class CommandSkill : SkillScript
                 //todo
                 break;
             case Augment.attackCountAugment:
+                if(SUBTYPE == SubSkillType.RngAtk)
+                {
+                    MIN_HIT++;
+                    MAX_HIT++;
+                }
+                else
+                {
                 HITS++;
+                }
                 break;
             case Augment.costAugment:
                 COST = (int)((float)COST * 0.5f);
@@ -286,32 +358,82 @@ public class CommandSkill : SkillScript
             case Augment.chargeDecreaseAugment:
                 COST = (int)((float)COST * 0.5f);
                 break;
-            case Augment.buffAugment:
+            case Augment.effectAugment1:
                 BUFFVAL *= 2;
+                break;
+            case Augment.effectAugment2:
+                BUFFVAL *= 2;
+                break;
+            case Augment.effectAugment3:
+                BUFFVAL *= 2;
+                break;
+
+            case Augment.elementAugment:
+                ELEMENT = Common.ChangeElement(ELEMENT);
                 break;
             default:
                 break;
         }
     }
 
-    public override BoolConatainer CheckAugment()
-    {
-        BoolConatainer conatainer = Common.container;
-        conatainer.name = "none";
-        conatainer.result = false;
-        if (AUGMENTS.costTrigger == 2)
-        {
-            // AugmentSkill(Augment.costAugment);
-            conatainer.result = true;
-            conatainer.name = "Damage Augment";
-        }
-        return conatainer;
-    }
+
 
     public override void LevelUP()
     {
         base.LevelUP();
-     
 
+        if(level % 5 == 0)
+        {
+
+        switch (ELEMENT)
+        {
+            case Element.Water:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    break;
+            case Element.Fire:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    TILES.Add(Common.GetNextTileRange(TILES));
+                    break;
+            case Element.Ice:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    break;
+            case Element.Electric:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    MAX_HIT++;
+                break;
+            case Element.Slash:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    HITS++;
+                break;
+            case Element.Pierce:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    break;
+            case Element.Blunt:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    ACCURACY += 5;
+                    if (ACCURACY > 100)
+                        ACCURACY = 100;
+                    CRIT_RATE += 0.1f;
+                    break;
+            case Element.Buff:
+                    BUFFVAL += 0.15f;
+                break;
+            case Element.Support:
+                break;
+            case Element.Ailment:
+                break;
+            case Element.Passive:
+                break;
+            case Element.Opp:
+                break;
+            case Element.Auto:
+                break;
+            case Element.none:
+                break;
+        }
+
+        }
+
+        UpdateDesc();
     }
 }

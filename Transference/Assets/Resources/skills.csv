@@ -135,13 +135,13 @@
 200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
 201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
 202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
-203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,50,0,FTCharge,
-204,DragonStone,Passive,None,Fire and Slash attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Slash
-205,WitchStone,Passive,None,Fire and Water attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Water
-206,PhoenixStone,Passive,None,Fire and Pierce attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Fire, Pierce
-207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Pierce
-208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Electric, Blunt
-209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Water, Blunt
-210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Slash
-211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,0.75,0,ElementDmg,2, Ice, Electric
+203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,50,0,FTCharge,0
+204,DragonStone,Passive,None,Fire and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Slash
+205,WitchStone,Passive,None,Fire and Water attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Water
+206,PhoenixStone,Passive,None,Fire and Pierce attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Pierce
+207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Pierce
+208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Electric, Blunt
+209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Water, Blunt
+210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Slash
+211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Electric
 -212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage

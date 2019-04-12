@@ -356,20 +356,24 @@ public class InventoryMangager : MonoBehaviour
                         currentIndex = currentContent.transform.childCount - 1;
                     }
 
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                    if (selectedMenuItem)
+                    if (currentContent.transform.GetChild(currentIndex))
                     {
-                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
-                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
-                        if (selectedText)
-                        {
-                            SetSelected(selectedText);
-                        }
-                        if (proText)
-                        {
-                            SetSelected(proText);
-                        }
 
+                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                        if (selectedMenuItem)
+                        {
+                            Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                            TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                            if (selectedText)
+                            {
+                                SetSelected(selectedText);
+                            }
+                            if (proText)
+                            {
+                                SetSelected(proText);
+                            }
+
+                        }
                     }
 
                     float index = currentIndex / (float)currentContent.transform.childCount;
@@ -569,7 +573,7 @@ public class InventoryMangager : MonoBehaviour
                     Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
                     Image attr = null;
-                    if(selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
+                    if (selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
                     {
 
                         attr = selectedMenuItem.GetComponentsInChildren<Image>()[2];
@@ -590,7 +594,7 @@ public class InventoryMangager : MonoBehaviour
                         pos.x = 0;
                         proText.GetComponent<RectTransform>().localPosition = pos;
                     }
-                    if(attr)
+                    if (attr)
                     {
                         pos = attr.GetComponent<RectTransform>().localPosition;
                         pos.x = 113;
@@ -1227,7 +1231,7 @@ public class InventoryMangager : MonoBehaviour
                                         proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>- </size>" + extraText + "</color>";
 
                                     }
-                                   
+
                                 }
                                 else
                                 {

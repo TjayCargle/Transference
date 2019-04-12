@@ -32,7 +32,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
             if (type == 2) //right
             {
                 currDetail++;
-                if(currDetail > (int)DetailType.Effects)
+                if(currDetail > (int)DetailType.Exp)
                 {
                     currDetail = 0;
                 }
@@ -56,6 +56,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if(detailsScreen)
         detailsScreen.selectedContent = type;
     }
 

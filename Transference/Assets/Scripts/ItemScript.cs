@@ -25,7 +25,7 @@ public class ItemScript : UsableScript
         get { return targetRange; }
         set { targetRange = value; }
     }
-    
+
     public ItemType ITYPE
     {
         get { return iType; }
@@ -64,23 +64,23 @@ public class ItemScript : UsableScript
         switch (ITYPE)
         {
             case ItemType.healthPotion:
-        
+
                 int amoint = (int)(target.MAX_HEALTH * trueValue);
-                usedEffect = target.ChangeHealth( amoint);
+                usedEffect = target.ChangeHealth(amoint);
 
                 break;
             case ItemType.manaPotion:
-                usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * trueValue));
+                usedEffect = target.ChangeMana((int)(target.MAX_MANA * trueValue));
                 break;
             case ItemType.fatiguePotion:
-                usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * trueValue));
+                usedEffect = target.ChangeFatigue((int)(target.MAX_FATIGUE * trueValue));
                 break;
             case ItemType.cure:
                 {
                     switch (effect)
                     {
                         case SideEffect.slow:
-                            if(target.SSTATUS == SecondaryStatus.slow)
+                            if (target.SSTATUS == SecondaryStatus.slow)
                             {
                                 target.SSTATUS = SecondaryStatus.normal;
                                 usedEffect = true;
@@ -155,6 +155,124 @@ public class ItemScript : UsableScript
             case ItemType.buff:
                 break;
             case ItemType.dmg:
+                break;
+            case ItemType.actionBoost:
+                float chance = Random.value;
+                if (chance < trueValue)
+                {
+                    target.ACTIONS += 3;
+                    usedEffect = true;
+                }
+                else
+                {
+                    usedEffect = false;
+                }
+                break;
+            case ItemType.random:
+                int resultEffect = Random.Range(0, 10);
+                int rngVal = (int)trueValue;
+                for (int i = 0; i < rngVal; i++)
+                {
+
+                    switch (resultEffect)
+                    {
+                        case 0:
+                            usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * Random.Range( -1.0f,1.0f)));
+                            break;
+                        case 1:
+                            usedEffect = target.ChangeMana((int)(target.MAX_MANA * Random.Range(-1.0f, 1.0f)));
+                            break;
+                        case 2:
+                            usedEffect = target.ChangeFatigue((int)(target.MAX_FATIGUE * Random.Range(-1.0f, 1.0f)));
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            target.ACTIONS += 1;
+                            usedEffect = true;
+                            break;
+                        case 5:
+                            target.ACTIONS += 2;
+                            usedEffect = true;
+                            break;
+                        case 6:
+                            target.ACTIONS += 3;
+                            usedEffect = true;
+                            break;
+                        case 7:
+                            {
+
+                            CommandSkill randomBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomBuff.EFFECT = SideEffect.none;
+                           randomBuff.BUFF = (BuffType)Random.Range(1,6);
+                           randomBuff.BUFFVAL = Random.Range(10,100);
+                           randomBuff.ELEMENT = Element.Buff;
+                           randomBuff.SUBTYPE = SubSkillType.Buff;
+
+                            target.INVENTORY.BUFFS.Add(randomBuff);
+                            BuffScript buff = target.gameObject.AddComponent<BuffScript>();
+                            buff.SKILL = randomBuff;
+                            buff.BUFF = randomBuff.BUFF;
+                            buff.COUNT = 1;
+                            target.ApplyPassives();
+                            }
+
+                            break;
+                        case 8:
+                            {
+                                CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                                randomDeBuff.EFFECT = SideEffect.none;
+                                randomDeBuff.BUFF = (BuffType)Random.Range(1, 6);
+                                randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                                randomDeBuff.ELEMENT = Element.Buff;
+                                randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+
+                                target.INVENTORY.BUFFS.Add(randomDeBuff);
+                                DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+                                buff.SKILL = randomDeBuff;
+                                buff.BUFF = randomDeBuff.BUFF;
+                                buff.COUNT = 1;
+                                target.ApplyPassives();
+                            }
+                            break;
+                        case 9:
+                            usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * Random.Range(-1.0f, 1.0f)));
+                            usedEffect = target.ChangeMana((int)(target.MAX_MANA * Random.Range(-1.0f, 1.0f)));
+                            usedEffect = target.ChangeFatigue((int)(target.MAX_FATIGUE * Random.Range(-1.0f, 1.0f)));
+                            break;
+                        case 10:
+                            {
+                                CommandSkill randomBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                                randomBuff.EFFECT = SideEffect.none;
+                                randomBuff.BUFF = (BuffType)Random.Range(1, 6);
+                                randomBuff.BUFFVAL = Random.Range(10, 100);
+                                randomBuff.ELEMENT = Element.Buff;
+                                randomBuff.SUBTYPE = SubSkillType.Buff;
+
+                                target.INVENTORY.BUFFS.Add(randomBuff);
+                                BuffScript buff = target.gameObject.AddComponent<BuffScript>();
+                                buff.SKILL = randomBuff;
+                                buff.BUFF = randomBuff.BUFF;
+                                buff.COUNT = 1;
+                                target.ApplyPassives();
+
+                                CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                                randomDeBuff.EFFECT = SideEffect.none;
+                                randomDeBuff.BUFF = (BuffType)Random.Range(1, 6);
+                                randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                                randomDeBuff.ELEMENT = Element.Buff;
+                                randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+
+                                target.INVENTORY.BUFFS.Add(randomDeBuff);
+                                DebuffScript debuff = target.gameObject.AddComponent<DebuffScript>();
+                                debuff.SKILL = randomDeBuff;
+                                debuff.BUFF = randomDeBuff.BUFF;
+                                debuff.COUNT = 1;
+                                target.ApplyPassives();
+                            }
+                            break;
+                    }
+                }
                 break;
         }
         return usedEffect;

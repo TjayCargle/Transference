@@ -289,11 +289,16 @@ public class PlayerController : MonoBehaviour
                 if (invm.selectedMenuItem.refItem.TYPE == 5)
                 {
                     ItemScript selectedItem = (ItemScript)invm.selectedMenuItem.refItem;
-                    if (selectedItem.useItem(current) == true)
+                    bool useditem = selectedItem.useItem(current);
+                    if (useditem == true || selectedItem.ITYPE == ItemType.actionBoost)
                     {
                         current.INVENTORY.ITEMS.Remove(selectedItem);
                         myManager.menuManager.ShowItemCanvas(11, current);
                         current.TakeAction();
+                    }
+                    if(selectedItem.ITYPE == ItemType.actionBoost && useditem == false)
+                    {
+                        myManager.CreateTextEvent(this, "Chance of gaining action points failed", "action item", myManager.CheckText, myManager.TextStart);
                     }
                 }
             }
@@ -322,9 +327,7 @@ public class PlayerController : MonoBehaviour
                                 }
                                 else
                                 {
-                                    current.WEAPON.NAME = "none";
-                                    current.WEAPON.DIST = 0;
-                                    current.WEAPON.Range = 0;
+                                    current.WEAPON.unEquip();
                                     myManager.menuManager.ShowExtraCanvas(4, current);
                                     myManager.ShowGridObjectAffectArea(current);
 
@@ -523,6 +526,7 @@ public class PlayerController : MonoBehaviour
                         case 5:
                             {
                                 UseItem();
+                               // myManager.attackableTiles = myManager.GetAdjecentTiles(current);
                             }
                             break;
                     }
@@ -640,7 +644,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             WeaponEquip tempWeapon = invoker.WEAPON;
-            tempWeapon.ACCURACY = 100;
+
             if (invoker.SSTATUS == SecondaryStatus.confusion)
             {
                 int chance = Random.Range(0, 2);

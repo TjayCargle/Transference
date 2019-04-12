@@ -1,0 +1,334 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
+  m_Name: iconStrip_strip19
+  m_EditorClassIdentifier: 
+  hashCode: 827608412
+  material: {fileID: 21987465673459448}
+  materialHashCode: 0
+  spriteSheet: {fileID: 2800000, guid: d7062511421345a4085565affb17584f, type: 3}
+  spriteInfoList:
+  - id: 0
+    x: 0
+    y: 0
+    width: 64
+    height: 64
+    xOffset: -0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_0
+    hashCode: -677574445
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300000, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 1
+    x: 64
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_1
+    hashCode: -677574446
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300002, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 2
+    x: 128
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_2
+    hashCode: -677574447
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300004, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 3
+    x: 192
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_3
+    hashCode: -677574448
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300006, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 4
+    x: 256
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_4
+    hashCode: -677574441
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300008, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 5
+    x: 320
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_5
+    hashCode: -677574442
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300010, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 6
+    x: 384
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_6
+    hashCode: -677574443
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300012, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 7
+    x: 448
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_7
+    hashCode: -677574444
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300014, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 8
+    x: 512
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_8
+    hashCode: -677574437
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300016, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 9
+    x: 576
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_9
+    hashCode: -677574438
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300018, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 10
+    x: 640
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_10
+    hashCode: -885120222
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300020, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 11
+    x: 704
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_11
+    hashCode: -885120221
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300022, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 12
+    x: 768
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_12
+    hashCode: -885120224
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300024, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 13
+    x: 832
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_13
+    hashCode: -885120223
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300026, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 14
+    x: 896
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_14
+    hashCode: -885120218
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300028, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 15
+    x: 960
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_15
+    hashCode: -885120217
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300030, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 16
+    x: 1024
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_16
+    hashCode: -885120220
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300032, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 17
+    x: 1088
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_17
+    hashCode: -885120219
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300034, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 18
+    x: 1152
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_18
+    hashCode: -885120214
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300036, guid: d7062511421345a4085565affb17584f, type: 3}
+  - id: 19
+    x: 1216
+    y: 0
+    width: 64
+    height: 64
+    xOffset: 0
+    yOffset: 50
+    xAdvance: 64
+    scale: 1
+    name: iconStrip_strip19_19
+    hashCode: -885120213
+    unicode: 0
+    pivot: {x: -32, y: 32}
+    sprite: {fileID: 21300038, guid: d7062511421345a4085565affb17584f, type: 3}
+  fallbackSpriteAssets: []
+--- !u!21 &21987465673459448
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Sprite
+  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: d7062511421345a4085565affb17584f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
