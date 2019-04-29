@@ -91,6 +91,8 @@ public class ShopScreen : MonoBehaviour
     [SerializeField]
     Sprite[] icons;
 
+    [SerializeField]
+    Text currentTypeText;
     public List<UsableScript> SHOPITEMS
     {
         get { return usables; }
@@ -216,7 +218,7 @@ public class ShopScreen : MonoBehaviour
                                 {
                                     if (SELECTED.refItem.GetType() == typeof(WeaponScript))
                                     {
-                                        loadBuyerList(0);
+                                        loadBuyerList(2); 
                                     }
                                     else if (SELECTED.refItem.GetType() == typeof(ArmorScript))
                                     {
@@ -227,16 +229,16 @@ public class ShopScreen : MonoBehaviour
                                         switch (((SkillScript)SELECTED.refItem).ELEMENT)
                                         {
                                             case Element.Passive:
-                                                loadBuyerList(3);
+                                                loadBuyerList(4);
                                                 break;
                                             case Element.Auto:
-                                                loadBuyerList(4);
+                                                loadBuyerList(3);
                                                 break;
                                             case Element.Opp:
                                                 loadBuyerList(5);
                                                 break;
                                             default:
-                                                loadBuyerList(2);
+                                                loadBuyerList(0);
                                                 break;
                                         }
                                     }
@@ -483,9 +485,10 @@ public class ShopScreen : MonoBehaviour
             selectedType = 0;
             selectedContent = 0;
             loadBuyerList(0);
-
             if (currentDetails)
                 currentDetails.SetActive(true);
+            if (currentTypeText)
+                currentTypeText.text = "Basic Attacks";
 
         }
     }
@@ -631,26 +634,38 @@ public class ShopScreen : MonoBehaviour
                         case 0:
                             refUseable = buyer.INVENTORY.WEAPONS[i];
                             selectedType = 0;
+                            if (currentTypeText)
+                                currentTypeText.text = "Basic Attacks";
                             break;
                         case 1:
                             refUseable = buyer.INVENTORY.ARMOR[i];
                             selectedType = 1;
+                            if (currentTypeText)
+                                currentTypeText.text = "Wards";
                             break;
                         case 2:
                             refUseable = buyer.BATTLE_SLOTS.SKILLS[i];
                             selectedType = 2;
+                            if (currentTypeText)
+                                currentTypeText.text = "Command Skills";
                             break;
                         case 3:
                             refUseable = buyer.PASSIVE_SLOTS.SKILLS[i];
                             selectedType = 3;
+                            if (currentTypeText)
+                                currentTypeText.text = "Passive Skills";
                             break;
                         case 4:
                             refUseable = buyer.AUTO_SLOTS.SKILLS[i];
                             selectedType = 4;
+                            if (currentTypeText)
+                                currentTypeText.text = "Auto SKills";
                             break;
                         case 5:
                             refUseable = buyer.OPP_SLOTS.SKILLS[i];
                             selectedType = 5;
+                            if (currentTypeText)
+                                currentTypeText.text = "Opportunitty Skills";
                             break;
                     }
                     if (buyerSkills[i].transform.parent.GetComponent<shopBtn>())

@@ -7,9 +7,9 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 5,Pixie Ward,Fire, 10, 8, 10, normal, normal, reflects, normal, resists, leathal, normal
 6,Neutral Ward,Purely Neutral, 5, 5, 20, normal,normal,normal,normal,normal,normal, normal
 7,Speed Ward,Purely Neutral, 1, 1, 30, cripples,normal,normal,nulls,normal,weak, resists
-8,Glyph Ward,Purely Neutral, 15, 15, 0, resists,resists,resists,resists,resists,resists, resists
-9,Fairy Ward,Fire, 5, 15, 10, resists, leathal, normal, reflects, weak, normal, normal
-10,Wolf Ward,Fire, 15, 5, 10, normal, weak, normal, resists, nulls, cripples, normal
-11,Gorgan Ward,Fire, 15, 15, 0, normal, cripples, cripples, cripples, nulls, nulls, nulls
-12,Arachnid Ward,Fire, 0, 5, 25, savage, cripples, nulls, resists, absorbs, normal, weak
-13,Ghost Ward,ghost,0,0,30,normal,cripples,normal,cripples,nulls,nulls,nulls
+8,Fairy Ward,Fire, 5, 15, 10, resists, leathal, normal, reflects, weak, normal, normal
+9,Wolf Ward,Fire, 15, 5, 10, normal, weak, normal, resists, nulls, cripples, normal
+10,Gorgan Ward,Fire, 15, 15, 0, normal, cripples, cripples, cripples, nulls, nulls, nulls
+11,Arachnid Ward,Fire, 0, 5, 25, savage, cripples, nulls, resists, absorbs, normal, weak
+12,Ghost Ward,ghost,0,0,30,normal,cripples,normal,cripples,nulls,nulls,nulls
+200,Glyph Ward,Purely Neutral, 15, 15, 0, resists,resists,resists,resists,resists,resists, resists

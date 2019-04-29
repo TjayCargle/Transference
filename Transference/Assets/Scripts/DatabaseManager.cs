@@ -29,9 +29,12 @@ public class DatabaseManager : MonoBehaviour
     [SerializeField]
     TextAsset hazardFile;
 
-
     [SerializeField]
     TextAsset mapFile;
+
+
+    [SerializeField]
+    TextAsset objectFile;
 
     [SerializeField]
     string[] skillLines;
@@ -57,6 +60,9 @@ public class DatabaseManager : MonoBehaviour
     [SerializeField]
     string[] mapLines;
 
+    [SerializeField]
+    string[] objLines;
+
     private Dictionary<int, string> skillDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> weaponDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> armorDictionary = new Dictionary<int, string>();
@@ -65,6 +71,7 @@ public class DatabaseManager : MonoBehaviour
     private Dictionary<int, string> actorDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> hazardDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> mapDictionary = new Dictionary<int, string>();
+    private Dictionary<int, string> objDictionary = new Dictionary<int, string>();
     public bool isSetup = false;
     public void Setup()
     {
@@ -208,6 +215,28 @@ public class DatabaseManager : MonoBehaviour
                     }
                 }
             }
+            if (objDictionary.Count == 0)
+            {
+                if (objectFile)
+                {
+
+                    file = objectFile.text;
+                    objLines = file.Split('\n');
+
+                    for (int i = 1; i < objLines.Length; i++)
+                    {
+                        string line = objLines[i];
+                        if (line[0] != '-')
+                        {
+                            string[] parsed = line.Split(',');
+                            objDictionary.Add(Int32.Parse(parsed[0]), line);
+                        }
+                    }
+                }
+            }
+
+
+
             isSetup = true;
         }
     }
@@ -300,7 +329,7 @@ public class DatabaseManager : MonoBehaviour
                     //   skill.DESC = parsed[4];
                     skill.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[2]);
                     skill.SUBTYPE = (SubSkillType)Enum.Parse(typeof(SubSkillType), parsed[3]);
-                
+
                     //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                     skill.TYPE = 4;
                     if (!livingObject.INVENTORY.ContainsSkillName(skill.NAME))
@@ -320,7 +349,7 @@ public class DatabaseManager : MonoBehaviour
                                     buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                                     buff.COST = Int32.Parse(parsed[5]);
                                     buff.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                                    buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                                    buff.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
                                     //buff.NEXT = Int32.Parse(parsed[10]);
                                     buff.ACCURACY = 100;
@@ -382,10 +411,12 @@ public class DatabaseManager : MonoBehaviour
                                         index++;
                                         buff.TILES.Add(v);
                                     }
+                                
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(buff);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(buff);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(buff);
-                                    if (equip == true)
+                          
+                          //          if (equip == true)
                                     {
                                         if (livingObject.BATTLE_SLOTS.CanAdd())
                                             livingObject.BATTLE_SLOTS.SKILLS.Add(buff);
@@ -415,7 +446,7 @@ public class DatabaseManager : MonoBehaviour
                                     support.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                                     support.COST = Int32.Parse(parsed[5]);
                                     support.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                                    support.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                                    support.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
                                     support.ACCURACY = Int32.Parse(parsed[10]);
 
                                     support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
@@ -445,7 +476,8 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(support);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(support);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(support);
-                                    if (equip == true)
+                                 
+                                 //   if (equip == true)
                                     {
                                         if (livingObject.BATTLE_SLOTS.CanAdd())
                                             livingObject.BATTLE_SLOTS.SKILLS.Add(support);
@@ -491,9 +523,8 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.INVENTORY.USEABLES.Add(passive);
                                     livingObject.INVENTORY.PASSIVES.Add(passive);
                                     livingObject.INVENTORY.SKILLS.Add(passive);
-
-
-                                    if (equip == true)
+                                
+                                //    if (equip == true)
                                     {
                                         if (livingObject.PASSIVE_SLOTS.CanAdd())
                                         {
@@ -517,11 +548,12 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
-                                    if (equip == true)
-                                    {
-                                        if (livingObject.OPP_SLOTS.CanAdd())
-                                            livingObject.OPP_SLOTS.SKILLS.Add(opp);
-                                    }
+                               // if (equip == true)
+                                {
+                                    if (livingObject.OPP_SLOTS.CanAdd())
+                                        livingObject.OPP_SLOTS.SKILLS.Add(opp);
+                                }
+                                
                                     return opp;
                                 }
                                 break;
@@ -536,7 +568,7 @@ public class DatabaseManager : MonoBehaviour
                                     ailment.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                                     ailment.COST = Int32.Parse(parsed[5]);
                                     ailment.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                                    ailment.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                                    ailment.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
                                     ailment.ACCURACY = 100;
 
@@ -558,12 +590,13 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(ailment);
-                                    if (equip == true)
-                                    {
-                                        if (livingObject.BATTLE_SLOTS.CanAdd())
-                                            livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
-                                    }
-
+                                    //if (equip == true)
+                                    //{
+                                    //    if (livingObject.BATTLE_SLOTS.CanAdd())
+                                    //        livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
+                                    //}
+                                    if (livingObject.BATTLE_SLOTS.CanAdd())
+                                        livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
                                     //ailment.DESC = "Has an " + ailment.ACCURACY + "% chance to inflict enemy with " + ailment.EFFECT;
                                     ailment.UpdateDesc();
                                     return ailment;
@@ -588,9 +621,10 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(auto);
                                     if (equip == true)
                                     {
-                                        if (livingObject.AUTO_SLOTS.CanAdd())
-                                            livingObject.AUTO_SLOTS.SKILLS.Add(auto);
+                                 
                                     }
+                                    if (livingObject.AUTO_SLOTS.CanAdd())
+                                        livingObject.AUTO_SLOTS.SKILLS.Add(auto);
                                     auto.UpdateDesc();
                                     return auto;
                                 }
@@ -622,7 +656,7 @@ public class DatabaseManager : MonoBehaviour
                                     command.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                                     command.COST = Int32.Parse(parsed[5]);
                                     command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                                    command.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                                    command.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
                                     command.ACCURACY = Int32.Parse(parsed[10]);
 
                                     command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
@@ -647,7 +681,7 @@ public class DatabaseManager : MonoBehaviour
                                         command.MAX_HIT = Int32.Parse(parsed[index]);
 
                                     }
-                                    if (command.RTYPE == RanngeType.single)
+                                    if (command.RTYPE == RangeType.single)
                                     {
                                         command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to";
                                         if (count > 1)
@@ -663,12 +697,12 @@ public class DatabaseManager : MonoBehaviour
                                             command.DESC += " " + command.HITS + " times";
                                         }
                                     }
-                                    if (command.RTYPE == RanngeType.area)
+                                    if (command.RTYPE == RangeType.area)
                                     {
                                         command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to all enemies in range";
 
                                     }
-                                    if (command.RTYPE == RanngeType.multi)
+                                    if (command.RTYPE == RangeType.multi)
                                     {
                                         command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to an enemy in range";
 
@@ -705,9 +739,9 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
                                     if (equip == true)
                                     {
+                                    }
                                         if (livingObject.BATTLE_SLOTS.CanAdd())
                                             livingObject.BATTLE_SLOTS.SKILLS.Add(command);
-                                    }
                                     return command;
                                 }
                                 break;
@@ -765,7 +799,7 @@ public class DatabaseManager : MonoBehaviour
                             buff.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             buff.COST = Int32.Parse(parsed[5]);
                             buff.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                            buff.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                            buff.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
 
                             buff.ACCURACY = 100;
@@ -832,7 +866,7 @@ public class DatabaseManager : MonoBehaviour
                             support.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             support.COST = Int32.Parse(parsed[5]);
                             support.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                            support.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                            support.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
                             support.ACCURACY = Int32.Parse(parsed[10]);
 
                             support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
@@ -917,7 +951,7 @@ public class DatabaseManager : MonoBehaviour
                             ailment.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             ailment.COST = Int32.Parse(parsed[5]);
                             ailment.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                            ailment.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                            ailment.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
                             ailment.ACCURACY = 100;
 
@@ -972,7 +1006,7 @@ public class DatabaseManager : MonoBehaviour
                             command.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             command.COST = Int32.Parse(parsed[5]);
                             command.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
-                            command.RTYPE = (RanngeType)Enum.Parse(typeof(RanngeType), parsed[7]);
+                            command.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
                             command.ACCURACY = Int32.Parse(parsed[10]);
 
                             command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
@@ -1039,17 +1073,19 @@ public class DatabaseManager : MonoBehaviour
                 weapon.ATTACK = Int32.Parse(parsed[3]);
                 weapon.ATTACK_TYPE = (EType)Enum.Parse(typeof(EType), parsed[4]);
                 weapon.AFINITY = (Element)Enum.Parse(typeof(Element), parsed[5]);
-                weapon.DIST = Int32.Parse(parsed[6]);
-                weapon.Range = Int32.Parse(parsed[7]);
-                weapon.ACCURACY = Int32.Parse(parsed[8]);
-                weapon.CRIT = Int32.Parse(parsed[9]);
-                weapon.BOOST = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[10]);
-                weapon.BOOSTVAL = Int32.Parse(parsed[11]);
+                weapon.ATKRANGE = (RangeType)Enum.Parse(typeof(RangeType), parsed[6]);
+                //weapon.DIST = Int32.Parse(parsed[6]);
+                //weapon.Range = Int32.Parse(parsed[7]);
+                Common.SetWeaponDistRange(weapon);
+                weapon.ACCURACY = Int32.Parse(parsed[7]);
+                weapon.CRIT = Int32.Parse(parsed[8]);
+                weapon.BOOST = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
+                weapon.BOOSTVAL = Int32.Parse(parsed[10]);
                 weapon.TYPE = 0;
 
-                if(weapon.BOOST != ModifiedStat.none)
+                if (weapon.BOOST != ModifiedStat.none)
                 {
-                    weapon.DESC = "" + weapon.BOOST.ToString() + " +" + weapon.BOOSTVAL + "."; 
+                    weapon.DESC = "" + weapon.BOOST.ToString() + " +" + weapon.BOOSTVAL + ".";
                 }
                 weapon.DESC += "Deals " + weapon.ATTACK_TYPE + " " + weapon.AFINITY + " based dmg.";
 
@@ -1127,13 +1163,13 @@ public class DatabaseManager : MonoBehaviour
                 list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[11]));
                 list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[12]));
 
-               // armor.DESC = "Defense: " + armor.DEFENSE + " Resistance: " + armor.RESISTANCE + " Speed: " + armor.SPEED;
+                // armor.DESC = "Defense: " + armor.DEFENSE + " Resistance: " + armor.RESISTANCE + " Speed: " + armor.SPEED;
                 armor.DESC = "Def +" + armor.DEFENSE + ", Res+" + armor.RESISTANCE + " Spd +" + armor.SPEED;
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if(list[i] != EHitType.normal)
+                    if (list[i] != EHitType.normal)
                     {
-                        if(list[i] < EHitType.normal)
+                        if (list[i] < EHitType.normal)
                         {
                             armor.DESC += ", " + list[i].ToString() + " " + (Element)i;
                         }
@@ -1175,7 +1211,7 @@ public class DatabaseManager : MonoBehaviour
         return null;
     }
 
-    public void GetItem(int id, LivingObject livingObject)
+    public ItemScript GetItem(int id, LivingObject livingObject)
     {
 
 
@@ -1196,6 +1232,7 @@ public class DatabaseManager : MonoBehaviour
                 item.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[6]);
                 item.STAT = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[7]);
                 item.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[8]);
+                item.RTYPE = RangeType.adjacent;
                 if (livingObject)
                 {
 
@@ -1205,11 +1242,12 @@ public class DatabaseManager : MonoBehaviour
                         livingObject.INVENTORY.USEABLES.Add(item);
                     }
                 }
+                return item;
             }
         }
 
 
-
+        return null;
         // reader.Close();
 
     }
@@ -1338,7 +1376,122 @@ public class DatabaseManager : MonoBehaviour
             // reader.Close();
         }
     }
+    public LivingObject GetLiving(int id, LivingObject newEnemy)
+    {
 
+
+        if (newEnemy.GetComponent<InventoryScript>())
+        {
+
+            string lines = "";
+            if (enemyDictionary.TryGetValue(id, out lines))
+            {
+                string[] parsed = lines.Split(',');
+                if (Int32.Parse(parsed[0]) == id)
+                {
+                    newEnemy.BASE_STATS.Reset(true);
+                    newEnemy.STATS.Reset(true);
+                    newEnemy.DEAD = false;
+                    int fileIndex = 1;
+                    newEnemy.FullName = parsed[fileIndex];
+                    fileIndex++;
+                    newEnemy.BASE_STATS.LEVEL = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.MAX_HEALTH = Int32.Parse(parsed[fileIndex]);
+                    newEnemy.BASE_STATS.HEALTH = newEnemy.BASE_STATS.MAX_HEALTH;
+                    fileIndex++;
+                    newEnemy.BASE_STATS.MAX_MANA = Int32.Parse(parsed[fileIndex]);
+                    newEnemy.BASE_STATS.MANA = newEnemy.BASE_STATS.MAX_MANA;
+                    fileIndex++;
+                    newEnemy.BASE_STATS.MAX_FATIGUE = Int32.Parse(parsed[fileIndex]);
+                    newEnemy.BASE_STATS.FATIGUE = 0;
+                    fileIndex++;
+                    newEnemy.BASE_STATS.STRENGTH = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.MAGIC = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.DEFENSE = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.RESIESTANCE = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.SPEED = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.SKILL = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    newEnemy.BASE_STATS.MOVE_DIST = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int numofskills = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int numofweapons = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+                    int numofarmors = Int32.Parse(parsed[fileIndex]);
+                    fileIndex++;
+
+
+
+                    for (int i = 0; i < numofskills; i++)
+                    {
+                        LearnSkill(Int32.Parse(parsed[fileIndex]), newEnemy, true);
+                        fileIndex++;
+                    }
+
+                    for (int i = 0; i < numofweapons; i++)
+                    {
+                        GetWeapon(Int32.Parse(parsed[fileIndex]), newEnemy);
+                        fileIndex++;
+                    }
+
+                    for (int i = 0; i < numofarmors; i++)
+                    {
+                        GetArmor(Int32.Parse(parsed[fileIndex]), newEnemy);
+                        fileIndex++;
+                    }
+                }
+            }
+        }
+        return newEnemy;
+    }
+
+    public GridObject GetObject(int id, GridObject newObject)
+    {
+
+
+        if (!newObject.GetComponent<BaseStats>())
+        {
+            newObject.BASE_STATS = newObject.gameObject.AddComponent<BaseStats>();
+        }
+
+        if (!newObject.GetComponent<ModifiedStats>())
+        {
+            newObject.STATS = newObject.gameObject.AddComponent<ModifiedStats>();
+        }
+        BaseStats baseStats = newObject.GetComponent<BaseStats>();
+        ModifiedStats modStats = newObject.GetComponent<ModifiedStats>();
+        string lines = "";
+        if (objDictionary.TryGetValue(id, out lines))
+        {
+            string[] parsed = lines.Split(',');
+            if (Int32.Parse(parsed[0]) == id)
+            {
+                baseStats.Reset(true);
+                modStats.Reset(true);
+
+                int fileIndex = 1;
+                newObject.FullName = parsed[fileIndex];
+                fileIndex++;
+                baseStats.MAX_HEALTH = Int32.Parse(parsed[fileIndex]);
+                baseStats.HEALTH = baseStats.MAX_HEALTH;
+                fileIndex++;
+                baseStats.DEFENSE = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                baseStats.RESIESTANCE = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                baseStats.MOVE_DIST = 0;
+
+            }
+        }
+        return newObject;
+    }
     public void GetActor(int id, LivingObject living)
     {
 
@@ -1430,6 +1583,8 @@ public class DatabaseManager : MonoBehaviour
         map.enemyIndexes = new List<int>();
         map.hazardIndexes = new List<int>();
         map.shopIndexes = new List<int>();
+        map.startIndexes = new List<int>();
+        map.objIndexes = new List<int>();
         string lines = "";
         if (mapDictionary.TryGetValue(id, out lines))
         {
@@ -1461,9 +1616,17 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                 }
 
+
                 for (int i = 0; i < numOfDoors; i++)
                 {
                     map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+
+                for (int i = 0; i < numOfDoors; i++)
+                {
+                    map.startIndexes.Add(Int32.Parse(parsed[fileIndex]));
                     fileIndex++;
                 }
 
@@ -1488,6 +1651,14 @@ public class DatabaseManager : MonoBehaviour
                 for (int i = 0; i < numOfShops; i++)
                 {
                     map.shopIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+                int numOfObjs = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                for (int i = 0; i < numOfObjs; i++)
+                {
+                    map.objIndexes.Add(Int32.Parse(parsed[fileIndex]));
                     fileIndex++;
                 }
             }

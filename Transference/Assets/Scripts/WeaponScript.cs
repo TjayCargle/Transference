@@ -15,6 +15,8 @@ public class WeaponScript : UsableScript
     [SerializeField]
     private int myAttackRange;
     [SerializeField]
+    private RangeType range;
+    [SerializeField]
     private EType eType;
     [SerializeField]
     private int useCount;
@@ -68,6 +70,12 @@ public class WeaponScript : UsableScript
     {
         get { return myAttackRange; }
         set { myAttackRange = value; }
+    }
+
+    public RangeType ATKRANGE
+    {
+        get { return range; }
+        set { range = value; }
     }
 
     public int USECOUNT

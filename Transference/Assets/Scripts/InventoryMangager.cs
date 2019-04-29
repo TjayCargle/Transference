@@ -295,6 +295,30 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
                     break;
+                case State.PlayerUsingItems:
+                    {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            IncreaseScroll();
+
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();
+
+                        }
+                        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        {
+                            IncreaseScroll();
+                        }
+
+                        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                        {
+                            DecreaseScroll();
+                        }
+                    }
+                    break;
             }
 
         }
@@ -362,15 +386,23 @@ public class InventoryMangager : MonoBehaviour
                         selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
                         if (selectedMenuItem)
                         {
-                            Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
-                            TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
-                            if (selectedText)
+                            if (selectedMenuItem.gameObject.activeInHierarchy)
                             {
-                                SetSelected(selectedText);
+
+                                Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                                TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                                if (selectedText)
+                                {
+                                    SetSelected(selectedText);
+                                }
+                                if (proText)
+                                {
+                                    SetSelected(proText);
+                                }
                             }
-                            if (proText)
+                            else
                             {
-                                SetSelected(proText);
+                                IncreaseScroll();
                             }
 
                         }
@@ -398,6 +430,11 @@ public class InventoryMangager : MonoBehaviour
                                 if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
                                 {
                                     manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
+
+                                if (selectedMenuItem.refItem.GetType() == typeof(ItemScript))
+                                {
+                                    manager.ShowItemAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as ItemScript));
                                 }
                             }
                         }
@@ -486,15 +523,23 @@ public class InventoryMangager : MonoBehaviour
 
                     if (selectedMenuItem)
                     {
-                        Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
-                        TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
-                        if (selectedText)
+                        if (selectedMenuItem.gameObject.activeInHierarchy)
                         {
-                            SetSelected(selectedText);
+
+                            Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                            TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                            if (selectedText)
+                            {
+                                SetSelected(selectedText);
+                            }
+                            if (proText)
+                            {
+                                SetSelected(proText);
+                            }
                         }
-                        if (proText)
+                        else
                         {
-                            SetSelected(proText);
+                            DecreaseScroll();
                         }
                     }
 
@@ -520,6 +565,12 @@ public class InventoryMangager : MonoBehaviour
                                 if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
                                 {
                                     manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
+
+
+                                if (selectedMenuItem.refItem.GetType() == typeof(ItemScript))
+                                {
+                                    manager.ShowItemAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as ItemScript));
                                 }
                             }
                         }
@@ -663,6 +714,12 @@ public class InventoryMangager : MonoBehaviour
                                 if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
                                 {
                                     manager.ShowSkillAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as CommandSkill));
+                                }
+
+
+                                if (selectedMenuItem.refItem.GetType() == typeof(ItemScript))
+                                {
+                                    manager.ShowItemAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as ItemScript));
                                 }
                             }
                         }
@@ -871,22 +928,26 @@ public class InventoryMangager : MonoBehaviour
                 MenuItem menuItem = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
                 if (menuItem)
                 {
-                    Text selectedText = menuItem.GetComponentInChildren<Text>();
-                    TextMeshProUGUI proText = menuItem.GetComponentInChildren<TextMeshProUGUI>();
-                    if (selectedText)
+                    if (menuItem.gameObject.activeInHierarchy)
                     {
-                        selectedText.color = Color.white;
-                        menuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = selectedText.GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
-                    }
 
-                    if (proText)
-                    {
-                        proText.color = Color.white;
-                        menuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = proText.GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
+                        Text selectedText = menuItem.GetComponentInChildren<Text>();
+                        TextMeshProUGUI proText = menuItem.GetComponentInChildren<TextMeshProUGUI>();
+                        if (selectedText)
+                        {
+                            selectedText.color = Color.white;
+                            menuItem.GetComponent<Image>().color = Color.black;
+                            Vector2 pos = selectedText.GetComponent<RectTransform>().localPosition;
+                            pos.x = 0;
+                        }
+
+                        if (proText)
+                        {
+                            proText.color = Color.white;
+                            menuItem.GetComponent<Image>().color = Color.black;
+                            Vector2 pos = proText.GetComponent<RectTransform>().localPosition;
+                            pos.x = 0;
+                        }
                     }
                 }
             }
@@ -894,28 +955,34 @@ public class InventoryMangager : MonoBehaviour
             TextMeshProUGUI proText2 = menuItem.GetComponentInChildren<TextMeshProUGUI>();
             if (selectedMenuItem)
             {
-                selectedMenuItem.GetComponent<Image>().color = Color.black;
-                if (selectedText2)
+                if (selectedMenuItem.gameObject.activeInHierarchy)
                 {
-                    selectedText2.color = Color.white;
-                    Vector2 pos = selectedText2.GetComponent<RectTransform>().localPosition;
-                    pos.x = 0;
-                    selectedText2.GetComponent<RectTransform>().localPosition = pos;
-                }
 
-                if (proText2)
-                {
-                    proText2.color = Color.white;
-                    Vector2 pos = proText2.GetComponent<RectTransform>().localPosition;
-                    pos.x = 0;
-                    proText2.GetComponent<RectTransform>().localPosition = pos;
-                }
+                    selectedMenuItem.GetComponent<Image>().color = Color.black;
+                    if (selectedText2)
+                    {
+                        selectedText2.color = Color.white;
+                        Vector2 pos = selectedText2.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        selectedText2.GetComponent<RectTransform>().localPosition = pos;
+                    }
 
+                    if (proText2)
+                    {
+                        proText2.color = Color.white;
+                        Vector2 pos = proText2.GetComponent<RectTransform>().localPosition;
+                        pos.x = 0;
+                        proText2.GetComponent<RectTransform>().localPosition = pos;
+                    }
+
+                }
 
             }
             if (currentContent.transform.childCount > 0)
             {
                 if (currentIndex < currentContent.transform.childCount)
+                {
+
                     if (currentContent.transform.GetChild(currentIndex).gameObject.activeInHierarchy)
                     {
 
@@ -943,7 +1010,16 @@ public class InventoryMangager : MonoBehaviour
                     else
                     {
                         currentIndex = 0;
-                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                        for (int i = 0; i < currentContent.transform.childCount; i++)
+                        {
+                            selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                            if (selectedMenuItem.gameObject.activeInHierarchy)
+                            {
+                                break;
+                            }
+                            currentIndex++;
+                        }
+
                         selectedMenuItem.GetComponent<Image>().color = Color.yellow;
                         selectedText2 = menuItem.GetComponentInChildren<Text>();
                         proText2 = menuItem.GetComponentInChildren<TextMeshProUGUI>();
@@ -964,6 +1040,7 @@ public class InventoryMangager : MonoBehaviour
                         }
 
                     }
+                }
             }
 
 
@@ -1220,14 +1297,16 @@ public class InventoryMangager : MonoBehaviour
                                     //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
                                     if (cmd.COST > 0)
                                     {
-                                        extraText = (cmd.COST * lastObject.STATS.FTCHARGECHANGE).ToString();
+                                        int cost = (cmd.GetCost(lastObject, lastObject.STATS.FTCOSTCHANGE));
+                                        extraText = cost.ToString();
                                         proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>+ </size>" + extraText + "</color>"; //<sprite=0><color=#4ba0bc><size=30> +</size>" + extraText + "</color>";
 
                                     }
                                     else
                                     {
                                         // extraText = (cmd.COST * -1).ToString();
-                                        extraText = (-1 * (cmd.COST * lastObject.STATS.FTCOSTCHANGE)).ToString();
+                                        int cost = (-1 * (cmd.GetCost(lastObject, lastObject.STATS.FTCOSTCHANGE)));
+                                        extraText = cost.ToString();
                                         proText.text += " <size=32><sprite=0></size><color=#4ba0bc><size=28>- </size>" + extraText + "</color>";
 
                                     }
@@ -1325,6 +1404,8 @@ public class InventoryMangager : MonoBehaviour
                 selectableItem.refItem = null;
                 if (windowType < 5)
                     selectableItem.gameObject.SetActive(false);
+                if (attr)
+                    attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             }
 
 

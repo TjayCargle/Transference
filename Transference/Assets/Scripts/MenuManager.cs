@@ -21,7 +21,9 @@ public class MenuManager : MonoBehaviour
     public Canvas detailCanvas;
     public Canvas newSkillCanvas;
     public Canvas shopCanvas;
+    public Canvas gameOverCanvas;
     GridObject prevObj;
+    public Canvas newSkillAnnounceCanvas;
     public TextMeshProUGUI DESC
     {
         get { return descText; }
@@ -60,6 +62,40 @@ public class MenuManager : MonoBehaviour
         if (newSkillCanvas)
         {
             newSkillCanvas.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowNewSkillAnnouncement()
+    {
+        if (newSkillAnnounceCanvas)
+        {
+            newSkillAnnounceCanvas.gameObject.SetActive(true);
+        }
+    }
+    public Canvas GetNewSkillCanvas()
+    {
+        return newSkillAnnounceCanvas;
+    }
+    public void DontShowNewSkillAnnoucement()
+    {
+        if (newSkillAnnounceCanvas)
+        {
+            newSkillAnnounceCanvas.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowGameOver()
+    {
+        if (gameOverCanvas)
+        {
+            gameOverCanvas.gameObject.SetActive(true);
+        }
+    }
+    public void DontShowGameOver()
+    {
+        if (gameOverCanvas)
+        {
+            gameOverCanvas.gameObject.SetActive(false);
         }
     }
     public void ShowActCanvas()

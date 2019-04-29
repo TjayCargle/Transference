@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class LivingObject : GridObject
 {
-    [SerializeField]
-    private BaseStats baseStats;
-    [SerializeField]
-    private ModifiedStats modifiedStats;
+ 
     private WeaponEquip equippedWeapon;
     private ArmorEquip equipedArmor;
     private AccessoryEquip equippedAccessory;
@@ -31,8 +28,7 @@ public class LivingObject : GridObject
     private skillSlots oppSlots;
     [SerializeField]
     private skillSlots autoSlots;
-    [SerializeField]
-    private bool isDead;
+
     [SerializeField]
     private InventoryScript inventory;
     public int refreshState;
@@ -51,11 +47,7 @@ public class LivingObject : GridObject
         get { return inventory; }
         set { inventory = value; }
     }
-    public bool DEAD
-    {
-        get { return isDead; }
-        set { isDead = value; }
-    }
+
     public PrimaryStatus PSTATUS
     {
         get { return pStatus; }
@@ -101,16 +93,7 @@ public class LivingObject : GridObject
         get { return autoSlots; }
         set { autoSlots = value; }
     }
-    public BaseStats BASE_STATS
-    {
-        get { return baseStats; }
-        set { baseStats = value; }
-    }
-    public ModifiedStats STATS
-    {
-        get { return modifiedStats; }
-        set { modifiedStats = value; }
-    }
+
     public WeaponEquip WEAPON
     {
         get { return equippedWeapon; }
@@ -645,31 +628,22 @@ public class LivingObject : GridObject
     }
     public override void Die()
     {
-        base.Die();
+
         myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart);
     }
-    protected bool isdoneDying = false;
-    protected bool startedDeathAnimation = false;
-    public void DeathStart()
-    {
-        //  if (!startedDeathAnimation)
-        {
-            startedDeathAnimation = false;
-            myManager.PlaySquishSnd();
-            isdoneDying = false;
-            StartCoroutine(FadeOut());
-        }
-    }
 
-    public bool DieEvent(Object data)
-    {
-
-        return isdoneDying;
+    public override void DeathStart()
+    {     
+            INVENTORY.BUFFS.Clear();
+            INVENTORY.DEBUFFS.Clear();
+            INVENTORY.EFFECTS.Clear();
+        base.DeathStart();
+        
     }
-    public virtual IEnumerator FadeOut()
+    public override IEnumerator FadeOut()
     {
         startedDeathAnimation = true;
-        //    Debug.Log("living dying");
+        // Debug.Log("enemy dying");
         if (GetComponent<SpriteRenderer>())
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -678,7 +652,7 @@ public class LivingObject : GridObject
             while (renderer.color.a > 0)
             {
                 num++;
-                if (num > 999)
+                if (num > 9999)
                 {
                     Debug.Log("time expired");
                     break;
@@ -690,4 +664,10 @@ public class LivingObject : GridObject
 
         }
     }
+    public override bool DieEvent(Object data)
+    {
+
+        return isdoneDying;
+    }
+   
 }

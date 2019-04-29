@@ -30,14 +30,19 @@ public class AnimationScript : MonoBehaviour
             {
                 obj = GetComponent<GridObject>();
             }
+            if (!obj)
+            {
+                return;
+            }
             if (!render)
             {
                 render = obj.gameObject.GetComponent<SpriteRenderer>();
 
             }
-            if (!obj)
+            anim = obj.GetComponent<Animator>();
+            if(!anim)
             {
-                return;
+                anim = gameObject.AddComponent<Animator>();
             }
             if (obj.FullName == "")
             {
@@ -65,7 +70,6 @@ public class AnimationScript : MonoBehaviour
             me = GetComponent<LivingObject>();
             cam = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();
-            anim = obj.GetComponent<Animator>();
             isSetup = true;
         }
     }
@@ -84,11 +88,16 @@ public class AnimationScript : MonoBehaviour
     }
     public void NextImage()
     {
+        if(currentList == null)
+        {
+         
+            return;
+        }
         if (currentList.Length > 0)
         {
             if (repeat == false)
             {
-                if (index == currentList.Length - 1)
+                if (index >= currentList.Length)
                 {
                     return;
                 }
@@ -150,6 +159,7 @@ public class AnimationScript : MonoBehaviour
                     }
                 }
             }
+         
         }
     }
 }

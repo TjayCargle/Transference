@@ -25,7 +25,7 @@ public class EffectScript : MonoBehaviour
                 {
                     //Debug.Log("Player is stunned");
                     int dmg = (int)(living.HEALTH * 0.1);
-                    manager.DamageLivingObject(living, dmg);
+                    manager.DamageGridObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.yellow, living);
                     living.ACTIONS--;
                     manager.NextTurn("effectScript");
@@ -42,7 +42,7 @@ public class EffectScript : MonoBehaviour
                 {
                     //   Debug.Log(living.FullName + " is sleeping");
                     int dmg = -(int)(living.HEALTH * 0.1);
-                    manager.DamageLivingObject(living, dmg);
+                    manager.DamageGridObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.blue, living);
                     living.ACTIONS = 0;
                     manager.NextTurn("effectScript");
@@ -72,7 +72,7 @@ public class EffectScript : MonoBehaviour
                     Debug.Log(living.FullName + " is burned");
                     int dmg = (int)(living.HEALTH * 0.2);
                     living.ACTIONS++;
-                    manager.DamageLivingObject(living, dmg);
+                    manager.DamageGridObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.red, living);
                     manager.CreateTextEvent(this, "" + living.FullName + " took damage from their burn", "burned effect", manager.CheckText, manager.TextStart);
 
@@ -85,7 +85,7 @@ public class EffectScript : MonoBehaviour
                 break;
             case SideEffect.poison:
                 Debug.Log(living.FullName + " is poisoned");
-                manager.DamageLivingObject(living, (int)(living.HEALTH * 0.1));
+                manager.DamageGridObject(living, (int)(living.HEALTH * 0.1));
                 if (!living.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
                 {
                     Common.CommonDebuffStr.EFFECT = SideEffect.debuff;

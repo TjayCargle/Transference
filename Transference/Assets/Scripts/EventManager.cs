@@ -31,7 +31,11 @@ public class EventManager : EventRunner
 
     private void Update()
     {
-
+        if(gridEvents == null)
+        {
+            gridEvents = new List<GridEvent>();
+            Debug.Log("wtf");
+        }
 
         activeEvents = gridEvents.Count;
         if (currentEvent.caller == null)

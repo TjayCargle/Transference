@@ -38,6 +38,9 @@ public class CameraScript : MonoBehaviour
     Color opaque;
     public float smoothSpd = 0.5f;
     public ArmorSet armorSet;
+    public AudioClip[] musicClips;
+    AudioSource audio;
+    int soundTrack = 1;
     void Start()
     {
         transform.localRotation = Quaternion.Euler(0, 0, 0);
@@ -50,6 +53,7 @@ public class CameraScript : MonoBehaviour
         transparent = new Color(0, 0, 0, 0);
         opaque = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         SetCameraPosDefault();
+        audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -80,7 +84,7 @@ public class CameraScript : MonoBehaviour
         x = 0;
         y = 5;
         z = 0;
-    } 
+    }
 
     public void SetCameraPosZoom()
     {
@@ -94,6 +98,33 @@ public class CameraScript : MonoBehaviour
         x = 0;
         y = 8;
         z = -1;
+    }
+
+    public void PlaySoundTrack1()
+    {
+        if(audio)
+        {
+            if(soundTrack != 1)
+            {
+                soundTrack = 1;
+                audio.clip = musicClips[0];
+                audio.Play();
+            }
+        }
+    }
+
+
+    public void PlaySoundTrack2()
+    {
+        if (audio)
+        {
+            if (soundTrack != 2)
+            {
+                soundTrack = 2;
+                audio.clip = musicClips[1];
+                audio.Play();
+            }
+        }
     }
 
     public void UpdateCamera()
@@ -144,22 +175,7 @@ public class CameraScript : MonoBehaviour
                                         //  actionText.transform.parent.gameObject.SetActive(true);
                                     }
                                     actionText.text = "Actions: " + liver.ACTIONS;
-                                    if (showActions)
-                                    {
-
-
-                                    }
-                                    else
-                                    {
-                                        if (actionText)
-                                        {
-                                            if (actionText.IsActive())
-                                            {
-                                                //actionText.transform.parent.gameObject.SetActive(false);
-                                            }
-                                        }
-
-                                    }
+                     
                                     if (healthSlider)
                                     {
                                         healthSlider.value = (float)(liver.HEALTH - potentialDamage) / (float)liver.MAX_HEALTH;
@@ -199,81 +215,11 @@ public class CameraScript : MonoBehaviour
                                                     string newText = "";
                                                     if (txt)
                                                     {
-
-                                                        switch (manager.invManager.selectedMenuItem.refItem.TYPE)
-                                                        {
-                                                            case 0:
-                                                                switch (manager.descriptionState)
-                                                                {
-
-                                                                    case descState.stats:
-                                                                        {
-                                                                            newText = manager.invManager.selectedMenuItem.refItem.DESC;
-
-                                                                        }
-                                                                        break;
-                                                                    case descState.skills:
-                                                                        {
-
-                                                                            WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
-                                                                            newText = "Accuracy: ";
-                                                                            newText += wep.ACCURACY.ToString();
-                                                                            newText += "\n Element: " + wep.AFINITY.ToString();
-                                                                            newText += "\n Type: " + wep.ATTACK_TYPE.ToString();
-                                                                        }
-                                                                        break;
-
-                                                                    case descState.equipped:
-                                                                        {
-
-                                                                            WeaponScript wep = (manager.invManager.selectedMenuItem.refItem as WeaponScript);
-                                                                            newText = "Uses: ";
-                                                                            newText += wep.USECOUNT.ToString();
-                                                                            newText += "\n Level: " + wep.LEVEL.ToString();
-                                                                        }
-                                                                        break;
-
-                                                                }
-                                                                txt.text = newText;
-                                                                txt.resizeTextForBestFit = true;
-                                                                break;
-
-                                                            case 4:
-                                                                switch (manager.descriptionState)
-                                                                {
-
-                                                                    case descState.stats:
-                                                                        {
-                                                                            newText = manager.invManager.selectedMenuItem.refItem.DESC;
-
-                                                                        }
-                                                                        break;
-                                                                    case descState.skills:
-                                                                        {
-
-                                                                            CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
-                                                                            newText = "Accuracy: ";
-                                                                            newText += skil.ACCURACY.ToString();
-                                                                            newText += "\n Base Damage: " + ((int)skil.DAMAGE);
-                                                                            newText += "\n Side effect: " + skil.EFFECT;
-
-                                                                        }
-                                                                        break;
-
-                                                                    case descState.equipped:
-                                                                        {
-                                                                            CommandSkill skil = (manager.invManager.selectedMenuItem.refItem as CommandSkill);
-
-                                                                            newText += "Learn upgraded in skill " + skil.NEXTCOUNT + " uses";
-
-                                                                        }
-                                                                        break;
-
-                                                                }
-                                                                txt.text = newText;
-                                                                txt.resizeTextForBestFit = true;
-                                                                break;
-                                                        }
+                                                        newText = manager.invManager.selectedMenuItem.refItem.DESC;
+                                                 
+                                                        txt.text = newText;
+                                                        txt.resizeTextForBestFit = true;
+                                                       
                                                     }
                                                 }
                                             }
@@ -293,14 +239,17 @@ public class CameraScript : MonoBehaviour
 
 
                                 }
-                                else if (infoObject.GetComponent<StatScript>())
+                                else if (infoObject.GetComponent<BaseStats>())
                                 {
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
-                                        healthSlider.value = infoObject.GetComponent<StatScript>().HEALTH / infoObject.GetComponent<StatScript>().MAX_HEALTH;
-                                        healthText.text = infoObject.GetComponent<StatScript>().HEALTH.ToString() + "/" + infoObject.GetComponent<StatScript>().MAX_HEALTH.ToString();
+                                        healthSlider.value = (float)infoObject.BASE_STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                        healthText.text = infoObject.BASE_STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
                                     }
+
+                                    infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
+                                
 
                                 }
                             }

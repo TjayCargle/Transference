@@ -12,20 +12,37 @@ public class EnemyScript : LivingObject
     public int headCount = 0;
     public int psudeoActions = 0;
     public Vector3 calcLocation;
-    TileScript targetTile;
+   // TileScript targetTile;
     ManagerScript manager;
     public TileScript nextTile;
-
-    public void MoveStart()
+    private float internalTimer = 1.0f;
+    [SerializeField]
+    path currentPath;
+    public void MoveStart(Object checkPath)
     {
-        //  Debug.Log(FullName+" move start");
+        path apath = checkPath as path;
+        currentPath = apath;
 
+        internalTimer = 1.0f;
         myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
-
+        myManager.ShowSelectedTile(currentPath.realTarget, Color.magenta);
+        myManager.myCamera.UpdateCamera();
+        
+    }
+    public void AttackStart()
+    {
+        internalTimer = 1.0f;
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
+        myManager.myCamera.UpdateCamera();
 
     }
     public bool MoveEvent(Object target)
     {
+        if(internalTimer >= 0)
+        {
+            internalTimer -= 0.02f;
+            return false;
+        }
 
         bool isDone = false;
         path pathTarget = target as path;
@@ -37,7 +54,7 @@ public class EnemyScript : LivingObject
         if(headCount == 0)
         {
             isDone = true;
-            TakeAction();
+            TakeRealAction();
             if (ACTIONS <= 0)
             {
                 isPerforming = false;
@@ -55,7 +72,7 @@ public class EnemyScript : LivingObject
         float dist = Vector3.Distance(nextTile.transform.position, transform.position);
         if (dist > 0.5f)
         {
-           transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.1f);
+           transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.05f);
             //transform.Translate(directionVector * 0.5f);
         }
         else
@@ -80,7 +97,7 @@ public class EnemyScript : LivingObject
         if (pathTarget.currentPath.Count == 0)
         {
             isDone = true;
-            TakeAction();
+            TakeRealAction();
             if (ACTIONS <= 0)
             {
                 isPerforming = false;
@@ -107,11 +124,16 @@ public class EnemyScript : LivingObject
 
     public bool EAtkEvent(Object target)
     {
-       // Debug.Log(FullName + " atacking");
-        bool isDone = true;
-        //if(ACTIONS > 0)
+        if (internalTimer >= 0)
         {
-            myManager.MoveCameraAndShow(this);
+            internalTimer -= 0.02f;
+            return false;
+        }
+        // Debug.Log(FullName + " atacking");
+        bool isDone = true;
+        if(ACTIONS > 0)
+        {
+            //myManager.MoveCameraAndShow(this);
             LivingObject realTarget = target as LivingObject;
             if (SSTATUS == SecondaryStatus.confusion)
             {
@@ -139,9 +161,9 @@ public class EnemyScript : LivingObject
                 myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
             }
-            // Debug.Log(FullName + " used " + bestReaction.atkName);
+            //  Debug.Log(FullName + " used " + bestReaction.atkName);
 
-            TakeAction();
+            TakeRealAction();
 
         }
         return isDone;
@@ -181,11 +203,11 @@ public class EnemyScript : LivingObject
                         if (manager.GetObjectAtTile(checkTile))
                         {
 
-                            if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>())
+                            if (manager.GetObjectAtTile(checkTile))
                             {
-                                if (manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>().FACTION == Faction.enemy)
+                                if (manager.GetObjectAtTile(checkTile).FACTION == Faction.enemy)
                                 {
-                                    LivingObject living = manager.GetObjectAtTile(checkTile).GetComponent<LivingObject>();
+                                    GridObject living = manager.GetObjectAtTile(checkTile);
                                     if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
                                     {
                                         current = checkTile;
@@ -250,7 +272,7 @@ public class EnemyScript : LivingObject
     }
     public TileScript DetermineMoveLocation(TileScript targetTile)
     {
-        // Debug.Log(FullName + " is Determining move location");
+        //Debug.Log(FullName + " " + calcLocation.ToString());
         TileScript newTile = null;
         List<TileScript> myTiles = myManager.GetMoveAbleTiles(calcLocation, MOVE_DIST, this);
         for (int i = 0; i < myTiles.Count; i++)
@@ -276,6 +298,7 @@ public class EnemyScript : LivingObject
                 }
             }
         }
+ 
         return newTile;
     }
     public LivingObject FindNearestEnemy()
@@ -403,7 +426,7 @@ public class EnemyScript : LivingObject
             //   TakeAction();
         }
         List<EActType> etypes = new List<EActType>();
-        path p = null;
+        List<path> possiblePaths = new List<path>();
         LivingObject liveObj = null;
         for (int i = 0; i < psudeoActions; i++)
         {
@@ -417,7 +440,7 @@ public class EnemyScript : LivingObject
                     int amount = DetermineEnemiesInRange(calcLocation);
                     if (amount == 0)
                     {
-
+                        TileScript targetTile = new TileScript();
                         currentEnemy = liveObj;
                         targetTile = DetermineMoveLocation(liveObj.currentTile);
 
@@ -428,12 +451,13 @@ public class EnemyScript : LivingObject
                                 calcLocation = targetTile.transform.position;
                                 calcLocation.y = 0.5f;
 
-                                p = ScriptableObject.CreateInstance<path>();
+                               path p = ScriptableObject.CreateInstance<path>();
                                 p.realTarget = targetTile;
                                 p.currentPath = new Queue<TileScript>();
                                 //myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
                                 //myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent,null,0);
                                 etypes.Add(EActType.move);
+                                possiblePaths.Add(p);
                             }
                             else
                             {
@@ -460,23 +484,24 @@ public class EnemyScript : LivingObject
                     // TakeAction();
 
                     isPerforming = false;
-
+                    Wait();
                 }
             }
         }
-
+        int pathNum = possiblePaths.Count -1;
         for (int i = 0; i < etypes.Count; i++)
         {
             switch (etypes[i])
             {
                 case EActType.move:
                     //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, p, "" + FullName + "move event " + i, MoveEvent, MoveStart, 0);
+                    myManager.CreateEvent(this, possiblePaths[pathNum], "" + FullName + "move event " + i, MoveEvent, null, 0, MoveStart);
+                    pathNum--;
                     break;
 
                 case EActType.atk:
                     // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, null, 0);
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, AttackStart, 0);
                     break;
 
              

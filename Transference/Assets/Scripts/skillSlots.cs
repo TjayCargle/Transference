@@ -62,7 +62,7 @@ public class skillSlots : MonoBehaviour {
 
     public bool CanAdd()
     {
-        if (SKILLS.Count < 5)
+        if (SKILLS.Count < 6)
             return true;
         return false;
     }

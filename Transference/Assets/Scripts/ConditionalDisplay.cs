@@ -10,6 +10,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool isAffectDisplay = false;
     public bool requiresDoorTile = false;
     public bool requiresShopTile = false;
+    public bool requriesSelectedLiving = false;
     ManagerScript manager;
     // Use this for initialization
     void Start()
@@ -64,19 +65,39 @@ public class ConditionalDisplay : MonoBehaviour
                 }
             }
 
-
-
         }
+
+
+        if (requriesSelectedLiving == true)
+        {
+            if (manager.myCamera.infoObject == null)
+            {
+          
+                gameObject.SetActive(false);
+                return;
+            }
+            else if (!manager.myCamera.infoObject.GetComponent<LivingObject>())
+            {
+        
+                gameObject.SetActive(false);
+                return;
+            }
+        }
+
 
         if (manager)
         {
 
             if (requiresDoorTile == true)
             {
-                if (manager.myCamera.currentTile.TTYPE != TileType.door)
+                if (manager.myCamera.currentTile)
                 {
-                    gameObject.SetActive(false);
-                    return;
+
+                    if (manager.myCamera.currentTile.TTYPE != TileType.door)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
                 }
             }
 

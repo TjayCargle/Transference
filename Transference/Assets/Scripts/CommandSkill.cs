@@ -21,7 +21,7 @@ public class CommandSkill : SkillScript
     private List<Vector2> affecttedTiles;
 
     [SerializeField]
-    protected RanngeType rType;
+    protected RangeType rType;
 
     [SerializeField]
     protected float critRate;
@@ -90,7 +90,7 @@ public class CommandSkill : SkillScript
         set { critRate = value; }
     }
 
-    public RanngeType RTYPE
+    public RangeType RTYPE
     {
         get { return rType; }
         set { rType = value; }
@@ -229,7 +229,7 @@ public class CommandSkill : SkillScript
         this.DESC = PossibleDesc(RTYPE, DAMAGE, HITS, EFFECT);
     }
 
-    public string PossibleDesc(RanngeType pRtype, DMG pDMG, int pHits, SideEffect pEffect)
+    public string PossibleDesc(RangeType pRtype, DMG pDMG, int pHits, SideEffect pEffect)
     {
         string potentialDesc;
         if(SUBTYPE == SubSkillType.Buff)
@@ -261,39 +261,39 @@ public class CommandSkill : SkillScript
         }
         else
         {
-            potentialDesc = ACCURACY + "% chance to deal " + pDMG + " " + this.ELEMENT + " based " + this.ETYPE + " damage to";
+            potentialDesc = ACCURACY + "% chance to deal " + pDMG + " " + this.ETYPE +" "+this.ELEMENT + " damage";
         }
 
-        switch (RTYPE)
-        {
-            case RanngeType.single:
-                if(TILES.Count > 1)
-                {
-                    potentialDesc += " targets in range ";
-                }
-                else
-                {
-                    potentialDesc += " target ";
-                }
-                break;
-            case RanngeType.multi:
-                potentialDesc += " target ";
-                break;
-            case RanngeType.area:
-                potentialDesc += " everyone in range ";
-                break;
-            case RanngeType.any:
-                potentialDesc += " yourself or target ";
-                break;
-            case RanngeType.anyarea:
-                potentialDesc += " everyone including yourself in range ";
-                break;
-            case RanngeType.multiarea:
-                potentialDesc += " everyone in selected area ";
-                break;
-            default:
-                break;
-        }
+        //switch (RTYPE)
+        //{
+        //    case RangeType.single:
+        //        if(TILES.Count > 1)
+        //        {
+        //            potentialDesc += " targets in range ";
+        //        }
+        //        else
+        //        {
+        //            potentialDesc += " target ";
+        //        }
+        //        break;
+        //    case RangeType.multi:
+        //        potentialDesc += " target ";
+        //        break;
+        //    case RangeType.area:
+        //        potentialDesc += " everyone in range ";
+        //        break;
+        //    case RangeType.any:
+        //        potentialDesc += " yourself or target ";
+        //        break;
+        //    case RangeType.anyarea:
+        //        potentialDesc += " everyone including yourself in range ";
+        //        break;
+        //    case RangeType.multiarea:
+        //        potentialDesc += " everyone in selected area ";
+        //        break;
+        //    default:
+        //        break;
+        //}
 
         if (SUBTYPE == SubSkillType.RngAtk)
         {
@@ -315,6 +315,10 @@ public class CommandSkill : SkillScript
             {
                 potentialDesc += " with a chance to debuff " + Common.GetSideEffectText(this.EFFECT);
             }
+        }
+        if(CRIT_RATE > 0)
+        {
+            potentialDesc += " and " + CRIT_RATE + "% chance to land a critical hit.";
         }
         return potentialDesc;
     }

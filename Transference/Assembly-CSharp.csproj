@@ -101,8 +101,11 @@
     <Compile Include="Assets\Scripts\Expbar.cs" />
     <Compile Include="Assets\Scripts\ExpManager.cs" />
     <Compile Include="Assets\Scripts\FlavorTextImg.cs" />
+    <Compile Include="Assets\Scripts\GameOverBtn.cs" />
+    <Compile Include="Assets\Scripts\GameOverText.cs" />
     <Compile Include="Assets\Scripts\GridAnimationObj.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
+    <Compile Include="Assets\Scripts\GridOjectManager.cs" />
     <Compile Include="Assets\Scripts\HazardManager.cs" />
     <Compile Include="Assets\Scripts\HazardScript.cs" />
     <Compile Include="Assets\Scripts\HazardSetup.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="Assets\Scripts\NewSkillPrompt.cs" />
     <Compile Include="Assets\Scripts\NonCombatButton.cs" />
     <Compile Include="Assets\Scripts\NonCombatController.cs" />
+    <Compile Include="Assets\Scripts\ObjManager.cs" />
     <Compile Include="Assets\Scripts\OppSkill.cs" />
     <Compile Include="Assets\Scripts\OptionsCtrl.cs" />
     <Compile Include="Assets\Scripts\OptionsManager.cs" />
@@ -150,6 +154,7 @@
     <Compile Include="Assets\Scripts\TileManager.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
     <Compile Include="Assets\Scripts\UsableScript.cs" />
+    <Compile Include="Assets\Scripts\UsedText.cs" />
     <Compile Include="Assets\Scripts\VoicesManager.cs" />
     <Compile Include="Assets\Scripts\WeaponEquip.cs" />
     <Compile Include="Assets\Scripts\WeaponManager.cs" />

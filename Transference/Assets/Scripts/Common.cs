@@ -86,28 +86,45 @@ public enum ModifiedStat
     Speed,
     Skill,
     dmg,
-    all
+    all,
+    ElementBody
 
 }
-public enum RanngeType
+public enum RangeType
 {
     single,
     multi,
     area,
     any,
     anyarea,
-    multiarea
+    multiarea,
+    adjacent,
+    pinWheel,
+    detached,
+    stretched,
+    rotator,
+    fan,
+    spear,
+    lance,
+    line,
+    rect,
+    cone,
+    tpose,
+    clover,
+    cross,
+    square,
+    box,
+    diamond,
+    crosshair
 }
 
 public enum TargetType
 {
-    self,
+
     ally,
-    allyAndSelf,
     enemy,
-    alliesInRange,
-    EnemiesInRange,
-    any
+    range,
+    adjecent
 }
 
 public enum BuffType
@@ -260,7 +277,8 @@ public enum ItemType
     buff,
     dmg,
     actionBoost,
-    random
+    random,
+    summon
 }
 
 public enum IconSet
@@ -462,16 +480,16 @@ public class MassAtkConatiner : ScriptableObject
 public class AtkConatiner : ScriptableObject
 {
     public LivingObject attackingObject;
-    public LivingObject dmgObject;
+    public GridObject dmgObject;
     public Element attackingElement;
     public EType attackType;
     public int dmg;
     public Reaction alteration;
     public CommandSkill command;
     public DmgReaction react;
-    private AtkConatiner container;
 
-    public AtkConatiner(AtkConatiner container)
+
+    public void Inherit (AtkConatiner container)
     {
         this.attackingObject = container.attackingObject;
         this.dmgObject = container.dmgObject;
@@ -481,7 +499,7 @@ public class AtkConatiner : ScriptableObject
         this.alteration = container.alteration;
         this.command = container.command;
         this.react = container.react;
-        this.container = container.container;
+
     }
 }
 public class LearnContainer : ScriptableObject
@@ -520,6 +538,7 @@ public enum currentMenu
     OppMove,
     PlayerOptions,
     act,
+    CmdItems,
     none
 }
 public enum Faction
@@ -566,10 +585,13 @@ public struct MapDetail
     public List<int> doorIndexes;
     public List<string> roomNames;
     public List<int> roomIndexes;
+    public List<int> startIndexes;
     public List<int> enemyIndexes;
     public List<int> hazardIndexes;
     public List<int> shopIndexes;
+    public List<int> objIndexes;
     public Texture texture;
+    public int StartingPosition;
 }
 public enum descState
 {
@@ -681,6 +703,7 @@ public class Common : ScriptableObject
 
     public static int MaxSkillLevel = 30;
     public static int maxDmg = 999;
+    public static int MaxLevel = 99;
     public static List<EHitType> noHitList = new List<EHitType>()
     {
         EHitType.normal,
@@ -1012,7 +1035,7 @@ public class Common : ScriptableObject
             SkillScript askill = useable as SkillScript;
             switch (askill.ELEMENT)
             {
-         
+
                 case Element.Buff:
                     boostText = "Doubles the effect of the buff. ";
                     break;
@@ -1024,14 +1047,14 @@ public class Common : ScriptableObject
                 case Element.Passive:
                     boostText = "Boosts the effects of the passive skill by 15%. ";
                     break;
-             
+
                 case Element.Auto:
                     boostText = "Increases the chance of the auto skill triggering by 20% ";
                     break;
-       
+
             }
         }
-        else if(useable.GetType() == typeof(ArmorScript))
+        else if (useable.GetType() == typeof(ArmorScript))
         {
             boostText = "Gain improved resistances but also greater weaknesses to attacks.";
         }
@@ -1185,5 +1208,39 @@ public class Common : ScriptableObject
             newElement = ChangeElement(element);
         }
         return newElement;
+    }
+
+    public static void SetWeaponDistRange(WeaponScript weapon)
+    {
+        switch (weapon.ATKRANGE)
+        {
+          
+            case RangeType.adjacent:
+                weapon.Range = 1;
+                weapon.DIST = 1;
+                break;
+            case RangeType.pinWheel:
+                weapon.Range = 2;
+                weapon.DIST = 2;
+                break;
+            case RangeType.detached:
+                weapon.Range = 1;
+                weapon.DIST = 2;
+                break;
+            case RangeType.stretched:
+                weapon.Range = 2;
+                weapon.DIST = 3;
+                break;
+            case RangeType.spear:
+                weapon.Range = 2;
+                weapon.DIST = 2;
+                break;
+            case RangeType.lance:
+                weapon.Range = 3;
+                weapon.DIST = 3;
+                break;
+     
+            
+        }
     }
 }

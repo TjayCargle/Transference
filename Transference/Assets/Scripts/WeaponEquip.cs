@@ -47,7 +47,10 @@ public class WeaponEquip : Equipable
       
     }
 
-
+    public RangeType RTYPE
+    {
+        get { return equipped.ATKRANGE; }
+    }
 
     public int ATTACK
     {

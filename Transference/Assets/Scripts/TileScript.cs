@@ -82,6 +82,8 @@ public class TileScript : MonoBehaviour, IComparable
     private string mapNmae;
     [SerializeField]
     private int roomIndex;
+    [SerializeField]
+    private int startIndex;
     public string MAP
     {
         get { return mapNmae; }
@@ -93,6 +95,12 @@ public class TileScript : MonoBehaviour, IComparable
         get { return roomIndex; }
         set { roomIndex = value; }
     }
+
+    public int START
+    {
+        get { return startIndex; }
+        set { startIndex = value; }
+    }
     public Material MAT
     {
         get { return mat; }
@@ -102,6 +110,7 @@ public class TileScript : MonoBehaviour, IComparable
     {
         MAP = "";
         ROOM = -1;
+        START = -1;
     }
     public int CompareTo(object obj)
     {
@@ -134,4 +143,6 @@ public class TileScript : MonoBehaviour, IComparable
 
         mesh.uv = uvs;
     }
+
+
 }

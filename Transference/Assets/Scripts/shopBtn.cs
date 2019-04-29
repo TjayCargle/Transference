@@ -125,7 +125,7 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                                 if (aug.AUGMENT < Augment.end && aug.AUGMENT != Augment.none)
                                 {
                                     shop.AUGMENT = aug.AUGMENT;
-                                    shop.ChangeTopicAndWindow("Last chance to turn back.", ShopWindow.removingItem);
+                                    shop.ChangeTopicAndWindow("You must give up an item for this.", ShopWindow.removingItem);
                                 }
                             }
                         }

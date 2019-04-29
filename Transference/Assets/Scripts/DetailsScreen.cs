@@ -237,7 +237,7 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=lime>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
                 finalText = "This is your Physical level. This is increased by using <color=yellow>physical skills</color>. Leveling this up randomly increases <color=#ff117a>Strength</color> or <color=orange>Defense</color>.";
@@ -246,7 +246,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your magical level. This is increased by using <color=yellow>magical skills</color>. Leveling this up randomly increases <color=#b400e9>Magic</color> or <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=cyan>Speed</color> or <color=#00FF00>Skill</color>.";
+                finalText = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=#00FFFF>Speed</color> or <color=#00FF00>Skill</color>.";
                 break;
 
         }

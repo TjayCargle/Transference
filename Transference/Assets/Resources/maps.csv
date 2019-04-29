@@ -1,5 +1,6 @@
--id, name,texture num, map width, map height, num of doors, door indexs, Room Names, Room indexes ,num of enemies, enemy indexs,num of hazards, hazard indexes,num of shops,shop index, p1-p8xy  maptype s= start/n=norm/b=boss,
-0,Private study,0 ,8,6,2, 43,44,Upper Hallway,Upper Hallway,1,1, 4, 34, 27, 28, 37, 0,1,0
-1,Upper Hallway, 2,5,8,5, 36,37,1,2,4,Game Room,Game Room,Private study,Private study,Gift Shop,2,2,0,0,3, 2, 17, 18, 0,0
-2,Game Room,1, 5,7,2,1,2,Game Room,Game Room,1,1, 5, 18, 22,28, 32, 34, 2, 15, 19,0
-3,Gift Shop, 0,5,5,1, 10,Upper Hallway,1, 0, 0, 1, 12
+-id, name,texture num, map width, map height, num of doors, door indexs, Room Names, Room indexes,Start Indexes ,num of enemies, enemy indexs,num of hazards, hazard indexes,num of shops,shop index,num objs, obj index p1-p8xy  maptype s= start/n=norm/b=boss,
+0,Private study,0 ,8,6,3, 43,44,3,Upper Hallway,Upper Hallway,Hidden Room,1,1,4,1,2,22, 3, 34, 27, 28, 0,1,0,0
+1,Upper Hallway, 2,5,8,5, 36,37,1,2,4,Game Room,Game Room,Private study,Private study,Gift Shop,2,2,0,0,3, 1,2,43,44,10,2, 17, 18, 0,0,0
+2,Game Room,1, 5,7,2,1,2,Upper Hallway,Upper Hallway,1,1,36,37, 5, 18, 22,28, 32, 34, 2, 15, 19,0,0
+3,Gift Shop, 0,5,5,1, 10,Upper Hallway,1, 3,0, 0, 1, 12,1,18
+4,Hidden Room,2,4,6,1,22,Private study,0,3,1,13,0,0,1,7

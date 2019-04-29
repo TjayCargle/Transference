@@ -71,9 +71,9 @@ public class StatScript : MonoBehaviour
     {
         get { return myBaseStr; }
         set { myBaseStr = value;
-            if (myBaseStr > 50)
+            if (myBaseStr > Common.MaxLevel)
             {
-                myBaseStr = 50;
+                myBaseStr = Common.MaxLevel;
             }
         }
     }
@@ -81,9 +81,9 @@ public class StatScript : MonoBehaviour
     {
         get { return myBaseMag; }
         set { myBaseMag = value;
-            if (myBaseMag > 50)
+            if (myBaseMag > Common.MaxLevel)
             {
-                myBaseMag = 50;
+                myBaseMag = Common.MaxLevel;
             }
         }
     }
@@ -91,9 +91,9 @@ public class StatScript : MonoBehaviour
     {
         get { return myBaseDefense; }
         set { myBaseDefense = value;
-            if (myBaseDefense > 50)
+            if (myBaseDefense > Common.MaxLevel)
             {
-                myBaseDefense = 50;
+                myBaseDefense = Common.MaxLevel;
             }
         }
     }
@@ -101,9 +101,9 @@ public class StatScript : MonoBehaviour
     {
         get { return myBaseResistance; }
         set { myBaseResistance = value;
-            if (myBaseResistance > 50)
+            if (myBaseResistance > Common.MaxLevel)
             {
-                myBaseResistance = 50;
+                myBaseResistance = Common.MaxLevel;
             }
         }
     }
@@ -113,9 +113,9 @@ public class StatScript : MonoBehaviour
         set
         {
             myBaseSpeed = value;
-            if (myBaseSpeed > 50)
+            if (myBaseSpeed > Common.MaxLevel)
             {
-                myBaseSpeed = 50;
+                myBaseSpeed = Common.MaxLevel;
             }
         }
     }
@@ -123,9 +123,9 @@ public class StatScript : MonoBehaviour
     {
         get { return myBaseSkill; }
         set { myBaseSkill = value;
-            if (myBaseSkill > 50)
+            if (myBaseSkill > Common.MaxLevel)
             {
-                myBaseSkill = 50;
+                myBaseSkill = Common.MaxLevel;
             }
         }
     }

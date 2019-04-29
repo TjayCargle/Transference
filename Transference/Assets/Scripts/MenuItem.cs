@@ -66,6 +66,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void ApplyAction(GridObject invokingObject)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
         if (myManager.currentState == State.ChangeOptions)
         {
             return;
@@ -89,6 +93,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //entry.index = myManager.invManager.currentIndex;
                     //entry.menu = currentMenu.command;
                     //myManager.enterState(entry);
+
                     myManager.StackNewSelection(State.PlayerMove, currentMenu.act);
 
                     MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
@@ -103,7 +108,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     if (invokingObject.GetComponent<LivingObject>())
                     {
                         LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                        myManager.attackableTiles = myManager.GetWeaponAttackableTiles(liveInvokingObject);
+                        myManager.attackableTiles = myManager.GetAttackableTiles(liveInvokingObject, myManager.player.current.WEAPON);
                         myManager.ShowWhite();
                         if (myManager.attackableTiles.Count > 0)
                         {
@@ -140,10 +145,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                                 if (livvy.FACTION != myManager.player.current.FACTION)
                                                 {
                                                     DmgReaction reac;
-                                                    if(myManager.player.currentSkill)
-                                                        reac= myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
+                                                    if (myManager.player.currentSkill)
+                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
                                                     else
-                                                        reac= myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
                                                     if (reac.reaction > Reaction.weak)
                                                         reac.damage = 0;
                                                     myManager.myCamera.potentialDamage = reac.damage;
@@ -152,8 +157,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                                     {
                                                         myManager.potential.pulsing = true;
                                                     }
-                                                    if (reac.damage == 0)
-                                                        Debug.Log("Zero " + " /" + reac.reaction);
+                                                
                                                 }
                                             }
                                         }
@@ -164,7 +168,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             }
                             if (foundSomething == false)
                             {
-                                if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[0].transform.position) == true)
+                                if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.player.current.transform.position) == true)
                                 {
                                     myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
 
@@ -182,7 +186,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             //entry.index = myManager.invManager.currentIndex;
                             //entry.menu = currentMenu.command;
                             //myManager.enterState(entry);
-                       
+
                             myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
 
                         }
@@ -467,15 +471,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.generated:
 
-                if (myManager.currentState == State.PlayerOppOptions)
-                {
-                    myManager.player.useOppAction(myManager.oppObj);
-                }
-                else
-                {
-                    myManager.player.useOrEquip();
-                }
-
+              //  myManager.CreateEvent(this, null, "player user or atk", myManager.ReturnTrue, );
+                PlayerUseOrAtk(invokingObject.GetComponent<LivingObject>());
 
                 break;
 
@@ -530,6 +527,18 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
         }
     }
+
+    public void PlayerUseOrAtk(LivingObject invokingObject)
+    {
+        if (myManager.currentState == State.PlayerOppOptions)
+        {
+            myManager.player.useOppAction(myManager.oppObj);
+        }
+        else
+        {
+            myManager.player.useOrEquip();
+        }
+    }
     public bool ComfirmAction(GridObject invokingObject, MenuItemType itemType)
     {
         MenuItemType item = itemType;
@@ -580,7 +589,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                         // myManager.currentState = State.PlayerInput;
                         // myManager.returnState();
-                         myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                        myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
                         return true;
                     }
                     else

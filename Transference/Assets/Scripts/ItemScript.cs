@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ItemScript : UsableScript
 {
-    [SerializeField]
-    private int targetRange;
+
     [SerializeField]
     private ItemType iType;
     [SerializeField]
@@ -19,12 +18,8 @@ public class ItemScript : UsableScript
 
     [SerializeField]
     private ModifiedStat modStat;
-
-    public int RANGE
-    {
-        get { return targetRange; }
-        set { targetRange = value; }
-    }
+    [SerializeField]
+    private RangeType rType;
 
     public ItemType ITYPE
     {
@@ -35,6 +30,11 @@ public class ItemScript : UsableScript
     {
         get { return tType; }
         set { tType = value; }
+    }
+    public RangeType RTYPE
+    {
+        get { return rType; }
+        set { rType = value; }
     }
 
     public float VALUE
@@ -58,7 +58,7 @@ public class ItemScript : UsableScript
         get { return modStat; }
         set { modStat = value; }
     }
-    public bool useItem(LivingObject target)
+    public bool useItem(LivingObject target, TileScript targetTile = null)
     {
         bool usedEffect = false;
         switch (ITYPE)
@@ -177,7 +177,7 @@ public class ItemScript : UsableScript
                     switch (resultEffect)
                     {
                         case 0:
-                            usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * Random.Range( -1.0f,1.0f)));
+                            usedEffect = target.ChangeHealth((int)(target.MAX_HEALTH * Random.Range(-1.0f, 1.0f)));
                             break;
                         case 1:
                             usedEffect = target.ChangeMana((int)(target.MAX_MANA * Random.Range(-1.0f, 1.0f)));
@@ -202,19 +202,19 @@ public class ItemScript : UsableScript
                         case 7:
                             {
 
-                            CommandSkill randomBuff = ScriptableObject.CreateInstance<CommandSkill>();
-                            randomBuff.EFFECT = SideEffect.none;
-                           randomBuff.BUFF = (BuffType)Random.Range(1,6);
-                           randomBuff.BUFFVAL = Random.Range(10,100);
-                           randomBuff.ELEMENT = Element.Buff;
-                           randomBuff.SUBTYPE = SubSkillType.Buff;
+                                CommandSkill randomBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                                randomBuff.EFFECT = SideEffect.none;
+                                randomBuff.BUFF = (BuffType)Random.Range(1, 6);
+                                randomBuff.BUFFVAL = Random.Range(10, 100);
+                                randomBuff.ELEMENT = Element.Buff;
+                                randomBuff.SUBTYPE = SubSkillType.Buff;
 
-                            target.INVENTORY.BUFFS.Add(randomBuff);
-                            BuffScript buff = target.gameObject.AddComponent<BuffScript>();
-                            buff.SKILL = randomBuff;
-                            buff.BUFF = randomBuff.BUFF;
-                            buff.COUNT = 1;
-                            target.ApplyPassives();
+                                target.INVENTORY.BUFFS.Add(randomBuff);
+                                BuffScript buff = target.gameObject.AddComponent<BuffScript>();
+                                buff.SKILL = randomBuff;
+                                buff.BUFF = randomBuff.BUFF;
+                                buff.COUNT = 1;
+                                target.ApplyPassives();
                             }
 
                             break;
@@ -271,6 +271,58 @@ public class ItemScript : UsableScript
                                 target.ApplyPassives();
                             }
                             break;
+                    }
+                }
+                break;
+            case ItemType.summon:
+                {
+                    EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                    if (enemyManager)
+                    {
+                        if (manager)
+                        {
+
+                            GameObject temp = Instantiate(enemyManager.enemyPrefab, Vector2.zero, Quaternion.identity);
+                            if (temp.GetComponent<EnemySetup>())
+                            {
+                                Destroy(temp.GetComponent<EnemySetup>());
+                            }
+                            if (temp.GetComponent<EnemySetup>())
+                            {
+                                EnemySetup es = temp.GetComponent<EnemySetup>();
+                                GameObject.DestroyImmediate(es);
+                            }
+                       
+                            if (!temp.GetComponent<LivingSetup>())
+                            {
+                                temp.gameObject.AddComponent<LivingSetup>();
+                            }
+
+                            ActorScript actor = temp.gameObject.AddComponent<ActorScript>();
+                            actor.FACTION = Faction.ally;
+
+                            actor.Setup();
+                            DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+
+                            SpriteRenderer shadowRender = actor.SHADOW.GetComponent<SpriteRenderer>();
+                            shadowRender.color = Common.GetFactionColor(actor.FACTION) - new Color(0, 0, 0, 0.3f);
+                            actor.transform.position = targetTile.transform.position + new Vector3(0, 0.5f, 0);
+                            actor.currentTile = targetTile;
+                            actor.currentTile.isOccupied = true;
+                            actor.gameObject.SetActive(true);
+                            for (int i = 0; i < target.LEVEL; i++)
+                            {
+                                actor.LevelUp();
+                            }
+                            actor.BASE_STATS.HEALTH = actor.BASE_STATS.MAX_HEALTH;
+                            actor.BASE_STATS.MANA = actor.BASE_STATS.MAX_MANA;
+                            actor.ACTIONS = 0;
+                            actor.BASE_STATS.FATIGUE = 0;
+                            manager.gridObjects.Add(actor);
+                            manager.SoftReset();
+                        }
+                        usedEffect = true;
                     }
                 }
                 break;

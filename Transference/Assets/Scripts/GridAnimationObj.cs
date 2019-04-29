@@ -60,9 +60,9 @@ public class GridAnimationObj : GridObject
                     }
                 }
             }
-            script.LoadList(path);
+            script.LoadList(path, false);
             gameObject.SetActive(true);
-
+          //  Debug.Log("anim");
             isShowing = true;
             script.index = 0;
             //anim.Play();

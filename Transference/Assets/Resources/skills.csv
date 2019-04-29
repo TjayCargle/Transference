@@ -23,60 +23,60 @@
 - Water all moves area
 -
 -Slash
-10,Slice,Slash,Charge,none,3,physical,single,0,0,70,tiny,2,0,1,0,1
-11,Alt Slice,Slash,Charge,none,3,physical,single,0,0,70,tiny,2,0,1,0,2
-12,Mega Slice,Slash,Cost,none,-6,physical,single,0,0,75,small,3,0,1,0,1
-13,Ultra Slice,Slash,Cost,none,-12,physical,single,0,0,75,small,2,0,3,-1,1,0,1,1,1
-14,Arcane Slice,Slash,Magic,none,5,magical,single,0,0,80,tiny,2,0,1,0,1
-15,Etherial Slice,Slash,Magic,none,8,magical,single,0,0,80,small,3,0,3,-1,1,0,1,1,1
+10,Slice,Slash,Charge,none,3,physical,adjacent,0,0,70,tiny,2,0,1,0,1
+11,Alt Slice,Slash,Charge,none,3,physical,spear,0,0,70,tiny,2,0,1,0,2
+12,Mega Slice,Slash,Cost,none,-6,physical,rotator,5,0,75,small,3,0,1,0,1
+13,Ultra Slice,Slash,Cost,none,-12,physical,line,5,0,75,small,2,0,3,-1,1,0,1,1,1
+14,Arcane Slice,Slash,Magic,none,5,magical,spear,0,0,80,tiny,2,0,1,0,1
+15,Etherial Slice,Slash,Magic,none,8,magical,line,5,0,80,small,3,0,3,-1,1,0,1,1,1
 -
 -Pierce
-20,Sting,Pierce,Charge,none,3,physical,single,0,0,70,tiny,1,0,2,0,1,0,2
-21,Alt Sting,Pierce,Charge,none,3,physical,single,0,0,70,tiny,1,0,2,0,1,0,-1
-22,Mega Sting,Pierce,Cost,none,-6,physical,single,0,0,75,small,1,0,3,0,1,0,2,0,3
-23,Ultra Sting,Pierce,Cost,none,-12,physical,single,0,0,75,small,2,0,2,0,1,0,2
-24,Arcane Sting,Pierce,Magic,none,5,magical,single,0,0,80,tiny,1,0,1,0,1
-25,Etherial Sting,Pierce,Magic,none,8,magical,single,0,0,80,small,1,0,6,0,1,0,2,1,1,1,2,-1,1,-1,2
+20,Sting,Pierce,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,2,0,1,0,2
+21,Alt Sting,Pierce,Charge,none,3,physical,detached,0,0,70,tiny,1,0,2,0,1,0,-1
+22,Mega Sting,Pierce,Cost,none,-6,physical,diamond,2,0,75,small,1,0,3,0,1,0,2,0,3
+23,Ultra Sting,Pierce,Cost,none,-12,physical,spear,2,0,75,small,2,0,2,0,1,0,2
+24,Arcane Sting,Pierce,Magic,none,5,magical,detached,0,0,80,tiny,1,0,1,0,1
+25,Etherial Sting,Pierce,Magic,none,8,magical,spear,2,0,80,small,1,0,6,0,1,0,2,1,1,1,2,-1,1,-1,2
 -
 -Blunt
-30,Smash,Blunt,Charge,none,3,physical,single,0,0,70,tiny,1,0,1,0,1
-31,Alt Smash,Blunt,Charge,none,3,physical,single,0,0,70,tiny,1,0,1,1,1
-32,Mega Smash,Blunt,Cost,none,-6,physical,single,0,0,75,small,2,0,1,0,1
-33,Ultra Smash,Blunt,Cost,none,-12,physical,area,0,0,75,small,1,0,2,0,1,1,1
-34,Arcane Smash,Blunt,Magic,none,5,magical,single,0,0,80,tiny,1,0,1,0,1
-35,Etherial Smash,Blunt,Magic,none,8,magical,single,0,0,80,small,2,0,1,0,1
+30,Smash,Blunt,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
+31,Alt Smash,Blunt,Charge,none,3,physical,rotator,0,0,70,tiny,1,0,1,1,1
+32,Mega Smash,Blunt,Cost,none,-6,physical,adjacent,10,0,75,small,2,0,1,0,1
+33,Ultra Smash,Blunt,Cost,none,-12,physical,square,20,0,75,small,1,0,2,0,1,1,1
+34,Arcane Smash,Blunt,Magic,none,5,magical,adjacent,0,0,80,tiny,1,0,1,0,1
+35,Etherial Smash,Blunt,Magic,none,8,magical,rotator,10,0,80,small,2,0,1,0,1
 -
 -Water
-40,Splash,Water,Charge,none,3,physical,area,0,0,70,tiny,1,0,3,-1,1,0,1,1,1
-41,Alt Splash,Water,Charge,none,3,physical,area,0,0,70,tiny,1,0,3,-1,2,0,2,1,2
-42,Mega Splash,Water,Cost,none,-6,physical,area,0,0,75,small,2,0,6,-1,1,0,1,1,1,-1,2,0,2,1,2
-43,Arcane Splash,Water,RngAtk,none,-12,physical,area,0,0,75,small,1,0,3,-1,1,0,1,1,1,2,5
-44,Arcane Splash,Water,Magic,none,5,magical,area,0,0,80,tiny,1,0,1,0,1
-45,Etherial Splash,Water,Magic,none,8,magical,area,0,0,80,small,2,0,3,-1,2,0,1,-1,1
+40,Splash,Water,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,3,-1,1,0,1,1,1
+41,Alt Splash,Water,Charge,none,3,physical,diamond,0,0,70,tiny,1,0,3,-1,2,0,2,1,2
+42,Mega Splash,Water,Cost,none,-6,physical,cross,0,0,75,small,2,0,6,-1,1,0,1,1,1,-1,2,0,2,1,2
+43,Ultra Splash,Water,RngAtk,none,-12,physical,square,5,0,75,small,1,0,3,-1,1,0,1,1,1,2,5
+44,Arcane Splash,Water,Magic,none,5,magical,cone,0,0,80,tiny,1,0,1,0,1
+45,Etherial Splash,Water,Magic,none,8,magical,square,0,0,80,small,2,0,3,-1,2,0,1,-1,1
 -
 -Fire
-50,Blaze,Fire,Charge,none,3,physical,multi,0,0,70,tiny,1,0,1,0,1
-51,Alt Blaze,Fire,Charge,none,3,physical,multi,0,0,70,tiny,1,0,1,0,2
-52,Mega Blaze,Fire,Cost,none,-6,physical,multi,0,0,75,small,2,0,3,-1,1,0,1,1,1
-53,Ultra Blaze,Fire,Cost,none,-12,physical,multi,0,0,75,small,2,0,3,0,1,0,2,0,3
-54,Arcane Blaze,Fire,Magic,none,5,magical,multi,0,0,80,tiny,1,0,1,0,1
-55,Etherial Blaze,Fire,Magic,none,8,magical,multi,0,0,80,small,2,0,4,-1,1,0,1,1,1,0,2
+50,Blaze,Fire,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
+51,Alt Blaze,Fire,Charge,none,3,physical,rotator,0,0,70,tiny,1,0,1,0,2
+52,Mega Blaze,Fire,Cost,none,-6,physical,line,0,0,75,small,2,0,3,-1,1,0,1,1,1
+53,Ultra Blaze,Fire,Cost,none,-12,physical,cone,5,0,75,small,2,0,3,0,1,0,2,0,3
+54,Arcane Blaze,Fire,Magic,none,5,magical,line,0,0,80,tiny,1,0,1,0,1
+55,Etherial Blaze,Fire,Magic,none,8,magical,rotator,0,0,80,small,2,0,4,-1,1,0,1,1,1,0,2
 -
 -Ice
-60,Frost,Ice,Charge,none,3,physical,single,0,0,70,tiny,1,0,1,1,2
-61,Alt Frost,Ice,Charge,none,3,physical,single,0,0,70,tiny,1,0,1,1,1
-62,Mega Frost,Ice,Cost,none,-6,physical,single,0,0,75,small,2,0,1,0,2
-63,Ultra Frost,Ice,Cost,none,-12,physical,area,0,0,75,small,1,0,2,0,2,1,1
-64,Arcane Frost,Ice,Magic,none,5,magical,single,0,0,80,tiny,1,0,1,1,1
-65,Etherial Frost,Ice,Magic,none,8,magical,single,0,0,80,small,2,0,1,0,2
+60,Frost,Ice,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,1,2
+61,Alt Frost,Ice,Charge,none,3,physical,detached,0,0,70,tiny,1,0,1,1,1
+62,Mega Frost,Ice,Cost,none,-6,physical,cone,0,0,75,small,2,0,1,0,2
+63,Ultra Frost,Ice,Cost,none,-12,physical,line,5,0,75,small,1,0,2,0,2,1,1
+64,Arcane Frost,Ice,Magic,none,5,magical,cone,0,0,80,tiny,1,0,1,1,1
+65,Etherial Frost,Ice,Magic,none,8,magical,line,0,0,80,small,2,0,1,0,2
 -
 -Elec
-70,Thunder,Electric,RngAtk,none,3,physical,single,0,0,70,tiny,1,0,1,0,1,1,2
-71,Alt Thunder,Electric,RngAtk,none,3,physical,single,0,0,70,tiny,1,0,1,0,2,1,2
-72,Mega Thunder,Electric,RngAtk,none,-6,physical,single,0,0,75,small,1,0,2,0,1,0,2,1,4
-73,Utra Thunder,Electric,RngAtk,none,-12,physical,single,0,0,75,small,1,0,1,0,1,2,3
-74,Arcane Thunder,Electric,RngAtk,none,5,magical,single,0,0,80,tiny,1,0,1,0,1,1,2
-75,Etherial Thunder,Electric,RngAtk,none,8,magical,single,0,0,80,small,2,0,3,-1,1,0,1,1,1,1,3
+70,Thunder,Electric,RngAtk,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1,1,2
+71,Alt Thunder,Electric,RngAtk,none,3,physical,rotator,0,0,70,tiny,1,0,1,0,2,1,2
+72,Mega Thunder,Electric,RngAtk,none,-6,physical,clover,0,0,75,small,1,0,2,0,1,0,2,1,4
+73,Utra Thunder,Electric,RngAtk,none,-12,physical,cone,2,0,75,small,1,0,1,0,1,2,3
+74,Arcane Thunder,Electric,RngAtk,none,5,magical,rotator,0,0,80,tiny,1,0,1,0,1,1,2
+75,Etherial Thunder,Electric,RngAtk,none,8,magical,clover,0,0,80,small,2,0,3,-1,1,0,1,1,1,1,3
 -
 -Buffs
 80,Ralli Str,Buff,Buff,none,4,magical,any,1,0,30,1,str,1,0,1
@@ -144,4 +144,13 @@
 209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Water, Blunt
 210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Slash
 211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Electric
+212,DroidStone,Passive,None,Pierce and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Pierce, Blunt
+213,ZombieStone,Passive,None,Water and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Water, Slash
+214,Flame Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Fire,Water
+215,Aqua Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Water,Electric
+216,Static Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Electric,Ice
+217,Frost Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Ice,Blunt
+218,Hammer Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Blunt,Slash
+219,Chain Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Slash,Pierce
+220,Flame Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Pierce,Fire
 -212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage
