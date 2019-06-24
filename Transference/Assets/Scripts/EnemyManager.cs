@@ -31,7 +31,7 @@ public class EnemyManager : MonoBehaviour {
                 enemies[i].Unset();
                 enemySetup.Unset();
                 enemySetup.enemyId = Random.Range(0, 2);
-                enemySetup.Setup();
+                enemies[i].Setup();
                 subenemies.Add(enemies[i]);
             }
         }
@@ -44,7 +44,7 @@ public class EnemyManager : MonoBehaviour {
                 enemies[i].Unset();
                 enemySetup.Unset();
                 enemySetup.enemyId = Random.Range(0, 2);
-                enemySetup.Setup();
+                enemies[i].Setup();
                 subenemies.Add(enemies[i]);
             }
             while (enemies.Count < num)

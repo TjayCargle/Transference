@@ -43,7 +43,7 @@ public class HazardManager : MonoBehaviour {
                     hazards[i].dropsSkill = true;
                     hazards[i].REWARD = Random.Range(0, 11);
                 }
-                hazardSetup.Setup();
+                hazards[i].Setup();
                 subhazards.Add(hazards[i]);
             }
         }
@@ -66,7 +66,7 @@ public class HazardManager : MonoBehaviour {
                     hazards[i].dropsSkill = true;
                     hazards[i].REWARD = Random.Range(0, 11);
                 }
-                hazardSetup.Setup();
+                hazards[i].Setup();
                 subhazards.Add(hazards[i]);
             }
             while (hazards.Count < num)

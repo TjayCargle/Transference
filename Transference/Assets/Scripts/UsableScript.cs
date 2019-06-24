@@ -64,14 +64,17 @@ public class UsableScript : ScriptableObject
        
         }
     }
-    public virtual void GrantXP(float amount)
+    public virtual bool GrantXP(float amount)
     {
+
         exp -= amount;
         if (exp <= 0)
         {
             LevelUP();
-            exp = 2 + (level * 2);
+            exp = 1 + (level * 2);
+            return true;
         }
+        return false;
     }
   
     public virtual void ApplyAugment(Augment aug)

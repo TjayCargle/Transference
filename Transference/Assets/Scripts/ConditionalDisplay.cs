@@ -11,7 +11,10 @@ public class ConditionalDisplay : MonoBehaviour
     public bool requiresDoorTile = false;
     public bool requiresShopTile = false;
     public bool requriesSelectedLiving = false;
+    public bool checksForEvent = false;
+    public bool requiresSelectedorSpecialTile = false;
     ManagerScript manager;
+    public bool debugging = false;
     // Use this for initialization
     void Start()
     {
@@ -72,13 +75,13 @@ public class ConditionalDisplay : MonoBehaviour
         {
             if (manager.myCamera.infoObject == null)
             {
-          
+
                 gameObject.SetActive(false);
                 return;
             }
             else if (!manager.myCamera.infoObject.GetComponent<LivingObject>())
             {
-        
+
                 gameObject.SetActive(false);
                 return;
             }
@@ -98,6 +101,38 @@ public class ConditionalDisplay : MonoBehaviour
                         gameObject.SetActive(false);
                         return;
                     }
+                }
+            }
+            if (requiresSelectedorSpecialTile == true)
+            {
+                if (manager.myCamera.currentTile)
+                {
+
+                    if (manager.myCamera.infoObject == null && manager.myCamera.currentTile.TTYPE == TileType.regular)
+                    {
+
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+               
+            }
+            if (checksForEvent == true)
+            {
+                if (manager.myCamera.infoObject == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (manager.myCamera.infoObject != manager.player.current)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (!manager.CheckAdjecentTilesEvent(manager.player.current))
+                {
+                    gameObject.SetActive(false);
+                    return;
                 }
             }
 
@@ -121,7 +156,7 @@ public class ConditionalDisplay : MonoBehaviour
             {
                 if (manager.currentState == displayStates[i])
                 {
-                    gameObject.SetActive(true);
+                
                     found = true;
                     break;
                 }
@@ -130,12 +165,15 @@ public class ConditionalDisplay : MonoBehaviour
             if (found == false)
             {
                 gameObject.SetActive(false);
+                if(debugging == true)
+                {
+                    Debug.Log("found false");
+                }
             }
-
-
-
-
-
+        }
+        else
+        {
+            Debug.Log("no manager");
         }
 
     }

@@ -6,6 +6,7 @@ public class ArmorSet : MonoBehaviour
 {
 
     public LivingObject currentObj;
+    public GridObject currentGridObj;
 
     [SerializeField]
     Image[] armorreacts;
@@ -130,6 +131,45 @@ public class ArmorSet : MonoBehaviour
         //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
         attributes[5].text = "Skl: " + currentObj.SKILL;
+
+    }
+    public void updateGridDetails()
+    {
+        if (!currentGridObj)
+            return;
+        selectedHitlist = Common.noHitList;
+
+        if (selectedHitlist != null)
+        {
+            for (int i = 0; i < selectedHitlist.Count; i++)
+            {
+                armorreacts[i].sprite = armorSprites[(int)selectedHitlist[i]];
+            }
+        }
+
+
+        if (wardSlider)
+        {
+                wardSlider.gameObject.SetActive(false);         
+        }
+
+      
+        
+        attributes[0].text = "Str: " + currentGridObj.BASE_STATS.STRENGTH;
+
+        attributes[1].text = "Def: " + currentGridObj.BASE_STATS.DEFENSE;//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+
+
+
+        attributes[2].text = "Spd: " + currentGridObj.BASE_STATS.SPEED;//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+
+
+        attributes[3].text = "Mag: " + currentGridObj.BASE_STATS.MAGIC;
+        attributes[4].text = "Res: " + currentGridObj.BASE_STATS.RESIESTANCE;// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+
+     
+
+        attributes[5].text = "Skl: " + currentGridObj.BASE_STATS.SKILL;
 
     }
 }

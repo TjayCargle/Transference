@@ -274,8 +274,8 @@ public class PlayerController : MonoBehaviour
                         {
 
                             //  UseItem();
-                            myManager.CreateEvent(this, null,"buffered use" ,myManager.ReturnTrue, BuffereduseOrEquip);
-                         //   useOrEquip();
+                            myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
+                            //   useOrEquip();
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
@@ -302,18 +302,26 @@ public class PlayerController : MonoBehaviour
         if (currentItem)
         {
             bool useditem = false;
-            if(!target && TargetTile)
+            if (!target && TargetTile)
             {
-                if(currentItem.TTYPE != TargetType.adjecent)
+                if (currentItem.TTYPE != TargetType.adjecent)
                 {
                     return;
                 }
                 useditem = currentItem.useItem(current, TargetTile);
                 if (useditem == true)
                 {
+                    GridAnimationObj gao = null;
+                    gao = myManager.PrepareGridAnimation(null, current);
+                    gao.type = -2;
+                    gao.magnitute = 0;
+                    gao.LoadGridAnimation();
+
+                  myManager.  CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
                     myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
-        
+
                     current.TakeAction();
                     if (current.ACTIONS > 0)
                         myManager.returnState();
@@ -335,7 +343,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 useditem = currentItem.useItem(target);
-       
+
                 if (useditem == false)
                 {
                     switch (currentItem.ITYPE)
@@ -378,7 +386,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     public void useOrEquip(bool takeAction = true)
     {
         if (current)
@@ -580,7 +588,10 @@ public class PlayerController : MonoBehaviour
                                         }
                                         myManager.tempObject.transform.position = myManager.currentObject.transform.position;
                                         myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                        myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
+                                        if (currentSkill.ETYPE == EType.physical)
+                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
+                                        else
+                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSpells);
                                         //  menuStackEntry entry = new menuStackEntry();
                                         //  entry.state = State.PlayerAttacking;
                                         //  entry.index = invm.currentIndex;
@@ -665,7 +676,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void useOrEquip(LivingObject living,bool takeAction = true )
+    public void useOrEquip(LivingObject living, bool takeAction = true)
     {
         if (living)
         {
@@ -864,7 +875,10 @@ public class PlayerController : MonoBehaviour
                                         {
                                             myMenuManager.ShowNone();
                                         }
-                                        myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
+                            if (currentSkill.ETYPE == EType.physical)
+                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
+                                        else
+                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSpells);
                                         //  menuStackEntry entry = new menuStackEntry();
                                         //  entry.state = State.PlayerAttacking;
                                         //  entry.index = invm.currentIndex;
@@ -1031,13 +1045,27 @@ public class PlayerController : MonoBehaviour
                         }
                         else
                         {
-                            check = myManager.AttackTargets(invoker, tempSKill);
+                            //check = myManager.AttackTargets(invoker, tempSKill);
+                            for (int i = 0; i < myManager.opptargets.Count; i++)
+                            {
+                                bool testcheck = myManager.AttackTarget(invoker, myManager.opptargets[i], tempSKill);
+                                if(testcheck == true)
+                                {
+                                    check = true;
+                                }
+                            }
                         }
                     }
                     else
                     {
-                        check = myManager.AttackTargets(invoker, tempSKill);
-
+                        for (int i = 0; i < myManager.opptargets.Count; i++)
+                        {
+                            bool testcheck = myManager.AttackTarget(invoker, myManager.opptargets[i], tempSKill);
+                            if (testcheck == true)
+                            {
+                                check = true;
+                            }
+                        }
                     }
 
                     if (check == true)

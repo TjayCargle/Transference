@@ -12,7 +12,7 @@ public class EnemyScript : LivingObject
     public int headCount = 0;
     public int psudeoActions = 0;
     public Vector3 calcLocation;
-   // TileScript targetTile;
+    // TileScript targetTile;
     ManagerScript manager;
     public TileScript nextTile;
     private float internalTimer = 1.0f;
@@ -27,7 +27,7 @@ public class EnemyScript : LivingObject
         myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
         myManager.ShowSelectedTile(currentPath.realTarget, Color.magenta);
         myManager.myCamera.UpdateCamera();
-        
+
     }
     public void AttackStart()
     {
@@ -38,7 +38,7 @@ public class EnemyScript : LivingObject
     }
     public bool MoveEvent(Object target)
     {
-        if(internalTimer >= 0)
+        if (internalTimer >= 0)
         {
             internalTimer -= 0.02f;
             return false;
@@ -51,7 +51,7 @@ public class EnemyScript : LivingObject
 
         pathTarget.currentPath = DeterminePath(pathTarget);
         headCount = pathTarget.currentPath.Count;
-        if(headCount == 0)
+        if (headCount == 0)
         {
             isDone = true;
             TakeRealAction();
@@ -65,14 +65,14 @@ public class EnemyScript : LivingObject
         nextTile = pathTarget.currentPath.Peek();
         //  myManager.myCamera.currentTile = nextTile;
         // myManager.myCamera.infoObject = this;
-       
+
         Vector3 directionVector = (nextTile.transform.position - transform.position);
         directionVector.y = 0.0f;
-       
+
         float dist = Vector3.Distance(nextTile.transform.position, transform.position);
         if (dist > 0.5f)
         {
-           transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.05f);
+            transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.05f);
             //transform.Translate(directionVector * 0.5f);
         }
         else
@@ -131,7 +131,7 @@ public class EnemyScript : LivingObject
         }
         // Debug.Log(FullName + " atacking");
         bool isDone = true;
-        if(ACTIONS > 0)
+        if (ACTIONS > 0)
         {
             //myManager.MoveCameraAndShow(this);
             LivingObject realTarget = target as LivingObject;
@@ -142,13 +142,20 @@ public class EnemyScript : LivingObject
                 if (chance <= 2)
                 {
                     Debug.Log("They hit themselves");
-
+                    if (manager.log)
+                    {
+                        manager.log.Log(FullName + " hit themselves ");
+                    }
                     realTarget = this;
                 }
             }
 
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
             manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
+            if (manager.log)
+            {
+                manager.log.Log(FullName + " used " + bestReaction.atkName);
+            }
             myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
             myManager.myCamera.infoObject = realTarget;
             myManager.myCamera.UpdateCamera();
@@ -262,9 +269,13 @@ public class EnemyScript : LivingObject
         {
             if (objects[i].FACTION != Faction.enemy)
             {
-                if (Vector3.Distance(location, objects[i].transform.position) <= Atk_DIST)
+                if (!objects[i].DEAD)
                 {
-                    count++;
+
+                    if (Vector3.Distance(location, objects[i].transform.position) <= Atk_DIST)
+                    {
+                        count++;
+                    }
                 }
             }
         }
@@ -298,7 +309,7 @@ public class EnemyScript : LivingObject
                 }
             }
         }
- 
+
         return newTile;
     }
     public LivingObject FindNearestEnemy()
@@ -343,9 +354,9 @@ public class EnemyScript : LivingObject
         CommandSkill usedSkill = null;
         EHitType currHit = target.ARMOR.HITLIST[(int)WEAPON.AFINITY];
         float modification = 1.0f;
-        for (int j = 0; j < BATTLE_SLOTS.SKILLS.Count; j++)
+        for (int j = 0; j < PHYSICAL_SLOTS.SKILLS.Count; j++)
         {
-            CommandSkill skill = BATTLE_SLOTS.SKILLS[j] as CommandSkill;
+            CommandSkill skill = PHYSICAL_SLOTS.SKILLS[j] as CommandSkill;
             if (skill.ELEMENT != Element.Buff)
             {
                 if (skill.ETYPE == EType.magical)
@@ -451,7 +462,7 @@ public class EnemyScript : LivingObject
                                 calcLocation = targetTile.transform.position;
                                 calcLocation.y = 0.5f;
 
-                               path p = ScriptableObject.CreateInstance<path>();
+                                path p = ScriptableObject.CreateInstance<path>();
                                 p.realTarget = targetTile;
                                 p.currentPath = new Queue<TileScript>();
                                 //myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
@@ -475,7 +486,7 @@ public class EnemyScript : LivingObject
                     {
                         //        Debug.Log("Doing an attack event");
                         //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
-                        etypes.Insert(0,EActType.atk);
+                        etypes.Insert(0, EActType.atk);
                         //   TakeAction();
                     }
                 }
@@ -488,7 +499,7 @@ public class EnemyScript : LivingObject
                 }
             }
         }
-        int pathNum = possiblePaths.Count -1;
+        int pathNum = possiblePaths.Count - 1;
         for (int i = 0; i < etypes.Count; i++)
         {
             switch (etypes[i])
@@ -504,7 +515,7 @@ public class EnemyScript : LivingObject
                     myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, AttackStart, 0);
                     break;
 
-             
+
 
             }
         }
@@ -557,10 +568,15 @@ public class EnemyScript : LivingObject
         BASE_STATS.Reset();
         BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
         INVENTORY.Clear();
-        BATTLE_SLOTS.SKILLS.Clear();
+        PHYSICAL_SLOTS.SKILLS.Clear();
         PASSIVE_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
-
+        PSTATUS = PrimaryStatus.normal;
+        shadow.GetComponent<AnimationScript>().Unset();
+        if (GetComponent<AnimationScript>())
+        {
+            GetComponent<AnimationScript>().Unset();
+        }
     }
 }

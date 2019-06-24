@@ -1,6 +1,9 @@
 -id, name,texture num, map width, map height, num of doors, door indexs, Room Names, Room indexes,Start Indexes ,num of enemies, enemy indexs,num of hazards, hazard indexes,num of shops,shop index,num objs, obj index p1-p8xy  maptype s= start/n=norm/b=boss,
-0,Private study,0 ,8,6,3, 43,44,3,Upper Hallway,Upper Hallway,Hidden Room,1,1,4,1,2,22, 3, 34, 27, 28, 0,1,0,0
-1,Upper Hallway, 2,5,8,5, 36,37,1,2,4,Game Room,Game Room,Private study,Private study,Gift Shop,2,2,0,0,3, 1,2,43,44,10,2, 17, 18, 0,0,0
-2,Game Room,1, 5,7,2,1,2,Upper Hallway,Upper Hallway,1,1,36,37, 5, 18, 22,28, 32, 34, 2, 15, 19,0,0
-3,Gift Shop, 0,5,5,1, 10,Upper Hallway,1, 3,0, 0, 1, 12,1,18
-4,Hidden Room,2,4,6,1,22,Private study,0,3,1,13,0,0,1,7
+0,Private study,0 ,8,6,2, 43,3,Upper Hallway,Lower Hallway,1,7,1,37, 3, 34, 27, 28, 0,1,0,0
+1,Upper Hallway, 2,5,8,2, 36,1,Game Room,Private study,2,0, 2,43,2, 17, 18, 0,0,0
+2,Game Room,1, 5,7,1,1,Upper Hallway,1,36, 5, 18, 22,28, 32, 34, 2, 15, 19,0,0
+3,Gift Shop, 0,5,5,2,10,14,Lower Hallway,Lesson Room,7,5,3,0,1,12,0,1, 12,0
+4,Hidden Room,2,4,7,1,26,Western Hallway,6,0,1,17,0,0,0
+5,Lesson Room,1,7,6,1,0,Gift Shop,3,14,1,19,1,17,0,2,7,37,1,0,0
+6,Western Hallway,2,7,5,2,0, 34,Hidden Room,Lower Hallway,4,7,22,2,1,19,0,0,3,1,16,28,2,0,0
+7,Lower Hallway, 2,5,8,3, 1,37,4,Western Hallway,Private study,Gift Shop,6,0,3,34,2,10,2, 17, 18, 0,0,0

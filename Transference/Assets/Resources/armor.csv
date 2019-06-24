@@ -1,15 +1,15 @@
-id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect
-0,Dragon Ward,Hardened skinned, 12, 8, 10, weak, nulls, cripples, normal, resists, resists, normal
-1,Witch Ward,Hardened skinned, 8, 12, 10, normal, resists, resists, normal, weak, cripples, normal
-2,Bumblebee Ward,Hardened skinned, 10, 6, 7, normal, leathal, cripples, normal, normal, weak, savage
-3,Scorpion Ward,Hardened skinned, 8, 12, 5, savage, absorbs, leathal, normal, normal, cripples, weak
-4,Phoenix Ward,Fire, 10, 8, 10, weak, reflects, cripples, normal, normal, savage, normal
-5,Pixie Ward,Fire, 10, 8, 10, normal, normal, reflects, normal, resists, leathal, normal
-6,Neutral Ward,Purely Neutral, 5, 5, 20, normal,normal,normal,normal,normal,normal, normal
-7,Speed Ward,Purely Neutral, 1, 1, 30, cripples,normal,normal,nulls,normal,weak, resists
-8,Fairy Ward,Fire, 5, 15, 10, resists, leathal, normal, reflects, weak, normal, normal
-9,Wolf Ward,Fire, 15, 5, 10, normal, weak, normal, resists, nulls, cripples, normal
-10,Gorgan Ward,Fire, 15, 15, 0, normal, cripples, cripples, cripples, nulls, nulls, nulls
-11,Arachnid Ward,Fire, 0, 5, 25, savage, cripples, nulls, resists, absorbs, normal, weak
-12,Ghost Ward,ghost,0,0,30,normal,cripples,normal,cripples,nulls,nulls,nulls
-200,Glyph Ward,Purely Neutral, 15, 15, 0, resists,resists,resists,resists,resists,resists, resists
+id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect, Force Affect
+0,Dragon Ward,Hardened skinned, 4, 3, 3, weak, nulls, cripples, normal, resists, resists, normal,resists
+1,Witch Ward,Hardened skinned, 2, 4, 4, nulls, resists, normal, normal, weak, cripples, normal,resists
+2,Bumblebee Ward,Hardened skinned, 2, 5, 3, resists, lethal, nulls, normal, weak, nulls, normal,resists
+3,Scorpion Ward,Hardened skinned, 5, 3, 2, savage, resists, lethal, normal, normal, weak, resists,resists
+4,Phoenix Ward,Fire, 3, 2, 5, weak, reflects, cripples, normal, normal, savage, normal,resists
+5,Pixie Ward,Fire, 5, 3, 2, normal, normal, reflects, normal, resists, lethal, normal,resists
+6,Neutral Ward,Purely Neutral, 3, 3, 4, normal,normal,normal,normal,normal,normal, normal,resists
+7,Speed Ward,Purely Neutral, 0, 0, 10, cripples,normal,normal,nulls,normal,weak, resists,resists
+8,Fairy Ward,Fire, 1, 3, 5, resists, lethal, normal, reflects, weak, normal, normal,resists
+9,Wolf Ward,Fire, 5, 4, 1, normal, weak, normal, resists, nulls, cripples, normal,resists
+10,Gorgan Ward,Fire, 8, 2, 0, normal, cripples, cripples, cripples, nulls, nulls, nulls,resists
+11,Arachnid Ward,Fire, 0, 2, 8, savage, cripples, nulls, resists, absorbs, normal, weak,resists
+12,Ghost Ward,ghost,1,2,7,normal,cripples,normal,cripples,nulls,nulls,nulls,resists
+200,Glyph Ward,Purely Neutral, 5, 5, 0, resists,resists,resists,resists,resists,resists, resists,resists

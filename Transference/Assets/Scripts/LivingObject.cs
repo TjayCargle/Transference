@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LivingObject : GridObject
 {
- 
+
     private WeaponEquip equippedWeapon;
     private ArmorEquip equipedArmor;
     private AccessoryEquip equippedAccessory;
@@ -21,7 +21,9 @@ public class LivingObject : GridObject
     [SerializeField]
     private StatusEffect eStatus = StatusEffect.none;
     [SerializeField]
-    private skillSlots battleSlots;
+    private skillSlots physicalSlots;
+    [SerializeField]
+    private skillSlots magicalSlots;
     [SerializeField]
     private skillSlots passiveSlots;
     [SerializeField]
@@ -37,10 +39,17 @@ public class LivingObject : GridObject
     private int skillLevel = 1;
     private bool tookAction = false;
     protected GameObject shadow;
+    protected GameObject barrier;
+
     public GameObject SHADOW
     {
         get { return shadow; }
         set { shadow = value; }
+    }
+    public GameObject BARRIER
+    {
+        get { return barrier; }
+        set { barrier = value; }
     }
     public InventoryScript INVENTORY
     {
@@ -71,10 +80,15 @@ public class LivingObject : GridObject
         get { return eStatus; }
         set { eStatus = value; }
     }
-    public skillSlots BATTLE_SLOTS
+    public skillSlots PHYSICAL_SLOTS
     {
-        get { return battleSlots; }
-        set { battleSlots = value; }
+        get { return physicalSlots; }
+        set { physicalSlots = value; }
+    }
+    public skillSlots MAGICAL_SLOTS
+    {
+        get { return magicalSlots; }
+        set { magicalSlots = value; }
     }
     public skillSlots PASSIVE_SLOTS
     {
@@ -139,7 +153,7 @@ public class LivingObject : GridObject
 
     public int STRENGTH
     {
-        get { return STATS.STRENGTH + BASE_STATS.STRENGTH + (WEAPON.BOOST == ModifiedStat.Str? WEAPON.BOOSTVAL : 0); }
+        get { return STATS.STRENGTH + BASE_STATS.STRENGTH + (WEAPON.BOOST == ModifiedStat.Str ? WEAPON.BOOSTVAL : 0); }
     }
     public int MAGIC
     {
@@ -216,12 +230,15 @@ public class LivingObject : GridObject
             STATS.HEALTH = 0;
             return false;
         }
-        STATS.HEALTH += val;
-        if (HEALTH > MAX_HEALTH)
+        if (val + HEALTH > MAX_HEALTH)
         {
-
             STATS.HEALTH = STATS.MAX_HEALTH;
             BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        }
+        else
+        {
+            STATS.HEALTH += val;
+
         }
         if (HEALTH <= 0)
         {
@@ -335,32 +352,34 @@ public class LivingObject : GridObject
 
             if (!GetComponent<skillSlots>())
             {
-                battleSlots = gameObject.AddComponent<skillSlots>();
+                physicalSlots = gameObject.AddComponent<skillSlots>();
+                magicalSlots = gameObject.AddComponent<skillSlots>();
                 passiveSlots = gameObject.AddComponent<skillSlots>();
                 oppSlots = gameObject.AddComponent<skillSlots>();
                 autoSlots = gameObject.AddComponent<skillSlots>();
                 passiveSlots.TYPE = 1;
                 autoSlots.TYPE = 2;
                 oppSlots.TYPE = 3;
+                magicalSlots.TYPE = 4;
             }
             else
             {
                 skillSlots[] slots = GetComponents<skillSlots>();
-                if (slots.Length < 4)
+                if (slots.Length < 5)
                 {
-                    while (slots.Length < 4)
+                    while (slots.Length < 5)
                     {
                         gameObject.AddComponent<skillSlots>();
-                        slots = GetComponents<skillSlots>();
                     }
                 }
+                slots = GetComponents<skillSlots>();
 
                 for (int i = 0; i < slots.Length; i++)
                 {
                     switch (slots[i].TYPE)
                     {
                         case 0:
-                            battleSlots = slots[i];
+                            physicalSlots = slots[i];
                             break;
 
                         case 1:
@@ -374,12 +393,16 @@ public class LivingObject : GridObject
                         case 3:
                             oppSlots = slots[i];
                             break;
+                        case 4:
+                            magicalSlots = slots[i];
+                            break;
                     }
 
                 }
                 passiveSlots.TYPE = 1;
                 autoSlots.TYPE = 2;
                 oppSlots.TYPE = 3;
+                magicalSlots.TYPE = 4;
 
             }
             if (GetComponent<LivingSetup>())
@@ -412,28 +435,64 @@ public class LivingObject : GridObject
             ACTIONS = (int)(spd / 10) + 2;
             if (SHADOW == null)
             {
-
                 shadow = new GameObject();
                 shadow.transform.parent = this.transform;
                 shadow.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
                 shadow.transform.localPosition = new Vector3(0, 0, 0.1f);
-                SpriteRenderer shadowRender = shadow.AddComponent<SpriteRenderer>();
-                shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
-                shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
-                shadowRender.material = myManager.ShadowMaterial;
-                AnimationScript ShadowAnimation = shadow.AddComponent<AnimationScript>();
-                ShadowAnimation.obj = this;
-                ShadowAnimation.render = shadowRender;
-                Animator shadowAnimator = shadow.gameObject.AddComponent<Animator>();
-                shadowAnimator.runtimeAnimatorController = GetComponent<AnimationScript>().anim.runtimeAnimatorController;
-                GetComponent<AnimationScript>().SHADOWANIM = shadowAnimator;
+                shadow.AddComponent<SpriteRenderer>();
+            }
+            if (!shadow.GetComponent<AnimationScript>())
+            {
+                shadow.AddComponent<AnimationScript>();
+
+            }
+            AnimationScript ShadowAnimation = shadow.GetComponent<AnimationScript>();
+            ShadowAnimation.obj = this;
+            if (!shadow.GetComponent<Animator>())
+            {
+                shadow.gameObject.AddComponent<Animator>();
+            }
+            Animator shadowAnimator = shadow.gameObject.GetComponent<Animator>();
+            shadowAnimator.runtimeAnimatorController = GetComponent<AnimationScript>().anim.runtimeAnimatorController;
+            ShadowAnimation.render = shadow.GetComponent<SpriteRenderer>();
+            ShadowAnimation.me = this;
+            ShadowAnimation.Setup();
+            SpriteRenderer shadowRender = shadow.GetComponent<SpriteRenderer>();
+            shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
+            shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
+            shadowRender.material = myManager.ShadowMaterial;
+            GetComponent<AnimationScript>().SHADOWANIM = shadow.GetComponent<Animator>();
+
+            if (BARRIER == null)
+            {
+                barrier = new GameObject();
+                barrier.transform.parent = this.transform;
+                barrier.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
+                barrier.transform.localPosition = new Vector3(0.25f, 0.25f, 0.1f);
+                barrier.AddComponent<SpriteRenderer>();
+            }
+
+            if (ARMOR.HITLIST != Common.noHitList)
+            {
+                if (ARMOR.ARMORID < 4)
+                {
+
+                    barrier.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Shields/")[ARMOR.ARMORID];
+                }
+                else
+                {
+
+                }
             }
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.Rotate(new Vector3(90, 0, 0));
 
         }
         //  Debug.Log("Setup done");
+        name = NAME;
         isSetup = true;
+
+
     }
 
     public void ApplyPassives()
@@ -515,9 +574,9 @@ public class LivingObject : GridObject
     {
         // STATS.HEALTH += 5;
         // STATS.MANA += 2;
-        STATS.HEALTH += (int)(0.125 * MAX_HEALTH) * (actions + 1);
-        STATS.MANA += (int)(0.125 * MAX_MANA) * (actions + 1);
-        STATS.FATIGUE -= (int)(0.125 * MAX_FATIGUE) * (actions + 1);
+        ChangeHealth((int)(0.125 * MAX_HEALTH) * (actions + 1));
+        ChangeMana((int)(0.125 * MAX_MANA) * (actions + 1));
+        ChangeFatigue((int)(0.125 * MAX_FATIGUE) * (actions + 1));
         if (HEALTH > MAX_HEALTH)
         {
             STATS.HEALTH = STATS.MAX_HEALTH;
@@ -633,12 +692,12 @@ public class LivingObject : GridObject
     }
 
     public override void DeathStart()
-    {     
-            INVENTORY.BUFFS.Clear();
-            INVENTORY.DEBUFFS.Clear();
-            INVENTORY.EFFECTS.Clear();
+    {
+        INVENTORY.BUFFS.Clear();
+        INVENTORY.DEBUFFS.Clear();
+        INVENTORY.EFFECTS.Clear();
         base.DeathStart();
-        
+
     }
     public override IEnumerator FadeOut()
     {
@@ -669,5 +728,5 @@ public class LivingObject : GridObject
 
         return isdoneDying;
     }
-   
+
 }

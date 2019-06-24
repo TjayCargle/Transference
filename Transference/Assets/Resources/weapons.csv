@@ -1,15 +1,15 @@
 id, name, description,attack, attack_type,affinity, range, accurracy, crit,boost type, boost amt
-0, Tail Strike,El:  2, 10, physical, Pierce, pinWheel, 100, 10, Str, 2
-1, Claw Slash,El: 1,10, physical, Slash, adjacent, 90, 10, Str, 2
-2, Dragon Breath,El:  2, 10, physical, Fire, lance, 80, 10, Str, 2
-3, Kick,El: 1. ,10, physical, Blunt, adjacent, 90, 10, Str, 2
-4, Fire Tome,El: 2, 10, magical, Fire, pinWheel, 80, 10, Mag, 2
-5, Frost Punch,El 2, 10, physical, Ice, adjacent, 80, 10, Str, 2
+0, Tail Strike,El:  2, 2, physical, Pierce, pinWheel, 100, 10, Str, 2
+1, Claw Slash,El: 1,2, physical, Slash, adjacent, 90, 10, Str, 2
+2, Dragon Breath,El:  2, 2, physical, Pyro, lance, 80, 10, Str, 2
+3, Kick,El: 1. ,2, physical, Blunt, adjacent, 90, 10, Str, 2
+4, Pyro Tome,El: 2, 2, magical, Pyro, pinWheel, 80, 10, Mag, 2
+5, Frost Punch,El 2, 2, physical, Ice, adjacent, 80, 10, Str, 2
 6, Mystic Arrow, El: 1. Dist: 1 ,1, magical, Pierce, detached, 90, 10, Mag, 2
-8, Ice Tome,El: 2, 10, magical, Ice, pinWheel, 80, 10, Mag, 2
-7, Hydro Lance,El: 2, 10, physical, Water, lance, 80, 10, Str, 2
-9, Water Tome, El:1 ,1, magical, Water, pinWheel, 90, 10, Mag, 2
-10, Elec Tome,El: 2, 10, magical, Electric, pinWheel, 80, 10, Mag, 2
-11, Static Punch,El:  2, 10, physical, Electric, adjacent, 80, 10, Str, 2
-12, Mystic Blade,El: 1,10, magical, Slash, adjacent, 90, 10, Mag, 2
-13, Mystic Hammer,El:  1. ,10, magical, Blunt, adjacent, 90, 10, Mag, 2
+8, Ice Tome,El: 2, 2, magical, Ice, pinWheel, 80, 10, Mag, 2
+7, Hydro Lance,El: 2, 2, physical, Water, lance, 80, 10, Str, 2
+9, Water Tome, El:1 ,2, magical, Water, pinWheel, 90, 10, Mag, 2
+10, Elec Tome,El: 2, 2, magical, Electric, pinWheel, 80, 10, Mag, 2
+11, Static Punch,El:  2, 2, physical, Electric, adjacent, 80, 10, Str, 2
+12, Mystic Blade,El: 1,2, magical, Slash, adjacent, 90, 10, Mag, 2
+13, Mystic Hammer,El:  1. ,2, magical, Blunt, adjacent, 90, 10, Mag, 2

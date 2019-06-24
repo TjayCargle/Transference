@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileManager : MonoBehaviour {
-   public List<TileScript> tiles;
+public class TileManager : MonoBehaviour
+{
+    public List<TileScript> tiles;
     public Texture defaultTexture;
 
     public GameObject Tile;
@@ -11,21 +12,22 @@ public class TileManager : MonoBehaviour {
     private ManagerScript myManager;
     public void Setup()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
             tiles = new List<TileScript>();
             myManager = GetComponent<ManagerScript>();
             isSetup = true;
         }
     }
-    void Start () {
+    void Start()
+    {
         Setup();
-	}
-	
+    }
+
     public List<TileScript> getTiles(int num)
     {
         List<TileScript> subTiles = new List<TileScript>();
-        if(num < tiles.Count)
+        if (num < tiles.Count)
         {
             for (int i = 0; i < num; i++)
             {
@@ -99,7 +101,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -374,7 +376,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -432,7 +434,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -559,7 +561,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -618,7 +620,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 2;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -629,7 +632,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -711,7 +714,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 4;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -722,7 +726,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -802,7 +806,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 3;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -813,7 +818,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-       
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -930,7 +935,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 6;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -941,7 +947,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -1046,7 +1052,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 4;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -1057,7 +1064,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -1189,7 +1196,8 @@ public class TileManager : MonoBehaviour {
 
             }
             currindex += 7;
-            returntiles.Add(tiles);
+            if (tiles.Count > 0)
+                returntiles.Add(tiles);
         }
 
 
@@ -1226,8 +1234,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 
@@ -1281,8 +1289,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 
@@ -1290,7 +1298,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -1340,7 +1348,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 
@@ -1348,7 +1357,7 @@ public class TileManager : MonoBehaviour {
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();
         List<Vector3> possiblePossitions = new List<Vector3>();
-     
+
         int index = -1;
         Vector3 v1 = origin.transform.position;
         Vector3 v2 = origin.transform.position;
@@ -1396,7 +1405,7 @@ public class TileManager : MonoBehaviour {
 
         v9.x += -1;
         v9.z += 2;
-    
+
         v10.z += 2;
 
         v11.x += 1;
@@ -1461,7 +1470,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 
@@ -1495,8 +1505,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 
@@ -1553,8 +1563,8 @@ public class TileManager : MonoBehaviour {
                 tiles.Add(newTile);
             }
         }
-
-        returntiles.Add(tiles);
+        if (tiles.Count > 0)
+            returntiles.Add(tiles);
         return returntiles;
     }
 }

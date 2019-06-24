@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
+public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerUpHandler
 {
 
 
@@ -17,7 +17,17 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     public bool isSetup = false;
 
 
+
     public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+
+          //  if (myManager)
+             //   myManager.SelectMenuItem(this);
+        }
+    }
+    public void OnPointerUp(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
@@ -26,7 +36,6 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 myManager.SelectMenuItem(this);
         }
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (myManager)
@@ -56,6 +65,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
 
             }
+       
             isSetup = true;
         }
     }
@@ -94,7 +104,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //entry.menu = currentMenu.command;
                     //myManager.enterState(entry);
 
-                    myManager.StackNewSelection(State.PlayerMove, currentMenu.act);
+                    myManager.StackNewSelection(State.PlayerMove, currentMenu.command);
 
                     MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
                     if (myMenuManager)
@@ -367,12 +377,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectBS:
                 {
-                    //   Debug.Log("select battle skill");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquipping;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.skillsMain;
-                    //myManager.enterState(entry);
+      
                     myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
@@ -382,7 +387,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         if (invokingObject.GetComponent<LivingObject>())
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(7, liveInvokingObject);
+                            myMenuManager.ShowItemCanvas(5, liveInvokingObject);
 
                         }
                     }
@@ -521,6 +526,29 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.door:
                 {
                     myManager.CheckDoorPrompt();
+                }
+                break;
+            case MenuItemType.anEvent:
+                {
+                    myManager.CheckEventPrompt();
+                }
+                break;
+            case MenuItemType.selectSpells:
+                {
+
+                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
+
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(12, liveInvokingObject);
+
+                        }
+                    }
                 }
                 break;
             default:

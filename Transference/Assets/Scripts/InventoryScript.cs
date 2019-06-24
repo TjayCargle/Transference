@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryScript : MonoBehaviour {
+public class InventoryScript : MonoBehaviour
+{
     [SerializeField]
     List<UsableScript> usables;
 
@@ -38,6 +39,9 @@ public class InventoryScript : MonoBehaviour {
     [SerializeField]
     List<EffectScript> effects;
 
+    [SerializeField]
+    List<CommandSkill> commandSpells;
+
     public List<UsableScript> USEABLES
     {
         get { return usables; }
@@ -64,6 +68,11 @@ public class InventoryScript : MonoBehaviour {
         get { return commandSkills; }
         set { commandSkills = value; }
     }
+    //public List<CommandSkill> CSPELLS
+    //{
+    //    get { return commandSkills; }
+    //    set { commandSkills = value; }
+    //}
     public List<AutoSkill> AUTOS
     {
         get { return autoSkills; }
@@ -144,7 +153,7 @@ public class InventoryScript : MonoBehaviour {
     {
         for (int i = 0; i < commandSkills.Count; i++)
         {
-            if(CSKILLS[i].NAME == name)
+            if (CSKILLS[i].NAME == name)
             {
                 return CSKILLS[i];
             }
@@ -163,11 +172,82 @@ public class InventoryScript : MonoBehaviour {
         }
         return null;
     }
-    public AutoSkill ContainsAutoName(string name)
+    public bool ContainsUsableIndex(UsableScript useable)
+    {
+  
+        if (useable.GetType() == typeof(CommandSkill))
+        {
+            if(ContainsCommandIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+        if (useable.GetType() == typeof(PassiveSkill))
+        {
+            if (ContainsPassiveIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+        if (useable.GetType() == typeof(AutoSkill))
+        {
+            if (ContainsAutoIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+        if (useable.GetType() == typeof(OppSkill))
+        {
+            if (ContainsOppIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+        if (useable.GetType() == typeof(OppSkill))
+        {
+            if (ContainsOppIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+        if (useable.GetType() == typeof(OppSkill))
+        {
+            if (ContainsOppIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+
+        if (useable.GetType() == typeof(WeaponScript))
+        {
+            if (ContainsWeaponIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+
+
+        if (useable.GetType() == typeof(ArmorScript))
+        {
+            if (ContainsArmorIndex(useable.INDEX) != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public AutoSkill ContainsAutoIndex(int index)
     {
         for (int i = 0; i < autoSkills.Count; i++)
         {
-            if (AUTOS[i].NAME == name)
+            if (AUTOS[i].INDEX == index)
             {
                 return AUTOS[i];
             }
@@ -175,11 +255,35 @@ public class InventoryScript : MonoBehaviour {
         return null;
     }
 
-    public PassiveSkill ContainsPassiveName(string name)
+    public WeaponScript ContainsWeaponIndex(int index)
+    {
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            if (weapons[i].INDEX == index)
+            {
+                return WEAPONS[i];
+            }
+        }
+        return null;
+    }
+
+    public ArmorScript ContainsArmorIndex(int index)
+    {
+        for (int i = 0; i < armor.Count; i++)
+        {
+            if (armor[i].INDEX == index)
+            {
+                return ARMOR[i];
+            }
+        }
+        return null;
+    }
+
+    public PassiveSkill ContainsPassiveIndex(int index)
     {
         for (int i = 0; i < passives.Count; i++)
         {
-            if (PASSIVES[i].NAME == name)
+            if (PASSIVES[i].INDEX == index)
             {
                 return PASSIVES[i];
             }
@@ -187,11 +291,11 @@ public class InventoryScript : MonoBehaviour {
         return null;
     }
 
-    public OppSkill ContainsOppName(string name)
+    public OppSkill ContainsOppIndex(int index)
     {
         for (int i = 0; i < oppSkills.Count; i++)
         {
-            if (OPPS[i].NAME == name)
+            if (OPPS[i].INDEX == index)
             {
                 return OPPS[i];
             }
@@ -205,11 +309,11 @@ public class InventoryScript : MonoBehaviour {
         {
             if (ARMOR[i].HEALTH < ARMOR[i].MAX_HEALTH)
             {
-                  
-                ARMOR[i].HEALTH += (0.20f *armor[i].MAX_HEALTH);
 
-                
-               
+                ARMOR[i].HEALTH += (0.20f * armor[i].MAX_HEALTH);
+
+
+
             }
 
         }
@@ -222,6 +326,7 @@ public class InventoryScript : MonoBehaviour {
         this.BUFFS.Clear();
         this.DEBUFFS.Clear();
         this.CSKILLS.Clear();
+        //this.CSPELLS.Clear();
         this.EFFECTS.Clear();
         this.ITEMS.Clear();
         this.OPPS.Clear();

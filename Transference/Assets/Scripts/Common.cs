@@ -27,7 +27,9 @@ public enum State
     EnemyTurn,
     HazardTurn,
     ShopCanvas,
-    PlayerUsingItems
+    PlayerUsingItems,
+    EventRunning,
+    SceneRunning
 
 
 }
@@ -49,7 +51,7 @@ public enum EHitType
     weak, //dmg x2
     savage, // dmg x2 + lose a turn
     cripples, // dmg x4 + stats halved
-    leathal // dmg x6 + lose a turn + stats halved
+    lethal // dmg x6 + lose a turn + stats halved
 
 }
 public enum Resists
@@ -162,7 +164,7 @@ public enum SubSkillType
     Ailment,
     Heal,
     RngAtk,
-    RngSupp,
+    Movement,
     None
 }
 public enum Augment
@@ -191,13 +193,14 @@ public enum Augment
 public enum Element
 {
     Water,
-    Fire,
+    Pyro,
     Ice,
     Electric,
 
     Slash,
     Pierce,
     Blunt,
+    Force,
     Buff,
     Support,
     Ailment,
@@ -209,12 +212,14 @@ public enum Element
 }
 public enum DetailType
 {
-    Command,
+    BasicAtk,
+    Armor,
+    Physical,
+    Magical,
     Passive,
     Auto,
     Opportunity,
-    BasicAtk,
-    Armor,
+    Items,
     Buffs,
     Debuffs,
     Effects,
@@ -245,7 +250,12 @@ public enum Reaction
     debuff,
     bonusAction,
     knockback,
-    snatched,
+    pullin,
+    pushforward,
+    pullback,
+    jumpback,
+    reposition,
+    Swap,
     ApplyEffect,
     turnloss,
     cripple,
@@ -261,12 +271,12 @@ public enum Reaction
 }
 public enum DMG
 {
-    tiny = 10,
-    small = 20,
-    medium = 40,
-    heavy = 80,
-    severe = 160,
-    collassal = 320
+    tiny = 2,
+    small = 4,
+    medium = 8,
+    heavy = 16,
+    severe = 32,
+    collassal = 64
 }
 public enum ItemType
 {
@@ -280,7 +290,13 @@ public enum ItemType
     random,
     summon
 }
-
+public enum AtkType
+{
+    basic,
+    skillSpell,
+    opportunity,
+    other
+}
 public enum IconSet
 {
     physical,
@@ -342,7 +358,10 @@ public enum MenuItemType
     selectAct,
     selectDetails,
     shop,
-    door
+    door,
+    anEvent,
+    selectSpells
+
 }
 public enum AutoAct
 {
@@ -433,7 +452,15 @@ public enum SideEffect
     reduceAct,
     debuff,
     heal,
-    barrier
+    barrier,
+    knockback,
+    pullin,
+    pushforward,
+    pullback,
+    jumpback,
+    reposition,
+    swap,
+   
 
 }
 
@@ -477,6 +504,8 @@ public class MassAtkConatiner : ScriptableObject
 {
     public List<AtkConatiner> atkConatiners;
 }
+
+
 public class AtkConatiner : ScriptableObject
 {
     public LivingObject attackingObject;
@@ -487,9 +516,9 @@ public class AtkConatiner : ScriptableObject
     public Reaction alteration;
     public CommandSkill command;
     public DmgReaction react;
+    public bool crit = false;
 
-
-    public void Inherit (AtkConatiner container)
+    public void Inherit(AtkConatiner container)
     {
         this.attackingObject = container.attackingObject;
         this.dmgObject = container.dmgObject;
@@ -527,6 +556,12 @@ public struct BoolConatainer
     public bool result;
     public string name;
 }
+public struct BoolConatainerWTileList
+{
+    public bool result;
+    public string name;
+    public List<TileScript> tiles;
+}
 public enum currentMenu
 {
     command,
@@ -539,6 +574,7 @@ public enum currentMenu
     PlayerOptions,
     act,
     CmdItems,
+    CmdSpells,
     none
 }
 public enum Faction
@@ -546,23 +582,10 @@ public enum Faction
     ally,
     enemy,
     hazard,
-    other
+    ordinary,
+    eventObj
 }
-public class tjCompare : ScriptableObject, IComparer<pathNode>
-{
 
-    public int Compare(pathNode x, pathNode y)
-    {
-        return x.gcost.CompareTo(y.gcost) + x.hcost.CompareTo(y.hcost);
-    }
-}
-public class pathNode : ScriptableObject
-{
-    public TileScript tile;
-    public int gcost;
-    public int hcost;
-
-}
 
 public class path : ScriptableObject
 {
@@ -582,6 +605,7 @@ public struct MapDetail
     public string mapName;
     public int width;
     public int height;
+    public int mapIndex;
     public List<int> doorIndexes;
     public List<string> roomNames;
     public List<int> roomIndexes;
@@ -589,9 +613,39 @@ public struct MapDetail
     public List<int> enemyIndexes;
     public List<int> hazardIndexes;
     public List<int> shopIndexes;
-    public List<int> objIndexes;
+    public List<int> objMapIndexes;
+    public List<int> objIds;
     public Texture texture;
     public int StartingPosition;
+}
+
+public struct SceneContainer
+{
+    public bool isRunning;
+    public int index;
+    public List<string> speakerNames;
+    public List<string> speakertext;
+
+}
+public struct EventDetails
+{
+    public string eventText;
+    public string choice1;
+    public string choice2;
+    public LivingObject affectedObject;
+    public int eventNum;
+}
+public struct EventPair
+{
+    int eventNum;
+    TileScript tile;
+}
+public struct MapData
+{
+    public List<int> unOccupiedIndexes;
+    public bool eventMap;
+    public List<EventPair> events;
+
 }
 public enum descState
 {
@@ -695,13 +749,16 @@ public class Common : ScriptableObject
     public static CommandSkill CommonDebuffStr = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffDef = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
-
+    public static UsableScript GenericUsable = CreateInstance<UsableScript>();
+    public static SkillScript GenericSkill = CreateInstance<SkillScript>();
     public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
-    public static ArmorScript noArmor = CreateInstance<ArmorScript>();
+    public static readonly ArmorScript noArmor = new ArmorScript();
 
     public static BoolConatainer container = new BoolConatainer();
 
-    public static int MaxSkillLevel = 30;
+    public static EventDetails eventdetail = new EventDetails();
+
+    public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
     public static List<EHitType> noHitList = new List<EHitType>()
@@ -712,7 +769,8 @@ public class Common : ScriptableObject
         EHitType.normal,
         EHitType.normal,
         EHitType.normal,
-        EHitType.normal
+        EHitType.normal,
+                EHitType.normal
     };
     public static Color GetFactionColor(Faction faction)
     {
@@ -727,8 +785,11 @@ public class Common : ScriptableObject
             case Faction.hazard:
                 return Color.yellow;
                 break;
-            case Faction.other:
+            case Faction.ordinary:
                 return orange;
+                break;
+            case Faction.eventObj:
+                return Color.magenta;
                 break;
         }
         return Color.magenta;
@@ -763,10 +824,10 @@ public class Common : ScriptableObject
                 text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
                 break;
             case SideEffect.freeze:
-                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to fire.";
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to pyro.";
                 break;
             case SideEffect.burn:
-                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist fire but weak to ice. ";
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist pyro but weak to ice. ";
                 break;
             case SideEffect.poison:
                 text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
@@ -796,10 +857,10 @@ public class Common : ScriptableObject
                 text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
                 break;
             case StatusEffect.frozen:
-                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to fire.";
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to pyro.";
                 break;
             case StatusEffect.burned:
-                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist fire but weak to ice. ";
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist pyro but weak to ice. ";
                 break;
             case StatusEffect.poisoned:
                 text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
@@ -1077,7 +1138,7 @@ public class Common : ScriptableObject
                             case Element.Water:
                                 ailmentText = "confusion";
                                 break;
-                            case Element.Fire:
+                            case Element.Pyro:
                                 ailmentText = "burn";
                                 break;
                             case Element.Ice:
@@ -1214,7 +1275,7 @@ public class Common : ScriptableObject
     {
         switch (weapon.ATKRANGE)
         {
-          
+
             case RangeType.adjacent:
                 weapon.Range = 1;
                 weapon.DIST = 1;
@@ -1239,8 +1300,87 @@ public class Common : ScriptableObject
                 weapon.Range = 3;
                 weapon.DIST = 3;
                 break;
-     
-            
+
+
         }
+    }
+
+    public static EventDetails GetEventText(int eventnum, LivingObject living)
+    {
+        eventdetail.eventText = "";
+        eventdetail.choice1 = "";
+        eventdetail.choice2 = "";
+        eventdetail.affectedObject = null;
+        eventdetail.eventNum = -1;
+        switch(eventnum)
+        {
+            case 1:
+                {
+                    eventdetail.eventText = "Will you give up Strength in return for magic?";
+                    eventdetail.choice1 = "Yes";
+                    eventdetail.choice2 = "No";
+                    eventdetail.affectedObject = living;
+                    eventdetail.eventNum = 1;
+                }
+                break;
+
+            case 2:
+                {
+                    eventdetail.eventText = "Will you give up magic in return for strength?";
+                    eventdetail.choice1 = "Yes";
+                    eventdetail.choice2 = "No";
+                    eventdetail.affectedObject = living;
+                    eventdetail.eventNum = 2;
+                }
+                break;
+        }
+     
+        return eventdetail;
+    }
+
+    public static string GetShortName(string name)
+    {
+        string shrtname = name;
+        string[] subs = shrtname.Split(' ');
+        shrtname = "";
+        for (int i = 0; i < subs.Length; i++)
+        {
+            shrtname += subs[i];
+        }
+
+        return shrtname;
+    }
+
+    public static Reaction EffectToReaction(SideEffect effect)
+    {
+
+        switch (effect)
+        {
+         
+            case SideEffect.swap:
+                return Reaction.Swap;
+                break;
+       
+            case SideEffect.knockback:
+                return Reaction.knockback;
+                break;
+            case SideEffect.pullin:
+                return Reaction.pullin;
+                break;
+            case SideEffect.pushforward:
+                return Reaction.pushforward;
+                break;
+            case SideEffect.pullback:
+                return Reaction.pullback;
+                break;
+            case SideEffect.jumpback:
+                return Reaction.jumpback;
+                break;
+            case SideEffect.reposition:
+                return Reaction.reposition;
+                break;
+        }
+
+        return Reaction.none;
     }
 }

@@ -35,7 +35,7 @@ public class BuffScript : MonoBehaviour
         countDown--;
         if(countDown <= 0)
         {
-            living.GetComponent<InventoryScript>().BUFFS.Remove(refSkill);
+            living.INVENTORY.BUFFS.Remove(refSkill);
             living.ApplyPassives();
             Destroy(this);
         }

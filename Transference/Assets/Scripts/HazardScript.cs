@@ -103,7 +103,7 @@ public class HazardScript : LivingObject
     public bool HAtkEvent(Object target)
     {
         myManager.MoveCameraAndShow(this); 
-        Debug.Log(FullName + " atacking");
+      //  Debug.Log(FullName + " atacking");
         bool isDone = true;
         {
 
@@ -111,6 +111,10 @@ public class HazardScript : LivingObject
 
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
             myManager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", myManager.CheckText, myManager.TextStart);
+            if (myManager.log)
+            {
+                myManager.log.Log(FullName + " used " + bestReaction.atkName);
+            }
             myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
             myManager.myCamera.infoObject = realTarget;
             myManager.myCamera.UpdateCamera();
@@ -273,7 +277,7 @@ public class HazardScript : LivingObject
         BASE_STATS.Reset();
         BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
         INVENTORY.Clear();
-        BATTLE_SLOTS.SKILLS.Clear();
+        PHYSICAL_SLOTS.SKILLS.Clear();
         PASSIVE_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();

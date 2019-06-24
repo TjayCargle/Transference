@@ -6,7 +6,7 @@ Assets/start.unity
 Assets/GameOver.unity
 Assets/DemoMap4.unity
 SceneListEnd?
-1310a12ca4ce432c405bb25320e3b3f5 Assembly-CSharp.dll:.EnemyScript
+87a6ab50a8c5bb88d43137d9353f5df2 Assembly-CSharp.dll:.EnemyScript
 984dcc0ba3707b7691fbdca8ff508d28 Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
 01aa15e337e3a9c62f15153dfac6d589 Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.EventRunner
@@ -24,13 +24,13 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 201e3fde670b00545944bb3db215c80a UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
-8cc855670f00ec53153c0893c6ca3868 Assembly-CSharp.dll:.HazardScript
+909eb506bdb750382b26673c7492ac1d Assembly-CSharp.dll:.HazardScript
 6175130d61898b25a46b4246995d3509 Assembly-CSharp.dll:.EnemyManager
 b38e2fe714601943b73db92512163e5f Assembly-CSharp.dll:.TileManager
 e7a73f5f78ba6445195ec23b74a1ce2d Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
 e59499128f4568c74dcfe637c3883725 Assembly-CSharp.dll:.NonCombatButton
 4ce868c8c03497d8c6ce33d7f92d2185 Assembly-CSharp.dll:.ItemScript
-634d5f27924a1086ab716f7b31b377fd Assembly-CSharp.dll:.GridAnimationObj
+d1e6f3fd3d2bb694cad5c342746ea192 Assembly-CSharp.dll:.GridAnimationObj
 620cbc9dee24d8d1251d3bb42def3392 Assembly-CSharp.dll:.GridOjectManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DoorScript
 43b79758845cc4453af379460ef82237 Assembly-CSharp.dll:.OptionsManager
@@ -70,7 +70,7 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 aff0838809850bd54e7fc7416d8d596c Assembly-CSharp.dll:.PathScript
 98ad81e9f689a492509f07e75b810aaa Unity.TextMeshPro.dll:TMPro.TMP_InputField
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.WeaponManager
-84ef784280d1244a9042d9bc491e35ae Assembly-CSharp.dll:.LivingObject
+d1ce6cb420cab7b0aeb5ebfd8ef0f967 Assembly-CSharp.dll:.LivingObject
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 5fc094978ce3e3591a7500ed380d854a UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -103,6 +103,7 @@ fc108ce7d98c40ac0907e8ca7f500c76 UnityEngine.UI.dll:UnityEngine.UI.Text
 0fd6822f6177297bd0eb4d83cc7a9030 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
+a7f71a531bdffa1831801dd8c5d3f11f Assembly-CSharp.dll:.TalkPanel
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ManaBar
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 06f0fef534ca4c1d6064fd77a26bf722 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -119,7 +120,7 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.P
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.CtrlsDesc
 00274a21279f5cb831ce20f895049e38 Unity.TextMeshPro.dll:TMPro.TMP_SubMeshUI
 949b79e687eb6662d8041e3c65eb5fd6 Assembly-CSharp.dll:.OptionsCtrl
-e6c1f45e9378ab57a9379bbdaa59b793 Assembly-CSharp.dll:.InventoryScript
+a33d1e5be7e5c6fd5be4d5ba42cb8fd6 Assembly-CSharp.dll:.InventoryScript
 e6ae40841db498b6e673877ac45ad208 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 1dcb82730d983b77cec736c6ef19f814 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -137,8 +138,8 @@ ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networki
 54fbabfb3d82d56859b27f8fa795cb1f Assembly-CSharp.dll:.SkillScript
 dd870956f313331a7c439fe3ee37e50d Assembly-CSharp.dll:.GameOverBtn
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-b961a73d0e56773911d06271534605f9 Assembly-CSharp.dll:.TempObject
-37ac822a22e5e6d2ae2a046493c1b16a Assembly-CSharp.dll:.ManagerScript
+a757d36e37ac3c7803e652ee9289f062 Assembly-CSharp.dll:.TempObject
+36fb99b5e730b06f5621824a3e76245b Assembly-CSharp.dll:.ManagerScript
 303ad70ce203ad874efe2965d0fbcff9 Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsEventTracker
 7fb9de8dcf73854b6b328eca1f7a6e6d Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsTracker
 052a664aedf4e49f54497bfcebcfc196 Assembly-CSharp.dll:.TileScript
@@ -151,7 +152,7 @@ ce284afaddddcc248a9a026a34409259 Assembly-CSharp.dll:.MenuStackManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ExpManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ArmorManager
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.CanvasManager
-ca2d17e0e50b154ae07154bf426dbe1b Assembly-CSharp.dll:.ConditionalDisplay
+7b47376860040760de611259a3e76fb9 Assembly-CSharp.dll:.ConditionalDisplay
 fafb5bd43cbf7cd283aafc87fd69a124 Assembly-CSharp.dll:.DebuffScript
 2f183fc95af370eb003564d892b4c911 Assembly-CSharp.dll:.PassiveSkill
 5f9313ccccfa9ece6649c895fca84762 Assembly-CSharp.dll:.DatabaseManager
@@ -165,16 +166,17 @@ bc66a9c85330e59cb0372f978daae977 Assembly-CSharp.dll:.ActorSetup
 2a97e12477857d9df1f5f13c71a9ea61 Assembly-CSharp.dll:.Expbar
 8ffafadd2f183e75b14520478167525a Assembly-CSharp.dll:.ImgObj
 406664d10cbe7e2baa2c174a2d32f10c Assembly-CSharp.dll:.UsableScript
-c9a3f53c8783b06f3e60482a97f05829 Assembly-CSharp.dll:.DetailsScreen
+39ecc0f13af26a77b7aca2396870f2f6 Assembly-CSharp.dll:.DetailsScreen
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.Analytics.Editor.dll:UnityEditor.Analytics.AnalyticsEventTrackerEditor
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.TextMeshPro.dll:TMPro.TMP_SpriteAnimator
 ce284afaddddcc248a9a026a34409259 Assembly-CSharp.dll:.SFXManager
 5815c5fc57a66ae7117be6acb6dac938 Assembly-CSharp.dll:.LivingSetup
 80164fccbc6970152cf0de4b44d9764e Assembly-CSharp.dll:.Equipable
-6ecd8129762ec2fe9071830329d32ae4 Assembly-CSharp.dll:.DmgTextObj
+b05294833d101da5c9b0d2ff3d1e0c22 Assembly-CSharp.dll:.DmgTextObj
 ea53a658729653e7f815e0123557193c Assembly-CSharp.dll:.EnemySetup
 c8013c11d8932bfb0cc5c26cf780260b Assembly-CSharp.dll:.WeaponScript
 f13413f91655ff7e09b55591b4294f70 Assembly-CSharp.dll:.MenuManager
+90c7b945d30e82f73a4cfb6a0d63e79f Assembly-CSharp.dll:.FreeMovement
 4fd8bf02e3089425d3502e26c44ba31a Unity.TextMeshPro.dll:TMPro.TextContainer
 8aeb667d552e50e6d3902ef837c5c2e7 Assembly-CSharp.dll:.PhaseImg
 e8ed6329a7d9a75e6cdd063ffb4231f4 Assembly-CSharp.dll:.ModifiedStats
@@ -195,16 +197,17 @@ e0ee4b3d4e27318934cc940a969d3d96 UnityEngine.Networking.dll:UnityEngine.Networki
 ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 9b895dcabbc1faf095c000c32d471fd0 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 5887ef1bc706b22b773d253fd443ceef UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
-8d2c3acbf4051dc67dea4168622544b2 Assembly-CSharp.dll:.AnimationScript
-b961a73d0e56773911d06271534605f9 Assembly-CSharp.dll:.GridObject
+b4d4f8ed57d5d23866aa62c188554d1a Assembly-CSharp.dll:.AnimationScript
+a757d36e37ac3c7803e652ee9289f062 Assembly-CSharp.dll:.GridObject
 510fefd6a544e16a3ffefa557ddcba39 Unity.TextMeshPro.dll:TMPro.PackageResourceImporterWindow
 abc2d1613b3402ddfd1645ccd4420e87 Assembly-CSharp.dll:.PlayerController
 57629ab99941e913b253595aa5d3a495 Assembly-CSharp.dll:.ShopScreen
-132ce854f2dbe09f0f1960eb853cd4d2 Assembly-CSharp.dll:.NonCombatController
+1ce572753b411167a2757f4577275307 Assembly-CSharp.dll:.NonCombatController
 aa82b3ce4c0c9b227036c0337315c5d3 Unity.TextMeshPro.dll:TMPro.TMP_FontAsset
 808e60db4f96f85218facd2b9b671aac Assembly-CSharp.dll:.AugBtn
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.TalkButton
 e51c09a4cc447f11db225afcd8e3e490 Unity.TextMeshPro.dll:TMPro.TMP_Settings
-28b127748b92f6c307f7b581e49334eb Assembly-CSharp.dll:.ArmorSet
+710d96afedf661b9d59864620ab659a2 Assembly-CSharp.dll:.ArmorSet
 cf96e5f7b3d069bab453925bd41be04e UnityEngine.TestRunner.dll:UnityEngine.TestTools.EnumerableSetUpTearDownCommandState
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 259d013faac28e8ba0aa2a7542273735 UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
@@ -225,18 +228,18 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SkillManager
-84ef784280d1244a9042d9bc491e35ae Assembly-CSharp.dll:.ActorScript
+d1ce6cb420cab7b0aeb5ebfd8ef0f967 Assembly-CSharp.dll:.ActorScript
 3738c79246b969757a29ff5562ca0025 Assembly-CSharp.dll:.TextObj
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.InvArrow
 fafb5bd43cbf7cd283aafc87fd69a124 Assembly-CSharp.dll:.BuffScript
-4ce15e99c635d2567873d27549d1f16f Assembly-CSharp.dll:.NewSkillPrompt
+b27f4e844923f9f7317dbfa03467c7d6 Assembly-CSharp.dll:.NewSkillPrompt
 8365fdb03fafa4246c92531572b39b79 Assembly-CSharp.dll:.skillSlots
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
 6242e9f84c3ed4963daf66246b61e2c5 Assembly-CSharp.dll:.CtrlsButton
 9012291604b765aa54510de50dae5c9d Assembly-CSharp.dll:.FlavorTextImg
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.AccessoryManager
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.BattleManager
 ea2dcb3620b466c04ce6251a6052882f Assembly-CSharp.dll:.CameraShake
 d4d7dbb4bfd0e3c4ee61a71b13b02c6c Assembly-CSharp.dll:.EventManager
 12ac29b822ea7b16802184520ae7f4db Assembly-CSharp.dll:.DetailsTabController
@@ -244,9 +247,10 @@ d4d7dbb4bfd0e3c4ee61a71b13b02c6c Assembly-CSharp.dll:.EventManager
 5f8afe20f191bdd2baee8a5b9c6e3ea5 Assembly-CSharp.dll:.HazardSetup
 e8ed6329a7d9a75e6cdd063ffb4231f4 Assembly-CSharp.dll:.StatScript
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
-72e99b26badb5cbc1892a6480cf899b3 Assembly-CSharp.dll:.InventoryMangager
-1f65dddf4a4895af7e38190427be6b33 Assembly-CSharp.dll:.CameraScript
+4b8e3899f858b7a7c957319d38b19363 Assembly-CSharp.dll:.InventoryMangager
+090368fc72e4c4c14449aa024ada20f4 Assembly-CSharp.dll:.CameraScript
 80164fccbc6970152cf0de4b44d9764e Assembly-CSharp.dll:.AccessoryEquip
+1bb12c5c9fd0acab20613e7cf2e411f6 Assembly-CSharp.dll:.DetailsTabIndicator
 61dc7d50771aadc46ed84ac77c59ade7 Assembly-CSharp.dll:.ObjManager
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
@@ -256,3 +260,4 @@ c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 b4b489383841adb83ed58075bdd00fad Assembly-CSharp.dll:.ArmorScript
 4ac8fe3dd7c5a9a128b6e11559442e3a Assembly-CSharp.dll:.EffectScript
 825c79e8007f0271e07282e703b3d706 Assembly-CSharp.dll:.PotentialSlider
+1d9b607ef499d74bf49952feb97f9865 Assembly-CSharp.dll:.BattleLog

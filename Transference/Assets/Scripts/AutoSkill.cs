@@ -168,19 +168,19 @@ public class AutoSkill : SkillScript
         switch (REACT)
         {
             case AutoReact.healByDmg:
-                DESC += "heal the damage you delt";
+                DESC += "heal the damage you dealt";
                 break;
    
             case AutoReact.GainManaByDmg:
-                DESC += "gain mana by the damage you delt";
+                DESC += "gain mana by the damage you dealt";
                 break;
 
             case AutoReact.ChargeFTByDmg:
-                DESC += "charge FT by the damage you delt";
+                DESC += "charge FT by the damage you dealt";
                 break;
       
             case AutoReact.HealFTByDmg:
-                DESC += "reduce FT by the damage you delt";
+                DESC += "reduce FT by the damage you dealt";
                 break;
  
             case AutoReact.extraAction:
@@ -207,7 +207,7 @@ public class AutoSkill : SkillScript
                 DESC += " before doing ";
                 break;
             case AutoAct.afterDmg:
-                DESC += " after hiting with ";
+                DESC += " after hitting with ";
                 break;
         
         }

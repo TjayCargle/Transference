@@ -103,8 +103,9 @@ public class PassiveSkill : SkillScript
 
                 break;
             case ModifiedStat.ElementDmg:
-                DESC = ModElements[0] + " and "+ModElements[1]+" attacks do "+ModValues[0].ToString()+"% more dmg ";
 
+                // DESC = ModElements[0] + " and "+ModElements[1]+" attacks do "+ModValues[0].ToString()+"% more dmg ";
+                DESC = ModElements[0] + " and " + ModElements[1] + " attacks do 2x more dmg ";
                 break;
             case ModifiedStat.Movement:
                 break;

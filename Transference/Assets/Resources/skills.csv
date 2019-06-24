@@ -18,7 +18,7 @@
 - Pierce all moves up 2,
 - Blunt all moves 1 spaceaway,
 - Elec all moves random hit
-- Fire all moves multi-range
+- Pyro all moves multi-range
 - Ice no move cartisian, 
 - Water all moves area
 -
@@ -39,12 +39,12 @@
 25,Etherial Sting,Pierce,Magic,none,8,magical,spear,2,0,80,small,1,0,6,0,1,0,2,1,1,1,2,-1,1,-1,2
 -
 -Blunt
-30,Smash,Blunt,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
-31,Alt Smash,Blunt,Charge,none,3,physical,rotator,0,0,70,tiny,1,0,1,1,1
-32,Mega Smash,Blunt,Cost,none,-6,physical,adjacent,10,0,75,small,2,0,1,0,1
-33,Ultra Smash,Blunt,Cost,none,-12,physical,square,20,0,75,small,1,0,2,0,1,1,1
-34,Arcane Smash,Blunt,Magic,none,5,magical,adjacent,0,0,80,tiny,1,0,1,0,1
-35,Etherial Smash,Blunt,Magic,none,8,magical,rotator,10,0,80,small,2,0,1,0,1
+30,Smash,Blunt,Charge,none,3,physical,adjacent,0,0,70,tiny,1,10,1,0,1
+31,Alt Smash,Blunt,Charge,none,3,physical,rotator,0,0,70,tiny,1,10,1,1,1
+32,Mega Smash,Blunt,Cost,none,-6,physical,adjacent,10,0,75,small,2,10,1,0,1
+33,Ultra Smash,Blunt,Cost,none,-12,physical,square,20,0,75,small,1,10,2,0,1,1,1
+34,Arcane Smash,Blunt,Magic,none,5,magical,adjacent,0,0,80,tiny,1,10,1,0,1
+35,Etherial Smash,Blunt,Magic,none,8,magical,rotator,10,0,80,small,2,10,1,0,1
 -
 -Water
 40,Splash,Water,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,3,-1,1,0,1,1,1
@@ -53,14 +53,18 @@
 43,Ultra Splash,Water,RngAtk,none,-12,physical,square,5,0,75,small,1,0,3,-1,1,0,1,1,1,2,5
 44,Arcane Splash,Water,Magic,none,5,magical,cone,0,0,80,tiny,1,0,1,0,1
 45,Etherial Splash,Water,Magic,none,8,magical,square,0,0,80,small,2,0,3,-1,2,0,1,-1,1
+46,Mystic Splash,Water,Magic,jumpback,5,magical,adjacent,0,0,80,tiny,1,0,1,0,1
+47,Hidden Splash,Water,Charge,pullback,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
--Fire
-50,Blaze,Fire,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
-51,Alt Blaze,Fire,Charge,none,3,physical,rotator,0,0,70,tiny,1,0,1,0,2
-52,Mega Blaze,Fire,Cost,none,-6,physical,line,0,0,75,small,2,0,3,-1,1,0,1,1,1
-53,Ultra Blaze,Fire,Cost,none,-12,physical,cone,5,0,75,small,2,0,3,0,1,0,2,0,3
-54,Arcane Blaze,Fire,Magic,none,5,magical,line,0,0,80,tiny,1,0,1,0,1
-55,Etherial Blaze,Fire,Magic,none,8,magical,rotator,0,0,80,small,2,0,4,-1,1,0,1,1,1,0,2
+-Pyro
+50,Blaze,Pyro,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
+51,Alt Blaze,Pyro,Charge,none,3,physical,rotator,0,0,70,tiny,1,0,1,0,2
+52,Mega Blaze,Pyro,Cost,burn,-6,physical,line,0,0,75,small,2,0,3,-1,1,0,1,1,1
+53,Ultra Blaze,Pyro,Cost,burn,-12,physical,cone,5,0,75,small,2,0,3,0,1,0,2,0,3
+54,Arcane Blaze,Pyro,Magic,burn,8,magical,line,0,0,80,tiny,1,0,1,0,1
+55,Etherial Blaze,Pyro,Magic,none,10,magical,rotator,0,0,80,small,2,0,4,-1,1,0,1,1,1,0,2
+56,Mystic Blaze,Pyro,Magic,pushforward,5,magical,adjacent,0,0,80,tiny,1,0,1,0,1
+57,Hidden Blaze,Pyro,Charge,knockback,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Ice
 60,Frost,Ice,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,1,2
@@ -69,6 +73,8 @@
 63,Ultra Frost,Ice,Cost,none,-12,physical,line,5,0,75,small,1,0,2,0,2,1,1
 64,Arcane Frost,Ice,Magic,none,5,magical,cone,0,0,80,tiny,1,0,1,1,1
 65,Etherial Frost,Ice,Magic,none,8,magical,line,0,0,80,small,2,0,1,0,2
+66,Mystic Frost,Ice,Magic,pullin,5,magical,detached,0,0,80,tiny,1,0,1,0,1
+67,Hidden Frost,Ice,Charge,reposition,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Elec
 70,Thunder,Electric,RngAtk,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1,1,2
@@ -76,7 +82,7 @@
 72,Mega Thunder,Electric,RngAtk,none,-6,physical,clover,0,0,75,small,1,0,2,0,1,0,2,1,4
 73,Utra Thunder,Electric,RngAtk,none,-12,physical,cone,2,0,75,small,1,0,1,0,1,2,3
 74,Arcane Thunder,Electric,RngAtk,none,5,magical,rotator,0,0,80,tiny,1,0,1,0,1,1,2
-75,Etherial Thunder,Electric,RngAtk,none,8,magical,clover,0,0,80,small,2,0,3,-1,1,0,1,1,1,1,3
+75,Etherial Thunder,Electric,RngAtk,none,8,magical,detached,0,0,80,small,2,0,3,-1,1,0,1,1,1,1,3
 -
 -Buffs
 80,Ralli Str,Buff,Buff,none,4,magical,any,1,0,30,1,str,1,0,1
@@ -87,28 +93,28 @@
 85,Ralli Skl,Buff,Buff,none,4,magical,any,1,0,30,1,skill,1,0,1
 -
 -Debuffs
-90,Regress Str,Buff,Debuff,none,4,magical,single,1,0,-30,1,str,1,0,1
-91,Regress Mag,Buff,Debuff,none,4,magical,single,1,0,-30,1,mag,1,0,1
-92,Regress Spd,Buff,Debuff,none,4,magical,single,1,0,-30,1,speed,1,0,1
-93,Regress Def,Buff,Debuff,none,4,magical,single,1,0,-30,1,defense,1,0,1
-94,Regress Res,Buff,Debuff,none,4,magical,single,1,0,-30,1,resistance,1,0,1
-95,Regress Skl,Buff,Debuff,none,4,magical,single,1,0,-30,1,skill,1,0,1
+90,Regress Str,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,str,1,0,1
+91,Regress Mag,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,mag,1,0,1
+92,Regress Spd,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,speed,1,0,1
+93,Regress Def,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,defense,1,0,1
+94,Regress Res,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,resistance,1,0,1
+95,Regress Skl,Buff,Debuff,none,4,magical,adjacent,1,0,-30,1,skill,1,0,1
 -
 -Aliments
-100,Poison,Ailment,Ailment,poison,4,magical,single,1,30,1,poison,1,0,1
-101,Burn,Ailment,Ailment,burn,4,magical,single,1,30,1,burn,1,0,1
-102,Sleep,Ailment,Ailment,sleep,4,magical,single,1,30,1,sleep,1,0,1
-103,Paralyze,Ailment,Ailment,paralyze,4,magical,single,1,30,1,paralyze,1,0,1
-104,Freeze,Ailment,Ailment,freeze,4,magical,single,1,30,1,freeze,1,0,1
-105,Bleed,Ailment,Ailment,bleed,4,magical,single,1,30,1,bleed,1,0,1
-106,Confuse,Ailment,Ailment,confusion,4,magical,single,1,30,1,confusion,1,0,1
+100,Poison,Ailment,Ailment,poison,4,magical,adjacent,1,30,1,poison,1,0,1
+101,Burn,Ailment,Ailment,burn,4,magical,adjacent,1,30,1,burn,1,0,1
+102,Sleep,Ailment,Ailment,sleep,4,magical,adjacent,1,30,1,sleep,1,0,1
+103,Paralyze,Ailment,Ailment,paralyze,4,magical,adjacent,1,30,1,paralyze,1,0,1
+104,Freeze,Ailment,Ailment,freeze,4,magical,adjacent,1,30,1,freeze,1,0,1
+105,Bleed,Ailment,Ailment,bleed,4,magical,adjacent,1,30,1,bleed,1,0,1
+106,Confuse,Ailment,Ailment,confusion,4,magical,adjacent,1,30,1,confusion,1,0,1
 -
 -Opportunity
 1,Slash Opportunity,Opp,None,Slash,1.0
 2,Pierce Opportunity,Opp,None,Pierce,1.0
 3,Blunt Opportunity,Opp,None,Blunt,1.0
 4,Water Opportunity,Opp,None,Water,1.0
-5,Fire Opportunity,Opp,None,Fire,1.0
+5,Pyro Opportunity,Opp,None,Pyro,1.0
 6,Ice Opportunity,Opp,None,Ice,1.0
 7,Elec Opportunity,Opp,None,Electric,1.0
 -
@@ -123,6 +129,7 @@
 -
 -Support
 150,Heal,Support,Heal,heal,8,magical,any,1,0,100,tiny,1,0,1,0,1
+151,Swap,Support,Movement,swap,8,magical,adjacent,1,0,100,tiny,1,0,1,0,1
 -Revive
 -Barrier
 -Siphon
@@ -131,26 +138,34 @@
 -Push
 -PullBack
 -
+-Force
+160,Pulse,Force,Charge,pullin,3,physical,adjacent,0,0,70,tiny,1,0,1,1,2
+161,Alt Pulse,Force,Charge,pullin,3,physical,detached,0,0,70,tiny,1,0,1,1,1
+162,Mega Pulse,Force,Cost,pullin,-6,physical,cone,0,0,75,small,2,0,1,0,2
+163,Ultra Pulse,Force,Cost,pullin,-12,physical,line,5,0,75,small,1,0,2,0,2,1,1
+164,Arcane Pulse,Force,Magic,pullin,5,magical,cone,0,0,80,tiny,1,0,1,1,1
+165,Etherial Pulse,Force,Magic,pullin,8,magical,detached,0,0,80,small,2,0,1,0,2
+-
 -Passives
 200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
 201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
 202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
 203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,50,0,FTCharge,0
-204,DragonStone,Passive,None,Fire and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Slash
-205,WitchStone,Passive,None,Fire and Water attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Water
-206,PhoenixStone,Passive,None,Fire and Pierce attacks do 75% more dmg,1,75,0,ElementDmg,2, Fire, Pierce
-207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Pierce
-208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Electric, Blunt
-209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Water, Blunt
-210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Slash
-211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,75,0,ElementDmg,2, Ice, Electric
-212,DroidStone,Passive,None,Pierce and Blunt attacks do 75% more dmg,1,75,0,ElementDmg,2, Pierce, Blunt
-213,ZombieStone,Passive,None,Water and Slash attacks do 75% more dmg,1,75,0,ElementDmg,2, Water, Slash
-214,Flame Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Fire,Water
-215,Aqua Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Water,Electric
-216,Static Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Electric,Ice
-217,Frost Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Ice,Blunt
-218,Hammer Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Blunt,Slash
-219,Chain Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Slash,Pierce
-220,Flame Body,Passive, None,Nulls Fire but take cripling damage from Water,1,0,0,ElementBody,2,Pierce,Fire
+204,DragonStone,Passive,None,Pyro and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Slash
+205,WitchStone,Passive,None,Pyro and Water attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Water
+206,PhoenixStone,Passive,None,Pyro and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Pierce
+207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Pierce
+208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Electric, Blunt
+209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Water, Blunt
+210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Slash
+211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Electric
+212,DroidStone,Passive,None,Pierce and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Pierce, Blunt
+213,ZombieStone,Passive,None,Water and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Water, Slash
+214,Flame Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Pyro,Water
+215,Aqua Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Water,Electric
+216,Static Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Electric,Ice
+217,Frost Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Ice,Blunt
+218,Hammer Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Blunt,Slash
+219,Chain Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Slash,Pierce
+220,Flame Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Pierce,Pyro
 -212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage

@@ -22,7 +22,7 @@ public class StatusIconManager : MonoBehaviour
         newContainer.transform.parent = transform;
 
         HorizontalLayoutGroup horizontal = newContainer.AddComponent<HorizontalLayoutGroup>();
-        horizontal.spacing = 32;
+        horizontal.spacing = 16;
         horizontal.childAlignment = TextAnchor.UpperLeft;
         horizontal.childControlWidth = true;
         horizontal.childControlHeight = true;
@@ -37,6 +37,8 @@ public class StatusIconManager : MonoBehaviour
         newText.transform.parent = newContainer.transform;
         icon.myText.resizeTextForBestFit = true;
         icon.myText.font = usedFont;
+
+        newContainer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         return icon;
     }
 

@@ -604,7 +604,7 @@ public class ShopScreen : MonoBehaviour
                 skillCount = buyer.INVENTORY.ARMOR.Count;
                 break;
             case 2:
-                skillCount = buyer.BATTLE_SLOTS.SKILLS.Count;
+                skillCount = buyer.PHYSICAL_SLOTS.SKILLS.Count;
                 break;
             case 3:
                 skillCount = buyer.PASSIVE_SLOTS.SKILLS.Count;
@@ -644,7 +644,7 @@ public class ShopScreen : MonoBehaviour
                                 currentTypeText.text = "Wards";
                             break;
                         case 2:
-                            refUseable = buyer.BATTLE_SLOTS.SKILLS[i];
+                            refUseable = buyer.PHYSICAL_SLOTS.SKILLS[i];
                             selectedType = 2;
                             if (currentTypeText)
                                 currentTypeText.text = "Command Skills";

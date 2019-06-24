@@ -11,10 +11,10 @@ public class AnimationScript : MonoBehaviour
     public GridObject obj;
     public int index;
     public bool isSetup = false;
-    LivingObject me;
+    public LivingObject me;
     PlayerController controller;
     CameraScript cam;
-   public Animator anim;
+    public Animator anim;
     Animator shadowAnimator;
     public Animator SHADOWANIM
     {
@@ -34,13 +34,15 @@ public class AnimationScript : MonoBehaviour
             {
                 return;
             }
-            if (!render)
-            {
-                render = obj.gameObject.GetComponent<SpriteRenderer>();
 
+            if(render == null)
+            {
+            render = obj.gameObject.GetComponent<SpriteRenderer>();
             }
+
+
             anim = obj.GetComponent<Animator>();
-            if(!anim)
+            if (!anim)
             {
                 anim = gameObject.AddComponent<Animator>();
             }
@@ -61,13 +63,23 @@ public class AnimationScript : MonoBehaviour
             {
                 shrtname += subs[i];
             }
+
             currentList = Resources.LoadAll<Sprite>("" + shrtname + "/Idle/"); //obj.FullName + "/Idle/");
+            Sprite[] possibleFaces = Resources.LoadAll<Sprite>("" + shrtname + "/Face/");
             index = 0;
             if (currentList.Length > 0)
             {
                 render.sprite = currentList[index];
             }
-            me = GetComponent<LivingObject>();
+            if (possibleFaces.Length > 0)
+            {
+                obj.FACE = possibleFaces[0];
+            }
+            if (me == null)
+            {
+                me = GetComponent<LivingObject>();
+
+            }
             cam = GameObject.FindObjectOfType<CameraScript>();
             controller = GameObject.FindObjectOfType<PlayerController>();
             isSetup = true;
@@ -84,18 +96,17 @@ public class AnimationScript : MonoBehaviour
         Resources.UnloadUnusedAssets();
         currentList = Resources.LoadAll<Sprite>(path);
         repeat = repeation;
-
+        render.sprite = currentList[index];
     }
     public void NextImage()
     {
-        if(currentList == null)
+        if (currentList == null)
         {
-         
             return;
         }
         if (currentList.Length > 0)
         {
-            if (repeat == false)
+            if (repeat != true)
             {
                 if (index >= currentList.Length)
                 {
@@ -131,6 +142,7 @@ public class AnimationScript : MonoBehaviour
     }
     public void CheckAnimation()
     {
+     
         if (anim)
         {
 
@@ -147,7 +159,7 @@ public class AnimationScript : MonoBehaviour
                         anim.speed = 0;
                     }
                 }
-                if(SHADOWANIM)
+                if (SHADOWANIM)
                 {
                     if (cam.infoObject == me)
                     {
@@ -159,7 +171,15 @@ public class AnimationScript : MonoBehaviour
                     }
                 }
             }
-         
+
         }
+    }
+
+    public void Unset()
+    {
+        obj = null;
+        currentList = null;
+        Resources.UnloadUnusedAssets();
+        isSetup = false;
     }
 }

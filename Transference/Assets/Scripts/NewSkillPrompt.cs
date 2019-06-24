@@ -5,16 +5,19 @@ using UnityEngine.UI;
 public class NewSkillPrompt : MonoBehaviour {
 
     public Text text;
-	// Use this for initialization
-	void Start () {
+
+    [SerializeField]
+    public Text choice1;
+
+    [SerializeField]
+    public Text choice2;
+
+    void Start () {
 		if(GetComponent<Text>())
         {
             text = GetComponent<Text>();
         }
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

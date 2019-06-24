@@ -311,7 +311,7 @@ public class ItemScript : UsableScript
                             actor.currentTile = targetTile;
                             actor.currentTile.isOccupied = true;
                             actor.gameObject.SetActive(true);
-                            for (int i = 0; i < target.LEVEL; i++)
+                            for (int i = 1; i < target.LEVEL; i++)
                             {
                                 actor.LevelUp();
                             }
@@ -319,6 +319,7 @@ public class ItemScript : UsableScript
                             actor.BASE_STATS.MANA = actor.BASE_STATS.MAX_MANA;
                             actor.ACTIONS = 0;
                             actor.BASE_STATS.FATIGUE = 0;
+                            actor.BASE_STATS.EXP = 0;
                             manager.gridObjects.Add(actor);
                             manager.SoftReset();
                         }

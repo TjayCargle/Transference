@@ -1,0 +1,614 @@
+fileFormatVersion: 2
+guid: c4d362392cef4974b88889892d51d1a4
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: ZeffronDrixIdle_strip24_0
+    21300002: ZeffronDrixIdle_strip24_1
+    21300004: ZeffronDrixIdle_strip24_2
+    21300006: ZeffronDrixIdle_strip24_3
+    21300008: ZeffronDrixIdle_strip24_4
+    21300010: ZeffronDrixIdle_strip24_5
+    21300012: ZeffronDrixIdle_strip24_6
+    21300014: ZeffronDrixIdle_strip24_7
+    21300016: ZeffronDrixIdle_strip24_8
+    21300018: ZeffronDrixIdle_strip24_9
+    21300020: ZeffronDrixIdle_strip24_10
+    21300022: ZeffronDrixIdle_strip24_11
+    21300024: ZeffronDrixIdle_strip24_12
+    21300026: ZeffronDrixIdle_strip24_13
+    21300028: ZeffronDrixIdle_strip24_14
+    21300030: ZeffronDrixIdle_strip24_15
+    21300032: ZeffronDrixIdle_strip24_16
+    21300034: ZeffronDrixIdle_strip24_17
+    21300036: ZeffronDrixIdle_strip24_18
+    21300038: ZeffronDrixIdle_strip24_19
+    21300040: ZeffronDrixIdle_strip24_20
+    21300042: ZeffronDrixIdle_strip24_21
+    21300044: ZeffronDrixIdle_strip24_22
+    21300046: ZeffronDrixIdle_strip24_23
+  externalObjects: {}
+  serializedVersion: 7
+  mipmaps:
+    mipMapMode: 1
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 1
+    borderMipMap: 1
+    mipMapsPreserveCoverage: 1
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 96
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 959f1177ea6a0d74eba1e8bb3b80ff37
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c95d598403b7f2418936ffaa74bb854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ccf21169e3300d49acc9a18e6cc5442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3a0ab8402063794081caa8fc383d73d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac9974a85f0c4f5499840710218aef37
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0625571c305e6f547b9ac3846c6810be
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44adad5cf905d8a468f6bc2b7d93da7d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffe4b00fea457724893e0908c462013a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f084ec0746e98de4984235bb73cd8e94
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c72587feed4434548900259338d0cd75
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 134585f582d44694cb9939ce30519472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf2844a3680b83344a6d715d3059f18d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 480d433aba57a7046944b92423211903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_13
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5eba36bd79abff1459dce42543aaef5f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_14
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 404d75232b9dfb049b194ff707c099e7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_15
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 850624f4b6e683542a11f8bf6c3502b2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_16
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b51575c545ad86c45b104846834df60e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_17
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0e4e75140a7e98419bdce378d991d0b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_18
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 065d7c57da4d5b445bdc98a4daf62789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_19
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9748423499836414ca19345b3acfb797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_20
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b8a8c8e00815ab4595f9086443358cc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_21
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5592a1ce547e2ee4ea07e420e422393a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_22
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2db64f355312594282b54654192547e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeffronDrixIdle_strip24_23
+      rect:
+        serializedVersion: 2
+        x: 1472
+        y: 5
+        width: 64
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1f166233e64ddd4e81a93218ada93d7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: b563ea73502e1ae44b9d0c98a2a58781
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

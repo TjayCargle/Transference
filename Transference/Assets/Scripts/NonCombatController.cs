@@ -8,7 +8,7 @@ public class NonCombatController : MonoBehaviour
     public NonCombatButton[] buttons;
     public NonCombatButton selectedButton;
     public Canvas ctrlCnvs;
-    public Sprite[] controls;
+
     public Image currControl;
     //   public Sprite[] silouetes;
     public GameObject[] targets;
@@ -21,6 +21,10 @@ public class NonCombatController : MonoBehaviour
     public CtrlsTitle title;
     public CtrlsDesc desc;
     public CtrlsButton selectedCtrlButton;
+
+    public Canvas patchCnvs;
+    public Canvas mainCanvas;
+    public Canvas playCanvas;
     // Use this for initialization
     void Start()
     {
@@ -39,8 +43,35 @@ public class NonCombatController : MonoBehaviour
         {
             ctrlCnvs.gameObject.SetActive(false);
         }
+
+        if (patchCnvs)
+        {
+            patchCnvs.gameObject.SetActive(false);
+        }
+    }
+    public void SetPlay()
+    {
+        if (playCanvas)
+        {
+            playCanvas.gameObject.SetActive(true);
+        }
+        if (mainCanvas)
+        {
+            mainCanvas.gameObject.SetActive(false);
+        }
     }
 
+    public void SetUnPlay()
+    {
+        if (playCanvas)
+        {
+            playCanvas.gameObject.SetActive(false);
+        }
+        if (mainCanvas)
+        {
+            mainCanvas.gameObject.SetActive(true);
+        }
+    }
     public void HitButton()
     {
         if (selectedButton)
@@ -80,6 +111,24 @@ public class NonCombatController : MonoBehaviour
 
                 case 3:
                     selectedButton.pressMain();
+                    break;
+
+                case 4:
+                    {
+                        patchCnvs.gameObject.SetActive(true);
+          
+                    }
+                    break;
+
+                case 5:
+                    selectedButton.playJax();
+                    break;
+
+                case 6:
+                    selectedButton.playZeffron();
+                    break;
+                case 7:
+                    SetUnPlay();
                     break;
             }
         }
@@ -157,33 +206,48 @@ public class NonCombatController : MonoBehaviour
                     ctrlCnvs.gameObject.SetActive(false);
                 }
 
-                if (Input.GetKeyDown(KeyCode.D))
-                {
-                    if (controlIndex + 1 < controls.Length)
-                    {
-                        controlIndex += 1;
-                    }
-                    else
-                    {
-                        controlIndex = 0;
-                    }
+                //if (Input.GetKeyDown(KeyCode.D))
+                //{
+                //    if (controlIndex + 1 < controls.Length)
+                //    {
+                //        controlIndex += 1;
+                //    }
+                //    else
+                //    {
+                //        controlIndex = 0;
+                //    }
 
-                    currControl.sprite = controls[controlIndex];
+                //    currControl.sprite = controls[controlIndex];
+                //}
+
+                //if (Input.GetKeyDown(KeyCode.A))
+                //{
+                //    if (controlIndex - 1 >= 0)
+                //    {
+                //        controlIndex -= 1;
+                //    }
+                //    else
+                //    {
+                //        controlIndex = controls.Length - 1;
+                //    }
+
+                //    currControl.sprite = controls[controlIndex];
+                //}
+            }
+        }
+
+        if (patchCnvs)
+        {
+
+            if (patchCnvs.gameObject.activeInHierarchy)
+            {
+
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButton(1))
+                {
+                    patchCnvs.gameObject.SetActive(false);
                 }
 
-                if (Input.GetKeyDown(KeyCode.A))
-                {
-                    if (controlIndex - 1 >= 0)
-                    {
-                        controlIndex -= 1;
-                    }
-                    else
-                    {
-                        controlIndex = controls.Length - 1;
-                    }
-
-                    currControl.sprite = controls[controlIndex];
-                }
+       
             }
         }
     }

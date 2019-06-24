@@ -32,7 +32,7 @@ public class HazardSetup : LivingSetup
                  dm.GetHazard(hazardid, myself);
            
 
-                dm.GetArmor(8, myself);
+                dm.GetArmor(200, myself);
                 
 
             }
@@ -47,11 +47,12 @@ public class HazardSetup : LivingSetup
             }
             myself.BASE_STATS.MAX_HEALTH = 100 +  (int)(myself.BASE_STATS.LEVEL * 12.5f);
             myself.BASE_STATS.HEALTH = myself.BASE_STATS.MAX_HEALTH;
-            if (myself.INVENTORY.CSKILLS.Count > 0)
+            if (myself.PHYSICAL_SLOTS.SKILLS.Count > 0)
             {
-                CommandSkill mySkill = myself.INVENTORY.CSKILLS[0];
+                CommandSkill mySkill = myself.PHYSICAL_SLOTS.SKILLS[0] as CommandSkill;
                 myself.dropsSkill = true;
                 myself.ARMOR.HITLIST[(int)mySkill.ELEMENT] = EHitType.reflects;
+                myself.ARMOR.HITLIST[(int)Element.Force - (int)mySkill.ELEMENT] = EHitType.cripples;
                 int amnt = Common.GetDmgIndex(mySkill.DAMAGE) * 10;
                 if (mySkill.ETYPE == EType.magical)
                 {

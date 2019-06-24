@@ -42,7 +42,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
                 currDetail--;
                 if (currDetail < 0)
                 {
-                    currDetail = 9;
+                    currDetail = (int)DetailType.Exp;
                 }
             }
             detailsScreen.detail = (DetailType)currDetail;
@@ -60,5 +60,26 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
         detailsScreen.selectedContent = type;
     }
 
-   
+    public void ChangeDescriptionType()
+    {
+       if(detailsScreen)
+        {
+            if(type == 35)
+            {
+                detailsScreen.fullDescription = !detailsScreen.fullDescription;
+                detailsScreen.updateDetails();
+                if(GetComponentInChildren<Text>())
+                {
+                    if(detailsScreen.fullDescription)
+                    {
+                        GetComponentInChildren<Text>().text = "Battle Description";
+                    }
+                    else
+                    {
+                        GetComponentInChildren<Text>().text = "Level Description";
+                    }
+                }
+            }
+        }
+    }
 }

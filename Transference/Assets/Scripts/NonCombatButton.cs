@@ -10,6 +10,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public int type;
     public NonCombatController controller;
+
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -24,6 +25,18 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             controller.buttonIndex = type;
             controller.currTarget = controller.targets[type];
         }
+
+        if (type == 4)
+        {
+            controller.buttonIndex = type;
+            controller.currTarget = controller.targets[3];
+        }
+
+        if (type > 4)
+        {
+            controller.buttonIndex = type;
+            controller.currTarget = controller.targets[type - 1];
+        }
     }
   //  public void OnPointerDown(PointerEventData eventData)
   //  {
@@ -32,10 +45,10 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
    public void PressStart()
    {
 
-       SceneManager.LoadSceneAsync("DemoMap4");
+        //SceneManager.LoadSceneAsync("DemoMap4");
 
-
-   }
+        controller.SetPlay();
+    }
 
    public void PressControls()
    {
@@ -50,6 +63,20 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
    {
        SceneManager.LoadScene("start");
    }
+
+    public void playJax()
+    {
+        PlayerPrefs.SetInt("defaultSceneEntry", 5);
+        SceneManager.LoadSceneAsync("DemoMap4");
+    }
+
+
+    public void playZeffron()
+    {
+        PlayerPrefs.SetInt("defaultSceneEntry", 4);
+        SceneManager.LoadSceneAsync("DemoMap4");
+    }
+
 
     public void OnPointerClick(PointerEventData eventData)
     {

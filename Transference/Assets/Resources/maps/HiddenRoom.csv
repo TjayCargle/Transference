@@ -1,0 +1,8 @@
+-UnoccupiedTiles count
+-tiles
+-event room
+-event tiles
+-event nums
+c,6
+r,8,11,12,15,16,19
+n,false

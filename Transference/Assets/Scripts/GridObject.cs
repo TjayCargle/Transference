@@ -17,10 +17,19 @@ public class GridObject : MonoBehaviour
     protected BaseStats baseStats;
     [SerializeField]
     protected ModifiedStats modifiedStats;
+    [SerializeField]
+   protected Sprite faceSprite = null;
+    public int MapIndex = -1;
     public virtual string NAME
     {
         get { return FullName; }
         set { FullName = value; }
+    }
+
+    public virtual Sprite FACE
+    {
+        get { return faceSprite; }
+        set { faceSprite = value; }
     }
 
     public virtual Faction FACTION
@@ -78,6 +87,10 @@ public class GridObject : MonoBehaviour
                     GetComponent<LivingSetup>().Setup();
                 }
 
+                if (GetComponent<AnimationScript>())
+                {
+                    GetComponent<AnimationScript>().Setup();
+                }
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 transform.Rotate(new Vector3(90, 0, 0));
             }
@@ -134,11 +147,27 @@ public class GridObject : MonoBehaviour
                 renderer.color = renderer.color - subtract;
                 yield return null;
             }
-
+            if (currentTile)
+                currentTile.isOccupied = false;
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
             isdoneDying = true;
         }
       
+    }
+
+
+    public void GenericUnset()
+    {
+        isSetup = false;
+        DEAD = false;
+        STATS.Reset(true);
+        BASE_STATS.Reset();
+        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
+        if (GetComponent<AnimationScript>())
+        {
+            GetComponent<AnimationScript>().Unset();
+        }
     }
 }

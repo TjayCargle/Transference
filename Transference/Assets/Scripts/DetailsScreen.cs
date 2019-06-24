@@ -33,7 +33,7 @@ public class DetailsScreen : MonoBehaviour
     Sprite[] armorSprites;
 
     [SerializeField]
-    public DetailType detail = DetailType.Command;
+    public DetailType detail = DetailType.Physical;
 
     [SerializeField]
     Text[] attributes;
@@ -99,6 +99,20 @@ public class DetailsScreen : MonoBehaviour
     Text sksliderText;
     [SerializeField]
     Text statusText;
+
+    [SerializeField]
+    DetailsTabIndicator[] indicators;
+
+    [SerializeField]
+    GameObject levelShowcase;
+
+    [SerializeField]
+    TextMeshProUGUI currentLevelInfo;
+
+    [SerializeField]
+    TextMeshProUGUI nextLevelInfo;
+    public bool fullDescription = true;
+    private DetailsTabIndicator currentIndicator = null;
     private ArmorScript selectedArmor;
     void Start()
     {
@@ -146,11 +160,27 @@ public class DetailsScreen : MonoBehaviour
         selectedHitlist = currentObj.ARMOR.HITLIST;
         selectedArmor = currentObj.ARMOR.SCRIPT;
         if (descriptionText)
-        descriptionText.text = "";
+            descriptionText.text = "";
 
         if (descriptionText2)
             descriptionText2.text = "";
+        if (levelShowcase)
+        {
+            levelShowcase.SetActive(false);
+            if (currentLevelInfo)
+            {
+                currentLevelInfo.color = Common.trans;
+            }
 
+            if (nextLevelInfo)
+            {
+                nextLevelInfo.color = Common.trans;
+            }
+        }
+        if (descriptionText)
+            descriptionText.gameObject.SetActive(true);
+        if (descriptionText2)
+            descriptionText2.gameObject.SetActive(true);
         string finalText = "";
         for (int i = 0; i < selectableContent.Length; i++)
         {
@@ -175,15 +205,37 @@ public class DetailsScreen : MonoBehaviour
         {
             nameText.text = currentObj.NAME;
         }
-        if(statusText)
+        if (statusText)
         {
-            statusText.text ="Current Status: " + currentObj.PSTATUS.ToString();
+            statusText.text = "Current Status: " + currentObj.PSTATUS.ToString();
         }
-      
+
+        if (indicators != null)
+        {
+            if ((int)detail < indicators.Length)
+            {
+                if (currentIndicator)
+                {
+                    if (currentIndicator.myImage)
+                    {
+                        currentIndicator.myImage.color = Color.white;
+                    }
+                }
+
+                currentIndicator = indicators[(int)detail];
+                if (currentIndicator)
+                {
+                    if (currentIndicator.myImage)
+                    {
+                        currentIndicator.myImage.color = Common.orange;
+                    }
+                }
+            }
+        }
         switch (selectedContent)
         {
             case 33:
-                if(currentObj.PSTATUS == PrimaryStatus.normal)
+                if (currentObj.PSTATUS == PrimaryStatus.normal)
                 {
                     finalText = "Staus is normal. No modifaction to movement or damage output";
                 }
@@ -214,7 +266,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Water Element. Water based moves generally hit all targets in the area.";
                 break;
             case 15:
-                finalText = "Fire Element. Fire based moves generally have larger targeting areas.";
+                finalText = "Pyro Element. Pyro based moves generally have larger targeting areas.";
                 break;
             case 16:
                 finalText = "Ice Element. Ice based moves generally hit distant tiles.";
@@ -248,6 +300,20 @@ public class DetailsScreen : MonoBehaviour
             case 32:
                 finalText = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=#00FFFF>Speed</color> or <color=#00FF00>Skill</color>.";
                 break;
+            case 34:
+                finalText = "Force Element. Force based moves generally pull targets in!";
+                break;
+            case 35:
+                if(fullDescription)
+                {
+                    finalText = "Display the battle description of selected skills. \n Click to change.";
+                }
+                else
+                {
+                    finalText = "Display the level description of selected skills. \n Click to change.";
+                }
+           
+                break;
 
         }
         if (detail != DetailType.Exp)
@@ -266,12 +332,21 @@ public class DetailsScreen : MonoBehaviour
                 skillSlots currentSlot = null;
                 switch (detail)
                 {
-                    case DetailType.Command:
-                        currentSlot = currentObj.BATTLE_SLOTS;
-                        sectionText.text = "Command Skills";
+                    case DetailType.Physical:
+                        currentSlot = currentObj.PHYSICAL_SLOTS;
+                        sectionText.text = "Physcial Skills";
                         if (selectedContent < 3)
                         {
-                            finalText = "Command Skills are usable skills that require a cost and take up 1 action when used.";
+                            finalText = "Physical Command Skills are usable skills that either cost FT or must charge the FT meter by a specific amount to be used.";
+                        }
+
+                        break;
+                    case DetailType.Magical:
+                        currentSlot = currentObj.MAGICAL_SLOTS;
+                        sectionText.text = "Magical Spells";
+                        if (selectedContent < 3)
+                        {
+                            finalText = "Magical Command Spells are usable spells that cost Mana to be used.";
                         }
                         break;
                     case DetailType.Passive:
@@ -333,6 +408,13 @@ public class DetailsScreen : MonoBehaviour
                             finalText = "Ailments are negative status effects that disrupt the character's turn or cause them to take damage.";
                         }
                         break;
+                    case DetailType.Items:
+                        sectionText.text = "Items";
+                        if (selectedContent < 3)
+                        {
+                            finalText = "Items are consumed upon use but have various useful effects.";
+                        }
+                        break;
                 }
                 for (int i = 0; i < skills.Length; i++)
                 {
@@ -341,18 +423,60 @@ public class DetailsScreen : MonoBehaviour
 
                         if (currentSlot.SKILLS.Count > i)
                         {
-                            skills[i].text = currentSlot.SKILLS[i].NAME;
+                            skills[i].text = currentSlot.SKILLS[i].NAME + " LV: " + currentSlot.SKILLS[i].LEVEL;
                             if (selectableContent[selectedContent].GetComponentInChildren<Text>())
                             {
                                 if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                 {
                                     finalText = currentSlot.SKILLS[i].DESC;
+                                    if (currentSlot.SKILLS[i].GetType() == typeof(CommandSkill))
+                                    {
+                                        if (fullDescription == false)
+                                        {
+
+                                            if (levelShowcase)
+                                            {
+                                                levelShowcase.SetActive(true);
+                                                if (descriptionText)
+                                                    descriptionText.gameObject.SetActive(false);
+                                                if (descriptionText2)
+                                                    descriptionText2.gameObject.SetActive(false);
+                                                if (currentLevelInfo)
+                                                {
+                                                    currentLevelInfo.text = (currentSlot.SKILLS[i] as CommandSkill).GetCurrentLevelStats();
+                                                    currentLevelInfo.color = Color.white;
+                                                }
+                                                if (nextLevelInfo)
+                                                {
+                                                    nextLevelInfo.text = (currentSlot.SKILLS[i] as CommandSkill).GetNextLevelStats();
+                                                    nextLevelInfo.color = Color.white;
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (descriptionText)
+                                                descriptionText.gameObject.SetActive(true);
+                                            if (descriptionText2)
+                                                descriptionText2.gameObject.SetActive(true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (descriptionText)
+                                            descriptionText.gameObject.SetActive(true);
+                                        if (descriptionText2)
+                                            descriptionText2.gameObject.SetActive(true);
+                                    }
+
                                 }
                             }
                         }
                         else
                         {
                             skills[i].text = "-";
+
                         }
                     }
 
@@ -442,6 +566,24 @@ public class DetailsScreen : MonoBehaviour
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
                                         finalText = Common.GetSideEffectText(currentObj.INVENTORY.EFFECTS[i].EFFECT);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                skills[i].text = "-";
+                            }
+                        }
+                        else if (detail == DetailType.Items)
+                        {
+                            if (currentObj.INVENTORY.ITEMS.Count > i)
+                            {
+                                skills[i].text = currentObj.INVENTORY.ITEMS[i].NAME;
+                                if (selectableContent[selectedContent].GetComponentInChildren<Text>())
+                                {
+                                    if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
+                                    {
+                                        finalText = currentObj.INVENTORY.ITEMS[i].DESC;
                                     }
                                 }
                             }
@@ -627,7 +769,7 @@ public class DetailsScreen : MonoBehaviour
         //else
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
         val = (currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
-        if(selectedArmor != null)
+        if (selectedArmor != null)
         {
             val += selectedArmor.DEFENSE;
         }
@@ -645,7 +787,7 @@ public class DetailsScreen : MonoBehaviour
         {
             val += selectedArmor.SPEED;
         }
-        attributes[2].text = "Spd: " +val;
+        attributes[2].text = "Spd: " + val;
 
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         //if (val > 0)

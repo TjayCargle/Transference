@@ -139,7 +139,7 @@ public class ArmorScript : UsableScript
                     {
                         HITLIST[i] = HITLIST[i] - 1;
                     }
-                    else if (HITLIST[i] > EHitType.normal && HITLIST[i] < EHitType.leathal)
+                    else if (HITLIST[i] > EHitType.normal && HITLIST[i] < EHitType.lethal)
                     {
                         HITLIST[i] = HITLIST[i] + 1;
                     }

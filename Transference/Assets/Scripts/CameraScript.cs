@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ public class CameraScript : MonoBehaviour
     public Text fatigueText;
     public GridObject infoObject;
     public Text actionText;
+    public Image faceImage;
     public CanvasRenderer test;
     public Canvas DescriptionCanvas;
     ManagerScript manager;
@@ -29,7 +31,7 @@ public class CameraScript : MonoBehaviour
 
     public Sprite[] resSprites;
     public Sprite[] weakSprites;
-    public Sprite[] attrSprites;
+
 
     public Image[] resists;
     public Image[] elements;
@@ -40,6 +42,8 @@ public class CameraScript : MonoBehaviour
     public ArmorSet armorSet;
     public AudioClip[] musicClips;
     AudioSource audio;
+
+   
     int soundTrack = 1;
     void Start()
     {
@@ -129,6 +133,7 @@ public class CameraScript : MonoBehaviour
 
     public void UpdateCamera()
     {
+
         if (currentTile)
         {
             if (infoCanvas)
@@ -144,6 +149,7 @@ public class CameraScript : MonoBehaviour
                         // infoCanvas.gameObject.SetActive(true);
                         if (infoObject != null)
                         {
+                   
 
                             if (!infoObject.GetComponent<TempObject>())
                             {
@@ -155,13 +161,25 @@ public class CameraScript : MonoBehaviour
 
                                 if (actionText.transform.parent.gameObject.activeInHierarchy)
                                 {
-                                    actionText.gameObject.SetActive(true);
+                                   // actionText.gameObject.SetActive(true);
                                 }
-
+                                if (faceImage)
+                                {
+                                    faceImage.sprite = infoObject.FACE;
+                                    if(faceImage.sprite == null)
+                                    {
+                                        faceImage.color = Common.trans;
+                                    }
+                                    else
+                                    {
+                                        faceImage.color = Color.white;
+                                    }
+                                }
                                 if (infoObject.GetComponent<LivingObject>())
                                 {
-
+                                
                                     LivingObject liver = infoObject.GetComponent<LivingObject>();
+                                      manager.iconManager.loadIconPanel(liver);
 
                                     if (armorSet)
                                     {
@@ -169,12 +187,22 @@ public class CameraScript : MonoBehaviour
                                         armorSet.updateDetails();
                                     }
 
-                                    infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
+                                    infoText.text = infoObject.FullName + " LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
                                     if (!actionText.IsActive())
                                     {
                                         //  actionText.transform.parent.gameObject.SetActive(true);
                                     }
                                     actionText.text = "Actions: " + liver.ACTIONS;
+                                    if (liver.ACTIONS == 1)
+                                    {
+                                        actionText.color = Color.red;
+                                        actionText.fontStyle = FontStyle.BoldAndItalic;
+                                    }
+                                    else
+                                    {
+                                        actionText.color = Color.white;
+                                        actionText.fontStyle = FontStyle.Normal;
+                                    }
                      
                                     if (healthSlider)
                                     {
@@ -241,16 +269,44 @@ public class CameraScript : MonoBehaviour
                                 }
                                 else if (infoObject.GetComponent<BaseStats>())
                                 {
+                               
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
-                                        healthSlider.value = (float)infoObject.BASE_STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
                                         healthText.text = infoObject.BASE_STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+
+                                        if (attackingCheck == false)
+                                        {
+                                            healthSlider.value = (float)infoObject.BASE_STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            healthText.text = (infoObject.BASE_STATS.HEALTH).ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+
+                                        }
+                                        else
+                                        {
+                                            healthSlider.value = (float)(infoObject.BASE_STATS.HEALTH - potentialDamage) / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            healthText.text = infoObject.BASE_STATS.HEALTH + " - " + potentialDamage;
+                                        }
                                     }
 
-                                    infoText.text = infoObject.FullName + " \n LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
-                                
+                                    infoText.text = infoObject.FullName + " LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
 
+
+                                    if (armorSet)
+                                    {
+                                        armorSet.currentGridObj = infoObject;
+                                        armorSet.updateGridDetails();
+                                    }
+                                    if(infoObject.FACTION == Faction.eventObj)
+                                    {
+                                        EventDetails eve = Common.GetEventText(infoObject.BASE_STATS.SPEED,null);
+                                        actionText.text = eve.eventText;
+                                    }
+                                    else
+                                    {
+                                    actionText.text = "";
+
+                                    }
+                                  
                                 }
                             }
                             else
@@ -273,6 +329,7 @@ public class CameraScript : MonoBehaviour
                         }
                         else if (infoObject == null)
                         {
+                           
                             if (infoCanvas.gameObject.activeInHierarchy)
                             {
 
@@ -283,22 +340,19 @@ public class CameraScript : MonoBehaviour
 
                         }
                     }
-                    else
+                    else if (currentTile.TTYPE == TileType.door)
                     {
-                        //if (actionText.gameObject.activeInHierarchy)
-                        //{
-
-                        //    actionText.gameObject.SetActive(false);
-                        //}
-                        if (infoCanvas.gameObject.activeInHierarchy)
-                        {
-                            //  infoCanvas.gameObject.SetActive(false);
-                        }
-                        if (DescriptionCanvas.gameObject.activeInHierarchy)
-                        {
-                            //     DescriptionCanvas.gameObject.SetActive(false);
-                        }
+               
+                        infoText.text = "Door to " + currentTile.MAP;
+                        actionText.text = "";
                     }
+                    else if (currentTile.TTYPE == TileType.shop)
+                    {
+
+                        infoText.text = "Shop Tile ";
+                        actionText.text = "";
+                    }
+
 
 
 

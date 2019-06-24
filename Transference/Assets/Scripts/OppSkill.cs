@@ -55,5 +55,10 @@ public class OppSkill : SkillScript {
  //       equippedSkill.UseSkill(user);
     }
 
+    public override void UpdateDesc()
+    {
+        base.UpdateDesc();
+        DESC = "Allows a free attack after an ally hits with a " + TRIGGER + " attack.";
+    }
 
 }

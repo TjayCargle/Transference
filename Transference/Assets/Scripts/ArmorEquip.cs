@@ -30,28 +30,28 @@ public class ArmorEquip : Equipable
     public ArmorScript SCRIPT
     {
         get { return equipped; }
-      
+
     }
     public int DEFENSE
     {
         get { return equipped.DEFENSE; }
-        
+
     }
     public int RESISTANCE
     {
         get { return equipped.RESISTANCE; }
-    
+
     }
     public int SPEED
     {
         get { return equipped.SPEED; }
- 
+
     }
 
     public List<EHitType> HITLIST
     {
         get { return equipped.HITLIST; }
-   
+
     }
     public int ARMORID
     {
@@ -103,6 +103,19 @@ public class ArmorEquip : Equipable
         maxHealthPercent = armor.MAX_HEALTH;
         healthPercent = armor.HEALTH;
         equipped = armor;
+
+        if (owner)
+        {
+            if (owner.BARRIER)
+            {
+                if (ARMORID != 200)
+                {
+
+                    owner.BARRIER.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Shields/")[ARMORID];
+                    owner.BARRIER.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+            }
+        }
     }
 
     public void unEquip()
@@ -111,7 +124,14 @@ public class ArmorEquip : Equipable
         noArmor.NAME = "none";
         noArmor.HITLIST = Common.noHitList;
         noArmor.DESC = "No armor equipped";
-        equipped = noArmor;
+        Equip(noArmor);
+        if (owner)
+        {
+            if (owner.BARRIER)
+            {
+                owner.BARRIER.GetComponent<SpriteRenderer>().color = Common.trans;
+            }
+        }
     }
     public bool DamageArmor(float amt)
     {
@@ -120,18 +140,22 @@ public class ArmorEquip : Equipable
         {
             if (equipped)
             {
-                float trueAmount = amt / (float)USER.MAX_HEALTH;
-                trueAmount *= 100;
-                equipped.HEALTH -= trueAmount;
-                if (equipped.HEALTH <= 0)
+                if (equipped != Common.noArmor)
                 {
-                    equipped.BREAKS++;
-                    if(equipped.BREAKS % 2 == 0)
+
+                    float trueAmount = amt / (float)USER.MAX_HEALTH;
+                    trueAmount *= 100;
+                    equipped.HEALTH -= trueAmount;
+                    if (equipped.HEALTH <= 0)
                     {
-                        equipped.LevelUP();
+                        equipped.BREAKS++;
+                        if (equipped.BREAKS % 2 == 0)
+                        {
+                            equipped.LevelUP();
+                        }
+                        unEquip();
+                        broken = true;
                     }
-                    unEquip();
-                    broken = true;
                 }
             }
 

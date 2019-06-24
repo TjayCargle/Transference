@@ -73,6 +73,8 @@ public class DatabaseManager : MonoBehaviour
     private Dictionary<int, string> mapDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> objDictionary = new Dictionary<int, string>();
     public bool isSetup = false;
+    MapData data = new MapData();
+    SceneContainer scene = new SceneContainer();
     public void Setup()
     {
         if (!isSetup)
@@ -236,6 +238,12 @@ public class DatabaseManager : MonoBehaviour
             }
 
 
+            data.unOccupiedIndexes = new List<int>();
+            data.events = new List<EventPair>();
+
+
+            scene.speakerNames = new List<string>();
+            scene.speakertext = new List<string>();
 
             isSetup = true;
         }
@@ -411,15 +419,15 @@ public class DatabaseManager : MonoBehaviour
                                         index++;
                                         buff.TILES.Add(v);
                                     }
-                                
+
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(buff);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(buff);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(buff);
-                          
-                          //          if (equip == true)
+
+                                    //          if (equip == true)
                                     {
-                                        if (livingObject.BATTLE_SLOTS.CanAdd())
-                                            livingObject.BATTLE_SLOTS.SKILLS.Add(buff);
+                                        if (livingObject.MAGICAL_SLOTS.CanAdd())
+                                            livingObject.MAGICAL_SLOTS.SKILLS.Add(buff);
                                     }
                                     if (buff.SUBTYPE == SubSkillType.Buff)
                                     {
@@ -471,16 +479,22 @@ public class DatabaseManager : MonoBehaviour
                                                 support.DESC = "Heals " + support.DAMAGE + " amount of health to target";
                                             }
                                             break;
+
+                                        case SideEffect.swap:
+                                            {
+                                                support.DESC = "Swaps positions with target";
+                                            }
+                                            break;
                                     }
 
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(support);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(support);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(support);
-                                 
-                                 //   if (equip == true)
+
+                                    //   if (equip == true)
                                     {
-                                        if (livingObject.BATTLE_SLOTS.CanAdd())
-                                            livingObject.BATTLE_SLOTS.SKILLS.Add(support);
+                                        if (livingObject.MAGICAL_SLOTS.CanAdd())
+                                            livingObject.MAGICAL_SLOTS.SKILLS.Add(support);
                                     }
                                 }
                                 break;
@@ -523,8 +537,8 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.INVENTORY.USEABLES.Add(passive);
                                     livingObject.INVENTORY.PASSIVES.Add(passive);
                                     livingObject.INVENTORY.SKILLS.Add(passive);
-                                
-                                //    if (equip == true)
+
+                                    //    if (equip == true)
                                     {
                                         if (livingObject.PASSIVE_SLOTS.CanAdd())
                                         {
@@ -548,12 +562,12 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
-                               // if (equip == true)
-                                {
-                                    if (livingObject.OPP_SLOTS.CanAdd())
-                                        livingObject.OPP_SLOTS.SKILLS.Add(opp);
-                                }
-                                
+                                    // if (equip == true)
+                                    {
+                                        if (livingObject.OPP_SLOTS.CanAdd())
+                                            livingObject.OPP_SLOTS.SKILLS.Add(opp);
+                                    }
+
                                     return opp;
                                 }
                                 break;
@@ -595,8 +609,8 @@ public class DatabaseManager : MonoBehaviour
                                     //    if (livingObject.BATTLE_SLOTS.CanAdd())
                                     //        livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
                                     //}
-                                    if (livingObject.BATTLE_SLOTS.CanAdd())
-                                        livingObject.BATTLE_SLOTS.SKILLS.Add(ailment);
+                                    if (livingObject.MAGICAL_SLOTS.CanAdd())
+                                        livingObject.MAGICAL_SLOTS.SKILLS.Add(ailment);
                                     //ailment.DESC = "Has an " + ailment.ACCURACY + "% chance to inflict enemy with " + ailment.EFFECT;
                                     ailment.UpdateDesc();
                                     return ailment;
@@ -621,7 +635,7 @@ public class DatabaseManager : MonoBehaviour
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(auto);
                                     if (equip == true)
                                     {
-                                 
+
                                     }
                                     if (livingObject.AUTO_SLOTS.CanAdd())
                                         livingObject.AUTO_SLOTS.SKILLS.Add(auto);
@@ -681,67 +695,79 @@ public class DatabaseManager : MonoBehaviour
                                         command.MAX_HIT = Int32.Parse(parsed[index]);
 
                                     }
-                                    if (command.RTYPE == RangeType.single)
-                                    {
-                                        command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to";
-                                        if (count > 1)
-                                        {
-                                            command.DESC += " enemies in row";
-                                        }
-                                        else
-                                        {
-                                            command.DESC += " a single enemy";
-                                        }
-                                        if (command.HITS > 1)
-                                        {
-                                            command.DESC += " " + command.HITS + " times";
-                                        }
-                                    }
-                                    if (command.RTYPE == RangeType.area)
-                                    {
-                                        command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to all enemies in range";
-
-                                    }
-                                    if (command.RTYPE == RangeType.multi)
-                                    {
-                                        command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to an enemy in range";
-
-                                    }
-                                    // if (command.HITS == 1)
-                                    //    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " enemy";
-                                    //else
+                                    //if (command.RTYPE == RangeType.single)
                                     //{
-
-                                    //    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to enemy " + command.HITS + " times";
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to";
+                                    //    if (count > 1)
+                                    //    {
+                                    //        command.DESC += " enemies in row";
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        command.DESC += " a single enemy";
+                                    //    }
+                                    //    if (command.HITS > 1)
+                                    //    {
+                                    //        command.DESC += " " + command.HITS + " times";
+                                    //    }
+                                    //}
+                                    //if (command.RTYPE == RangeType.area)
+                                    //{
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to all enemies in range";
 
                                     //}
-                                    if (command.SUBTYPE == SubSkillType.RngAtk)
-                                    {
-                                        command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to enemy " + command.MIN_HIT + "-" + command.MAX_HIT + " times";
-                                    }
-                                    if (command.EFFECT != SideEffect.none)
-                                    {
-                                        if (command.EFFECT < SideEffect.reduceStr)
-                                        {
-                                            command.DESC += " with a chance of " + command.EFFECT.ToString();
-                                        }
-                                        else
-                                        {
-                                            command.DESC += " with a chance to debuff " + Common.GetSideEffectText(command.EFFECT);
-                                            command.BUFFEDSTAT = Common.GetSideEffectMod(command.EFFECT);
-                                            command.BUFFVAL = -1 * command.CRIT_RATE;
-                                            command.EFFECT = SideEffect.debuff;
-                                        }
-                                    }
+                                    //if (command.RTYPE == RangeType.multi)
+                                    //{
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to an enemy in range";
+
+                                    //}
+                                    //// if (command.HITS == 1)
+                                    ////    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to " + command.TILES.Count + " enemy";
+                                    ////else
+                                    ////{
+
+                                    ////    command.DESC = "Deals " + command.DAMAGE + " " + skill.ELEMENT + " based " + command.ETYPE + " damage to enemy " + command.HITS + " times";
+
+                                    ////}
+                                    //if (command.SUBTYPE == SubSkillType.RngAtk)
+                                    //{
+                                    //    command.DESC = "Deals " + command.DAMAGE + " " + command.ETYPE + "  " + skill.ELEMENT + " damage to enemy " + command.MIN_HIT + "-" + command.MAX_HIT + " times";
+                                    //}
+                                    //if (command.EFFECT != SideEffect.none)
+                                    //{
+                                    //    if (command.EFFECT < SideEffect.reduceStr)
+                                    //    {
+                                    //        command.DESC += " with a chance of " + command.EFFECT.ToString();
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        command.DESC += " with a chance to debuff " + Common.GetSideEffectText(command.EFFECT);
+                                    //        command.BUFFEDSTAT = Common.GetSideEffectMod(command.EFFECT);
+                                    //        command.BUFFVAL = -1 * command.CRIT_RATE;
+                                    //        command.EFFECT = SideEffect.debuff;
+                                    //    }
+                                    //}
                                     command.UpdateDesc();
-                                    livingObject.GetComponent<InventoryScript>().CSKILLS.Add(command);
-                                    livingObject.GetComponent<InventoryScript>().USEABLES.Add(command);
-                                    livingObject.GetComponent<InventoryScript>().SKILLS.Add(command);
+
+                                    livingObject.INVENTORY.CSKILLS.Add(command);
+
+                                    livingObject.INVENTORY.USEABLES.Add(command);
+                                    livingObject.INVENTORY.SKILLS.Add(command);
                                     if (equip == true)
                                     {
                                     }
-                                        if (livingObject.BATTLE_SLOTS.CanAdd())
-                                            livingObject.BATTLE_SLOTS.SKILLS.Add(command);
+                                    if (command.ETYPE == EType.physical)
+                                    {
+
+                                        if (livingObject.PHYSICAL_SLOTS.CanAdd())
+                                            livingObject.PHYSICAL_SLOTS.SKILLS.Add(command);
+                                    }
+                                    else
+                                    {
+
+                                        if (livingObject.MAGICAL_SLOTS.CanAdd())
+                                            livingObject.MAGICAL_SLOTS.SKILLS.Add(command);
+                                    }
                                     return command;
                                 }
                                 break;
@@ -1162,6 +1188,7 @@ public class DatabaseManager : MonoBehaviour
                 list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[10]));
                 list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[11]));
                 list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[12]));
+                list.Add((EHitType)Enum.Parse(typeof(EHitType), parsed[13]));
 
                 // armor.DESC = "Defense: " + armor.DEFENSE + " Resistance: " + armor.RESISTANCE + " Speed: " + armor.SPEED;
                 armor.DESC = "Def +" + armor.DEFENSE + ", Res+" + armor.RESISTANCE + " Spd +" + armor.SPEED;
@@ -1486,8 +1513,8 @@ public class DatabaseManager : MonoBehaviour
                 fileIndex++;
                 baseStats.RESIESTANCE = Int32.Parse(parsed[fileIndex]);
                 fileIndex++;
+                baseStats.SPEED = Int32.Parse(parsed[fileIndex]);
                 baseStats.MOVE_DIST = 0;
-
             }
         }
         return newObject;
@@ -1584,13 +1611,15 @@ public class DatabaseManager : MonoBehaviour
         map.hazardIndexes = new List<int>();
         map.shopIndexes = new List<int>();
         map.startIndexes = new List<int>();
-        map.objIndexes = new List<int>();
+        map.objMapIndexes = new List<int>();
+        map.objIds = new List<int>();
         string lines = "";
         if (mapDictionary.TryGetValue(id, out lines))
         {
             string[] parsed = lines.Split(',');
             if (Int32.Parse(parsed[0]) == id)
             {
+                map.mapIndex = id;
                 int fileIndex = 1;
                 map.mapName = parsed[fileIndex];
                 fileIndex++;
@@ -1658,12 +1687,129 @@ public class DatabaseManager : MonoBehaviour
                 fileIndex++;
                 for (int i = 0; i < numOfObjs; i++)
                 {
-                    map.objIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    map.objMapIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                    fileIndex++;
+                }
+
+
+                for (int i = 0; i < numOfObjs; i++)
+                {
+                    map.objIds.Add(Int32.Parse(parsed[fileIndex]));
                     fileIndex++;
                 }
             }
         }
 
         return map;
+    }
+
+    public MapData GetMapData(string name)
+    {
+        string shrtname = name;
+        string[] subs = shrtname.Split(' ');
+        shrtname = "";
+        for (int i = 0; i < subs.Length; i++)
+        {
+            shrtname += subs[i];
+        }
+
+        data.unOccupiedIndexes.Clear();
+        data.events.Clear();
+        data.eventMap = false;
+
+        TextAsset asset = Resources.Load("maps/" + shrtname) as TextAsset;
+        if (asset)
+        {
+            string file = asset.text;
+            string[] mapLines = file.Split('\n');
+
+
+
+            for (int i = 0; i < mapLines.Length; i++)
+            {
+                string line = mapLines[i];
+                if (line[0] != '-')
+                {
+                    string[] parsed = line.Split(',');
+
+                    switch (parsed[0])
+                    {
+
+                        case "r":
+                            for (int j = 0; j < parsed.Length - 1; j++)
+                            {
+                                data.unOccupiedIndexes.Add(Int32.Parse(parsed[j + 1]));
+                            }
+                            break;
+                        case "n":
+                            data.eventMap = bool.Parse(parsed[1]);
+
+                            break;
+                    }
+
+                }
+            }
+
+        }
+        return data;
+    }
+
+    public SceneContainer GetSceneData(string name)
+    {
+
+        scene.speakertext.Clear();
+        scene.speakerNames.Clear();
+        TextAsset asset = Resources.Load("Dialogue/" + name) as TextAsset;
+        if (asset)
+        {
+            string file = asset.text;
+            string[] mapLines = file.Split('\n');
+
+
+
+            for (int i = 0; i < mapLines.Length; i++)
+            {
+                string line = mapLines[i];
+                if (line[0] != '-')
+                {
+                    string[] parsed = line.Split(',');
+
+                    switch (parsed[0])
+                    {
+
+                        case "a":
+                            {
+                                int actorNum = Int32.Parse(parsed[1]);
+                                string lines = "";
+                                if (actorDictionary.TryGetValue(actorNum, out lines))
+                                {
+                                    string[] actorParse = lines.Split(',');
+                                    scene.speakerNames.Add(actorParse[1]);
+                                }
+
+                                scene.speakertext.Add(parsed[2]);
+                            }
+                            break;
+                        case "e":
+                            {
+                                int enemyNum = Int32.Parse(parsed[1]);
+                                string lines = "";
+                                if (enemyDictionary.TryGetValue(enemyNum, out lines))
+                                {
+                                    string[] actorParse = lines.Split(',');
+                                    scene.speakerNames.Add(actorParse[1]);
+                                }
+
+                                scene.speakertext.Add(parsed[2]);
+                            }
+
+                            break;
+                    }
+
+                }
+            }
+
+        }
+        return scene;
     }
 }

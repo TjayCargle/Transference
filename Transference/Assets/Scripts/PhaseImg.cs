@@ -52,9 +52,9 @@ public class PhaseImg : ImgObj
             {
                 if (myText)
                 {
-                    if (textColor.a + 0.01 < 1.0f)
+                    if (textColor.a + Time.deltaTime < 1.0f)
                     {
-                        textColor.a += 0.01f;
+                        textColor.a +=  Time.deltaTime;
                         myText.color = textColor;
                     }
                     else
@@ -64,9 +64,9 @@ public class PhaseImg : ImgObj
                 }
                 if (GetComponent<Image>())
                 {
-                    if (myColor.a + 0.01 < 1.0f)
+                    if (myColor.a +  Time.deltaTime  < 1.0f)
                     {
-                        myColor.a += 0.01f;
+                        myColor.a += Time.deltaTime;
                         GetComponent<Image>().color = myColor;
                     }
                     else
@@ -80,9 +80,9 @@ public class PhaseImg : ImgObj
             {
                 if (myText)
                 {
-                    if (textColor.a - 0.01 > 0.0f)
+                    if (textColor.a - Time.deltaTime > 0.0f)
                     {
-                        textColor.a -= 0.01f;
+                        textColor.a -=Time.deltaTime;
                         myText.color = textColor;
                     }
                     else
@@ -92,9 +92,9 @@ public class PhaseImg : ImgObj
                 }
                 if (GetComponent<Image>())
                 {
-                    if (myColor.a - 0.01 > 0.0f)
+                    if (myColor.a -  Time.deltaTime > 0.0f)
                     {
-                        myColor.a -= 0.01f;
+                        myColor.a -=  Time.deltaTime;
                         GetComponent<Image>().color = myColor;
                     }
                     else

@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AccessoryEquip.cs" />
-    <Compile Include="Assets\Scripts\AccessoryManager.cs" />
     <Compile Include="Assets\Scripts\ActorScript.cs" />
     <Compile Include="Assets\Scripts\ActorSetup.cs" />
     <Compile Include="Assets\Scripts\AnimationScript.cs" />
@@ -74,6 +73,8 @@
     <Compile Include="Assets\Scripts\AugmentScript.cs" />
     <Compile Include="Assets\Scripts\AutoSkill.cs" />
     <Compile Include="Assets\Scripts\BaseStats.cs" />
+    <Compile Include="Assets\Scripts\BattleLog.cs" />
+    <Compile Include="Assets\Scripts\BattleManager.cs" />
     <Compile Include="Assets\Scripts\BuffScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\CameraShake.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Assets\Scripts\DebuffScript.cs" />
     <Compile Include="Assets\Scripts\DetailsScreen.cs" />
     <Compile Include="Assets\Scripts\DetailsTabController.cs" />
+    <Compile Include="Assets\Scripts\DetailsTabIndicator.cs" />
     <Compile Include="Assets\Scripts\DmgTextObj.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\EffectScript.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Assets\Scripts\Expbar.cs" />
     <Compile Include="Assets\Scripts\ExpManager.cs" />
     <Compile Include="Assets\Scripts\FlavorTextImg.cs" />
+    <Compile Include="Assets\Scripts\FreeMovement.cs" />
     <Compile Include="Assets\Scripts\GameOverBtn.cs" />
     <Compile Include="Assets\Scripts\GameOverText.cs" />
     <Compile Include="Assets\Scripts\GridAnimationObj.cs" />
@@ -148,6 +151,8 @@
     <Compile Include="Assets\Scripts\StatIcon.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
     <Compile Include="Assets\Scripts\StatusIconManager.cs" />
+    <Compile Include="Assets\Scripts\TalkButton.cs" />
+    <Compile Include="Assets\Scripts\TalkPanel.cs" />
     <Compile Include="Assets\Scripts\TempObject.cs" />
     <Compile Include="Assets\Scripts\TextEventManager.cs" />
     <Compile Include="Assets\Scripts\TextObj.cs" />

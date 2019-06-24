@@ -11,6 +11,9 @@ public class GridAnimationObj : GridObject
     public int type = 0;
     public CameraShake shake;
     public int magnitute = 1;
+    public GridObject target;
+    public string path;
+    public bool prepared = false;
     //  private float time = 2;
 
     public override void Setup()
@@ -28,25 +31,39 @@ public class GridAnimationObj : GridObject
     }
     public ManagerScript manager;
 
+    public void LoadGridAnimation()
+    {
+        if (type == -1)
+        {
+            path = "Animations/Break/";
+
+        }
+        else if (type == -2)
+        {
+            path = "Animations/Support/";
+
+        }
+        else if (type == (int)Element.Buff)
+        {
+            path = "Animations/Buffs/";
+
+        }
+        else
+        {
+            path = "Animations/" + ((Element)type).ToString().ToLower() + "/";
+        }
+        script.LoadList(path, false);
+    }
     public void StartCountDown()
     {
         if (isShowing == false)
         {
-            string path = "";
-            if (type == -1)
+            if(target)
             {
-                path = "Animations/Break/";
-
+                manager.MoveCameraAndShow(target);
             }
-           else if (type == (int)Element.Buff)
-            {
-                path = "Animations/Buffs/";
-
-            }
-            else
-            {
-                path = "Animations/" + ((Element)type).ToString().ToLower() + "/";
-            }
+  
+         
             if (manager.sfx)
             {
                 AudioClip[] audios = Resources.LoadAll<AudioClip>(path);
@@ -54,17 +71,16 @@ public class GridAnimationObj : GridObject
                 {
                     if (audios.Length > 0)
                     {
-
                         manager.sfx.loadAudio(audios[0]);
                         manager.sfx.playSound();
                     }
                 }
             }
-            script.LoadList(path, false);
+          
             gameObject.SetActive(true);
           //  Debug.Log("anim");
+            script.anim.speed = 1;
             isShowing = true;
-            script.index = 0;
             //anim.Play();
             //  time = 1.05f;
         }
@@ -78,9 +94,10 @@ public class GridAnimationObj : GridObject
         {
             shake.ToOrigin();
         }
+        gameObject.SetActive(false);
+        prepared = false;
         isShowing = false;
         manager.AnimationRequests--;
-        gameObject.SetActive(false);
         manager.myCamera.UpdateCamera();
     }
 
@@ -94,13 +111,13 @@ public class GridAnimationObj : GridObject
                 if (shake)
                 {
                     float val = script.currentList.Length * Random.Range(1.4f, 1.8f);
-                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.02f * magnitute), (val * 0.5f) * Time.deltaTime));
+                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.2f * magnitute), (val * 0.5f) * Time.deltaTime));
                 }
             }
             // time -= Time.deltaTime;
             if (script.index >= script.currentList.Length - 1)
             {
-
+                script.anim.speed = 0;
                 StopCountDown();
             }
         }
