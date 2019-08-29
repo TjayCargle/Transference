@@ -1,2 +1,4 @@
 -id,name, level, num of skills, num of weapons, skillOrWepNum
-0, Ice Glyph,1, 0,1,100
+0, Security Glyph,1, 0,1,100
+1, Lock Glyph,1, 0,1,100
+2, Redirect Glyph,1, 0,1,100

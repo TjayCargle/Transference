@@ -30,8 +30,16 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                enemySetup.enemyId = Random.Range(0, 2);
+                enemySetup.enemyId = Random.Range(0, 4);
                 enemies[i].Setup();
+                if(enemySetup.enemyId == 2)
+                {
+                    enemies[i].FACTION = Faction.fairy;
+                }
+                else
+                {
+                    enemies[i].FACTION = Faction.enemy;
+                }
                 subenemies.Add(enemies[i]);
             }
         }
@@ -43,17 +51,33 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                enemySetup.enemyId = Random.Range(0, 2);
+                enemySetup.enemyId = Random.Range(0, 4);
                 enemies[i].Setup();
+                if (enemySetup.enemyId == 2)
+                {
+                    enemies[i].FACTION = Faction.fairy;
+                }
+                else
+                {
+                    enemies[i].FACTION = Faction.enemy;
+                }
                 subenemies.Add(enemies[i]);
             }
             while (enemies.Count < num)
             {
                 GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
                 EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
-                enemySetup.enemyId = Random.Range(0, 2);
+                enemySetup.enemyId = Random.Range(0, 4);
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
+                if (enemySetup.enemyId == 2)
+                {
+                    enemy.FACTION = Faction.fairy;
+                }
+                else
+                {
+                    enemy.FACTION = Faction.enemy;
+                }
                 enemies.Add(enemy);
                 subenemies.Add(enemy);
         

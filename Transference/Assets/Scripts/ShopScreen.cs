@@ -229,13 +229,13 @@ public class ShopScreen : MonoBehaviour
                                         switch (((SkillScript)SELECTED.refItem).ELEMENT)
                                         {
                                             case Element.Passive:
-                                                loadBuyerList(4);
+                                                loadBuyerList(5);
                                                 break;
                                             case Element.Auto:
-                                                loadBuyerList(3);
+                                                loadBuyerList(4);
                                                 break;
                                             case Element.Opp:
-                                                loadBuyerList(5);
+                                                loadBuyerList(6);
                                                 break;
                                             default:
                                                 loadBuyerList(0);
@@ -488,7 +488,7 @@ public class ShopScreen : MonoBehaviour
             if (currentDetails)
                 currentDetails.SetActive(true);
             if (currentTypeText)
-                currentTypeText.text = "Basic Attacks";
+                currentTypeText.text = "Strikes";
 
         }
     }
@@ -607,12 +607,15 @@ public class ShopScreen : MonoBehaviour
                 skillCount = buyer.PHYSICAL_SLOTS.SKILLS.Count;
                 break;
             case 3:
-                skillCount = buyer.PASSIVE_SLOTS.SKILLS.Count;
+                skillCount = buyer.MAGICAL_SLOTS.SKILLS.Count;
                 break;
             case 4:
-                skillCount = buyer.AUTO_SLOTS.SKILLS.Count;
+                skillCount = buyer.PASSIVE_SLOTS.SKILLS.Count;
                 break;
             case 5:
+                skillCount = buyer.AUTO_SLOTS.SKILLS.Count;
+                break;
+            case 6:
                 skillCount = buyer.OPP_SLOTS.SKILLS.Count;
                 break;
         }
@@ -635,33 +638,39 @@ public class ShopScreen : MonoBehaviour
                             refUseable = buyer.INVENTORY.WEAPONS[i];
                             selectedType = 0;
                             if (currentTypeText)
-                                currentTypeText.text = "Basic Attacks";
+                                currentTypeText.text = "Strikes";
                             break;
                         case 1:
                             refUseable = buyer.INVENTORY.ARMOR[i];
                             selectedType = 1;
                             if (currentTypeText)
-                                currentTypeText.text = "Wards";
+                                currentTypeText.text = "Barriers";
                             break;
                         case 2:
                             refUseable = buyer.PHYSICAL_SLOTS.SKILLS[i];
                             selectedType = 2;
                             if (currentTypeText)
-                                currentTypeText.text = "Command Skills";
+                                currentTypeText.text = "Physical Skills";
                             break;
                         case 3:
-                            refUseable = buyer.PASSIVE_SLOTS.SKILLS[i];
+                            refUseable = buyer.MAGICAL_SLOTS.SKILLS[i];
                             selectedType = 3;
+                            if (currentTypeText)
+                                currentTypeText.text = "Magical Spells";
+                            break;
+                        case 4:
+                            refUseable = buyer.PASSIVE_SLOTS.SKILLS[i];
+                            selectedType = 4;
                             if (currentTypeText)
                                 currentTypeText.text = "Passive Skills";
                             break;
-                        case 4:
+                        case 5:
                             refUseable = buyer.AUTO_SLOTS.SKILLS[i];
-                            selectedType = 4;
+                            selectedType = 5;
                             if (currentTypeText)
                                 currentTypeText.text = "Auto SKills";
                             break;
-                        case 5:
+                        case 6:
                             refUseable = buyer.OPP_SLOTS.SKILLS[i];
                             selectedType = 5;
                             if (currentTypeText)

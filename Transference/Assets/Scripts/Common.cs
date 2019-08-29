@@ -165,6 +165,7 @@ public enum SubSkillType
     Heal,
     RngAtk,
     Movement,
+    Item,
     None
 }
 public enum Augment
@@ -173,7 +174,7 @@ public enum Augment
     levelAugment,
     accurracyAugment,
     sideEffectAugment,
-    rangeAument,
+    rangeAugment,
     attackCountAugment,
     costAugment,
     chargeIncreaseAugment,
@@ -257,9 +258,9 @@ public enum Reaction
     reposition,
     Swap,
     ApplyEffect,
-    turnloss,
+    leathal,
     cripple,
-    turnAndcrip,
+    savage,
     weak,
     nulled,
     reflected,
@@ -349,7 +350,7 @@ public enum MenuItemType
     selectBS,
     equipAS,
     equipPS,
-    special,
+    chooseOptions,
     equipOS,
     generated,
     selectItem,
@@ -360,7 +361,10 @@ public enum MenuItemType
     shop,
     door,
     anEvent,
-    selectSpells
+    selectSpells,
+    selectStrikes,
+    openBattleLog,
+    forceEnd
 
 }
 public enum AutoAct
@@ -460,7 +464,7 @@ public enum SideEffect
     jumpback,
     reposition,
     swap,
-   
+
 
 }
 
@@ -500,13 +504,44 @@ public enum TileType
     special
 }
 
+public enum HazardType
+{
+    attacker,
+    zeroExp,
+    lockDoor,
+    mapHider,
+    redirect
+
+}
+
+public enum EPType
+{
+    tactical,//prefers skills over spells or attacks
+    itemist,//prefers to use items
+    optimal,//priortizes using moves that will trigger opportunity attacks
+    forceful,//prefers attacks over spells or skills
+    aggro,//constantly tries to attack
+    finisher,//never changes target until dead
+    mystical,//prefers spells over skills or attacks
+    biologist,//attempts to use status effect before anything else
+    support,//will attempt to buff/debuff before anything else
+    scared,//runs away to nearest door
+    custom
+}
+public enum EPCluster
+{
+    physical,
+    magical,
+    logical,
+    natural
+}
 public class MassAtkConatiner : ScriptableObject
 {
-    public List<AtkConatiner> atkConatiners;
+    public List<AtkContainer> atkConatiners;
 }
 
 
-public class AtkConatiner : ScriptableObject
+public class AtkContainer : ScriptableObject
 {
     public LivingObject attackingObject;
     public GridObject dmgObject;
@@ -518,7 +553,7 @@ public class AtkConatiner : ScriptableObject
     public DmgReaction react;
     public bool crit = false;
 
-    public void Inherit(AtkConatiner container)
+    public void Inherit(AtkContainer container)
     {
         this.attackingObject = container.attackingObject;
         this.dmgObject = container.dmgObject;
@@ -531,6 +566,14 @@ public class AtkConatiner : ScriptableObject
 
     }
 }
+public class ItemContainer : ScriptableObject
+{
+
+    public GridObject target;
+    public ItemScript item;
+
+}
+
 public class LearnContainer : ScriptableObject
 {
     public LivingObject attackingObject;
@@ -543,7 +586,7 @@ public struct DmgReaction
     public Reaction reaction;
     public string atkName;
     public Element dmgElement;
-    public SkillScript usedSkill;
+    public CommandSkill usedSkill;
 }
 public struct Modification
 {
@@ -575,6 +618,7 @@ public enum currentMenu
     act,
     CmdItems,
     CmdSpells,
+    Strikes,
     none
 }
 public enum Faction
@@ -583,7 +627,13 @@ public enum Faction
     enemy,
     hazard,
     ordinary,
-    eventObj
+    eventObj,
+    fairy,
+    dropsSkill,
+    dropsSpell,
+    dropsStrike,
+    dropsBarrier,
+    dropsItem
 }
 
 
@@ -645,6 +695,31 @@ public struct MapData
     public List<int> unOccupiedIndexes;
     public bool eventMap;
     public List<EventPair> events;
+
+
+    public string mapName;
+    public int width;
+    public int height;
+    public int mapIndex;
+    public List<int> doorIndexes;
+    public List<string> roomNames;
+    public List<int> roomIndexes;
+    public List<int> startIndexes;
+    public List<int> enemyIndexes;
+    public List<int> glyphIndexes;
+    public List<int> glyphIds;
+    public List<int> shopIndexes;
+    public List<int> objMapIndexes;
+    public List<int> objIds;
+    public Texture texture;
+    public int StartingPosition;
+
+    public float yElevation;
+    public float xElevation;
+    public int yMinRestriction;
+    public int yMaxRestriction;
+    public int xMinRestriction;
+    public int xMaxRestriction;
 
 }
 public enum descState
@@ -750,9 +825,9 @@ public class Common : ScriptableObject
     public static CommandSkill CommonDebuffDef = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
     public static UsableScript GenericUsable = CreateInstance<UsableScript>();
-    public static SkillScript GenericSkill = CreateInstance<SkillScript>();
-    public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
-    public static readonly ArmorScript noArmor = new ArmorScript();
+    public static CommandSkill GenericSkill = CreateInstance<CommandSkill>();
+    //public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
+    // public static readonly ArmorScript noArmor = new ArmorScript();
 
     public static BoolConatainer container = new BoolConatainer();
 
@@ -788,8 +863,14 @@ public class Common : ScriptableObject
             case Faction.ordinary:
                 return orange;
                 break;
+            case Faction.fairy:
+                return lime;
             case Faction.eventObj:
                 return Color.magenta;
+                break;
+
+            default:
+                return orange;
                 break;
         }
         return Color.magenta;
@@ -958,7 +1039,7 @@ public class Common : ScriptableObject
         augs.Add(Augment.elementAugment);
         augs.Add(Augment.levelAugment);
         augs.Add(Augment.accurracyAugment);
-        augs.Add(Augment.rangeAument);
+        augs.Add(Augment.rangeAugment);
         return augs;
     }
     public static List<Augment> GetArmorAugments()
@@ -1004,7 +1085,7 @@ public class Common : ScriptableObject
         augs.Add(Augment.attackCountAugment);
         augs.Add(Augment.costAugment);
         augs.Add(Augment.sideEffectAugment);
-        augs.Add(Augment.rangeAument);
+        augs.Add(Augment.rangeAugment);
 
         return augs;
     }
@@ -1033,8 +1114,8 @@ public class Common : ScriptableObject
             case Augment.sideEffectAugment:
                 returnText = "add an ailment to ";
                 break;
-            case Augment.rangeAument:
-                returnText = "increase the range of ";
+            case Augment.rangeAugment:
+                returnText = "randomly change the range of ";
                 break;
             case Augment.attackCountAugment:
                 returnText = "increase the hit count of ";
@@ -1122,7 +1203,7 @@ public class Common : ScriptableObject
         switch (aug)
         {
             case Augment.levelAugment:
-                returnText = "Increases the level of the skill, ward, or basic attack. Boosting its stats and/or abilities.";
+                returnText = "Increases the level of the skill, Barrier, or Strike. Boosting its stats and/or abilities.";
                 break;
             case Augment.accurracyAugment:
                 returnText = "Increases the accurracy of the skill.";
@@ -1162,8 +1243,8 @@ public class Common : ScriptableObject
                     returnText = "Adds a chance to inflict " + ailmentText + " on target when using skill.";
                 }
                 break;
-            case Augment.rangeAument:
-                returnText = "Increases the range of the skill or basic attack.";
+            case Augment.rangeAugment:
+                returnText = "randomly changes the range of the skill or Strike.";
                 break;
             case Augment.attackCountAugment:
                 returnText = "Increases the amount of times the skill will try to hit the target.";
@@ -1194,22 +1275,22 @@ public class Common : ScriptableObject
             case Augment.none:
                 break;
             case Augment.strAugment:
-                returnText = "Increases the strength boost of the basic attack.";
+                returnText = "Increases the strength boost of the Strike.";
                 break;
             case Augment.magAugment:
-                returnText = "Increases the magic boost  of the basic attack. ";
+                returnText = "Increases the magic boost  of the Strike. ";
                 break;
             case Augment.sklAugment:
-                returnText = "Increases the skill boost  of the basic attack.";
+                returnText = "Increases the skill boost  of the Strike.";
                 break;
             case Augment.defAugment:
-                returnText = "Increases the defense boost of the ward.";
+                returnText = "Increases the defense boost of the Barrier.";
                 break;
             case Augment.resAugment:
-                returnText = "Increases the resistance boost of the ward. ";
+                returnText = "Increases the resistance boost of the Barrier. ";
                 break;
             case Augment.spdAugment:
-                returnText = "Increases the speed boost of the ward. ";
+                returnText = "Increases the speed boost of the Barrier. ";
                 break;
             default:
                 break;
@@ -1226,7 +1307,14 @@ public class Common : ScriptableObject
 
 
         if (useable.GetType() == typeof(CommandSkill))
-            return (int)IconSet.command;
+        {
+            CommandSkill cmd = useable as CommandSkill;
+            if (cmd.ETYPE == EType.magical)
+                return (int)IconSet.magical;
+            else
+                return (int)IconSet.physical;
+        }
+
 
         if (useable.GetType() == typeof(PassiveSkill))
             return (int)IconSet.passive;
@@ -1312,7 +1400,7 @@ public class Common : ScriptableObject
         eventdetail.choice2 = "";
         eventdetail.affectedObject = null;
         eventdetail.eventNum = -1;
-        switch(eventnum)
+        switch (eventnum)
         {
             case 1:
                 {
@@ -1334,7 +1422,7 @@ public class Common : ScriptableObject
                 }
                 break;
         }
-     
+
         return eventdetail;
     }
 
@@ -1350,17 +1438,151 @@ public class Common : ScriptableObject
 
         return shrtname;
     }
+    public static EPCluster GetEPCluster(EPType type)
+    {
 
+        switch (type)
+        {
+            case EPType.tactical:
+                return EPCluster.logical;
+                break;
+            case EPType.itemist:
+                return EPCluster.logical;
+                break;
+            case EPType.optimal:
+                return EPCluster.logical;
+                break;
+            case EPType.forceful:
+                return EPCluster.physical;
+                break;
+            case EPType.aggro:
+                return EPCluster.physical;
+                break;
+            case EPType.finisher:
+                return EPCluster.physical;
+                break;
+            case EPType.mystical:
+                return EPCluster.magical;
+                break;
+            case EPType.biologist:
+                return EPCluster.magical;
+                break;
+            case EPType.support:
+                return EPCluster.magical;
+                break;
+            case EPType.scared:
+                return EPCluster.natural;
+                break;
+            case EPType.custom:
+                return EPCluster.natural;
+                break;
+            default:
+                return EPCluster.natural;
+                break;
+        }
+    }
+    public static EPType GetRandomType(EPCluster cluster)
+    {
+        switch (cluster)
+        {
+            case EPCluster.physical:
+                {
+                    int ptye = Random.Range(0, 2);
+                    switch (ptye)
+                    {
+                        case 0:
+                            {
+                                return EPType.forceful;
+                            }
+                            break;
+                        case 1:
+                            {
+                                return EPType.finisher;
+                            }
+                            break;
+                        case 2:
+                            {
+                                return EPType.aggro;
+                            }
+                            break;
+                        default:
+                            return EPType.aggro;
+                            break;
+                    }
+                }
+                break;
+            case EPCluster.magical:
+                {
+                    int ptye = Random.Range(0, 2);
+                    switch (ptye)
+                    {
+                        case 0:
+                            {
+                                return EPType.mystical;
+                            }
+                            break;
+                        case 1:
+                            {
+                                return EPType.biologist;
+                            }
+                            break;
+                        case 2:
+                            {
+                                return EPType.support;
+                            }
+                            break;
+                        default:
+                            return EPType.mystical;
+                            break;
+                    }
+                }
+                break;
+            case EPCluster.logical:
+                {
+                    int ptye = Random.Range(0, 2);
+                    switch (ptye)
+                    {
+                        case 0:
+                            {
+                                return EPType.tactical;
+                            }
+                            break;
+                        case 1:
+                            {
+                                return EPType.itemist;
+                            }
+                            break;
+                        case 2:
+                            {
+                                return EPType.optimal;
+                            }
+                            break;
+                        default:
+                            return EPType.tactical;
+                            break;
+                    }
+                }
+                break;
+            case EPCluster.natural:
+                {
+                    return EPType.scared;
+                }
+                break;
+            default:
+                return EPType.scared;
+                break;
+        }
+    }
     public static Reaction EffectToReaction(SideEffect effect)
     {
 
         switch (effect)
         {
-         
+
             case SideEffect.swap:
                 return Reaction.Swap;
                 break;
-       
+
             case SideEffect.knockback:
                 return Reaction.knockback;
                 break;
@@ -1382,5 +1604,29 @@ public class Common : ScriptableObject
         }
 
         return Reaction.none;
+    }
+
+    public static MapDetail ConvertMapData2Detail(MapData data, MapDetail detail)
+    {
+
+        detail.mapName = data.mapName;
+        detail.width = data.width;
+        detail.height = data.height;
+        detail.mapIndex = data.mapIndex;
+
+        detail.doorIndexes = data.doorIndexes;
+        detail.roomNames = data.roomNames;
+        detail.roomIndexes = data.roomIndexes;
+
+        detail.startIndexes = data.startIndexes;
+        detail.enemyIndexes = data.enemyIndexes;
+        detail.hazardIndexes = data.glyphIndexes;
+
+        detail.shopIndexes = data.shopIndexes;
+        detail.objMapIndexes = data.objMapIndexes;
+        detail.objIds = data.objIds;
+        detail.StartingPosition = data.StartingPosition;
+
+        return detail;
     }
 }

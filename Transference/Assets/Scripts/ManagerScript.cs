@@ -12,7 +12,7 @@ public class ManagerScript : EventRunner
     public List<TileScript> currentAttackList;
     public List<List<TileScript>> attackableTiles;
     public PlayerController player;
-    Vector2 selectedDirection = Vector2.up;
+
     public int MapWidth = 0;
     public int MapHeight = 0;
     public State currentState = State.PlayerInput;
@@ -39,7 +39,7 @@ public class ManagerScript : EventRunner
     public List<menuStackEntry> menuStack;
     public int menuStackCount = 0;
     public descState descriptionState = descState.stats;
-    private int skipCount = 0;
+    private int attackIndex = 0;
     public SFXManager sfx;
     public VoicesManager voiceManager;
     public ImgObj oppImage;
@@ -84,11 +84,11 @@ public class ManagerScript : EventRunner
     private SceneContainer currentScene;
     [SerializeField]
     TalkPanel talkPanel;
-
+    bool nextRoundCalled = false;
     public BattleLog log;
     public List<GridObject> opptargets = new List<GridObject>();
 
-    private List<EnemyScript> liveEnemies = new List<EnemyScript>();
+    public List<EnemyScript> liveEnemies = new List<EnemyScript>();
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -122,6 +122,7 @@ public class ManagerScript : EventRunner
             detailsScreen = GameObject.FindObjectOfType<DetailsScreen>();
             shopScreen = GameObject.FindObjectOfType<ShopScreen>();
             log = GameObject.FindObjectOfType<BattleLog>();
+            isSetup = true;
             if (log)
             {
                 log.transform.gameObject.SetActive(false);
@@ -214,6 +215,7 @@ public class ManagerScript : EventRunner
             if (GameObject.FindObjectOfType<CameraScript>())
             {
                 myCamera = GameObject.FindObjectOfType<CameraScript>();
+                myCamera.Setup();
             }
             commandItems = GameObject.FindObjectsOfType<MenuItem>();
             player = GameObject.FindObjectOfType<PlayerController>();
@@ -224,9 +226,9 @@ public class ManagerScript : EventRunner
             tempObject.GetComponent<GridObject>().MOVE_DIST = 10000;
             tempObject.transform.position = Vector3.zero;
             menuManager.ShowNone();
-            isSetup = true;
-            currentState = State.FreeCamera;
 
+            //  currentState = State.FreeCamera;
+            enterStateTransition();
             if (PlayerPrefs.HasKey("defaultSceneEntry"))
             {
                 defaultSceneEntry = PlayerPrefs.GetInt("defaultSceneEntry");
@@ -250,7 +252,14 @@ public class ManagerScript : EventRunner
     }
 
     //DMG * (100/100+DEF)
+    public void stackLog()
+    {
+        if (log)
+        {
+            log.transform.gameObject.SetActive(!log.transform.gameObject.activeInHierarchy);
 
+        }
+    }
     void LateUpdate()
     {
         if (menuStack != null)
@@ -258,11 +267,7 @@ public class ManagerScript : EventRunner
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (log)
-            {
-                log.transform.gameObject.SetActive(!log.transform.gameObject.activeInHierarchy);
-
-            }
+            stackLog();
         }
         //if (Input.GetKeyDown(KeyCode.K))
         //{
@@ -331,63 +336,31 @@ public class ManagerScript : EventRunner
                         if (Input.GetKeyDown(KeyCode.W))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.up)
-                                skipCount++;
-                            else
-                            {
-
-                                selectedDirection = Vector2.up;
-
-                                skipCount = 0;
-                            }
+                            attackIndex++;
                             ChangeAttackTargets();
                         }
                         if (Input.GetKeyDown(KeyCode.D))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.right)
-                                skipCount++;
-                            else
-                            {
-
-                                selectedDirection = Vector2.right;
-
-                                skipCount = 0;
-                            }
+                            attackIndex++;
                             ChangeAttackTargets();
                         }
                         if (Input.GetKeyDown(KeyCode.S))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.down)
-                                skipCount++;
-                            else
-                            {
-
-                                selectedDirection = Vector2.down;
-
-                                skipCount = 0;
-                            }
+                            attackIndex--;
                             ChangeAttackTargets();
                         }
                         if (Input.GetKeyDown(KeyCode.A))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.left)
-                                skipCount++;
-                            else
-                            {
-
-                                selectedDirection = Vector2.left;
-
-
-                                skipCount = 0;
-                            }
+                            attackIndex--;
                             ChangeAttackTargets();
                         }
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
                             player.UseOrAttack();
+
                         }
                         if (Input.GetMouseButtonDown(0))
                         {
@@ -575,49 +548,25 @@ public class ManagerScript : EventRunner
                         if (Input.GetKeyDown(KeyCode.W))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.up)
-                                skipCount++;
-                            else
-                            {
-                                selectedDirection = Vector2.up;
-                                skipCount = 0;
-                            }
+                            //timbucktoo
                             hitkey = true;
                         }
                         if (Input.GetKeyDown(KeyCode.D))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.right)
-                                skipCount++;
-                            else
-                            {
-                                selectedDirection = Vector2.right;
-                                skipCount = 0;
-                            }
+
                             hitkey = true;
                         }
                         if (Input.GetKeyDown(KeyCode.S))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.down)
-                                skipCount++;
-                            else
-                            {
-                                selectedDirection = Vector2.down;
-                                skipCount = 0;
-                            }
+
                             hitkey = true;
                         }
                         if (Input.GetKeyDown(KeyCode.A))
                         {
                             ShowWhite();
-                            if (selectedDirection == Vector2.left)
-                                skipCount++;
-                            else
-                            {
-                                selectedDirection = Vector2.left;
-                                skipCount = 0;
-                            }
+
                             hitkey = true;
                         }
                         if (Input.GetMouseButtonDown(0))
@@ -682,55 +631,6 @@ public class ManagerScript : EventRunner
 
                                     }
                                 }
-                            }
-                        }
-                        if (hitkey == true)
-                        {
-
-                            if (doubleAdjOppTiles.Count > 0)
-                            {
-                                int realAmt = doubleAdjOppTiles.Count;
-                                if (skipCount >= realAmt)
-                                {
-                                    skipCount = realAmt - 1;
-                                    selectedDirection = selectedDirection * new Vector2(-1, -1);
-                                }
-                                int loopSkipCount = skipCount;
-                                int index = 0;
-
-                                for (int i = 0; i < doubleAdjOppTiles.Count; i++)
-                                {
-                                    Vector3 dir = doubleAdjOppTiles[i].transform.position - player.current.transform.position;
-                                    Vector2 trueDir = new Vector2(dir.x, dir.z);
-                                    trueDir.Normalize();
-                                    if (selectedDirection == trueDir)
-                                    {
-                                        if (loopSkipCount > 0)
-                                        {
-                                            loopSkipCount--;
-                                        }
-                                        else
-                                        {
-                                            index = i;
-                                            break;
-                                        }
-                                    }
-                                }
-                                targetIndex = index;
-                                showOppAdjTiles();
-                                TileScript targetTile = doubleAdjOppTiles[targetIndex];
-                                if (GetObjectAtTile(targetTile) != null)
-                                {
-                                    targetTile.myColor = Color.red;
-
-                                }
-                                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), targetTile.transform.position) == true)
-                                {
-                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                                }
-
-
-
                             }
                         }
 
@@ -833,6 +733,31 @@ public class ManagerScript : EventRunner
                     break;
                 case State.PlayerUsingItems:
                     {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            ShowWhite();
+                            attackIndex++;
+                            ChangeAttackTargets();
+                        }
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ShowWhite();
+                            attackIndex++;
+                            ChangeAttackTargets();
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            ShowWhite();
+                            attackIndex--;
+                            ChangeAttackTargets();
+                        }
+                        if (Input.GetKeyDown(KeyCode.A))
+                        {
+                            ShowWhite();
+                            attackIndex--;
+                            ChangeAttackTargets();
+                        }
+
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
                             if (myCamera.infoObject)
@@ -842,6 +767,15 @@ public class ManagerScript : EventRunner
                                     if (myCamera.infoObject.GetComponent<LivingObject>())
                                     {
                                         player.UseItem(myCamera.infoObject.GetComponent<LivingObject>(), myCamera.currentTile);
+                                    }
+                                    else if (player.currentItem.ITYPE == ItemType.dmg)
+                                    {
+                                        player.UseItem(myCamera.infoObject, myCamera.currentTile);
+                                    }
+                                    else
+                                    {
+                                        CreateTextEvent(this, "Invalid target", "validation text", CheckText, TextStart);
+                                        PlayExitSnd();
                                     }
                                 }
                                 else
@@ -901,6 +835,15 @@ public class ManagerScript : EventRunner
                                             if (myCamera.infoObject.GetComponent<LivingObject>())
                                             {
                                                 player.UseItem(myCamera.infoObject.GetComponent<LivingObject>(), myCamera.currentTile);
+                                            }
+                                            else if (player.currentItem.ITYPE == ItemType.dmg)
+                                            {
+                                                player.UseItem(myCamera.infoObject, myCamera.currentTile);
+                                            }
+                                            else
+                                            {
+                                                CreateTextEvent(this, "Invalid target", "validation text", CheckText, TextStart);
+                                                PlayExitSnd();
                                             }
                                         }
                                         else
@@ -1001,6 +944,10 @@ public class ManagerScript : EventRunner
                                                     }
                                                     else
                                                     {
+                                                        if (!player.currentSkill)
+                                                        {
+                                                            player.currentSkill = Common.GenericSkill;
+                                                        }
                                                         DmgReaction reac = CalcDamage(player.current, griddy, player.currentSkill, Reaction.none, false);
                                                         if (reac.reaction > Reaction.weak)
                                                             reac.damage = 0;
@@ -1032,6 +979,7 @@ public class ManagerScript : EventRunner
                         if (Input.GetMouseButtonDown(1))
                         {
                             returnState();
+                            player.currentSkill = null;
                             player.currentItem = null;
                         }
                     }
@@ -1105,7 +1053,15 @@ public class ManagerScript : EventRunner
                                     }
                                     if (!hitplayer)
                                     {
-                                        PlayExitSnd();
+                                        // PlayExitSnd();
+                                        if (menuManager)
+                                        {
+                                            if (menuManager.hiddenCanvas)
+                                            {
+                                                StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                menuManager.ShowHiddenCanvas();
+                                            }
+                                        }
                                     }
                                 }
                                 else
@@ -1218,12 +1174,13 @@ public class ManagerScript : EventRunner
                                 sfx.playSound();
                             }
                         }
+                        int playerIndx = -1;
                         for (int i = 0; i < turnOrder.Count; i++)
                         {
-                            if (turnOrder[i].ACTIONS > 0)
+                            if (tempObject.GetComponent<GridObject>().currentTile == turnOrder[i].currentTile)
                             {
-
-                                if (tempObject.GetComponent<GridObject>().currentTile == turnOrder[i].currentTile)
+                                playerIndx = i;
+                                if (turnOrder[i].ACTIONS > 0)
                                 {
                                     player.current = turnOrder[i];
                                     currentObject = turnOrder[i];
@@ -1232,8 +1189,31 @@ public class ManagerScript : EventRunner
                                     StackCMDSelection();
                                     CreateEvent(this, currentObject, "Select Camera Event", CameraEvent);
                                 }
+                                else
+                                {
+                                    if (menuManager)
+                                    {
+                                        if (menuManager.hiddenCanvas)
+                                        {
+                                            StackNewSelection(State.PlayerInput, currentMenu.none);
+                                            menuManager.ShowHiddenCanvas();
+                                        }
+                                    }
+                                }
                             }
 
+                        }
+
+                        if (playerIndx == -1)
+                        {
+                            if (menuManager)
+                            {
+                                if (menuManager.hiddenCanvas)
+                                {
+                                    StackNewSelection(State.PlayerInput, currentMenu.none);
+                                    menuManager.ShowHiddenCanvas();
+                                }
+                            }
                         }
                     }
 
@@ -1334,6 +1314,14 @@ public class ManagerScript : EventRunner
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
                             NextScene();
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            EndScene();
+                        }
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            EndScene();
                         }
                     }
                     break;
@@ -1497,7 +1485,7 @@ public class ManagerScript : EventRunner
                             truedetail--;
                             if (truedetail < 0)
                             {
-                                truedetail = 6;
+                                truedetail = (int)DetailType.Exp;
                             }
                             detailsScreen.detail = (DetailType)truedetail;
                         }
@@ -1547,7 +1535,7 @@ public class ManagerScript : EventRunner
                         {
                             int truedetail = (int)detailsScreen.detail;
                             truedetail++;
-                            if (truedetail > 6)
+                            if (truedetail > (int)DetailType.Exp)
                             {
                                 truedetail = 0;
                             }
@@ -1620,67 +1608,96 @@ public class ManagerScript : EventRunner
         if (attackableTiles.Count > 0)
         {
 
-            TileScript potentialTile1 = myCamera.currentTile;
-            TileScript potentialTile2 = player.current.currentTile;
-            Vector3 originalPosition = tempObject.transform.position;
-            Vector3 directionVector = new Vector3(selectedDirection.x, 0, selectedDirection.y);
-            //if (player.currentSkill)
-            //{
-            //    directionVector.x *= player.currentSkill.TILES[0].y;
-            //    directionVector.z *= player.currentSkill.TILES[0].y;
-            //}
-            //else
-            //{
-            //    directionVector.x *= player.current.WEAPON.DIST;
-            //    directionVector.z *= player.current.WEAPON.DIST;
-            //}
-            directionVector.x *= attackableTiles[0][0].transform.position.y;
-            directionVector.z *= attackableTiles[0][0].transform.position.y;
-            if (potentialTile1)
-            {
-                potentialTile1 = GetTileAtIndex(GetTileIndex(potentialTile1.transform.position + directionVector));
-                if (potentialTile1)
-                {
-                    for (int i = 0; i < attackableTiles.Count; i++)
-                    {
-                        for (int j = 0; j < attackableTiles[i].Count; j++)
-                        {
-                            TileScript compareTile = attackableTiles[i][j];
-                            if (potentialTile1 == compareTile)
-                            {
-                                currentAttackList = attackableTiles[i];
-                                ChangeAttackList();
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            if (potentialTile2)
-            {
-                potentialTile2 = GetTileAtIndex(GetTileIndex(potentialTile2.transform.position + directionVector));
-                if (potentialTile2)
-                {
-                    for (int i = 0; i < attackableTiles.Count; i++)
-                    {
-                        for (int j = 0; j < attackableTiles[i].Count; j++)
-                        {
-                            TileScript compareTile = attackableTiles[i][j];
-                            if (potentialTile2 == compareTile)
-                            {
-                                currentAttackList = attackableTiles[i];
-                                ChangeAttackList();
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
 
 
-            tempObject.transform.position = originalPosition;
+            if (attackableTiles.Count - 1 < attackIndex)
+            {
+                attackIndex = 0;
+            }
+            if (attackIndex < 0)
+            {
+                attackIndex = attackableTiles.Count - 1;
+            }
+            currentAttackList = attackableTiles[attackIndex];
             showAttackableTiles();
             ChangeAttackList();
+            for (int i = 0; i < currentAttackList.Count; i++)
+            {
+                GridObject griddy = GetObjectAtTile(currentAttackList[i]);
+                if (griddy)
+                {
+                    if (griddy.GetComponent<LivingObject>())
+                    {
+                        LivingObject livvy = griddy.GetComponent<LivingObject>();
+                        if (livvy.FACTION != player.current.FACTION)
+                        {
+                            DmgReaction reac;
+                            if (player.currentSkill)
+                            {
+                                reac = CalcDamage(player.current, livvy, player.currentSkill, Reaction.none, false);
+                            }
+                            else
+                            {
+                                reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
+                            }
+
+                            if (reac.reaction > Reaction.weak)
+                                reac.damage = 0;
+                            myCamera.potentialDamage = reac.damage;
+                            myCamera.UpdateCamera();
+
+                        }
+                    }
+                    else
+                    {
+                        DmgReaction reac;
+                        if (player.currentSkill)
+                        {
+                            reac = CalcDamage(player.current, griddy, player.currentSkill, Reaction.none, false);
+                        }
+                        else
+                        {
+                            reac = CalcDamage(player.current, griddy, player.current.WEAPON, Reaction.none, false);
+                        }
+                        if (reac.reaction > Reaction.weak)
+                            reac.damage = 0;
+                        myCamera.potentialDamage = reac.damage;
+                        myCamera.UpdateCamera();
+                    }
+                }
+            }
+
+            updateConditionals();
+            //  ChangeAttackList();
+            //if (potentialTile1)
+            //{
+            //    return;
+
+            //}
+            //if (potentialTile2)
+            //{
+            //    potentialTile2 = GetTileAtIndex(GetTileIndex(potentialTile2.transform.position + directionVector));
+            //    if (potentialTile2)
+            //    {
+            //        for (int i = 0; i < attackableTiles.Count; i++)
+            //        {
+            //            for (int j = 0; j < attackableTiles[i].Count; j++)
+            //            {
+            //                TileScript compareTile = attackableTiles[i][j];
+            //                if (potentialTile2 == compareTile)
+            //                {
+            //                    currentAttackList = attackableTiles[i];
+
+            //                    return;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+
+            //tempObject.transform.position = originalPosition;
+
 
         }
     }
@@ -1714,7 +1731,25 @@ public class ManagerScript : EventRunner
             }
             else
             {
-                currentAttackList[i].myColor = Common.red;
+                if (currentState == State.PlayerUsingItems)
+                {
+                    if (player.currentItem)
+                    {
+                        if (player.currentItem.ITYPE != ItemType.dmg)
+                        {
+                            currentAttackList[i].myColor = Common.green;
+                        }
+                        else
+                        {
+                            currentAttackList[i].myColor = Common.red;
+                        }
+                    }
+                }
+                else
+                {
+
+                    currentAttackList[i].myColor = Common.red;
+                }
 
             }
         }
@@ -1855,6 +1890,20 @@ public class ManagerScript : EventRunner
             myCamera.attackingCheck = true;
             potential.pulsing = true;
         }
+        else if (currentState == State.PlayerUsingItems)
+        {
+            if (player.currentItem.ITYPE == ItemType.dmg)
+            {
+                myCamera.attackingCheck = true;
+                potential.pulsing = true;
+            }
+            else
+            {
+                myCamera.potentialDamage = 0;
+                myCamera.attackingCheck = false;
+                potential.pulsing = false;
+            }
+        }
         else
         {
             myCamera.potentialDamage = 0;
@@ -1905,12 +1954,16 @@ public class ManagerScript : EventRunner
     }
     public void enterStateTransition()
     {
-        currentState = State.PlayerTransition;
-        updateConditionals();
-        myCamera.UpdateCamera();
+        if (currentState != State.SceneRunning && currentState != State.EnemyTurn && currentState != State.HazardTurn)
+        {
+            currentState = State.PlayerTransition;
+            updateConditionals();
+            myCamera.UpdateCamera();
+        }
     }
     public void returnState()
     {
+
 
         // Debug.Log("returnin");
         if (currentState == State.PlayerAttacking || currentState == State.PlayerTransition || currentState == State.playerUsingSkills || currentState == State.PlayerUsingItems)
@@ -2003,6 +2056,16 @@ public class ManagerScript : EventRunner
                     myCamera.currentTile = player.current.currentTile;
                     myCamera.UpdateCamera();
                     break;
+                case currentMenu.Strikes:
+                    menuManager.ShowItemCanvas(13, currentObject.GetComponent<LivingObject>());
+                    myCamera.infoObject = player.current;
+                    myCamera.showActions = true;
+                    myCamera.currentTile = player.current.currentTile;
+                    myCamera.UpdateCamera();
+                    break;
+                case currentMenu.none:
+                    menuManager.ShowNone();
+                    break;
                 default:
                     ShowGridObjectAffectArea(currentObject);
                     menuManager.ShowCommandCanvas();
@@ -2025,7 +2088,20 @@ public class ManagerScript : EventRunner
                 }
             }
             player.current = null;
-            currentState = State.FreeCamera;
+            if (prevState == State.EnemyTurn)
+            {
+                currentState = State.EnemyTurn;
+                return;
+            }
+            else if (prevState == State.HazardTurn)
+            {
+                currentState = State.HazardTurn;
+            }
+            else
+            {
+
+                currentState = State.FreeCamera;
+            }
             menuManager.ShowNone();
             menuStack.Remove(menuStack[0]);
         }
@@ -2055,6 +2131,20 @@ public class ManagerScript : EventRunner
         {
             myCamera.attackingCheck = true;
             potential.pulsing = true;
+        }
+        else if (currentState == State.PlayerUsingItems)
+        {
+            if (player.currentItem.ITYPE == ItemType.dmg)
+            {
+                myCamera.attackingCheck = true;
+                potential.pulsing = true;
+            }
+            else
+            {
+                myCamera.potentialDamage = 0;
+                myCamera.attackingCheck = false;
+                potential.pulsing = false;
+            }
         }
         else
         {
@@ -2136,6 +2226,13 @@ public class ManagerScript : EventRunner
                 break;
             case currentMenu.CmdSpells:
                 menuManager.ShowItemCanvas(12, currentObject.GetComponent<LivingObject>());
+                myCamera.infoObject = player.current;
+                myCamera.showActions = true;
+                myCamera.currentTile = player.current.currentTile;
+                myCamera.UpdateCamera();
+                break;
+            case currentMenu.Strikes:
+                menuManager.ShowItemCanvas(13, currentObject.GetComponent<LivingObject>());
                 myCamera.infoObject = player.current;
                 myCamera.showActions = true;
                 myCamera.currentTile = player.current.currentTile;
@@ -2346,8 +2443,9 @@ public class ManagerScript : EventRunner
                         yDist = Mathf.Abs(tempY - objY);
                         if (xDist + yDist <= player.current.MOVE_DIST && StartCanMoveCheck(player.current, player.current.currentTile, hitTile))
                         {
-                            movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
-                            myCamera.currentTile = hitTile;
+                              movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
+                             myCamera.currentTile = hitTile;
+                          //  StartCoroutine(Move(movedObj, hitTile));
                         }
 
 
@@ -2358,6 +2456,33 @@ public class ManagerScript : EventRunner
             }
         }
         myCamera.UpdateCamera();
+    }
+
+    public IEnumerator Move(GridObject griddy, TileScript target)
+    {
+
+       
+        while (griddy.transform.position != (target.transform.position) + new Vector3(0, 0.5f,0))
+        {
+            Vector3 directionVector = (target.transform.position - griddy.transform.position);
+            directionVector.y = 0.0f;
+
+            float dist = Vector3.Distance(target.transform.position, griddy.transform.position);
+            if (dist > 0.5f)
+            {
+                griddy.transform.position = Vector3.MoveTowards(griddy.transform.position, target.transform.position, 0.05f);
+           
+            }
+            else
+            {
+                directionVector = target.transform.position;
+                directionVector.y = target.transform.position.y + 0.5f;
+                griddy.transform.position = directionVector;
+                break;
+            }
+            yield return null;
+        }
+   
     }
 
     private void UpdateScene()
@@ -2382,22 +2507,61 @@ public class ManagerScript : EventRunner
         }
         else
         {
+
+            if (liveEnemies.Count > 1)
+            {
+                myCamera.PlaySoundTrack2();
+            }
+            else
+            {
+                myCamera.PlaySoundTrack1();
+            }
             talkPanel.gameObject.SetActive(false);
             currentState = State.FreeCamera;
             currentScene.isRunning = false;
         }
 
     }
-
+    public void EndScene()
+    {
+        if (liveEnemies.Count > 1)
+        {
+            myCamera.PlaySoundTrack2();
+        }
+        else
+        {
+            myCamera.PlaySoundTrack1();
+        }
+        talkPanel.gameObject.SetActive(false);
+        currentState = State.FreeCamera;
+        currentScene.isRunning = false;
+    }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
         switch (defaultSceneEntry)
         {
             case 4:
                 {
+                    if (checkMap.mapIndex == 4)
+                    {
+                        myCamera.PlaySoundTrack3();
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("Scene2");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene2 event", CheckSceneRunning, null, 0);
+                        }
+                    }
                     if (checkMap.mapIndex == 7)
                     {
-                        myCamera.PlaySoundTrack2();
+                        myCamera.PlaySoundTrack3();
                         GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                         jax.SetActive(true);
                         ActorSetup asetup = jax.GetComponent<ActorSetup>();
@@ -2427,9 +2591,26 @@ public class ManagerScript : EventRunner
 
             case 5:
                 {
+                    if (checkMap.mapIndex == 5)
+                    {
+                        myCamera.PlaySoundTrack3();
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("Scene1");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                        }
+                    }
                     if (checkMap.mapIndex == 7)
                     {
-                        myCamera.PlaySoundTrack2();
+                        myCamera.PlaySoundTrack3();
                         GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                         zeffron.SetActive(true);
                         ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
@@ -2463,7 +2644,7 @@ public class ManagerScript : EventRunner
     {
         database.Setup();
         LoadDScene(defaultSceneEntry);
-        myCamera.PlaySoundTrack1();
+        //myCamera.PlaySoundTrack1();
         if (PlayerObject)
         {
             if (defaultSceneEntry == 5)
@@ -2493,8 +2674,8 @@ public class ManagerScript : EventRunner
 
             }
         }
-        prevState = currentState;
-        currentState = State.PlayerTransition;
+        prevState = State.FreeCamera;
+        // currentState = State.PlayerTransition;
         if (turnOrder.Count > 0)
             CreateEvent(this, turnOrder[0], "Phase Announce Event", PhaseAnnounce, null, -1, PhaseAnnounceStart);
         CreateEvent(this, null, "return state event", BufferedStateChange);
@@ -2573,6 +2754,7 @@ public class ManagerScript : EventRunner
         }
         liveEnemies.Clear();
         MapDetail map = database.GetMap(amapIndex);
+        MapData data = database.GetMapData(map.mapName);
         bool visited = false;
         for (int i = 0; i < visitedMaps.Count; i++)
         {
@@ -2583,14 +2765,27 @@ public class ManagerScript : EventRunner
                 break;
             }
         }
-
         if (visited == false)
         {
             CheckForMapChangeEvent(map);
         }
 
+        if (data.doorIndexes.Count > 0)
+        {
+            LoadDScene(data, startindex);
+        }
+        else
+        {
+            LoadDScene(map, startindex);
+        }
 
-        MapData data = database.GetMapData(map.mapName);
+        currentMap = map;
+        visitedMaps.Add(map);
+
+    }
+
+    public void LoadDScene(MapDetail map, int startindex = -1)
+    {
         MapWidth = map.width;
         MapHeight = map.height;
         Clear();
@@ -2604,7 +2799,7 @@ public class ManagerScript : EventRunner
         }
         LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>();
         int tileIndex = 0;
-
+        float tileHeight = 0;
         float xoffset = 1 / (float)MapWidth;
         float yoffset = 1 / (float)MapHeight;
         for (int i = 0; i < map.width; i++)
@@ -2615,7 +2810,7 @@ public class ManagerScript : EventRunner
                 int mapIndex = TwoToOneD(j, map.width, i);
                 TileScript tile = tileMap[tileIndex];
                 tile.listindex = mapIndex;
-                tile.transform.position = new Vector3(i, 0, j);
+                tile.transform.position = new Vector3(i, j * tileHeight, j);
                 tile.transform.parent = tileParent.transform;
                 tile.name = "Tile " + mapIndex;
                 tile.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -2624,8 +2819,8 @@ public class ManagerScript : EventRunner
                 tile.setUVs((xoffset * (float)i), (xoffset * (float)(i + 1)), (yoffset * (float)j), (yoffset * (float)(j + 1)));
                 tileIndex++;
                 tile.canBeOccupied = true;
-
             }
+            // yo += 0.05f;
 
         }
         tileMap.Sort();
@@ -2650,20 +2845,8 @@ public class ManagerScript : EventRunner
             }
 
         }
-        else
-        {
 
-        }
-        if (data.unOccupiedIndexes != null)
-        {
 
-            for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
-            {
-                int tindex = data.unOccupiedIndexes[i];
-                tileMap[tindex].canBeOccupied = false;
-                tileMap[tindex].gameObject.SetActive(false);
-            }
-        }
         tileIndex = 1;
         int largestLevel = 1;
         turnOrder.Clear();
@@ -2709,6 +2892,7 @@ public class ManagerScript : EventRunner
         List<EnemyScript> enemies = enemyManager.getEnemies(map.enemyIndexes.Count);
         for (int i = 0; i < enemies.Count; i++)
         {
+
             liveEnemies.Add(enemies[i]);
             enemies[i].transform.position = tileMap[map.enemyIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
             enemies[i].gameObject.SetActive(true);
@@ -2722,10 +2906,18 @@ public class ManagerScript : EventRunner
             {
                 enemies[i].LevelUp();
             }
+
+            if (lvtimes > 1)
+            {
+                if (enemies[i].INVENTORY.ARMOR.Count > 0)
+                {
+                    enemies[i].ARMOR.Equip(enemies[i].INVENTORY.ARMOR[0]);
+                }
+            }
             enemies[i].BASE_STATS.HEALTH = enemies[i].BASE_STATS.MAX_HEALTH;
             enemies[i].BASE_STATS.MANA = enemies[i].BASE_STATS.MAX_MANA;
             enemies[i].BASE_STATS.FATIGUE = 0;
-            enemies[i].MapIndex = i;
+            enemies[i].MapIndex = map.enemyIndexes[i];
 
         }
 
@@ -2740,15 +2932,15 @@ public class ManagerScript : EventRunner
             gridobjs[i].BASE_STATS.MANA = 0;
             gridobjs[i].BASE_STATS.FATIGUE = 0;
 
-            if (gridobjs[i].BASE_STATS.SPEED > 0)
-            {
-                gridobjs[i].FACTION = Faction.eventObj;
-            }
-            else
-            {
-                gridobjs[i].FACTION = Faction.ordinary;
-            }
-            gridobjs[i].MapIndex = i;
+            //if (gridobjs[i].BASE_STATS.SPEED > 0)
+            //{
+            //    gridobjs[i].FACTION = Faction.eventObj;
+            //}
+            //else
+            //{
+            //    gridobjs[i].FACTION = Faction.ordinary;
+            //}
+            gridobjs[i].MapIndex = map.objMapIndexes[i];
         }
 
         List<HazardScript> hazards = hazardManager.getHazards(map.hazardIndexes.Count);
@@ -2757,7 +2949,7 @@ public class ManagerScript : EventRunner
             hazards[i].transform.position = tileMap[map.hazardIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
             hazards[i].gameObject.SetActive(true);
             hazards[i].BASE_STATS.LEVEL = Random.Range(largestLevel, largestLevel + 2);
-            hazards[i].MapIndex = i;
+            hazards[i].MapIndex = map.hazardIndexes[i];
         }
         if (turnOrder.Count > 0)
             currentObject = turnOrder[0];
@@ -2825,46 +3017,340 @@ public class ManagerScript : EventRunner
             for (int i = 0; i < 5; i++)
             {
                 UsableScript newItem = null;
-                int j = i;
+
                 int itemNum = 0;
-                if (j == 4)
-                {
-                    j = Random.Range(0, 3);
-                }
-                switch (j)
+
+                switch (i)
                 {
                     case 0:
                         itemNum = Random.Range(0, 13);
                         newItem = database.GetWeapon(itemNum, null);
                         break;
                     case 1:
-                        itemNum = Random.Range(0, 5);
-                        itemNum += (Random.Range(1, 9) * 10);
-                        //    Debug.Log("command " + itemNum);
+                        itemNum = Random.Range(0, 4);
+                        itemNum += (Random.Range(1, 8) * 10);
+                        //    Debug.Log("command skill" + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
                     case 2:
+                        itemNum = Random.Range(4, 7);
+                        itemNum += (Random.Range(1, 10) * 10);
+                        //    Debug.Log("command spell" + itemNum);
+                        newItem = database.GetSkill(itemNum);
+                        break;
+                    case 3:
                         itemNum = Random.Range(110, 116);
                         //  Debug.Log("auto " + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
-                    case 3:
+                    case 4:
                         itemNum = Random.Range(200, 211);
                         //  Debug.Log("passive " + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
-                    case 4:
-                        itemNum = Random.Range(0, 12);
-                        newItem = database.GetArmor(itemNum, null);
-                        break;
+
                     default:
                         break;
                 }
                 shopItems.Add(newItem);
             }
         }
-        currentMap = map;
-        visitedMaps.Add(map);
+
+
+
+    }
+
+    public void LoadDScene(MapData data, int startindex = -1)
+    {
+
+
+
+        MapWidth = data.width;
+        MapHeight = data.height;
+        Clear();
+        if (null == tileMap || tileMap.Count == 0)
+        {
+            tileMap = tileManager.getTiles(data.width * data.height); // * MapHeight);
+        }
+        else
+        {
+            return;
+        }
+        LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>();
+        int tileIndex = 0;
+        float tileHeight = 0;
+        float xoffset = 1 / (float)MapWidth;
+        float yoffset = 1 / (float)MapHeight;
+        float yElevation = 0;
+        float xElevation = 0;
+     
+        for (int i = 0; i < data.width; i++)
+        {
+
+            for (int j = 0; j < data.height; j++)
+            {
+                int mapIndex = TwoToOneD(j, data.width, i);
+                TileScript tile = tileMap[tileIndex];
+                tile.listindex = mapIndex;
+                if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
+                    tile.transform.position = new Vector3(i + xElevation, (j * tileHeight) + yElevation, j);
+                else
+                    tile.transform.position = new Vector3(i, (j * tileHeight), j);
+                tile.transform.parent = tileParent.transform;
+                tile.name = "Tile " + mapIndex;
+                tile.transform.rotation = Quaternion.Euler(90, 0, 0);
+                tile.setTexture(data.texture);
+                tile.TTYPE = TileType.regular;
+                tile.setUVs((xoffset * (float)i), (xoffset * (float)(i + 1)), (yoffset * (float)j), (yoffset * (float)(j + 1)));
+                tileIndex++;
+                tile.canBeOccupied = true;
+            }
+            yElevation += data.yElevation;
+            xElevation += data.xElevation;
+        }
+        tileMap.Sort();
+
+        for (int i = 0; i < data.doorIndexes.Count; i++)
+        {
+            tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
+            tileMap[data.doorIndexes[i]].MAP = data.roomNames[i];
+            tileMap[data.doorIndexes[i]].ROOM = data.roomIndexes[i];
+            tileMap[data.doorIndexes[i]].START = data.startIndexes[i];
+            tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
+            tileMap[data.doorIndexes[i]].TTYPE = TileType.door;
+        }
+        if (data.shopIndexes.Count > 0)
+        {
+
+            for (int i = 0; i < data.shopIndexes.Count; i++)
+            {
+                tileMap[data.shopIndexes[i]].MAT.mainTexture = shopTexture;
+                tileMap[data.shopIndexes[i]].setUVs(0, 1, 0, 1);
+                tileMap[data.shopIndexes[i]].TTYPE = TileType.shop;
+            }
+
+        }
+
+        if (data.unOccupiedIndexes != null)
+        {
+
+            for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
+            {
+                int tindex = data.unOccupiedIndexes[i];
+                tileMap[tindex].canBeOccupied = false;
+                tileMap[tindex].gameObject.SetActive(false);
+            }
+        }
+        tileIndex = 1;
+        int largestLevel = 1;
+        turnOrder.Clear();
+        for (int i = 0; i < livingobjs.Length; i++)
+        {
+            if (livingobjs[i].GetComponent<EnemyScript>() || livingobjs[i].GetComponent<HazardScript>())
+            {
+                continue;
+            }
+            if (livingobjs[i].GetComponent<ActorScript>())
+            {
+
+                if (startindex == -1)
+                {
+                    livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
+                }
+                else if (startindex > 20)
+                {
+                    livingobjs[i].transform.position = tileMap[startindex - i].transform.position + new Vector3(0, 0.5f, 0);
+                }
+                else
+                {
+                    livingobjs[i].transform.position = tileMap[startindex + i].transform.position + new Vector3(0, 0.5f, 0);
+                }
+                tileIndex++;
+                turnOrder.Add(livingobjs[i]);
+                if (!livingobjs[i].isSetup)
+                {
+                    livingobjs[i].Setup();
+                }
+                if (largestLevel < livingobjs[i].LEVEL)
+                {
+                    largestLevel = livingobjs[i].LEVEL;
+                }
+                if (livingobjs[i].DEAD)
+                {
+                    livingobjs[i].STATS.HEALTH = (-1 * livingobjs[i].MAX_HEALTH) + 1;
+                    livingobjs[i].DEAD = false;
+                }
+            }
+        }
+        int lvtimes = 0;
+        List<EnemyScript> enemies = enemyManager.getEnemies(data.enemyIndexes.Count);
+        for (int i = 0; i < enemies.Count; i++)
+        {
+
+            liveEnemies.Add(enemies[i]);
+            enemies[i].transform.position = tileMap[data.enemyIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
+            enemies[i].gameObject.SetActive(true);
+            if (largestLevel > 1)
+            {
+                lvtimes = Random.Range(largestLevel - 2, largestLevel);
+            }
+            enemies[i].BASE_STATS.LEVEL = largestLevel;
+
+            for (int j = 0; j < lvtimes; j++)
+            {
+                enemies[i].LevelUp();
+            }
+
+            if (lvtimes > 1)
+            {
+                if (enemies[i].INVENTORY.ARMOR.Count > 0)
+                {
+                    enemies[i].ARMOR.Equip(enemies[i].INVENTORY.ARMOR[0]);
+                }
+            }
+            enemies[i].BASE_STATS.HEALTH = enemies[i].BASE_STATS.MAX_HEALTH;
+            enemies[i].BASE_STATS.MANA = enemies[i].BASE_STATS.MAX_MANA;
+            enemies[i].BASE_STATS.FATIGUE = 0;
+            enemies[i].MapIndex = data.enemyIndexes[i];
+
+        }
+
+        List<GridObject> gridobjs = objManager.getObjects(data);
+        for (int i = 0; i < gridobjs.Count; i++)
+        {
+            gridobjs[i].transform.position = tileMap[data.objMapIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
+            gridobjs[i].gameObject.SetActive(true);
+
+
+            gridobjs[i].BASE_STATS.HEALTH = gridobjs[i].BASE_STATS.MAX_HEALTH;
+            gridobjs[i].BASE_STATS.MANA = 0;
+            gridobjs[i].BASE_STATS.FATIGUE = 0;
+
+            //if (gridobjs[i].BASE_STATS.SPEED > 0)
+            //{
+            //    gridobjs[i].FACTION = Faction.eventObj;
+            //}
+            //else
+            //{
+            //    gridobjs[i].FACTION = Faction.ordinary;
+            //}
+            gridobjs[i].MapIndex = data.objMapIndexes[i];
+        }
+
+        List<HazardScript> hazards = hazardManager.getHazards(data);
+        for (int i = 0; i < hazards.Count; i++)
+        {
+            hazards[i].transform.position = tileMap[data.glyphIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
+            hazards[i].gameObject.SetActive(true);
+            hazards[i].BASE_STATS.LEVEL = Random.Range(largestLevel, largestLevel + 2);
+            hazards[i].MapIndex = data.glyphIndexes[i];
+        }
+        if (turnOrder.Count > 0)
+            currentObject = turnOrder[0];
+
+        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+        //for (int i = livingObjects.Length - 1; i >= 0; i--)
+        //{
+
+        //    if (livingObjects[i].GetComponent<EnemyScript>() || livingObjects[i].GetComponent<HazardScript>())
+        //    {
+        //        continue;
+        //    }
+
+        //}
+
+
+        tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
+        attackableTiles = new List<List<TileScript>>();
+        ShowWhite();
+        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
+        gridObjects.Clear();
+        for (int i = 0; i < objs.Length; i++)
+        {
+            if (objs[i].gameObject == tempObject)
+            {
+                continue;
+            }
+
+            if (!objs[i].gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+            if (!gridObjects.Contains(objs[i]))
+            {
+
+                gridObjects.Add(objs[i]);
+                if (objs[i].currentTile)
+                {
+                    objs[i].currentTile.isOccupied = false;
+                }
+                objs[i].currentTile = GetTile(objs[i]);
+                if (objs[i].currentTile)
+                {
+                    objs[i].currentTile.isOccupied = true;
+
+                }
+
+                objs[i].GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
+        //CleanMenuStack(true);
+        //currentState = State.FreeCamera;
+        // tempObject.transform.position = Vector3.zero;
+        //tempObject.GetComponent<GridObject>().currentTile = tileMap[0];
+        // myCamera.currentTile = tileMap[0];
+        //ShowGridObjectAffectArea(tempObject.GetComponent<GridObject>(), true);
+
+        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+
+        myCamera.UpdateCamera();
+
+        if (shopItems != null)
+        {
+            shopItems.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                UsableScript newItem = null;
+
+                int itemNum = 0;
+
+                switch (i)
+                {
+                    case 0:
+                        itemNum = Random.Range(0, 13);
+                        newItem = database.GetWeapon(itemNum, null);
+                        break;
+                    case 1:
+                        itemNum = Random.Range(0, 4);
+                        itemNum += (Random.Range(1, 8) * 10);
+                        //    Debug.Log("command skill" + itemNum);
+                        newItem = database.GetSkill(itemNum);
+                        break;
+                    case 2:
+                        itemNum = Random.Range(4, 7);
+                        itemNum += (Random.Range(1, 10) * 10);
+                        //    Debug.Log("command spell" + itemNum);
+                        newItem = database.GetSkill(itemNum);
+                        break;
+                    case 3:
+                        itemNum = Random.Range(110, 116);
+                        //  Debug.Log("auto " + itemNum);
+                        newItem = database.GetSkill(itemNum);
+                        break;
+                    case 4:
+                        itemNum = Random.Range(200, 211);
+                        //  Debug.Log("passive " + itemNum);
+                        newItem = database.GetSkill(itemNum);
+                        break;
+
+                    default:
+                        break;
+                }
+                shopItems.Add(newItem);
+            }
+        }
+
+
     }
 
     public void Clear()
@@ -2943,24 +3429,33 @@ public class ManagerScript : EventRunner
 
         }
     }
+
     public void NextRound()
     {
+        if (currentState == State.PlayerTransition)
+        {
+            currentState = prevState;
+        }
+        myCamera.armorSet.selectedArmor = null;
         currOppList.Clear();
         doubleAdjOppTiles.Clear();
         menuManager.ShowNone();
-
+        eventManager.gridEvents.Clear();
         LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         switch (currentState)
         {
             case State.HazardTurn:
                 currentState = State.FreeCamera;
+                prevState = State.FreeCamera;
                 break;
             case State.EnemyTurn:
                 currentState = State.HazardTurn;
+                prevState = State.HazardTurn;
                 menuManager.ShowNone();
                 break;
             default:
                 currentState = State.EnemyTurn;
+                prevState = State.EnemyTurn;
                 menuManager.ShowNone();
                 break;
         }
@@ -2985,6 +3480,10 @@ public class ManagerScript : EventRunner
                     else if (currentState == State.EnemyTurn)
                     {
                         if (livingObjects[i].FACTION == Faction.enemy)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                        if (livingObjects[i].FACTION == Faction.fairy)
                         {
                             turnOrder.Add(livingObjects[i]);
                         }
@@ -3018,6 +3517,7 @@ public class ManagerScript : EventRunner
 
 
                     livingObjects[i].ACTIONS = acts;
+                  
 
                 }
             }
@@ -3042,7 +3542,13 @@ public class ManagerScript : EventRunner
                         buffs[j].UpdateCount(buffs[j].SKILL.OWNER);
                     }
                 }
-
+                if (turnOrder[i].ARMOR.SCRIPT != turnOrder[i].DEFAULT_ARMOR)
+                {
+                    if (turnOrder[i].ARMOR.UpdateTurnCount())
+                    {
+                        CreateTextEvent(this, "" + turnOrder[i].NAME + " barrier has worn off", " barrier subside", CheckText, TextStart);
+                    }
+                }
                 if (turnOrder[i].refreshState > 0)
                 {
                     turnOrder[i].refreshState--;
@@ -3054,25 +3560,10 @@ public class ManagerScript : EventRunner
                 if (turnOrder[i].STATS)
                 {
 
-                    //int acts = (int)(turnOrder[i].SPEED / 10);
-
-                    //if (turnOrder[i].GENERATED < 0)
-                    //{
-                    //    if (-1 * turnOrder[i].GENERATED >= acts)
-                    //    {
-                    //        acts = 2;
-                    //    }
-                    //}
-                    //else
-                    //{
-
-                    //    acts += turnOrder[i].GENERATED;
-                    //    acts += 2;
-                    //}
-
-
-
-                    //turnOrder[i].ACTIONS = acts;
+                    if (turnOrder[i].GetComponent<SpriteRenderer>())
+                    {
+                        turnOrder[i].GetComponent<SpriteRenderer>().color = Color.white;
+                    }
 
                     if (turnOrder[i].GetComponent<InventoryScript>())
                     {
@@ -3101,22 +3592,21 @@ public class ManagerScript : EventRunner
                         HazardScript hazard = turnOrder[i].GetComponent<HazardScript>();
                         CreateEvent(this, hazard, "Hazard Event", HazardEvent, null, -1, SetHazardEvent);
                     }
+                    nextRoundCalled = false;
                 }
             }
         }
-        else if (currentState == State.FreeCamera)
+        else if (currentState != State.EnemyTurn && currentState != State.HazardTurn)
         {
             menuManager.ShowNone();
             menuManager.ShowGameOver();
             eventManager.gridEvents.Clear();
             currentState = State.PlayerTransition;
+            nextRoundCalled = false;
         }
         else
         {
-            //  NextRound();
-
-
-            NextTurn("manager next round event");
+            NextRound();
         }
         SoftReset();
         myCamera.UpdateCamera();
@@ -3144,6 +3634,26 @@ public class ManagerScript : EventRunner
 
                 playable.STATS.Reset(true);
 
+                playable.BASE_STATS.HEALTH = (int)(playable.BASE_STATS.MAX_HEALTH);
+                playable.BASE_STATS.MANA = (int)(playable.BASE_STATS.MAX_MANA);
+                playable.BASE_STATS.FATIGUE = (int)(playable.BASE_STATS.MAX_FATIGUE);
+
+                CommandSkill skill = playable.GetMostUsedSkill();
+                CommandSkill spell = playable.GetMostUsedSpell();
+
+                if (skill)
+                {
+                    playable.INVENTORY.USEABLES.Remove(skill);
+                    playable.INVENTORY.CSKILLS.Remove(skill);
+                    playable.PHYSICAL_SLOTS.SKILLS.Remove(skill);
+                }
+
+                if (spell)
+                {
+                    playable.INVENTORY.USEABLES.Remove(spell);
+                    playable.INVENTORY.CSKILLS.Remove(spell);
+                    playable.MAGICAL_SLOTS.SKILLS.Remove(spell);
+                }
 
                 for (int j = playable.INVENTORY.USEABLES.Count - 1; j >= 0; j--)
                 {
@@ -3294,6 +3804,9 @@ public class ManagerScript : EventRunner
                 break;
             case Faction.ordinary:
                 break;
+            case Faction.fairy:
+                currentState = State.EnemyTurn;
+                break;
         }
         turnOrder.Clear();
 
@@ -3396,6 +3909,18 @@ public class ManagerScript : EventRunner
         }
 
     }
+    public bool WaitForSFXEvent(Object data)
+    {
+        if (!sfx)
+        {
+            return true;
+        }
+        if (sfx.isPlaying())
+        {
+            return false;
+        }
+        return true;
+    }
     public bool EnemyEvent(Object data)
     {
         EnemyScript enemy = data as EnemyScript;
@@ -3480,7 +4005,24 @@ public class ManagerScript : EventRunner
                 }
                 else
                 {
-                    attackableTiles[i][j].myColor = Common.pink;
+                    if (currentState == State.PlayerUsingItems)
+                    {
+                        if (player.currentItem)
+                        {
+                            if (player.currentItem.ITYPE != ItemType.dmg)
+                            {
+                                attackableTiles[i][j].myColor = Common.lime;
+                            }
+                        }
+                        else
+                        {
+                            attackableTiles[i][j].myColor = Common.pink;
+                        }
+                    }
+                    else
+                    {
+                        attackableTiles[i][j].myColor = Common.pink;
+                    }
 
                 }
             }
@@ -3539,6 +4081,11 @@ public class ManagerScript : EventRunner
     {
 
         LivingObject aliveObj = null;
+        if (obj == null)
+        {
+
+            return;
+        }
         GridObject tempGridObject = GetObjectAtTile(obj.currentTile);
         if (tempGridObject)
         {
@@ -3685,7 +4232,7 @@ public class ManagerScript : EventRunner
     }
     private List<TileScript> pathTiles;
     private List<TileScript> comfirmedTiles;
-    public bool StartCanMoveCheck(LivingObject target, TileScript startTile, TileScript targetTile)
+    public bool StartCanMoveCheck(GridObject target, TileScript startTile, TileScript targetTile)
     {
         comfirmedTiles = new List<TileScript>();
         if (pathTiles == null)
@@ -3694,14 +4241,15 @@ public class ManagerScript : EventRunner
             pathTiles.Clear();
         BoolConatainer con = CanMoveToTile(target, startTile, targetTile);
         bool returnedBool = con.result;
-        // Debug.Log(con.name);
-        //   Debug.Log(target.FullName + " can move to " + targetTile.name + " resulted in " + returnedBool);
+        //  Debug.Log(con.name);
+        //    Debug.Log(target.FullName + " can move to " + targetTile.name + " resulted in " + returnedBool);
         return returnedBool;
     }
-    public BoolConatainer CanMoveToTile(LivingObject target, TileScript startTile, TileScript targetTile, int depth = 0)
+    public BoolConatainer CanMoveToTile(GridObject target, TileScript startTile, TileScript targetTile, int depth = 0)
     {
         BoolConatainer conatainer = new BoolConatainer();
         // Debug.Log(target.FullName + " pathing at depth " + depth);
+
         if (depth > MapWidth * MapHeight)
         {
             Debug.Log("Pathing error, depth:" + depth);
@@ -3727,13 +4275,18 @@ public class ManagerScript : EventRunner
                 continue;
             }
             pathTiles.Add(current);
+            if (current.canBeOccupied == false)
+            {
+                continue;
+            }
 
             if (current.isOccupied)
             {
-                if (GetObjectAtTile(current))
+                GridObject obj = null;
+                if (obj = GetObjectAtTile(current))
                 {
 
-                    if (GetObjectAtTile(current).FACTION != target.FACTION)
+                    if (obj.FACTION != target.FACTION)
                     {
                         continue;
                     }
@@ -3770,19 +4323,20 @@ public class ManagerScript : EventRunner
         {
 
             current = options[i];
-
+            if (current.canBeOccupied == false)
+            {
+                continue;
+            }
             if (current.isOccupied)
             {
-                if (GetObjectAtTile(current))
+                GridObject obj = null;
+                if (obj = GetObjectAtTile(current))
                 {
-
-                    if (GetObjectAtTile(current).GetComponent<LivingObject>())
+                    if (obj.FACTION != target.FACTION)
                     {
-                        if (GetObjectAtTile(current).GetComponent<LivingObject>().FACTION != target.FACTION)
-                        {
-                            continue;
-                        }
+                        continue;
                     }
+
                 }
                 else
                 {
@@ -3956,7 +4510,8 @@ public class ManagerScript : EventRunner
 
     public List<TileScript> GetMoveAbleTiles(Vector3 target, int MOVE_DIST, LivingObject currObj)
     {
-        List<TileScript> returnedTiles = new List<TileScript>();
+        List<TileScript> returnedTiles = tileManager.EDITABLE_TILES;
+        returnedTiles.Clear();
         TileScript startTile = GetTileAtIndex(GetTileIndex(target));
         if (startTile)
         {
@@ -3986,7 +4541,7 @@ public class ManagerScript : EventRunner
                             if (GetObjectAtTile(tempTile) == null && tempTile.isOccupied == false)
                             {
 
-                                if (tempTile != GetTileAtIndex(GetTileIndex(target)))
+                                if (tempTile != startTile)
                                 {
 
                                     if (xDist + yDist <= MoveDist)
@@ -4008,6 +4563,8 @@ public class ManagerScript : EventRunner
     }
     public void ShowGridObjectMoveArea(LivingObject obj)
     {
+        if (obj == null)
+            return;
         for (int i = 0; i < MapWidth; i++)
         {
             for (int j = 0; j < MapHeight; j++)
@@ -4051,6 +4608,8 @@ public class ManagerScript : EventRunner
     }
     public void ShowGridObjectAttackArea(GridObject obj)
     {
+        if (obj == null)
+            return;
         for (int i = 0; i < MapWidth; i++)
         {
             for (int j = 0; j < MapHeight; j++)
@@ -4116,22 +4675,46 @@ public class ManagerScript : EventRunner
     }
     public void MoveGridObject(GridObject obj, Vector3 direction, bool ignoreDist = false)
     {
-        direction.Normalize();
+       // direction.Normalize();
         Vector3 curPos = GetTile(obj).transform.position;
         Vector3 newPos = curPos + direction;
+      
         int TileIndex = TwoToOneD((int)newPos.z, MapWidth, (int)newPos.x);
         if (TileIndex >= MapHeight * MapWidth)
             return;
         if (TileIndex < 0)
             return;
-        if (GetTileAtIndex(TileIndex).canBeOccupied == false)
+
+        if (!StartCanMoveCheck(obj, obj.currentTile, tileMap[TileIndex]))
             return;
+        if (GetTileAtIndex(TileIndex).canBeOccupied == false)
+        {
+           
+            if (direction.x > 0)
+                direction.x++;
+            if (direction.x < 0)
+                direction.x--;
+            if (direction.y > 0)
+                direction.y++;
+            if (direction.y < 0)
+                direction.y--;
+            if (direction.z > 0)
+                direction.z++;
+            if (direction.z < 0)
+                direction.z--;
+            MoveGridObject(obj, direction, ignoreDist);
+            return;
+
+        }
+        //   return;
+        TileScript temp = tileMap[TileIndex];
         if (obj.GetComponent<LivingObject>())
         {
-            TileScript atile = tileMap[TileIndex].GetComponent<TileScript>();
-            if (IsTileOccupied(atile) == true)
+
+            LivingObject liveObj = obj.GetComponent<LivingObject>();
+            if (IsTileOccupied(temp) == true)
             {
-                GridObject gridObject = GetObjectAtTile(atile);
+                GridObject gridObject = GetObjectAtTile(temp);
                 if (gridObject)
                 {
                     if (gridObject.GetComponent<LivingObject>())
@@ -4143,9 +4726,26 @@ public class ManagerScript : EventRunner
                         }
                     }
                 }//.GetComponent<LivingObject>();
+
+                if (StartCanMoveCheck(liveObj, liveObj.currentTile, temp))
+                {
+                    if (ignoreDist == false)
+                    {
+                        obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0);
+                        myCamera.currentTile = tileMap[TileIndex].GetComponent<TileScript>();
+                        myCamera.infoObject = GetObjectAtTile(tileMap[TileIndex].GetComponent<TileScript>());
+                        return;
+                    }
+                }
+                else
+                {
+                    if (ignoreDist == false)
+                    {
+                        return;
+                    }
+                }
             }
         }
-        TileScript temp = tileMap[TileIndex];
         float tempX = temp.transform.position.x;
         float tempY = temp.transform.position.z;
 
@@ -4205,7 +4805,7 @@ public class ManagerScript : EventRunner
                 // DamageGridObject(otherObject, 2);
                 //  obj.transform.Translate((otherObject.transform.position - obj.transform.position) * 0.5f);
                 // otherObject.transform.Translate((obj.transform.position + otherObject.transform.position) * 0.5f);
-                //AtkConatiner sideContainer = ScriptableObject.CreateInstance<AtkConatiner>();
+                //AtkContainer sideContainer = ScriptableObject.CreateInstance<AtkContainer>();
 
                 //DmgReaction sideReaction = new DmgReaction();
 
@@ -4745,6 +5345,77 @@ public class ManagerScript : EventRunner
                 }
                 break;
          */
+    public List<TileScript> GetSkillAttackableTilesOneList(GridObject obj, CommandSkill skill)
+    {
+        TileScript origin = obj.currentTile;
+        switch (skill.RTYPE)
+        {
+            case RangeType.adjacent:
+                return tileManager.GetAdjecentTiles(origin);
+                break;
+            case RangeType.rect:
+                return tileManager.GetRectTiles(origin);
+                break;
+            case RangeType.pinWheel:
+                return tileManager.GetPinWheelTiles(origin);
+                break;
+            case RangeType.detached:
+                return tileManager.GetDetachedTiles(origin);
+                break;
+            case RangeType.stretched:
+                return tileManager.GetStretchedTiles(origin);
+                break;
+            case RangeType.rotator:
+                return tileManager.GetRotatorTiles(origin);
+                break;
+            case RangeType.fan:
+                return tileManager.GetFanTiles(origin);
+                break;
+            case RangeType.spear:
+                return tileManager.GetSpearTiles(origin);
+                break;
+            case RangeType.lance:
+                return tileManager.GetLanceTiles(origin);
+                break;
+            case RangeType.line:
+                return tileManager.GetLineTiles(origin);
+                break;
+            case RangeType.cone:
+                return tileManager.GetConeTiles(origin);
+                break;
+            case RangeType.tpose:
+                return tileManager.GetTPoseTiles(origin);
+                break;
+            case RangeType.clover:
+                return tileManager.GetCloverTiles(origin);
+                break;
+            case RangeType.cross:
+                return tileManager.GetCrossTiles(origin);
+                break;
+            case RangeType.square:
+                return tileManager.GetSquareTiles(origin);
+                break;
+            case RangeType.box:
+                return tileManager.GetBoxTiles(origin);
+                break;
+            case RangeType.diamond:
+                return tileManager.GetDiamondTiles(origin);
+                break;
+            case RangeType.crosshair:
+                return tileManager.GetCrosshairTiles(origin);
+                break;
+            case RangeType.any:
+                {
+                    List<TileScript> mytiles = tileManager.GetAdjecentTiles(origin);
+
+                    mytiles.Add(origin);
+                    return mytiles;
+
+                }
+                break;
+        }
+        return null;
+    }
     public List<List<TileScript>> GetSkillsAttackableTiles(GridObject obj, CommandSkill skill)
     {
         int checkIndex = GetTileIndex(obj);
@@ -4949,65 +5620,10 @@ public class ManagerScript : EventRunner
                 break;
             case RangeType.any:
                 {
-
+                    returnList = tileManager.GetAdjecentTilesList(origin);
                     List<TileScript> mytile = new List<TileScript>();
-                    mytile.Add(GetTileAtIndex(checkIndex));
+                    mytile.Add(obj.currentTile);
                     returnList.Add(mytile);
-                    for (int i = 0; i < 4; i++)
-                    {
-                        List<TileScript> tiles = new List<TileScript>();
-                        if (affectedTiles != null)
-                        {
-                            for (int j = 0; j < affectedTiles.Count; j++)
-                            {
-                                Vector2 Dist = affectedTiles[j];
-                                switch (i)
-                                {
-                                    case 0:
-                                        checkDist.x = Dist.x;
-                                        checkDist.y = Dist.y;
-                                        break;
-
-                                    case 1:
-                                        checkDist.x = Dist.y;
-                                        checkDist.y = Dist.x * -1;
-                                        break;
-
-                                    case 2:
-
-                                        checkDist.x = Dist.x * -1;
-                                        checkDist.y = Dist.y * -1;
-
-                                        break;
-
-                                    case 3:
-                                        checkDist.x = Dist.y * -1; //Yes x = y
-                                        checkDist.y = Dist.x;
-                                        break;
-                                }
-
-
-                                Vector3 checkPos = obj.transform.position;
-                                checkPos.x += checkDist.x;
-                                checkPos.z += checkDist.y;
-                                int testIndex = GetTileIndex(checkPos);
-                                if (testIndex >= 0)
-                                {
-                                    TileScript t = GetTileAtIndex(testIndex);
-                                    float checkX = Mathf.Abs(t.transform.position.x - checkPos.x);
-                                    float checkY = Mathf.Abs(t.transform.position.z - checkPos.z);
-                                    if (checkX + checkY <= dist)
-                                    {
-                                        TileScript realTile = GetTileAtIndex(testIndex);
-                                        if (!tiles.Contains(realTile))
-                                            tiles.Add(realTile);
-                                    }
-                                }
-                            }
-                        }
-                        if (tiles.Count > 0)
-                            returnList.Add(tiles);
-                    }
 
                 }
                 break;
@@ -5267,7 +5883,7 @@ public class ManagerScript : EventRunner
 
         return returnList;
     }
-    public List<List<TileScript>> GetAttackableTiles(GridObject obj, WeaponEquip skill)
+    public List<List<TileScript>> GetAttackableTiles(GridObject obj, WeaponScript skill)
     {
         int checkIndex = GetTileIndex(obj);
         if (checkIndex == -1)
@@ -5276,7 +5892,7 @@ public class ManagerScript : EventRunner
         TileScript origin = obj.currentTile;
         List<List<TileScript>> returnList = new List<List<TileScript>>();
 
-        switch (skill.RTYPE)
+        switch (skill.ATKRANGE)
         {
             case RangeType.adjacent:
                 returnList = tileManager.GetAdjecentTilesList(origin);
@@ -5777,6 +6393,38 @@ public class ManagerScript : EventRunner
         }
     }
 
+    public void ShowWeaponAttackbleTiles(LivingObject obj, WeaponScript skill)
+    {
+        ShowWhite();
+        List<List<TileScript>> tempTiles = GetAttackableTiles(obj, skill);
+        if (tempTiles == null)
+            return;
+        if (currentState == State.PlayerOppOptions)
+            return;
+        if (tempTiles.Count > 0)
+        {
+            for (int i = 0; i < tempTiles.Count; i++) //list of lists
+            {
+                for (int j = 0; j < tempTiles[i].Count; j++) //indivisual list
+                {
+
+                    if (i == 0)
+                    {
+                        tempTiles[i][j].myColor = Common.red;
+                    }
+                    else if (tempTiles[i][j].myColor != Common.red)
+                    {
+                        tempTiles[i][j].myColor = Common.pink;
+                    }
+
+
+
+                }
+            }
+
+        }
+    }
+
     public List<int> GetTargetList()
     {
         if (currentAttackList.Count > 0)
@@ -5811,79 +6459,155 @@ public class ManagerScript : EventRunner
     }
     public List<List<TileScript>> GetWeaponAttackableTiles(LivingObject liveObj)
     {
+        if(liveObj == null)
+        {
+            return null;
+        }
+        if(liveObj.currentTile == null)
+        {
+            return null;
+        }
         int checkIndex = GetTileIndex(liveObj);
         if (checkIndex == -1)
             return null;
-
-        List<List<TileScript>> returnList = new List<List<TileScript>>();
-        int Dist = liveObj.WEAPON.DIST;
-        int Range = liveObj.WEAPON.Range;
-
-        Vector2 checkDist = Vector2.zero;
-
-        for (int i = 0; i < 4; i++)
+        TileScript origin = liveObj.currentTile;
+       // List<List<TileScript>> returnList = new List<List<TileScript>>();
+        switch (liveObj.WEAPON.EQUIPPED.ATKRANGE)
         {
-            switch (i)
-            {
-                case 0:
-                    checkDist.x = 0;
-                    checkDist.y = 1;
-                    break;
-
-                case 1:
-                    checkDist.x = 1;
-                    checkDist.y = 0;
-                    break;
-
-                case 2:
-                    checkDist.x = 0;
-                    checkDist.y = -1;
-                    break;
-
-                case 3:
-                    checkDist.x = -1;
-                    checkDist.y = 0;
-                    break;
-            }
-
-            List<TileScript> tiles = new List<TileScript>();
-            for (int j = 0; j < Range; j++)
-            {
-                Vector3 checkPos = liveObj.transform.position;
-
-                checkPos.x += (checkDist.x * Dist);
-                checkPos.z += (checkDist.y * Dist);
-
-                checkPos.x -= (checkDist.x * j);
-                checkPos.z -= (checkDist.y * j);
-
-
-                int testIndex = GetTileIndex(checkPos);
-                if (testIndex >= 0)
+            case RangeType.adjacent:
+                return tileManager.GetAdjecentTilesList(origin);
+                break;
+            case RangeType.rect:
+                return tileManager.GetRectTilesList(origin);
+                break;
+            case RangeType.pinWheel:
+                return tileManager.GetPinWheelTilesList(origin);
+                break;
+            case RangeType.detached:
+                return tileManager.GetDetachedTilesList(origin);
+                break;
+            case RangeType.stretched:
+                return tileManager.GetStretchedTilesList(origin);
+                break;
+            case RangeType.rotator:
+                return tileManager.GetRotatorTilesList(origin);
+                break;
+            case RangeType.fan:
+                return tileManager.GetFanTilesList(origin);
+                break;
+            case RangeType.spear:
+                return tileManager.GetSpearTilesList(origin);
+                break;
+            case RangeType.lance:
+                return tileManager.GetLanceTilesList(origin);
+                break;
+            case RangeType.line:
+                return tileManager.GetLineTilesList(origin);
+                break;
+            case RangeType.cone:
+                return tileManager.GetConeTilesList(origin);
+                break;
+            case RangeType.tpose:
+                return tileManager.GetTPoseTilesList(origin);
+                break;
+            case RangeType.clover:
+                return tileManager.GetCloverTilesList(origin);
+                break;
+            case RangeType.cross:
+                return tileManager.GetCrossTilesList(origin);
+                break;
+            case RangeType.square:
+                return tileManager.GetSquareTilesList(origin);
+                break;
+            case RangeType.box:
+                return tileManager.GetBoxTilesList(origin);
+                break;
+            case RangeType.diamond:
+                return tileManager.GetDiamondTilesList(origin);
+                break;
+            case RangeType.crosshair:
+                return tileManager.GetCrosshairTilesList(origin);
+                break;
+            case RangeType.any:
                 {
-                    TileScript t = GetTileAtIndex(testIndex);
+                    List<TileScript> mytiles = tileManager.GetAdjecentTiles(origin);
 
-                    float checkX = Mathf.Abs(checkPos.x - liveObj.transform.position.x);
-                    float checkY = Mathf.Abs(checkPos.z - liveObj.transform.position.z);
+                    mytiles.Add(origin);
+                    List<List<TileScript>> returnList = new List<List<TileScript>>();
+                    returnList.Add(mytiles);
+                    return returnList;
 
-
-                    if (checkX + checkY <= Dist)
-                    {
-
-
-
-                        TileScript realTile = GetTileAtIndex(testIndex);
-                        if (!tiles.Contains(realTile))
-                            tiles.Add(realTile);
-                    }
                 }
-            }
-            if (tiles.Count > 0)
-            {
-                returnList.Add(tiles);
-            }
+                break;
         }
-        return returnList;
+        //int Dist = liveObj.WEAPON.DIST;
+        //int Range = liveObj.WEAPON.Range;
+
+        //Vector2 checkDist = Vector2.zero;
+
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    switch (i)
+        //    {
+        //        case 0:
+        //            checkDist.x = 0;
+        //            checkDist.y = 1;
+        //            break;
+
+        //        case 1:
+        //            checkDist.x = 1;
+        //            checkDist.y = 0;
+        //            break;
+
+        //        case 2:
+        //            checkDist.x = 0;
+        //            checkDist.y = -1;
+        //            break;
+
+        //        case 3:
+        //            checkDist.x = -1;
+        //            checkDist.y = 0;
+        //            break;
+        //    }
+
+        //    List<TileScript> tiles = new List<TileScript>();
+        //    for (int j = 0; j < Range; j++)
+        //    {
+        //        Vector3 checkPos = liveObj.transform.position;
+
+        //        checkPos.x += (checkDist.x * Dist);
+        //        checkPos.z += (checkDist.y * Dist);
+
+        //        checkPos.x -= (checkDist.x * j);
+        //        checkPos.z -= (checkDist.y * j);
+
+
+        //        int testIndex = GetTileIndex(checkPos);
+        //        if (testIndex >= 0)
+        //        {
+        //            TileScript t = GetTileAtIndex(testIndex);
+
+        //            float checkX = Mathf.Abs(checkPos.x - liveObj.transform.position.x);
+        //            float checkY = Mathf.Abs(checkPos.z - liveObj.transform.position.z);
+
+
+        //            if (checkX + checkY <= Dist)
+        //            {
+
+
+
+        //                TileScript realTile = GetTileAtIndex(testIndex);
+        //                if (!tiles.Contains(realTile))
+        //                    tiles.Add(realTile);
+        //            }
+        //        }
+        //    }
+        //    if (tiles.Count > 0)
+        //    {
+        //        returnList.Add(tiles);
+        //    }
+        //}
+        return null;
     }
     public void SelectMenuItem(GridObject invokingObject)
     {
@@ -5979,7 +6703,7 @@ public class ManagerScript : EventRunner
     {
 
         Vector3 resetPos = invokingObject.currentTile.transform.position;
-        resetPos.y = 0.5f;
+        resetPos.y = invokingObject.currentTile.transform.position.y + 0.5f;
         invokingObject.transform.position = resetPos;
 
         if (attackableTiles != null)
@@ -6037,7 +6761,10 @@ public class ManagerScript : EventRunner
     }
     public void DamageGridObject(GridObject dmgObject, int dmg)
     {
-
+        if (!dmgObject)
+        {
+            return;
+        }
 
         dmgObject.STATS.HEALTH -= dmg;
         if (log)
@@ -6063,11 +6790,11 @@ public class ManagerScript : EventRunner
 
                     CreateEvent(this, gao, "Animation request: " + AnimationRequests + "", CheckAnimation, gao.StartCountDown, 0);
 
-                    CreateTextEvent(this, dmgObject.NAME + " ward broke!", "ward break event", CheckText, TextStart);
+                    CreateTextEvent(this, dmgObject.NAME + " Barrier broke!", "Barrier break event", CheckText, TextStart);
                     if (log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(dmgObject.FACTION)) + ">";
-                        log.Log(coloroption + dmgObject.NAME + "</color> ward broke!");
+                        log.Log(coloroption + dmgObject.NAME + "</color> Barrier broke!");
                     }
                 }
             }
@@ -6104,10 +6831,16 @@ public class ManagerScript : EventRunner
             reduction = 0.5f;
         }
 
+        if (attackType == EType.physical)
+            calc = attackingObject.STRENGTH / dmgObject.BASE_STATS.DEFENSE;
+        else
+            calc = attackingObject.MAGIC / dmgObject.BASE_STATS.RESIESTANCE;
 
-        calc = dmg * increasedDmg * reduction;
+        calc += 1;
+        //  calc *= ((dmg * increasedDmg * reduction) / resist);
+        calc *= dmg * increasedDmg * reduction;
 
-        mod = ApplyDmgMods(attackingObject, mod, attackingElement);
+        mod = ApplyDmgMods(attackingObject, mod, attackingElement, attackType);
 
 
         calc = calc * mod;
@@ -6188,7 +6921,7 @@ public class ManagerScript : EventRunner
         }
         if (result <= chance)
         {
-            DmgReaction react = CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
+            DmgReaction react = CalcDamage(attackingObject, dmgObject, weapon.ELEMENT, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
             react.atkName = weapon.NAME;
             return react;
         }
@@ -6247,25 +6980,28 @@ public class ManagerScript : EventRunner
                 break;
 
             case EHitType.weak:
-                mod = 2.0f;
+                //  mod = 2.0f;
+                mod = 1.5f;
                 react.reaction = Reaction.weak;
                 break;
 
             case EHitType.savage:
 
-                react.reaction = Reaction.turnloss;
-                mod = 4.0f;
-
+                react.reaction = Reaction.savage;
+                // mod = 4.0f;
+                mod = 2.0f;
                 break;
 
             case EHitType.cripples:
-                mod = 4.0f;
+                //  mod = 4.0f;
+                mod = 2.0f;
                 react.reaction = Reaction.cripple;
                 break;
 
             case EHitType.lethal:
-                mod = 6.0f;
-                react.reaction = Reaction.turnAndcrip;
+                // mod = 6.0f;
+                mod = 3.0f;
+                react.reaction = Reaction.leathal;
                 //dmgObject.GENERATED = 0;
                 //todo add lose a action
                 break;
@@ -6278,17 +7014,6 @@ public class ManagerScript : EventRunner
         float reduction = 1.0f;
         float increasedDmg = 1.0f;
         float resist = 1.0f;
-        if (attackType == EType.physical)
-        {
-            resist = dmgObject.DEFENSE;
-
-
-        }
-        else
-        {
-            resist = dmgObject.RESIESTANCE;
-
-        }
 
         if (resist <= 0)
         {
@@ -6325,6 +7050,7 @@ public class ManagerScript : EventRunner
         // Debug.Log("Resist: " + resist);
 
         int diff = dmg;
+
         if (attackType == EType.physical)
         {
             //if (alteration == Reaction.reduceDef)
@@ -6332,6 +7058,12 @@ public class ManagerScript : EventRunner
             //    resist *= 0.5f;
             //}
             //calc = ((float)attackingObject.STRENGTH * reduction * increasedDmg) * (attackingObject.STRENGTH / resist);
+            resist = dmgObject.DEFENSE;
+            if (resist <= 0)
+            {
+                resist = 1;
+            }
+            calc = attackingObject.STRENGTH;
             diff = attackingObject.STRENGTH - dmgObject.DEFENSE;
         }
         else
@@ -6341,33 +7073,42 @@ public class ManagerScript : EventRunner
             //    resist *= 0.5f;
             //}
             //calc = ((float)attackingObject.MAGIC * reduction * increasedDmg) * (attackingObject.MAGIC / resist);
+            resist = dmgObject.RESIESTANCE;
+            if (resist <= 0)
+            {
+                resist = 1;
+            }
+            calc = attackingObject.MAGIC;
             diff = attackingObject.MAGIC - dmgObject.RESIESTANCE;
         }
 
         if (diff > 5)
         {
-            calc = dmg * increasedDmg * reduction * 2.0f;
+            // calc = dmg * increasedDmg * reduction * 2.0f;
+            calc *= ((dmg * increasedDmg * reduction) / resist) * 1.2f;
         }
         else if (diff < -5)
         {
-            calc = dmg * increasedDmg * reduction * 0.5f;
+            //  calc = dmg * increasedDmg * reduction * 0.5f;
+            calc *= (((dmg * increasedDmg * reduction) / resist) * 0.8f) + 1;
         }
         else
         {
-            calc = dmg * increasedDmg * reduction;
+            //  calc = dmg * increasedDmg * reduction;
+            calc *= ((dmg * increasedDmg * reduction) / resist);
         }
 
-        if (attackingObject.LEVEL > dmgObject.LEVEL)
+        if (attackingObject.LEVEL + 2 > dmgObject.LEVEL)
         {
-            calc *= 2.0f;
+            calc *= 1.2f;
         }
-        else if (attackingObject.LEVEL < dmgObject.LEVEL)
+        else if (attackingObject.LEVEL - 2 < dmgObject.LEVEL)
         {
-            calc *= 0.5f;
+            calc *= 0.8f;
         }
 
-        mod = ApplyDmgMods(attackingObject, mod, attackingElement);
-        mod = ApplyDmgMods(dmgObject, mod, attackingElement);
+        mod = ApplyDmgMods(attackingObject, dmgObject, mod, attackingElement, attackType);
+
         // Debug.Log("Mod: " + mod);
         calc = calc * mod;
         // Debug.Log("Calc: " + calc);
@@ -6409,7 +7150,8 @@ public class ManagerScript : EventRunner
         {
             case SubSkillType.Buff:
                 {
-
+                    if (applyAccuraccy == false)
+                        return new DmgReaction() { damage = 0, reaction = Reaction.none, usedSkill = skill };
                     List<CommandSkill> passives = dmgObject.GetComponent<InventoryScript>().BUFFS;
                     if (!passives.Contains(skill))
                     {
@@ -6437,6 +7179,8 @@ public class ManagerScript : EventRunner
                 break;
             case SubSkillType.Debuff:
                 {
+                    if (applyAccuraccy == false)
+                        return new DmgReaction() { damage = 0, reaction = Reaction.none, usedSkill = skill };
                     return new DmgReaction() { damage = 0, reaction = Reaction.debuff, usedSkill = skill };
                 }
 
@@ -6450,6 +7194,10 @@ public class ManagerScript : EventRunner
                 //  ApplyEffect(dmgObject, skill.EFFECT, skill.ACCURACY, skill);
                 return new DmgReaction() { damage = 0, reaction = Reaction.AilmentOnly };
                 break;
+            case SubSkillType.Item:
+                {
+                    return CalcDamage(attackingObject, dmgObject as GridObject, skill.ELEMENT, skill.ETYPE, (int)skill.DAMAGE, alteration);
+                }
             default:
                 {
                     int chance = skill.ACCURACY;
@@ -6473,7 +7221,7 @@ public class ManagerScript : EventRunner
 
     }
 
-    public DmgReaction CalcDamage(AtkConatiner conatiner, bool applyAccuraccy = true)
+    public DmgReaction CalcDamage(AtkContainer conatiner, bool applyAccuraccy = true)
     {
         // Debug.Log("Calc 2");
 
@@ -6530,7 +7278,7 @@ public class ManagerScript : EventRunner
         }
         if (result <= chance)
         {
-            DmgReaction react = CalcDamage(attackingObject, dmgObject, weapon.AFINITY, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
+            DmgReaction react = CalcDamage(attackingObject, dmgObject, weapon.ELEMENT, weapon.ATTACK_TYPE, weapon.ATTACK, alteration);
             react.atkName = weapon.NAME;
             return react;
         }
@@ -6540,10 +7288,11 @@ public class ManagerScript : EventRunner
         }
     }
 
-    public float ApplyDmgMods(LivingObject living, float dmg, Element atkAffinity)
+    public float ApplyDmgMods(LivingObject attacker, LivingObject defender, float dmg, Element atkAffinity, EType eType)
     {
-        List<PassiveSkill> passives = living.GetComponent<InventoryScript>().PASSIVES;
-        living.ApplyPassives();
+        List<PassiveSkill> passives = attacker.INVENTORY.PASSIVES;
+        attacker.ApplyPassives();
+        float modification = 1.0f;
         for (int i = 0; i < passives.Count; i++)
         {
             if (passives[i].ModStat == ModifiedStat.ElementDmg)
@@ -6552,17 +7301,137 @@ public class ManagerScript : EventRunner
                 {
                     if (passives[i].ModElements[k] == atkAffinity)
                     {
-                        dmg *= (100.0f / (float)passives[i].ModValues[k]);
+                        modification *= ((float)passives[i].ModValues[k] / 100.0f);
                     }
                 }
             }
         }
 
+        List<PassiveSkill> epassives = defender.INVENTORY.PASSIVES;
+        defender.ApplyPassives();
+
+        List<CommandSkill> buffs = attacker.INVENTORY.BUFFS;
+
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            if (buffs[i].BUFF == BuffType.str && eType == EType.physical)
+            {
+                modification += (buffs[i].BUFFVAL / 100.0f);
+            }
+            else if (buffs[i].BUFF == BuffType.mag && eType == EType.magical)
+            {
+                modification += (buffs[i].BUFFVAL / 100.0f);
+            }
+        }
+        List<CommandSkill> ebuffs = defender.INVENTORY.BUFFS;
+
+        for (int i = 0; i < ebuffs.Count; i++)
+        {
+            if (ebuffs[i].BUFF == BuffType.defense && eType == EType.physical)
+            {
+                modification -= (ebuffs[i].BUFFVAL / 100.0f);
+            }
+            else if (ebuffs[i].BUFF == BuffType.resistance && eType == EType.magical)
+            {
+                modification -= (ebuffs[i].BUFFVAL / 100.0f);
+            }
+        }
+        List<CommandSkill> debuffs = attacker.INVENTORY.DEBUFFS;
+        for (int i = 0; i < debuffs.Count; i++)
+        {
+            if (debuffs[i].BUFF == BuffType.str && eType == EType.physical)
+            {
+                modification -= (debuffs[i].BUFFVAL / 100.0f);
+            }
+            else if (debuffs[i].BUFF == BuffType.mag && eType == EType.magical)
+            {
+                modification -= (debuffs[i].BUFFVAL / 100.0f);
+            }
+        }
+
+        List<CommandSkill> edebuffs = defender.INVENTORY.DEBUFFS;
+        for (int i = 0; i < edebuffs.Count; i++)
+        {
+            if (edebuffs[i].BUFF == BuffType.defense && eType == EType.physical)
+            {
+                modification += (edebuffs[i].BUFFVAL / 100.0f);
+            }
+            else if (edebuffs[i].BUFF == BuffType.resistance && eType == EType.magical)
+            {
+                modification += (edebuffs[i].BUFFVAL / 100.0f);
+            }
+        }
+
+        dmg = dmg * modification;
+        return dmg;
+    }
+
+    public float ApplyDmgMods(LivingObject attacker, float dmg, Element atkAffinity, EType eType)
+    {
+        List<PassiveSkill> passives = attacker.INVENTORY.PASSIVES;
+        attacker.ApplyPassives();
+        for (int i = 0; i < passives.Count; i++)
+        {
+            if (passives[i].ModStat == ModifiedStat.ElementDmg)
+            {
+                for (int k = 0; k < passives[i].ModElements.Count; k++)
+                {
+                    if (passives[i].ModElements[k] == atkAffinity)
+                    {
+                        dmg *= ((float)passives[i].ModValues[k] / 100.0f);
+                    }
+                }
+            }
+        }
+
+        List<CommandSkill> buffs = attacker.INVENTORY.BUFFS;
+
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            if (buffs[i].BUFF == BuffType.str && eType == EType.physical)
+            {
+                dmg *= (buffs[i].BUFFVAL / 100.0f);
+            }
+            else if (buffs[i].BUFF == BuffType.mag && eType == EType.magical)
+            {
+                dmg *= (buffs[i].BUFFVAL / 100.0f);
+            }
+        }
+
+        List<CommandSkill> debuffs = attacker.INVENTORY.DEBUFFS;
+        for (int i = 0; i < debuffs.Count; i++)
+        {
+            if (debuffs[i].BUFF == BuffType.str && eType == EType.physical)
+            {
+                dmg *= (debuffs[i].BUFFVAL / 100.0f);
+            }
+            else if (debuffs[i].BUFF == BuffType.mag && eType == EType.magical)
+            {
+                dmg *= (debuffs[i].BUFFVAL / 100.0f);
+            }
+        }
+
+        if (dmg > 2.0f)
+            dmg *= 0.8f;
         return dmg;
     }
     public GridAnimationObj PrepareGridAnimation(GridAnimationObj gao, GridObject target)
     {
-
+        if (!target)
+        {
+            GameObject tjObject = Instantiate(animPrefab);
+            tjObject.SetActive(false);
+            gao = tjObject.GetComponent<GridAnimationObj>();
+            animObjs.Add(gao);
+            gao.manager = this;
+            gao.Setup();
+            // gao.gameObject.SetActive(true);
+            //   Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
+            //  v3.z -= 0.1f;
+            gao.transform.position = Vector3.zero;
+            gao.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            return gao;
+        }
         AnimationRequests++;
         int busyCount = 0;
         if (AnimationRequests <= animObjs.Count)
@@ -6574,7 +7443,7 @@ public class ManagerScript : EventRunner
                 {
                     gao = animObjs[i];
                     //gao.gameObject.SetActive(true);
-                    Vector3 v3 = new Vector3(target.transform.position.x, 1, target.transform.position.z);
+                    Vector3 v3 = new Vector3(target.transform.position.x, target.transform.position.y + 1, target.transform.position.z);
                     //  v3.z -= 0.1f;
                     gao.transform.position = v3;
                     gao.transform.localRotation = Quaternion.Euler(90, 0, 0);
@@ -6625,7 +7494,7 @@ public class ManagerScript : EventRunner
         gao.prepared = true;
         return gao;
     }
-    public void ApplyReaction(LivingObject attackingObject, GridObject target, DmgReaction react, Element dmgElement)
+    public void ApplyReaction(LivingObject attackingObject, GridObject target, DmgReaction react, Element dmgElement, CommandSkill cmd = null)
     {
         //  Debug.Log("Applying dmg: " + react.damage);
         int gtype = (int)dmgElement;
@@ -6636,6 +7505,38 @@ public class ManagerScript : EventRunner
 
                 break;
             case Reaction.buff:
+                {
+                    if (cmd)
+                    {
+
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject livetarget = target.GetComponent<LivingObject>();
+                            List<CommandSkill> buffs = livetarget.INVENTORY.BUFFS;
+                            if (!buffs.Contains(cmd))
+                            {
+                                bool sameType = false;
+                                for (int i = 0; i < buffs.Count; i++)
+                                {
+                                    if (buffs[i].BUFFEDSTAT == cmd.BUFFEDSTAT && buffs[i].BUFFVAL == cmd.BUFFVAL)
+                                    {
+                                        sameType = true;
+                                        break;
+                                    }
+                                }
+                                if (sameType == false)
+                                {
+                                    livetarget.INVENTORY.DEBUFFS.Add(cmd);
+                                    BuffScript buff = target.gameObject.AddComponent<BuffScript>();
+                                    buff.SKILL = cmd;
+                                    buff.BUFF = cmd.BUFF;
+                                    buff.COUNT = 3;
+                                    livetarget.ApplyPassives();
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case Reaction.cripple:
                 if (target.GetComponent<LivingObject>())
@@ -6775,7 +7676,7 @@ public class ManagerScript : EventRunner
                 break;
             case Reaction.ApplyEffect:
                 break;
-            case Reaction.turnloss:
+            case Reaction.savage:
                 if (target.GetComponent<LivingObject>())
                 {
                     CreateTextEvent(this, "" + attackingObject.FullName + " did SAVAGE damage", "enemy atk", CheckText, TextStart);
@@ -6794,7 +7695,7 @@ public class ManagerScript : EventRunner
                     }
                 }
                 break;
-            case Reaction.turnAndcrip:
+            case Reaction.leathal:
                 CreateTextEvent(this, "" + attackingObject.FullName + " did LEATHAL damage", "enemy atk", CheckText, TextStart);
                 if (log)
                 {
@@ -6849,6 +7750,38 @@ public class ManagerScript : EventRunner
             case Reaction.AilmentOnly:
                 break;
             case Reaction.debuff:
+                {
+                    if (cmd)
+                    {
+
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject livetarget = target.GetComponent<LivingObject>();
+                            List<CommandSkill> debuffs = livetarget.INVENTORY.DEBUFFS;
+                            if (!debuffs.Contains(cmd))
+                            {
+                                bool sameType = false;
+                                for (int i = 0; i < debuffs.Count; i++)
+                                {
+                                    if (debuffs[i].BUFFEDSTAT == cmd.BUFFEDSTAT && debuffs[i].BUFFVAL == cmd.BUFFVAL)
+                                    {
+                                        sameType = true;
+                                        break;
+                                    }
+                                }
+                                if (sameType == false)
+                                {
+                                    livetarget.INVENTORY.DEBUFFS.Add(cmd);
+                                    DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+                                    buff.SKILL = cmd;
+                                    buff.BUFF = cmd.BUFF;
+                                    buff.COUNT = 3;
+                                    livetarget.ApplyPassives();
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case Reaction.bonusAction:
                 break;
@@ -7038,6 +7971,10 @@ public class ManagerScript : EventRunner
 
 
         bool killedEnemy = false;
+        if (!target)
+        {
+            return killedEnemy;
+        }
         if (target.GetComponent<LivingObject>())
         {
             LivingObject livetarget = target.GetComponent<LivingObject>();
@@ -7045,7 +7982,7 @@ public class ManagerScript : EventRunner
             {
                 if (!livetarget.DEAD)
                 {
-
+                    livetarget.STATS.HEALTH = -1 * livetarget.BASE_STATS.MAX_HEALTH;
                     if (turnOrder.Contains(livetarget))
                     {
                         turnOrder.Remove(livetarget);
@@ -7141,6 +8078,18 @@ public class ManagerScript : EventRunner
                                 for (int i = 0; i < enemy.INVENTORY.USEABLES.Count; i++)
                                 {
                                     UsableScript possibility = enemy.INVENTORY.USEABLES[i];
+                                    if (possibility.GetType() == typeof(ItemScript))
+                                    {
+                                        continue;
+                                    }
+                                    if (possibility.GetType() == typeof(ArmorScript))
+                                    {
+                                        //200 + armor is charcter specific
+                                        if ((possibility as ArmorScript).INDEX < 200)
+                                        {
+                                            possibleUseables.Add(possibility);
+                                        }
+                                    }
                                     if (!attackingObject.INVENTORY.ContainsUsableIndex(possibility))
                                     {
                                         possibleUseables.Add(possibility);
@@ -7248,6 +8197,10 @@ public class ManagerScript : EventRunner
                         {
                             currentMap.enemyIndexes.Remove(enemy.MapIndex);
                         }
+                        if (liveEnemies.Contains(enemy))
+                        {
+                            liveEnemies.Remove(enemy);
+                        }
                     }
 
                     if (target.currentTile)
@@ -7271,7 +8224,7 @@ public class ManagerScript : EventRunner
                     for (int i = 0; i < livingObjects.Length; i++)
                     {
                         LivingObject liver = livingObjects[i];
-                        if (liver.FACTION == Faction.enemy)
+                        if (liver.FACTION != Faction.ally)
                         {
                             winner = false;
                         }
@@ -7308,18 +8261,121 @@ public class ManagerScript : EventRunner
                 {
                     target.DEAD = true;
                     target.Die();
+                    if (target.MapIndex >= 0 && currentMap.objMapIndexes.Contains(target.MapIndex))
+                    {
+                        for (int i = 0; i < currentMap.objMapIndexes.Count; i++)
+                        {
+                            if (target.MapIndex == currentMap.objMapIndexes[i])
+                            {
+                                currentMap.objMapIndexes.Remove(target.MapIndex);
+                                currentMap.objIds.RemoveAt(i);
+                            }
+                        }
+
+
+
+                    }
                     if (target.currentTile)
                     {
                         target.currentTile.isOccupied = false;
                         target.currentTile = null;
                     }
-                    if (attackingObject.INVENTORY.ITEMS.Count < 6)
+                    switch (target.FACTION)
                     {
-                        UsableScript useable = database.GetItem(Random.Range(0, 17), attackingObject);
-                        useable.DESC = attackingObject.FullName;
-                        CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
-                        CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+
+                        case Faction.ordinary:
+                            break;
+                        case Faction.eventObj:
+                            break;
+
+                        case Faction.dropsSkill:
+                            {
+                                int physCount = 0;
+                                for (int i = 0; i < attackingObject.INVENTORY.CSKILLS.Count; i++)
+                                {
+                                    if (attackingObject.INVENTORY.CSKILLS[i].ETYPE == EType.magical)
+                                    {
+                                        physCount++;
+                                    }
+                                }
+                                if (physCount < 6)
+                                {
+                                    int itemNum = 0;
+                                    itemNum = Random.Range(0, 4);
+                                    itemNum += (Random.Range(1, 8) * 10);
+                                    //    Debug.Log("command skill" + itemNum);
+
+                                    UsableScript useable = database.LearnSkill(itemNum, attackingObject);
+                                    useable.DESC = attackingObject.FullName;
+                                    CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
+                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                }
+                            }
+                            break;
+                        case Faction.dropsSpell:
+                            {
+                                int magCount = 0;
+                                for (int i = 0; i < attackingObject.INVENTORY.CSKILLS.Count; i++)
+                                {
+                                    if (attackingObject.INVENTORY.CSKILLS[i].ETYPE == EType.magical)
+                                    {
+                                        magCount++;
+                                    }
+                                }
+                                if (magCount < 6)
+                                {
+                                    int itemNum = 0;
+                                    //itemNum = Random.Range(0, 4);
+                                    //itemNum += (Random.Range(1, 8) * 10);
+                                    ////    Debug.Log("command skill" + itemNum);
+                                    //newItem = database.GetSkill(itemNum);
+
+                                    itemNum = Random.Range(4, 7);
+                                    itemNum += (Random.Range(1, 10) * 10);
+                                    //    Debug.Log("command spell" + itemNum);
+
+                                    UsableScript useable = database.LearnSkill(itemNum, attackingObject);
+                                    useable.DESC = attackingObject.FullName;
+                                    CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
+                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                }
+                            }
+                            break;
+                        case Faction.dropsStrike:
+                            {
+                                if (attackingObject.INVENTORY.WEAPONS.Count < 6)
+                                {
+                                    UsableScript useable = database.GetWeapon(Random.Range(0, 14), attackingObject);
+                                    useable.DESC = attackingObject.FullName;
+                                    CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
+                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                }
+                            }
+                            break;
+                        case Faction.dropsBarrier:
+                            {
+                                if (attackingObject.INVENTORY.ARMOR.Count < 6)
+                                {
+                                    UsableScript useable = database.GetArmor(Random.Range(0, 11), attackingObject);
+                                    useable.DESC = attackingObject.FullName;
+                                    CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
+                                    CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                                }
+                            }
+                            break;
+                        case Faction.dropsItem:
+                            {
+                                if (attackingObject.INVENTORY.ITEMS.Count < 6)
+                                {
+                                    UsableScript useable = database.GetItem(Random.Range(0, 26), attackingObject);
+                                    useable.DESC = attackingObject.FullName;
+                                    CreateEvent(this, useable, "New Skill Event", CheckCount, null, -1, CountStart);
+                                    CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                                }
+                            }
+                            break;
                     }
+
 
                 }
             }
@@ -7411,7 +8467,8 @@ public class ManagerScript : EventRunner
     }
     public void CreateDmgTextEvent(string dmgValue, Color color, GridObject target)
     {
-
+        if (!target)
+            return;
         // Debug.Log("requesting " + dmgRequest);
         DmgTextObj dto = null;
         dmgRequest++;
@@ -7459,6 +8516,7 @@ public class ManagerScript : EventRunner
             dto.transform.Rotate(90, 0, 0);
             dto.text.color = color;
         }
+        dto.target = target;
         CreateEvent(this, dto, "DmgText request: " + dmgRequest + "", CheckDmgText, dto.StartCountDown, 0);
 
     }
@@ -7490,7 +8548,7 @@ public class ManagerScript : EventRunner
         if (skill != null)
         {
             MassAtkConatiner conatiners = ScriptableObject.CreateInstance<MassAtkConatiner>();
-            conatiners.atkConatiners = new List<AtkConatiner>();
+            conatiners.atkConatiners = new List<AtkContainer>();
 
 
 
@@ -7517,18 +8575,39 @@ public class ManagerScript : EventRunner
                 {
                     skill.HITS = Random.Range(skill.MIN_HIT, skill.MAX_HIT);
                 }
+                HazardScript redirect = null;
+                for (int i = 0; i < gridObjects.Count; i++)
+                {
+                    if (gridObjects[i].GetComponent<HazardScript>())
+                    {
+                        if ((gridObjects[i] as HazardScript).HTYPE == HazardType.redirect)
+                        {
+                            CreateTextEvent(this, "A Glyph redirected your attack", "locked door", CheckText, TextStart);
 
-
+                            redirect = gridObjects[i] as HazardScript;
+                            break;
+                        }
+                    }
+                }
                 for (int j = 0; j < skill.HITS; j++)
                 {
-                    AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
                     conatiner.alteration = skill.REACTION;
                     conatiner.attackingElement = skill.ELEMENT;
                     conatiner.attackType = skill.ETYPE;
                     conatiner.attackingObject = invokingObject;
                     conatiner.command = skill;
                     conatiner.dmg = (int)skill.DAMAGE;
-                    conatiner.dmgObject = target;
+                    if (redirect)
+                    {
+                        conatiner.dmgObject = redirect;
+                    }
+                    else
+                    {
+                        conatiner.dmgObject = target;
+                    }
+
+
                     DmgReaction react = CalcDamage(conatiner);
                     react.usedSkill = skill;
                     conatiner.react = react;
@@ -7543,8 +8622,8 @@ public class ManagerScript : EventRunner
 
                             react.damage *= 2;
 
-                            //PlayOppSnd();
-                            CreateEvent(this, conatiner.attackingObject, "Critical Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
+                            PlayOppSnd();
+                            // CreateEvent(this, conatiner.attackingObject, "Critical Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
                             CreateTextEvent(this, "" + conatiner.attackingObject.NAME + " landed a critical hit!", "crit", CheckText, TextStart, -1);
                             if (log)
                             {
@@ -7556,13 +8635,16 @@ public class ManagerScript : EventRunner
                     CreateEvent(this, conatiner, "Skill use event", AttackEvent, null, 0);
                 }
 
-
-                bool leveledup = skill.GrantXP(1);
-                if (leveledup)
+                if (currentState != State.EnemyTurn && currentState != State.HazardTurn)
                 {
-                    skill.DESC = invokingObject.NAME;
-                    CreateEvent(this, skill, "New Skill Event", CheckCount, null, -1, CountStart);
-                    CreateTextEvent(this, "" + invokingObject.FullName + "'s " + skill.NAME + " leveled up!", "new skill event", CheckText, TextStart);
+
+                    bool leveledup = skill.GrantXP(1);
+                    if (leveledup)
+                    {
+                        skill.DESC = invokingObject.NAME;
+                        CreateEvent(this, skill, "New Skill Event", CheckCount, null, -1, CountStart);
+                        CreateTextEvent(this, "" + invokingObject.FullName + "'s " + skill.NAME + " leveled up!", "new skill event", CheckText, TextStart);
+                    }
                 }
                 // }
 
@@ -7609,7 +8691,7 @@ public class ManagerScript : EventRunner
                     if (skill != null)
                     {
                         MassAtkConatiner conatiners = ScriptableObject.CreateInstance<MassAtkConatiner>();
-                        conatiners.atkConatiners = new List<AtkConatiner>();
+                        conatiners.atkConatiners = new List<AtkContainer>();
                         for (int i = 0; i < targetIndicies.Count; i++)
                         {
                             GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
@@ -7703,6 +8785,22 @@ public class ManagerScript : EventRunner
                                 log.Log(coloroption + invokingObject.NAME + "</color> used " + skill.NAME);
                             }
                         }
+
+                        HazardScript redirect = null;
+                        for (int r = 0; r < gridObjects.Count; r++)
+                        {
+                            if (gridObjects[r].GetComponent<HazardScript>())
+                            {
+                                if ((gridObjects[r] as HazardScript).HTYPE == HazardType.redirect)
+                                {
+                                    CreateTextEvent(this, "A Glyph redirected your attack", "locked door", CheckText, TextStart);
+
+                                    redirect = gridObjects[r] as HazardScript;
+                                    break;
+                                }
+                            }
+                        }
+
                         for (int i = 0; i < targetIndicies.Count; i++)
                         {
                             if (acceptable == true)
@@ -7719,18 +8817,26 @@ public class ManagerScript : EventRunner
                                 // conatiners.atkConatiners.Add(conatiner);
                                 if (skill.SUBTYPE == SubSkillType.RngAtk)
                                 {
-                                    skill.HITS = Random.Range(skill.MIN_HIT, skill.MAX_HIT);
+                                    skill.HITS = Random.Range(skill.MIN_HIT, skill.MAX_HIT + 1);
                                 }
+
                                 for (int j = 0; j < skill.HITS; j++)
                                 {
-                                    AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
                                     conatiner.alteration = skill.REACTION;
                                     conatiner.attackingElement = skill.ELEMENT;
                                     conatiner.attackType = skill.ETYPE;
                                     conatiner.attackingObject = invokingObject;
                                     conatiner.command = skill;
                                     conatiner.dmg = (int)skill.DAMAGE;
-                                    conatiner.dmgObject = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
+                                    if (redirect)
+                                    {
+                                        conatiner.dmgObject = redirect;
+                                    }
+                                    else
+                                    {
+                                        conatiner.dmgObject = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
+                                    }
                                     DmgReaction react = CalcDamage(conatiner);
                                     react.usedSkill = skill;
                                     conatiner.react = react;
@@ -7742,11 +8848,12 @@ public class ManagerScript : EventRunner
                                         int chance = Random.Range(0, 100);
                                         if (critchance > chance)
                                         {
-                                            Debug.Log("Prior :" + react.damage);
+                                            //Debug.Log("Prior :" + react.damage);
                                             react.damage *= 2;
-                                            Debug.Log("After :" + react.damage);
+                                            //Debug.Log("After :" + react.damage);
                                             conatiner.react = react;
-                                            CreateEvent(this, conatiner.attackingObject, "Critical Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
+                                            PlayOppSnd();
+                                            // CreateEvent(this, conatiner.attackingObject, "Critical Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
                                             CreateTextEvent(this, "" + conatiner.attackingObject.NAME + " landed a critical hit!", "crit", CheckText, TextStart, 0);
                                             if (log)
                                             {
@@ -7780,14 +8887,21 @@ public class ManagerScript : EventRunner
 
                                 if (skill.EFFECT >= SideEffect.knockback && skill.EFFECT <= SideEffect.swap)
                                 {
-                                    AtkConatiner sideContainer = ScriptableObject.CreateInstance<AtkConatiner>();
+                                    AtkContainer sideContainer = ScriptableObject.CreateInstance<AtkContainer>();
                                     sideContainer.alteration = skill.REACTION;
                                     sideContainer.attackingElement = skill.ELEMENT;
                                     sideContainer.attackType = skill.ETYPE;
                                     sideContainer.attackingObject = invokingObject;
                                     sideContainer.command = skill;
                                     sideContainer.dmg = (int)skill.DAMAGE;
-                                    sideContainer.dmgObject = GetObjectAtTile(currentAttackList[targetIndicies[0]]);
+                                    if (redirect)
+                                    {
+                                        sideContainer.dmgObject = redirect;
+                                    }
+                                    else
+                                    {
+                                        sideContainer.dmgObject = GetObjectAtTile(currentAttackList[targetIndicies[0]]);
+                                    }
                                     DmgReaction sideReaction = new DmgReaction();
                                     sideReaction.damage = -1;
                                     sideReaction.reaction = Common.EffectToReaction(skill.EFFECT);
@@ -7832,6 +8946,20 @@ public class ManagerScript : EventRunner
             {
                 if (targetIndicies.Count > 0)
                 {
+                    HazardScript redirect = null;
+                    for (int i = 0; i < gridObjects.Count; i++)
+                    {
+                        if (gridObjects[i].GetComponent<HazardScript>())
+                        {
+                            if ((gridObjects[i] as HazardScript).HTYPE == HazardType.redirect)
+                            {
+                                CreateTextEvent(this, "A Glyph redirected your attack", "locked door", CheckText, TextStart);
+
+                                redirect = gridObjects[i] as HazardScript;
+                                break;
+                            }
+                        }
+                    }
                     if (log)
                     {
                         log.Log(invokingObject.NAME + " used " + weapon.NAME);
@@ -7870,14 +8998,22 @@ public class ManagerScript : EventRunner
                                         }
                                     }
                                 }
-                                AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
                                 conatiner.alteration = atkReaction;
-                                conatiner.attackingElement = weapon.AFINITY;
+                                conatiner.attackingElement = weapon.ELEMENT;
                                 conatiner.attackType = weapon.ATTACK_TYPE;
                                 conatiner.attackingObject = invokingObject;
                                 conatiner.command = null;
                                 conatiner.dmg = weapon.ATTACK;
-                                conatiner.dmgObject = potentialTarget;
+                                if (redirect)
+                                {
+                                    conatiner.dmgObject = redirect;
+                                }
+                                else
+                                {
+                                    conatiner.dmgObject = potentialTarget;
+                                }
+
                                 CreateEvent(this, conatiner, "Skill use event", WeaponAttackEvent);
 
                             }
@@ -8088,7 +9224,7 @@ public class ManagerScript : EventRunner
     {
         menuManager.ShowNone();
         loadTargets();
-        AtkConatiner container = data as AtkConatiner;
+        AtkContainer container = data as AtkContainer;
         CreateTextEvent(this, "" + container.attackingObject.FullName + " used " + container.command.NAME, "skill atk", CheckText, TextStart);
         CommandSkill skill = container.command;
 
@@ -8113,7 +9249,7 @@ public class ManagerScript : EventRunner
                 if (container.crit == true)
                 {
                     PlayOppSnd();
-                    CreateEvent(this, container.attackingObject, "Critical Announcement", OppAnnounceEvent, null, 0, OppAnnounceStart);
+                    // CreateEvent(this, container.attackingObject, "Critical Announcement", OppAnnounceEvent, null, 0, OppAnnounceStart);
                     CreateTextEvent(this, "" + container.attackingObject.NAME + " landed a critical hit!", "crit", CheckText, TextStart, 0);
                 }
             }
@@ -8200,7 +9336,7 @@ public class ManagerScript : EventRunner
         bool hit = false;
         for (int i = 0; i < containers.atkConatiners.Count; i++)
         {
-            AtkConatiner container = containers.atkConatiners[i];
+            AtkContainer container = containers.atkConatiners[i];
 
             if (container.alteration < Reaction.nulled)
             {
@@ -8257,7 +9393,12 @@ public class ManagerScript : EventRunner
 
     public bool ECheckForOppChanceEvent(Object data)
     {
-        AtkConatiner container = data as AtkConatiner;
+        AtkContainer container = data as AtkContainer;
+        if (!container.dmgObject)
+        {
+            Debug.Log("got a null here X(");
+            return true;
+        }
         if (!container.dmgObject.DEAD)
         {
 
@@ -8289,7 +9430,7 @@ public class ManagerScript : EventRunner
     {
         menuManager.ShowNone();
         loadTargets();
-        AtkConatiner container = data as AtkConatiner;
+        AtkContainer container = data as AtkContainer;
         CreateTextEvent(this, "" + container.attackingObject.FullName + " used their " + container.attackingObject.WEAPON.NAME + " attack", "weapon atk", CheckText, TextStart);
         DmgReaction react = CalcDamage(container);
         container.alteration = react.reaction;
@@ -8297,11 +9438,13 @@ public class ManagerScript : EventRunner
 
 
         container.attackingObject.WEAPON.Use();
+
         container.react = react;
         //  ApplyReaction(container.attackingObject, container.dmgObject, react, container.attackingElement);
         CreateEvent(this, container, "apply reaction event", ApplyReactionEvent);
         if (react.reaction < Reaction.nulled && react.reaction != Reaction.missed)
             DetermineAtkExp(container.attackingObject, container.dmgObject, null, true, react.damage);
+
 
         //currentState = State.PlayerTransition;
         enterStateTransition();
@@ -8349,6 +9492,21 @@ public class ManagerScript : EventRunner
             }
 
         }
+        if (currentState != State.EnemyTurn && currentState != State.HazardTurn)
+        {
+            if (container.attackingObject.WEAPON.USECOUNT % 2 == 0)
+            {
+                WeaponScript weapon = container.attackingObject.WEAPON.EQUIPPED;
+                weapon.DESC = invokingObject.NAME;
+                CreateEvent(this, weapon, "New Skill Event", CheckCount, null, -1, CountStart);
+                CreateTextEvent(this, "" + invokingObject.FullName + "'s " + weapon.NAME + " leveled up!", "new skill event", CheckText, TextStart);
+                SpriteRenderer sr = player.current.GetComponent<SpriteRenderer>();
+                if (sr)
+                {
+                    sr.color = Color.white;
+                }
+            }
+        }
         if (oppAction == false)
         {
             //if (currOppList.Count == 0)
@@ -8387,6 +9545,38 @@ public class ManagerScript : EventRunner
         menuManager.ShowNone();
 
     }
+
+    public void GotoNewRoom()
+    {
+        if (player.current)
+        {
+            TileScript tile = player.current.currentTile;
+            if (tile)
+            {
+                if (tile.TTYPE == TileType.door)
+                {
+
+                    for (int i = 0; i < gridObjects.Count; i++)
+                    {
+                        if (gridObjects[i].GetComponent<HazardScript>())
+                        {
+                            if ((gridObjects[i] as HazardScript).HTYPE == HazardType.lockDoor)
+                            {
+                                CreateTextEvent(this, "A Lock Glyph is preventing u from leaving", "locked door", CheckText, TextStart);
+                                PlayExitSnd();
+                                return;
+                            }
+                        }
+                    }
+
+                    LoadDScene(tile.ROOM, tile.START);
+                    CreateEvent(this, null, "return state event", BufferedCleanEvent);
+                    CreateEvent(this, null, "next round event", NewRoomRoundBegin);
+                }
+            }
+        }
+    }
+
     public void DoorStart(Object data)
     {
         TileScript doorTile = data as TileScript;
@@ -8509,7 +9699,7 @@ public class ManagerScript : EventRunner
                         if (usable.GetType() == typeof(ItemScript))
                             tmp.text = "" + usable.DESC + " gained " + spritestr + usable.NAME;
                     }
-                    usable.UpdateDesc();
+
                     enterStateTransition();
                     menuManager.ShowNone();
                 }
@@ -8519,7 +9709,7 @@ public class ManagerScript : EventRunner
                     enterStateTransition();
                     menuManager.ShowNone();
                 }
-
+                usable.UpdateDesc();
                 menuManager.ShowNewSkillAnnouncement();
             }
         }
@@ -8633,6 +9823,10 @@ public class ManagerScript : EventRunner
                         theColor = Color.magenta;
                         turnText = "Event Phase";
                         break;
+                    case Faction.fairy:
+                        theColor = Color.red;
+                        turnText = "Enemy Phase";
+                        break;
                     default:
                         Debug.Log("Ya done goofed");
                         theColor = Color.white;
@@ -8692,7 +9886,12 @@ public class ManagerScript : EventRunner
         currentState = State.HazardTurn;
         doubleAdjOppTiles.Clear();
         //  Debug.Log("At next round begin");
-        NextRound();
+        if (nextRoundCalled == false)
+        {
+
+            nextRoundCalled = true;
+            NextRound();
+        }
         //player.current = turnOrder[0];
         //CreateEvent(this, turnOrder[0], "Initial Camera Event", CameraEvent);
         return true;
@@ -8700,7 +9899,7 @@ public class ManagerScript : EventRunner
     public bool ApplyReactionEvent(Object data)
     {
 
-        AtkConatiner conatiner = data as AtkConatiner;
+        AtkContainer conatiner = data as AtkContainer;
 
         ApplyReaction(conatiner.attackingObject, conatiner.dmgObject, conatiner.react, conatiner.attackingElement);
 
@@ -8715,7 +9914,8 @@ public class ManagerScript : EventRunner
         if (currentState != State.PlayerTransition)
             doubleAdjOppTiles.Clear();
 
-        if (currentState != State.EnemyTurn && currentState != State.HazardTurn)
+
+        if (currentState != State.EnemyTurn && currentState != State.HazardTurn && currentState != State.PlayerTransition)
         {
             //    Debug.Log("Next turn...");
             CleanMenuStack(true, false);
@@ -8740,15 +9940,20 @@ public class ManagerScript : EventRunner
         if (nextround == true)
         {
             //  Debug.Log("next round from end turn in " + currentState + "  by?: " + currentObject.NAME);
-            NextRound();
-            ShowWhite();
-
-            for (int i = 0; i < turnOrder.Count; i++)
+            if (nextRoundCalled == false)
             {
-                ShowSelectedTile(turnOrder[i], Common.orange);
+
+                nextRoundCalled = true;
+                NextRound();
+                ShowWhite();
+
+                for (int i = 0; i < turnOrder.Count; i++)
+                {
+                    ShowSelectedTile(turnOrder[i], Common.orange);
+
+                }
 
             }
-
         }
         // currentObject = turnOrder[0];
 
@@ -8825,6 +10030,10 @@ public class ManagerScript : EventRunner
 
     public void StackShop()
     {
+        if (currentState == State.EnemyTurn || currentState == State.HazardTurn)
+        {
+            return;
+        }
 
         if (stackManager)
         {
@@ -8849,6 +10058,7 @@ public class ManagerScript : EventRunner
             {
                 if (menuStack.Count == 0)
                 {
+
                     menuManager.ShowNone();
                     currentState = State.FreeCamera;
                 }
@@ -8865,9 +10075,22 @@ public class ManagerScript : EventRunner
         }
 
     }
+    public void forceEnd()
+    {
+        for (int i = 0; i < turnOrder.Count; i++)
+        {
+            if (turnOrder[i].ACTIONS > 0)
+            {
+                turnOrder[i].Wait();
+            }
+        }
+        NextTurn("manager");
+    }
+
 
     public void StackOptions()
     {
+
 
         if (stackManager)
         {
@@ -8886,7 +10109,39 @@ public class ManagerScript : EventRunner
                 if (menuStack.Count == 0)
                 {
                     menuManager.ShowNone();
-                    currentState = State.FreeCamera;
+                    if (prevState != State.PlayerTransition)
+                    {
+                        currentState = prevState;
+                    }
+
+                    else if (turnOrder.Count > 0)
+                    {
+                        switch (turnOrder[0].FACTION)
+                        {
+                            case Faction.ally:
+                                currentState = State.FreeCamera;
+                                break;
+                            case Faction.enemy:
+                                currentState = State.EnemyTurn;
+                                break;
+                            case Faction.hazard:
+                                currentState = State.HazardTurn;
+                                break;
+
+                            case Faction.fairy:
+                                currentState = State.EnemyTurn;
+                                break;
+                            default:
+                                currentState = State.FreeCamera;
+                                break;
+                        }
+
+
+                    }
+                    else
+                    {
+                        currentState = State.FreeCamera;
+                    }
                 }
                 else
                 {
@@ -8903,14 +10158,24 @@ public class ManagerScript : EventRunner
     }
     public void StackDetails()
     {
-
+        if (currentState == State.EnemyTurn || currentState == State.HazardTurn)
+        {
+            return;
+        }
         if (stackManager)
         {
             if (currentState != State.CheckDetails)
             {
                 detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
                 menuStackEntry playerDetails = stackManager.GetDetailStack();
-
+                if (currentState == State.FreeCamera)
+                {
+                    playerDetails.menu = currentMenu.none;
+                }
+                else
+                {
+                    playerDetails.menu = currentMenu.command;
+                }
                 playerDetails.index = invManager.currentIndex;
                 enterState(playerDetails);
                 menuManager.ShowDetails();
@@ -9235,11 +10500,11 @@ public class ManagerScript : EventRunner
                     return;
                 if (skill.GetType() == typeof(WeaponScript))
                 {
-                    prompt.text.text = objName + " learned a new basic attack. Go to equip attack?";
+                    prompt.text.text = objName + " learned a new Strike. Go to equip attack?";
                 }
                 else if (skill.GetType() == typeof(ArmorScript))
                 {
-                    prompt.text.text = objName + " learned a new ward spell. Go to equip ward?";
+                    prompt.text.text = objName + " learned a new Barrier spell. Go to equip Barrier?";
                 }
                 else
                 {
@@ -9387,6 +10652,24 @@ public class ManagerScript : EventRunner
                             }
                             break;
                         case 3:
+                            if (player.current.INVENTORY.WEAPONS.Count < 6)
+                            {
+
+                                player.current.INVENTORY.WEAPONS.Add((WeaponScript)shopScreen.SELECTED.refItem);
+
+                                player.current.PHYSICAL_SLOTS.SKILLS.Remove((CommandSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.CSKILLS.Remove((CommandSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.SKILLS.Remove((CommandSkill)shopScreen.REMOVING.refItem);
+
+                                SHOPLIST.Remove(shopScreen.SELECTED.refItem);
+
+                                shopScreen.SHOPITEMS = SHOPLIST;
+                                shopScreen.PreviousMenu();
+                                shopScreen.PreviousMenu();
+                                shopScreen.loadShopList();
+                            }
+                            break;
+                        case 4:
                             if (player.current.AUTO_SLOTS.CanAdd())
                             {
 
@@ -9404,7 +10687,7 @@ public class ManagerScript : EventRunner
                                 shopScreen.loadShopList();
                             }
                             break;
-                        case 4:
+                        case 5:
                             if (player.current.PASSIVE_SLOTS.CanAdd())
                             {
 
@@ -9422,7 +10705,7 @@ public class ManagerScript : EventRunner
                             }
 
                             break;
-                        case 5:
+                        case 6:
                             player.current.INVENTORY.OPPS.Add((OppSkill)shopScreen.SELECTED.refItem);
                             player.current.OPP_SLOTS.SKILLS.Remove((OppSkill)shopScreen.REMOVING.refItem);
                             player.current.INVENTORY.OPPS.Remove((OppSkill)shopScreen.REMOVING.refItem);

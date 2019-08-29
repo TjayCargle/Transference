@@ -20,6 +20,7 @@ public class GridObject : MonoBehaviour
     [SerializeField]
    protected Sprite faceSprite = null;
     public int MapIndex = -1;
+    public int id = -1;
     public virtual string NAME
     {
         get { return FullName; }

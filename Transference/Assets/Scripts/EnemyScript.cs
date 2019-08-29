@@ -4,20 +4,29 @@ using UnityEngine;
 
 public class EnemyScript : LivingObject
 {
-
-    public List<GridObject> potentialTargets;
+    public EPType personality;
+    GridObject atkTarget = null;
     //public Queue<TileScript> currentPath;
     public bool isPerforming = false;
     public LivingObject currentEnemy;
     public int headCount = 0;
     public int psudeoActions = 0;
-    public Vector3 calcLocation;
+
     // TileScript targetTile;
     ManagerScript manager;
     public TileScript nextTile;
     private float internalTimer = 1.0f;
     [SerializeField]
     path currentPath;
+    private bool waiting = false;
+    private List<AtkContainer> possibleAttacks = new List<AtkContainer>();
+    private List<CommandSkill> reflectedSkills = new List<CommandSkill>();
+    private List<ItemContainer> possibleItems = new List<ItemContainer>();
+    public List<string> atkNames = new List<string>();
+    private int chosen = -1;
+    public DmgReaction lastReaction;
+    private AtkContainer lastAttack;
+    private List<GridObject> adjacentObjects = new List<GridObject>();
     public void MoveStart(Object checkPath)
     {
         path apath = checkPath as path;
@@ -36,6 +45,25 @@ public class EnemyScript : LivingObject
         myManager.myCamera.UpdateCamera();
 
     }
+    public void ItemStart()
+    {
+        internalTimer = 1.0f;
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
+        myManager.myCamera.UpdateCamera();
+
+    }
+    public override void Setup()
+    {
+        if (!isSetup)
+        {
+            base.Setup();
+
+            manager = GameObject.FindObjectOfType<ManagerScript>();
+            //currentPath = new Queue<TileScript>();
+            isSetup = true;
+        }
+    }
+
     public bool MoveEvent(Object target)
     {
         if (internalTimer >= 0)
@@ -78,7 +106,7 @@ public class EnemyScript : LivingObject
         else
         {
             directionVector = nextTile.transform.position;
-            directionVector.y = 0.5f;
+            directionVector.y = nextTile.transform.position.y + 0.5f;
             transform.position = directionVector;
         }
 
@@ -108,20 +136,28 @@ public class EnemyScript : LivingObject
         myManager.myCamera.currentTile = currentTile;
         return isDone;
     }
-    public override void Setup()
+    public  bool EWaitEvent(Object target)
     {
-        if (!isSetup)
-        {
-            base.Setup();
-            potentialTargets = new List<GridObject>();
-            manager = GameObject.FindObjectOfType<ManagerScript>();
-            //currentPath = new Queue<TileScript>();
-            isSetup = true;
-        }
+
+        bool isDone = true;
+
+        Wait();
+        TakeRealAction();
+
+        return isDone;
     }
-
-
-
+    public bool RunAwayEvent(Object target)
+    {
+        if (!DEAD)
+        {
+            DEAD = true;
+            myManager.gridObjects.Remove(this);
+            Wait();
+            this.Die();
+        }
+        TakeRealAction();
+        return true;
+    }
     public bool EAtkEvent(Object target)
     {
         if (internalTimer >= 0)
@@ -134,7 +170,7 @@ public class EnemyScript : LivingObject
         if (ACTIONS > 0)
         {
             //myManager.MoveCameraAndShow(this);
-            LivingObject realTarget = target as LivingObject;
+            // LivingObject realTarget = target as LivingObject;
             if (SSTATUS == SecondaryStatus.confusion)
             {
                 int chance = Random.Range(0, 2);
@@ -146,27 +182,60 @@ public class EnemyScript : LivingObject
                     {
                         manager.log.Log(FullName + " hit themselves ");
                     }
-                    realTarget = this;
+                    atkTarget = this;
+
                 }
             }
 
-            DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
+            DmgReaction bestReaction = DetermineBestDmgOutput();
+            lastReaction = bestReaction;
             manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
             if (manager.log)
             {
-                manager.log.Log(FullName + " used " + bestReaction.atkName);
+                manager.log.Log("<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + FullName + "></color> used " + bestReaction.atkName);
             }
-            myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
-            myManager.myCamera.infoObject = realTarget;
+
+            if (bestReaction.usedSkill != null)
+            {
+                for (int i = 0; i < bestReaction.usedSkill.HITS; i++)
+                {
+                    if (i == 0)
+                        myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement,lastAttack.command);
+                    else
+                    {
+                        if (lastAttack == null)
+                        {
+                            Debug.Log("last attack null in enemey");
+
+                        }
+                        DmgReaction secondReaction = myManager.CalcDamage(lastAttack);
+                        myManager.ApplyReaction(this, atkTarget, secondReaction, secondReaction.dmgElement);
+                    }
+
+                }
+            }
+            else
+            {
+                myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement);
+            }
+            myManager.myCamera.infoObject = atkTarget;
             myManager.myCamera.UpdateCamera();
             if (bestReaction.reaction != Reaction.missed)
             {
-                AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
                 conatiner.attackingObject = this;
-                conatiner.dmgObject = realTarget;
+                conatiner.dmgObject = atkTarget;
                 conatiner.attackingElement = bestReaction.dmgElement;
+                //Debug.Log("checkin real" + atkTarget);
                 myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
+            }
+            if (bestReaction.reaction >= Reaction.nulled && bestReaction.reaction <= Reaction.absorb)
+            {
+                if (!reflectedSkills.Contains(bestReaction.usedSkill))
+                {
+                    reflectedSkills.Add(bestReaction.usedSkill);
+                }
             }
             //  Debug.Log(FullName + " used " + bestReaction.atkName);
 
@@ -175,7 +244,31 @@ public class EnemyScript : LivingObject
         }
         return isDone;
     }
+    public bool UseItemEvent(Object target)
+    {
+        if (internalTimer >= 0)
+        {
+            internalTimer -= 0.02f;
+            return false;
+        }
+        bool isDone = true;
 
+        if (possibleItems.Count > 0)
+        {
+            ItemScript usingItem = possibleItems[0].item;
+            if (possibleItems[0].item.useItem(possibleItems[0].target, this))
+            {
+                this.INVENTORY.ITEMS.Remove(usingItem);
+                this.INVENTORY.USEABLES.Remove(usingItem);
+            }
+        }
+        else
+        {
+            Debug.Log("possibleItems are 0....");
+        }
+        TakeRealAction();
+        return isDone;
+    }
     public Queue<TileScript> DeterminePath(path pathTarget)
     {
         float timer = Time.deltaTime;
@@ -212,7 +305,7 @@ public class EnemyScript : LivingObject
 
                             if (manager.GetObjectAtTile(checkTile))
                             {
-                                if (manager.GetObjectAtTile(checkTile).FACTION == Faction.enemy)
+                                if (manager.GetObjectAtTile(checkTile).FACTION == this.FACTION)
                                 {
                                     GridObject living = manager.GetObjectAtTile(checkTile);
                                     if (Vector3.Distance(pathTarget.realTarget.transform.position, checkTile.transform.position) < Vector3.Distance(pathTarget.realTarget.transform.position, current.transform.position))
@@ -261,34 +354,396 @@ public class EnemyScript : LivingObject
 
         return pathTarget.currentPath;
     }
-    public int DetermineEnemiesInRange(Vector3 location)
+    public bool FindEnemiesInRangeOfAttacks(Vector3 location)
     {
-        int count = 0;
-        LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
-        for (int i = 0; i < objects.Length; i++)
-        {
-            if (objects[i].FACTION != Faction.enemy)
-            {
-                if (!objects[i].DEAD)
-                {
+        bool foundEnemy = false;
 
-                    if (Vector3.Distance(location, objects[i].transform.position) <= Atk_DIST)
+        LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
+        int skip = -1;
+        int consider = -1;
+        if (personality == EPType.support)
+        {
+            for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
+            {
+                CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                {
+                    if (!INVENTORY.BUFFS.Contains(possibleSkill))
                     {
-                        count++;
+                        foundEnemy = true;
+                        AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                        conatiner.alteration = possibleSkill.REACTION;
+                        conatiner.attackingElement = possibleSkill.ELEMENT;
+                        conatiner.attackType = possibleSkill.ETYPE;
+                        conatiner.attackingObject = this;
+                        conatiner.dmgObject = this;
+                        conatiner.command = possibleSkill;
+                        conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                        possibleAttacks.Add(conatiner);
+                        atkNames.Add(possibleSkill.NAME + " " + this.NAME);
+
                     }
                 }
             }
         }
-        return count;
+        for (int i = 0; i < objects.Length; i++)
+        {
+            if (personality == EPType.finisher)
+            {
+                if (atkTarget)
+                {
+                    if (atkTarget.DEAD != true)
+                    {
+
+                        if (objects[i] != atkTarget)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            if (objects[i].FACTION != this.FACTION)
+            {
+                if (!objects[i].DEAD)
+                {
+                    if (personality == EPType.mystical || personality == EPType.tactical || personality == EPType.support)
+                    {
+                        consider = Random.Range(0, 3);
+                        if (consider != 0)
+                        {
+                            skip = 0;
+                            // Debug.Log("should skip basic");
+                        }
+                    }
+                    if (reflectedSkills.Contains(null))
+                    {
+                        skip = 0;
+                    }
+                    if (skip != 0)
+                    {
+                        if (Vector3.Distance(location, objects[i].transform.position) == Atk_DIST)
+                        {
+                            foundEnemy = true;
+                            AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                            conatiner.dmgObject = objects[i];
+                            conatiner.command = null;
+
+
+                            conatiner.alteration = Reaction.none; //atkReaction;
+                            conatiner.attackingElement = WEAPON.ELEMENT;
+                            conatiner.attackType = WEAPON.ATTACK_TYPE;
+                            conatiner.attackingObject = this;
+
+                            conatiner.dmg = WEAPON.ATTACK;
+
+
+
+                            possibleAttacks.Add(conatiner);
+                            atkNames.Add(WEAPON.NAME + " " + objects[i].NAME);
+                            // potentialTargets.Add(objects[i]);
+                        }
+                    }
+                    for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
+                    {
+                        CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                        if (reflectedSkills.Contains(possibleSkill))
+                        {
+                            continue;
+                        }
+
+                        if (objects[i].GetComponent<HazardScript>())
+                        {
+                            if (possibleSkill.ELEMENT == Element.Buff)
+                            {
+                                continue;
+                            }
+                        }
+                        if (personality == EPType.support)
+                        {
+                            if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                            {
+                                continue;
+                            }
+
+                            if (possibleSkill.ELEMENT != Element.Buff)
+                            {
+                                consider = Random.Range(0, 3);
+                                if (consider != 0)
+                                {
+
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                if (objects[i].INVENTORY.BUFFS.Contains(possibleSkill))
+                                {
+                                    continue;
+                                }
+                                if (objects[i].INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                {
+                                    continue;
+                                }
+
+                            }
+                        }
+                        else if (possibleSkill.ETYPE == EType.magical)
+                        {
+                            if (personality == EPType.forceful || personality == EPType.tactical)
+                            {
+                                consider = Random.Range(0, 3);
+                                if (consider != 0)
+                                {
+                                    //Debug.Log("should skip magic");
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (personality == EPType.forceful || personality == EPType.mystical)
+                            {
+                                consider = Random.Range(0, 3);
+                                if (consider != 0)
+                                {
+                                    //Debug.Log("should skip skill");
+                                    continue;
+                                }
+                            }
+                        }
+                        if (possibleSkill.CanUse())
+                        {
+                            if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                            {
+                                if (!INVENTORY.BUFFS.Contains(possibleSkill))
+                                {
+                                    foundEnemy = true;
+                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                    conatiner.alteration = possibleSkill.REACTION;
+                                    conatiner.attackingElement = possibleSkill.ELEMENT;
+                                    conatiner.attackType = possibleSkill.ETYPE;
+                                    conatiner.attackingObject = this;
+                                    conatiner.dmgObject = this;
+                                    conatiner.command = possibleSkill;
+                                    conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                                    possibleAttacks.Add(conatiner);
+                                    atkNames.Add(possibleSkill.NAME + " " + this.NAME);
+
+                                }
+                            }
+                            else
+                            {
+                                List<TileScript> skilltiles = myManager.GetSkillAttackableTilesOneList(this, possibleSkill);
+
+                                if (skilltiles.Contains(objects[i].currentTile))
+                                {
+
+                                    foundEnemy = true;
+                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                    conatiner.alteration = possibleSkill.REACTION;
+                                    conatiner.attackingElement = possibleSkill.ELEMENT;
+                                    conatiner.attackType = possibleSkill.ETYPE;
+                                    conatiner.attackingObject = this;
+                                    conatiner.dmgObject = objects[i];
+                                    conatiner.command = possibleSkill;
+                                    conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                                    possibleAttacks.Add(conatiner);
+                                    atkNames.Add(possibleSkill.NAME + " " + objects[i].NAME);
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        return foundEnemy;
+    }
+    public bool FoundItemsCanUse()
+    {
+        bool found = false;
+
+        for (int i = 0; i < INVENTORY.ITEMS.Count; i++)
+        {
+
+            switch (INVENTORY.ITEMS[i].ITYPE)
+            {
+                case ItemType.healthPotion:
+                    {
+                        if (HEALTH < MAX_HEALTH)
+                        {
+                            ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                            container.item = INVENTORY.ITEMS[i];
+                            container.target = this;
+                            possibleItems.Add(container);
+                            found = true;
+                        }
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION == this.FACTION && adjacentObjects[j].GetComponent<EnemyScript>())
+                            {
+                                EnemyScript fellowEnemy = adjacentObjects[j] as EnemyScript;
+                                if (fellowEnemy.HEALTH < fellowEnemy.MAX_HEALTH)
+                                {
+                                    ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                    container.item = INVENTORY.ITEMS[i];
+                                    container.target = this;
+                                    possibleItems.Add(container);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.manaPotion:
+                    {
+                        if (MANA < MAX_MANA)
+                        {
+                            ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                            container.item = INVENTORY.ITEMS[i];
+                            container.target = this;
+                            possibleItems.Add(container);
+                            found = true;
+                        }
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION == this.FACTION && adjacentObjects[j].GetComponent<EnemyScript>())
+                            {
+                                EnemyScript fellowEnemy = adjacentObjects[j] as EnemyScript;
+                                if (fellowEnemy.MANA < fellowEnemy.MAX_MANA)
+                                {
+                                    ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                    container.item = INVENTORY.ITEMS[i];
+                                    container.target = this;
+                                    possibleItems.Add(container);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.fatiguePotion:
+                    {
+                        if (FATIGUE > 0)
+                        {
+                            ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                            container.item = INVENTORY.ITEMS[i];
+                            container.target = this;
+                            possibleItems.Add(container);
+                            found = true;
+                        }
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION == this.FACTION && adjacentObjects[j].GetComponent<EnemyScript>())
+                            {
+                                EnemyScript fellowEnemy = adjacentObjects[j] as EnemyScript;
+                                if (fellowEnemy.FATIGUE > 0)
+                                {
+                                    ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                    container.item = INVENTORY.ITEMS[i];
+                                    container.target = this;
+                                    possibleItems.Add(container);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.cure:
+                    break;
+                case ItemType.buff:
+                    break;
+                case ItemType.dmg:
+                    {
+
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION != this.FACTION)
+                            {
+                                ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                container.item = INVENTORY.ITEMS[i];
+                                container.target = adjacentObjects[j];
+                                possibleItems.Add(container);
+                                found = true;
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.actionBoost:
+                    {
+                        if (ACTIONS > 0)
+                        {
+                            ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                            container.item = INVENTORY.ITEMS[i];
+                            container.target = this;
+                            possibleItems.Add(container);
+                            found = true;
+                        }
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION == this.FACTION && adjacentObjects[j].GetComponent<EnemyScript>())
+                            {
+                                EnemyScript fellowEnemy = adjacentObjects[j] as EnemyScript;
+                                if (fellowEnemy.ACTIONS > 0)
+                                {
+                                    ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                    container.item = INVENTORY.ITEMS[i];
+                                    container.target = this;
+                                    possibleItems.Add(container);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.random:
+                    {
+                        if (ACTIONS > 0)
+                        {
+                            ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                            container.item = INVENTORY.ITEMS[i];
+                            container.target = this;
+                            possibleItems.Add(container);
+                            found = true;
+                        }
+                        for (int j = 0; j < adjacentObjects.Count; j++)
+                        {
+                            if (adjacentObjects[j].FACTION == this.FACTION && adjacentObjects[j].GetComponent<EnemyScript>())
+                            {
+                                EnemyScript fellowEnemy = adjacentObjects[j] as EnemyScript;
+                                if (fellowEnemy.ACTIONS > 0)
+                                {
+                                    ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                    container.item = INVENTORY.ITEMS[i];
+                                    container.target = this;
+                                    possibleItems.Add(container);
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+            }
+        }
+
+        return found;
     }
     public TileScript DetermineMoveLocation(TileScript targetTile)
     {
         //Debug.Log(FullName + " " + calcLocation.ToString());
         TileScript newTile = null;
-        List<TileScript> myTiles = myManager.GetMoveAbleTiles(calcLocation, MOVE_DIST, this);
+        List<TileScript> myTiles = myManager.GetMoveAbleTiles(transform.position, MOVE_DIST, this);
         for (int i = 0; i < myTiles.Count; i++)
         {
-
+            if (myTiles[i] == targetTile)
+            {
+                return targetTile;
+            }
             if (newTile == null)
             {
                 newTile = myTiles[i];
@@ -312,6 +767,33 @@ public class EnemyScript : LivingObject
 
         return newTile;
     }
+    public TileScript FindNearestDoorTile()
+    {
+        TileScript returnTile = null;
+
+        List<TileScript> tiles = myManager.tileMap;
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (tiles[i].TTYPE == TileType.door)
+            {
+                if (returnTile == null)
+                {
+                    returnTile = tiles[i];
+                }
+                else
+                {
+                    float dist1 = Vector3.Distance(returnTile.transform.position, transform.position);
+                    float dist2 = Vector3.Distance(tiles[i].transform.position, transform.position);
+                    if (dist2 < dist1)
+                    {
+                        returnTile = tiles[i];
+                    }
+                }
+            }
+        }
+
+        return returnTile;
+    }
     public LivingObject FindNearestEnemy()
     {
         // Debug.Log(FullName + " is finding near enemies");
@@ -322,7 +804,7 @@ public class EnemyScript : LivingObject
             //if(objects[i].GetComponent<LivingObject>())
             {
                 LivingObject living = objects[i];//.GetComponent<LivingObject>();
-                if (living.FACTION != Faction.enemy)
+                if (living.FACTION != this.FACTION)
                 {
                     if (!living.DEAD)
                     {
@@ -333,8 +815,8 @@ public class EnemyScript : LivingObject
                         }
                         else
                         {
-                            float dist1 = Vector3.Distance(newTarget.transform.position, calcLocation);// Mathf.Sqrt(Mathf.Abs(newTarget.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
-                            float dist2 = Vector3.Distance(living.transform.position, calcLocation); //Mathf.Sqrt(Mathf.Abs(living.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
+                            float dist1 = Vector3.Distance(newTarget.transform.position, transform.position);// Mathf.Sqrt(Mathf.Abs(newTarget.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
+                            float dist2 = Vector3.Distance(living.transform.position, transform.position); //Mathf.Sqrt(Mathf.Abs(living.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
                             if (dist2 < dist1)
                             {
                                 newTarget = living;
@@ -346,184 +828,495 @@ public class EnemyScript : LivingObject
         }
         return newTarget;
     }
-    public DmgReaction DetermineBestDmgOutput(LivingObject target, bool checkdistance = true)
+    public DmgReaction DetermineBestDmgOutput()
     {
-        DmgReaction bestReaction = myManager.CalcDamage(this, target, WEAPON);
-        bestReaction.atkName = WEAPON.NAME;
-        bestReaction.dmgElement = WEAPON.AFINITY;
-        CommandSkill usedSkill = null;
-        EHitType currHit = target.ARMOR.HITLIST[(int)WEAPON.AFINITY];
-        float modification = 1.0f;
-        for (int j = 0; j < PHYSICAL_SLOTS.SKILLS.Count; j++)
+        //     Debug.Log("determing atk from " + possibleAttacks.Count);
+        DmgReaction bestReaction;
+        List<int> attackOptions = new List<int>();
+        for (int i = 0; i < possibleAttacks.Count; i++)
         {
-            CommandSkill skill = PHYSICAL_SLOTS.SKILLS[j] as CommandSkill;
-            if (skill.ELEMENT != Element.Buff)
+            attackOptions.Add(i);
+            DmgReaction aReaction = myManager.CalcDamage(possibleAttacks[i], false);
+            if (aReaction.reaction <= Reaction.weak && aReaction.reaction >= Reaction.leathal)
             {
-                if (skill.ETYPE == EType.magical)
-                    modification = STATS.SPCHANGE;
-                if (skill.ETYPE == EType.physical)
+                attackOptions.Add(i);
+            }
+            if (possibleAttacks[i].command != null)
+            {
+                CommandSkill usableskill = possibleAttacks[i].command;
+                if (usableskill.HITS > 1 || usableskill.MAX_HIT > 1)
                 {
-                    if (skill.COST > 0)
-                    {
-                        modification = STATS.FTCHARGECHANGE;
-                    }
-                    else
-                    {
-                        modification = STATS.FTCOSTCHANGE;
-                    }
+                    attackOptions.Add(i);
                 }
-                if (skill.CanUse(modification))
+                if (usableskill.ETYPE == EType.magical)
                 {
-                    bool inrange = false;
-                    if (checkdistance)
+                    if (MAGIC > STRENGTH)
                     {
-                        inrange = (Vector3.Distance(target.transform.position, calcLocation) <= skill.TILES.Count);
+                        attackOptions.Add(i);
                     }
-                    else
+                    if (MAGIC > possibleAttacks[i].dmgObject.BASE_STATS.RESIESTANCE)
                     {
-                        inrange = true;
+                        attackOptions.Add(i);
                     }
-                    if (inrange)// Mathf.Sqrt(Mathf.Abs(newTarget.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
+
+                }
+                else
+                {
+                    if (STRENGTH > MAGIC)
                     {
-
-                        DmgReaction aReaction = myManager.CalcDamage(this, target, skill, skill.REACTION);
-                        aReaction.dmgElement = skill.ELEMENT;
-
-                        if (aReaction.damage > bestReaction.damage)
-                        {
-                            bestReaction = aReaction;
-                            bestReaction.atkName = skill.NAME;
-                            usedSkill = skill;
-
-                            if (usedSkill.ETYPE == EType.magical)
-                                modification = STATS.SPCHANGE;
-                            if (usedSkill.ETYPE == EType.physical)
-                            {
-                                if (usedSkill.COST > 0)
-                                {
-                                    modification = STATS.FTCHARGECHANGE;
-                                }
-                                else
-                                {
-                                    modification = STATS.FTCOSTCHANGE;
-                                }
-                            }
-                        }
-                        if ((int)target.ARMOR.HITLIST[(int)skill.ELEMENT] > (int)currHit)
-                        {
-                            bestReaction = aReaction;
-                            bestReaction.atkName = skill.NAME;
-                        }
+                        attackOptions.Add(i);
+                    }
+                    if (STRENGTH > possibleAttacks[i].dmgObject.BASE_STATS.DEFENSE)
+                    {
+                        attackOptions.Add(i);
                     }
                 }
             }
+
         }
-        if (usedSkill)
+        //   Debug.Log("concluded options " + attackOptions.Count);
+        if (attackOptions.Count > 0)
         {
-            usedSkill.UseSkill(this, modification);
+
+            chosen = Random.Range(0, attackOptions.Count);
+            AtkContainer chosenContainer = possibleAttacks[attackOptions[chosen]];
+            bestReaction = myManager.CalcDamage(chosenContainer);
+            chosen = attackOptions[chosen];
+            atkTarget = chosenContainer.dmgObject;
+            if (chosenContainer.command)
+            {
+                bestReaction.atkName = chosenContainer.command.NAME;
+                bestReaction.usedSkill = chosenContainer.command;
+
+                chosenContainer.command.UseSkill(this);
+                bestReaction.dmgElement = chosenContainer.command.ELEMENT;
+
+            }
+            else
+            {
+                bestReaction.usedSkill = null;
+                bestReaction.atkName = WEAPON.NAME;
+                bestReaction.dmgElement = WEAPON.ELEMENT;
+            }
+            lastAttack = chosenContainer;
         }
+        else
+        {
+           // Debug.Log("basic atk");
+            bestReaction = myManager.CalcDamage(this, atkTarget, WEAPON, Reaction.none, false);
+            lastAttack = null;
+        }
+
         return bestReaction;
     }
-    public void DetermineActions()
+    private void LoadAdjacentObjects()
     {
-        isPerforming = true;
-        //  Debug.Log(FullName + " is Determining actions");
+        TileScript origin = currentTile;
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+        v1.z += 1;
 
+        v2.x += 1;
 
-        psudeoActions = ACTIONS;
-        calcLocation = transform.position;
-        if (psudeoActions == 0)
+        v3.z -= 1;
+
+        v4.x -= 1;
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
         {
-            //   TakeAction();
-        }
-        List<EActType> etypes = new List<EActType>();
-        List<path> possiblePaths = new List<path>();
-        LivingObject liveObj = null;
-        for (int i = 0; i < psudeoActions; i++)
-        {
-            //if (HEALTH > HEALTH * 0.5)
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
             {
-                // Debug.Log(FullName + " performing action " + i);
+                GridObject griddy = null;
 
-                liveObj = FindNearestEnemy();
-                if (liveObj)
+                if (griddy = myManager.GetObjectAtTile(myManager.tileMap[index]))
                 {
-                    int amount = DetermineEnemiesInRange(calcLocation);
-                    if (amount == 0)
+                    adjacentObjects.Add(griddy);
+                }
+            }
+        }
+    }
+    private void PrepareMoveEvent(TileScript targetTile)
+    {
+
+        if (targetTile)
+        {
+            if (myManager.eventManager)
+            {
+                //calcLocation = targetTile.transform.position;
+                //calcLocation.y = 0.5f;
+
+                path p = ScriptableObject.CreateInstance<path>();
+                p.realTarget = targetTile;
+                p.currentPath = new Queue<TileScript>();
+                myManager.CreateEvent(this, p, "" + FullName + "move event ", MoveEvent, null, 0, MoveStart);
+
+            }
+            else
+            {
+                Debug.Log("Could not find event manager");
+            }
+        }
+        else
+        {
+            Debug.Log("No target tile, waiting...");
+            waiting = true;
+            myManager.CreateEvent(this, null, "" + FullName + "wait event ", EWaitEvent);
+        }
+    }
+    public bool DetermineNextAction(Object target)
+    {
+        if(DEAD)
+        {
+            return true;
+        }
+        adjacentObjects.Clear();
+        possibleItems.Clear();
+        possibleAttacks.Clear();
+        atkNames.Clear();
+        LivingObject liveObj = null;
+        LoadAdjacentObjects();
+        liveObj = FindNearestEnemy();
+        //if enemies exist
+        if (waiting)
+        {
+            TakeRealAction();
+            return true;
+        }
+        if (liveObj)
+        {
+            //  atkTarget = liveObj;
+            if (personality == EPType.scared)
+            {
+                TileScript targetTile = FindNearestDoorTile();
+                if (currentTile != targetTile)
+                {
+                    targetTile = DetermineMoveLocation(targetTile);
+                    PrepareMoveEvent(targetTile);
+                }
+                else
+                {
+                    myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
+                }
+                return true;
+            }
+            bool found = FindEnemiesInRangeOfAttacks(transform.position);
+            bool foundItems = FoundItemsCanUse();
+            if (found == false)
+            {
+
+                if (reflectedSkills.Count >= 1 && personality != EPType.scared)
+                {
+                    personality = EPType.scared;
+                }
+                if (personality == EPType.scared)
+                {
+                    TileScript targetTile = FindNearestDoorTile();
+                    if (currentTile != targetTile)
                     {
-                        TileScript targetTile = new TileScript();
-                        currentEnemy = liveObj;
-                        targetTile = DetermineMoveLocation(liveObj.currentTile);
-
-                        if (targetTile)
-                        {
-                            if (myManager.eventManager)
-                            {
-                                calcLocation = targetTile.transform.position;
-                                calcLocation.y = 0.5f;
-
-                                path p = ScriptableObject.CreateInstance<path>();
-                                p.realTarget = targetTile;
-                                p.currentPath = new Queue<TileScript>();
-                                //myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                                //myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent,null,0);
-                                etypes.Add(EActType.move);
-                                possiblePaths.Add(p);
-                            }
-                            else
-                            {
-                                Debug.Log("Could not find event manager");
-                            }
-                        }
-                        else
-                        {
-                            Debug.Log("No target tile, waiting...");
-                            Wait();
-                        }
-
+                        targetTile = DetermineMoveLocation(targetTile);
+                        PrepareMoveEvent(targetTile);
                     }
                     else
                     {
-                        //        Debug.Log("Doing an attack event");
-                        //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
-                        etypes.Insert(0, EActType.atk);
-                        //   TakeAction();
+                        myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
                     }
                 }
                 else
                 {
-                    // TakeAction();
 
-                    isPerforming = false;
-                    Wait();
+                    //move
+
+                    currentEnemy = liveObj;
+                    TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                    PrepareMoveEvent(targetTile);
                 }
             }
-        }
-        int pathNum = possiblePaths.Count - 1;
-        for (int i = 0; i < etypes.Count; i++)
-        {
-            switch (etypes[i])
+            else
             {
-                case EActType.move:
-                    //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, possiblePaths[pathNum], "" + FullName + "move event " + i, MoveEvent, null, 0, MoveStart);
-                    pathNum--;
-                    break;
+                switch (personality)
+                {
+                    case EPType.aggro:
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        break;
 
-                case EActType.atk:
-                    // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, AttackStart, 0);
-                    break;
+                    case EPType.tactical:
+                        {
+                            if (HEALTH > (MAX_HEALTH * 0.5f) && FATIGUE < (MAX_FATIGUE * 0.9f))
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                            }
+                            else if (foundItems == true)
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                            }
+                            else
+                            {
+                                waiting = true;
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                            }
+                        }
+                        break;
+                    case EPType.mystical:
+                        if (MANA >= 5)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        else if (foundItems == true)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                        }
+                        else
+                        {
+                            waiting = true;
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                        }
+                        break;
+                    case EPType.forceful:
+                        if (HEALTH > (MAX_HEALTH * 0.5f))
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        else if (foundItems == true)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                        }
+                        else
+                        {
+                            waiting = true;
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                        }
+                        break;
+                    case EPType.itemist:
+                        if (foundItems == true)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                        }
+                        else
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        break;
+                    case EPType.optimal:
+                        {
+                            if (adjacentObjects.Count > 0)
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                            }
+                            else if (myManager.liveEnemies.Count > 1)
+                            {
+                                for (int i = 0; i < myManager.liveEnemies.Count; i++)
+                                {
+                                    if (myManager.liveEnemies[i] != this)
+                                    {
+                                        TileScript targetAllyTile = myManager.liveEnemies[i].currentTile;
+                                        PrepareMoveEvent(targetAllyTile);
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (foundItems == true)
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                            }
+                            else
+                            {
+
+                                personality = EPType.scared;
+
+                                if (personality == EPType.scared)
+                                {
+                                    TileScript targetTile = FindNearestDoorTile();
+                                    if (currentTile != targetTile)
+                                    {
+                                        targetTile = DetermineMoveLocation(targetTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                    else
+                                    {
+                                        myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case EPType.finisher:
+                        {
+                            if (foundItems == true)
+                            {
+                                for (int i = 0; i < possibleItems.Count; i++)
+                                {
+                                    if (possibleItems[i].item.ITYPE == ItemType.dmg)
+                                    {
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                            }
+
+                        }
+                        break;
+                    case EPType.biologist:
+                        if (MANA >= 5)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        else if (foundItems == true)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                        }
+                        else
+                        {
+                            waiting = true;
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                        }
+                        break;
+                    case EPType.support:
+                        if (MANA >= 5)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        else if (foundItems == true)
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                        }
+                        else
+                        {
+                            waiting = true;
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                        }
+                        break;
 
 
+                    default:
+                        {
+                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                        }
+                        break;
+
+                }
 
             }
         }
+        return true;
+    }
+    public void DetermineActions()
+    {
+        if(DEAD)
+        {
+            return;
+        }
+        isPerforming = true;
+        //  Debug.Log(FullName + " is Determining actions");
+
+        waiting = false;
+        psudeoActions = ACTIONS;
+
+        if (psudeoActions == 0)
+        {
+            //   TakeAction();
+        }
+        //  List<EActType> etypes = new List<EActType>();
+        //  List<path> possiblePaths = new List<path>();
+        //  LivingObject liveObj = null;
+        for (int i = 0; i < psudeoActions; i++)
+        {
+            myManager.CreateEvent(this, null, "" + FullName + "determine action event " + i, DetermineNextAction, null, 0);
+            //if (HEALTH > HEALTH * 0.5)
+            // {
+            // Debug.Log(FullName + " performing action " + i);
+
+            //    liveObj = FindNearestEnemy();
+            //    if (liveObj)
+            //    {
+            //        bool amount = FindEnemiesInRangeOfAttacks(calcLocation);
+            //        if (amount == false)
+            //        {
+            //            TileScript targetTile = new TileScript();
+            //            currentEnemy = liveObj;
+            //            targetTile = DetermineMoveLocation(liveObj.currentTile);
+
+            //            if (targetTile)
+            //            {
+            //                if (myManager.eventManager)
+            //                {
+            //                    calcLocation = targetTile.transform.position;
+            //                    calcLocation.y = 0.5f;
+
+            //                    path p = ScriptableObject.CreateInstance<path>();
+            //                    p.realTarget = targetTile;
+            //                    p.currentPath = new Queue<TileScript>();
+            //                    //myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
+            //                    //myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent,null,0);
+            //                    etypes.Add(EActType.move);
+            //                    possiblePaths.Add(p);
+            //                }
+            //                else
+            //                {
+            //                    Debug.Log("Could not find event manager");
+            //                }
+            //            }
+            //            else
+            //            {
+            //                Debug.Log("No target tile, waiting...");
+            //                Wait();
+            //            }
+
+            //        }
+            //        else
+            //        {
+            //            //        Debug.Log("Doing an attack event");
+            //            //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
+            //            etypes.Insert(0, EActType.atk);
+            //            //   TakeAction();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // TakeAction();
+
+            //        isPerforming = false;
+            //        Wait();
+            //    }
+            //}
+        }
+        //int pathNum = possiblePaths.Count - 1;
+        //for (int i = 0; i < etypes.Count; i++)
+        //{
+        //    switch (etypes[i])
+        //    {
+        //        case EActType.move:
+        //            //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
+        //            myManager.CreateEvent(this, possiblePaths[pathNum], "" + FullName + "move event " + i, MoveEvent, null, 0, MoveStart);
+        //            pathNum--;
+        //            break;
+
+        //        case EActType.atk:
+        //            // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
+        //            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, AttackStart, 0);
+        //            break;
+
+
+
+        //    }
+        //}
         //   else
 
-        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
+        // myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
 
-        myManager.ShowGridObjectMoveArea(this);
+        //  myManager.ShowGridObjectMoveArea(this);
         isPerforming = false;
     }
     public override void Die()
@@ -570,9 +1363,11 @@ public class EnemyScript : LivingObject
         INVENTORY.Clear();
         PHYSICAL_SLOTS.SKILLS.Clear();
         PASSIVE_SLOTS.SKILLS.Clear();
+        MAGICAL_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
         PSTATUS = PrimaryStatus.normal;
+        reflectedSkills.Clear();
         shadow.GetComponent<AnimationScript>().Unset();
         if (GetComponent<AnimationScript>())
         {

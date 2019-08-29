@@ -22,6 +22,11 @@ public class ArmorEquip : Equipable
 
     [SerializeField]
     private float maxHealthPercent;
+
+
+    [SerializeField]
+    private int currentTurnCount = 0;
+
     public LivingObject USER
     {
         get { return owner; }
@@ -58,6 +63,24 @@ public class ArmorEquip : Equipable
         get { return equipped.INDEX; }
 
     }
+    public int TURNCOUNT
+    {
+        get { return equipped.TURNCOUNT; }
+    }
+
+    public int USECOUNT
+    {
+        get { return equipped.USECOUNT; }
+    }
+
+    public void Use()
+    {
+        if (equipped)
+        {
+            equipped.Use();
+        }
+    }
+
     public float MAX_HEALTH
     {
         get
@@ -96,10 +119,25 @@ public class ArmorEquip : Equipable
             }
         }
     }
+
+    public bool UpdateTurnCount()
+    {
+        if (equipped != owner.DEFAULT_ARMOR)
+        {
+
+            currentTurnCount--;
+            if (currentTurnCount <= 0)
+            {
+                unEquip();
+                return true;
+            }
+        }
+        return false;
+    }
     public void Equip(ArmorScript armor)
     {
         base.Equip(armor);
-
+        currentTurnCount = armor.TURNCOUNT;
         maxHealthPercent = armor.MAX_HEALTH;
         healthPercent = armor.HEALTH;
         equipped = armor;
@@ -108,7 +146,7 @@ public class ArmorEquip : Equipable
         {
             if (owner.BARRIER)
             {
-                if (ARMORID != 200)
+                if (ARMORID < 200)
                 {
 
                     owner.BARRIER.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Shields/")[ARMORID];
@@ -120,11 +158,12 @@ public class ArmorEquip : Equipable
 
     public void unEquip()
     {
-        ArmorScript noArmor = Common.noArmor;
-        noArmor.NAME = "none";
-        noArmor.HITLIST = Common.noHitList;
-        noArmor.DESC = "No armor equipped";
-        Equip(noArmor);
+        //ArmorScript noArmor = Common.noArmor;
+        //noArmor.NAME = "none";
+        //noArmor.HITLIST = Common.noHitList;
+        //noArmor.DESC = "No armor equipped";
+
+        Equip(owner.DEFAULT_ARMOR);
         if (owner)
         {
             if (owner.BARRIER)
@@ -140,7 +179,7 @@ public class ArmorEquip : Equipable
         {
             if (equipped)
             {
-                if (equipped != Common.noArmor)
+                if (equipped != owner.DEFAULT_ARMOR)
                 {
 
                     float trueAmount = amt / (float)USER.MAX_HEALTH;
@@ -148,11 +187,11 @@ public class ArmorEquip : Equipable
                     equipped.HEALTH -= trueAmount;
                     if (equipped.HEALTH <= 0)
                     {
-                        equipped.BREAKS++;
-                        if (equipped.BREAKS % 2 == 0)
-                        {
-                            equipped.LevelUP();
-                        }
+                        //equipped.BREAKS++;
+                        //if (equipped.BREAKS % 2 == 0)
+                        //{
+                        //    equipped.LevelUP();
+                        //}
                         unEquip();
                         broken = true;
                     }

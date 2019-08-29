@@ -12,6 +12,7 @@ public class DmgTextObj : MonoBehaviour
     private float time = 2;
     public bool isSetup = false;
     public ManagerScript manager;
+    public GridObject target;
     // Use this for initialization
     void Start()
     {
@@ -33,7 +34,8 @@ public class DmgTextObj : MonoBehaviour
     {
         if (isShowing == false)
         {
-            
+            if (target)
+                manager.MoveCameraAndShow(target);
             gameObject.SetActive(true);
             isShowing = true;
             time = 1.00f;

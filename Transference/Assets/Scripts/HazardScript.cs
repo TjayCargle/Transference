@@ -6,21 +6,22 @@ public class HazardScript : LivingObject
 {
 
     BaseStats myStats;
-    private bool destructible = true;
+
     public int droppedItemNum = -1;
     [SerializeField]
     public bool dropsSkill = false;
-
+    [SerializeField]
+    private HazardType htype = HazardType.attacker;
     public int REWARD
     {
         get { return droppedItemNum; }
         set { droppedItemNum = value; }
     }
 
-    public bool DESTRUCTIBLE
+    public HazardType HTYPE
     {
-        get { return destructible; }
-        set { destructible = value; }
+        get { return htype; }
+        set { htype = value; }
     }
     public bool isPerforming = false;
 
@@ -32,8 +33,9 @@ public class HazardScript : LivingObject
             base.Setup();
             BASE_STATS.MANA = 0;
             BASE_STATS.MAX_MANA = 0;
+            BASE_STATS.MAX_FATIGUE = 0;
             FACTION = Faction.hazard;
-            FullName = "Glyph";
+            //FullName = "Glyph";
             isSetup = true;
         }
 
@@ -120,10 +122,11 @@ public class HazardScript : LivingObject
             myManager.myCamera.UpdateCamera();
             if (bestReaction.reaction != Reaction.missed)
             {
-                AtkConatiner conatiner = ScriptableObject.CreateInstance<AtkConatiner>();
+                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
                 conatiner.attackingObject = this;
                 conatiner.dmgObject = realTarget;
                 conatiner.attackingElement = bestReaction.dmgElement;
+                //Debug.Log("checkin real" + realTarget);
                 myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
             }
@@ -151,7 +154,7 @@ public class HazardScript : LivingObject
         {
             bestReaction = myManager.CalcDamage(this, target, WEAPON);
             bestReaction.atkName = WEAPON.NAME;
-            bestReaction.dmgElement = WEAPON.AFINITY;
+            bestReaction.dmgElement = WEAPON.ELEMENT;
         }
 
 
@@ -172,7 +175,7 @@ public class HazardScript : LivingObject
                     modification = STATS.FTCOSTCHANGE;
                 }
             }
-            usedSkill.UseSkill(this, modification);
+            //usedSkill.UseSkill(this, modification);
         }
         return bestReaction;
     }

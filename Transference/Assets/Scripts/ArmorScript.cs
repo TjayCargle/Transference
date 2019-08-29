@@ -12,6 +12,9 @@ public class ArmorScript : UsableScript
     private int mySpeed;
 
     [SerializeField]
+    private int turnCount = 2;
+
+    [SerializeField]
     private List<EHitType> hitList;
 
     //[SerializeField]
@@ -26,8 +29,7 @@ public class ArmorScript : UsableScript
     [SerializeField]
     private float maxHealthPercent = 100.0f;
     private LivingObject owner;
-    [SerializeField]
-    private int breakCount = 0;
+
 
     public List<EHitType> HITLIST
     {
@@ -55,10 +57,10 @@ public class ArmorScript : UsableScript
         get { return mySpeed; }
         set { mySpeed = value; }
     }
-    public int BREAKS
+    public int TURNCOUNT
     {
-        get { return breakCount; }
-        set { breakCount = value; }
+        get { return turnCount; }
+        set { turnCount = value; }
     }
     public float MAX_HEALTH
     {
@@ -91,33 +93,243 @@ public class ArmorScript : UsableScript
     }
     public override void LevelUP()
     {
-        base.LevelUP();
+    
         if(LEVEL < Common.MaxSkillLevel)
         {
             LEVEL++;
-            DEFENSE++;
-            RESISTANCE++;
-            SPEED++;
+            switch (LEVEL)
+            {
+
+                case 2:
+                    {
+                        DEFENSE++;
+                        TURNCOUNT++;
+                    }
+                    break;
+                case 3:
+                    {
+                        RESISTANCE++;
+                    }
+                    break;
+                case 4:
+                    {
+                        SPEED++;
+                        TURNCOUNT++;
+                    }
+                    break;
+                case 5:
+                    {
+                        DEFENSE++;
+                        RESISTANCE++;
+                        SPEED++;
+                    }
+                    break;
+                case 6:
+                    {
+                        DEFENSE+=2;
+                        TURNCOUNT++;
+                    }
+                    break;
+                case 7:
+                    {
+                        RESISTANCE+=2;
+                    }
+                    break;
+                case 8:
+                    {
+                        SPEED+=2;
+                        TURNCOUNT++;
+                    }
+                    break;
+                case 9:
+                    {
+                        DEFENSE+=2;
+                        RESISTANCE+=2;
+                        SPEED+=2;
+                    }
+                    break;
+                case 10:
+                    {
+                        DEFENSE++;
+                        RESISTANCE++;
+                        SPEED++;
+                        TURNCOUNT++;
+                    }
+                    break;
+            }
         }
     }
+
+    public void Use()
+    {
+
+        USECOUNT++;
+        if(USECOUNT % 2 == 0)
+        {
+            if(LEVEL < Common.MaxSkillLevel)
+            {
+                LevelUP();
+                UpdateDesc();
+            }
+        }
+    }
+
     public override void UpdateDesc()
     {
         base.UpdateDesc();
-        DESC = "Def +" + DEFENSE + ", Res+" + RESISTANCE + " Spd +" + SPEED;
-        for (int i = 0; i < HITLIST.Count; i++)
+        DESC = "Def +" + DEFENSE + ", Res+" + RESISTANCE + " Spd +" + SPEED + ". Changes resistances for " + TURNCOUNT + " turns.";
+        //for (int i = 0; i < HITLIST.Count; i++)
+        //{
+        //    if (HITLIST[i] != EHitType.normal)
+        //    {
+        //        if (HITLIST[i] < EHitType.normal)
+        //        {
+        //            DESC += ", " + HITLIST[i].ToString() + " " + (Element)i;
+        //        }
+        //        else
+        //        {
+        //            DESC += ", " + HITLIST[i].ToString() + " to " + (Element)i;
+        //        }
+        //    }
+        //}
+    }
+
+    public string GetCurrentLevelStats()
+    {
+        string returnedString = "";
+        if (level < Common.MaxSkillLevel)
         {
-            if (HITLIST[i] != EHitType.normal)
-            {
-                if (HITLIST[i] < EHitType.normal)
-                {
-                    DESC += ", " + HITLIST[i].ToString() + " " + (Element)i;
-                }
-                else
-                {
-                    DESC += ", " + HITLIST[i].ToString() + " to " + (Element)i;
-                }
-            }
+            returnedString = "Level " + LEVEL + "";
         }
+        else
+        {
+            returnedString = "Max Level ";
+        }
+
+        returnedString += "\n Def +" + DEFENSE.ToString() + "";
+        returnedString += "\n Res +" + (RESISTANCE) + "";
+        returnedString += "\n Spd +" + (SPEED) + "";
+        returnedString += "\n Lasts: " + (TURNCOUNT) + " turns";
+        return returnedString;
+    }
+    public string GetNextLevelStats()
+    {
+        string returnedString = "";
+        if (level + 1 < Common.MaxSkillLevel)
+        {
+            returnedString = "<color=green>Level " + (LEVEL + 1) + "</color>";
+        }
+        else if (level + 1 == Common.MaxSkillLevel)
+        {
+            returnedString = "<color=green>Max Level</color>";
+        }
+        else
+        {
+            return GetCurrentLevelStats();
+        }
+       
+
+            switch ((LEVEL + 1))
+            {
+
+                case 2:
+                    {
+                      
+                       
+                        returnedString += "\n Def +<color=green>"+ (DEFENSE + 1).ToString() + "</color>";
+                        returnedString += "\n Res +" + (RESISTANCE) + "";
+                        returnedString += "\n Spd +" + (SPEED) + "";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "</color> turns";
+                  
+                    }
+                    break;
+                case 3:
+                    {
+                       
+                        returnedString += "\n Def +" + DEFENSE.ToString() + "";
+                        returnedString += "\n Res +<color=green>" + (RESISTANCE + 1).ToString() + "</color>";
+                        returnedString += "\n Spd +" + (SPEED) + "";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "</color> turns";
+                    }
+                    break;
+                case 4:
+                    {
+                      
+                       
+                        returnedString += "\n Def +" + DEFENSE.ToString() + "";
+                        returnedString += "\n Res +" + (RESISTANCE) + "";
+                        returnedString += "\n Spd +<color=green>" + (SPEED + 1).ToString() + "</color>";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "</color> turns";
+                    }
+                    break;
+                case 5:
+                    {
+
+                      
+            
+                        returnedString += "\n Def +<color=green>" + (DEFENSE + 1).ToString() + "</color>";
+                        returnedString += "\n Res +<color=green>" + (RESISTANCE + 1).ToString() + "</color>";
+                        returnedString += "\n Spd +<color=green>" + (SPEED + 1).ToString() + "</color>";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "</color> turns";
+                    }
+                    break;
+                case 6:
+                    {
+                       
+                      
+                        returnedString += "\n Def +<color=green>" + (DEFENSE + 2).ToString() + "</color>";
+                        returnedString += "\n Res +" + (RESISTANCE) + "";
+                        returnedString += "\n Spd +" + (SPEED) + "";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "turns </color>";
+                    }
+                    break;
+                case 7:
+                    {
+                      
+                        returnedString += "\n Def +" + DEFENSE.ToString() + "";
+                        returnedString += "\n Res +<color=green>" + (RESISTANCE + 2).ToString() + "</color>";
+                        returnedString += "\n Spd +" + (SPEED) + "";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "turns </color>";
+                    }
+                    break;
+                case 8:
+                    {
+                      
+                        
+                        returnedString += "\n Def +" + DEFENSE.ToString() + "";
+                        returnedString += "\n Res +" + (RESISTANCE) + "";
+                        returnedString += "\n Spd +<color=green>" + (SPEED + 2).ToString() + "</color>";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + "turns </color>";
+                    }
+                    break;
+                case 9:
+                    {
+                       
+                       
+                       
+                        returnedString += "\n Def +<color=green>" + (DEFENSE + 2).ToString() + "</color>";
+                        returnedString += "\n Res +<color=green>" + (RESISTANCE + 2).ToString() + "</color>";
+                        returnedString += "\n Spd +<color=green>" + (SPEED + 2).ToString() + "</color>";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + " turns </color>";
+                    }
+                    break;
+                case 10:
+                    {
+                      
+                       
+                    
+                       
+                        returnedString += "\n Def +<color=green>" + (DEFENSE + 1).ToString() + "</color>";
+                        returnedString += "\n Res +<color=green>" + (RESISTANCE + 2).ToString() + "</color>";
+                        returnedString += "\n Spd +<color=green>" + (SPEED + 1).ToString() + "</color>";
+                        returnedString += "\n Lasts: <color=green>" + (TURNCOUNT + 1).ToString() + " turns </color> ";
+                    }
+                    break;
+            
+
+        }
+
+        return returnedString;
     }
     public override void ApplyAugment(Augment aug)
     {

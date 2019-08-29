@@ -45,7 +45,7 @@ public class HazardSetup : LivingSetup
                 if (myself.currentTile)
                     myself.currentTile.isOccupied = true;
             }
-            myself.BASE_STATS.MAX_HEALTH = 100 +  (int)(myself.BASE_STATS.LEVEL * 12.5f);
+            myself.BASE_STATS.MAX_HEALTH = 50 +  (int)(myself.BASE_STATS.LEVEL * 12f);
             myself.BASE_STATS.HEALTH = myself.BASE_STATS.MAX_HEALTH;
             if (myself.PHYSICAL_SLOTS.SKILLS.Count > 0)
             {
@@ -53,7 +53,7 @@ public class HazardSetup : LivingSetup
                 myself.dropsSkill = true;
                 myself.ARMOR.HITLIST[(int)mySkill.ELEMENT] = EHitType.reflects;
                 myself.ARMOR.HITLIST[(int)Element.Force - (int)mySkill.ELEMENT] = EHitType.cripples;
-                int amnt = Common.GetDmgIndex(mySkill.DAMAGE) * 10;
+                int amnt = Common.GetDmgIndex(mySkill.DAMAGE) * 5;
                 if (mySkill.ETYPE == EType.magical)
                 {
                     myself.STATS.MAGIC = 2 * amnt;
@@ -74,9 +74,9 @@ public class HazardSetup : LivingSetup
                 if (myself.INVENTORY.WEAPONS.Count > 0)
                 {
                     myself.dropsSkill = false;
-                    myself.ARMOR.HITLIST[(int)myself.WEAPON.AFINITY] = EHitType.reflects;
+                    myself.ARMOR.HITLIST[(int)myself.WEAPON.ELEMENT] = EHitType.reflects;
                     WeaponEquip weapon = myself.WEAPON;
-                    int amnt = (1 +(weapon.ATTACK/10) )* 5;
+                    int amnt = (1 +(weapon.ATTACK) )* 5;
                     if (weapon.ATTACK_TYPE == EType.magical)
                     {
                         myself.BASE_STATS.MAGIC = 2 * amnt;

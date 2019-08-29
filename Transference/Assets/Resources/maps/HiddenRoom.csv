@@ -1,8 +1,27 @@
--UnoccupiedTiles count
--tiles
--event room
--event tiles
--event nums
-c,6
+-UnoccupiedTiles count = r
+-event room = n  -event tiles -event nums
+-id = i
+-texture num = t
+-map width = w
+-map height = h
+-num of doors/door indexs = d [location], [location] 
+-Room Names = m
+- Room locations = l
+-Start Indexes = x
+-num of enemies / enemy indexs = e [location], [location] 
+-num of rando glyphs / glyph indexes = g [location], [location] 
+-num of lock glyphs / lock glyph indexes = gi [location], [location] 
+-num of shops/shop index = s [location], [location] 
+-num objs/ obj indexs = o [location], [location] 
+-obj ids = oi [location], [location] 
+i,4
 r,8,11,12,15,16,19
 n,false
+t,2
+w,4
+h,7
+d,26
+m,Western Hallway
+l,6
+x,0
+e,17

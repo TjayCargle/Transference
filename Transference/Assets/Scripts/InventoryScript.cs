@@ -332,7 +332,7 @@ public class InventoryScript : MonoBehaviour
         this.OPPS.Clear();
         this.PASSIVES.Clear();
         this.SKILLS.Clear();
-        this.USEABLES.Clear();
         this.WEAPONS.Clear();
+        this.USEABLES.Clear();
     }
 }

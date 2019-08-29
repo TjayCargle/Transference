@@ -126,7 +126,28 @@ public class AnimationScript : MonoBehaviour
                     }
                 }
             }
-            else
+            else if (obj)
+            {
+                if(obj.FACTION == Faction.ordinary)
+                {
+                    if (cam.infoObject == obj)
+                    {
+                        index++;
+                        if (index >= currentList.Length)
+                            index = 0;
+                        render.sprite = currentList[index];
+                    }
+                }
+                else
+                {
+
+                    index++;
+                    if (index >= currentList.Length)
+                        index = 0;
+                    render.sprite = currentList[index];
+                }
+            }
+            else 
             {
 
                 index++;

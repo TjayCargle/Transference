@@ -1,8 +1,29 @@
--UnoccupiedTiles count
--tiles
--event room
--event tiles
--event nums
-c,11
+-UnoccupiedTiles count = r
+-event room = n  -event tiles -event nums
+-id = i
+-texture num = t
+-map width = w
+-map height = h
+-num of doors/door indexs = d [location], [location] 
+-Room Names = m
+- Room locations = l
+-Start Indexes = x
+-num of enemies / enemy indexs = e [location], [location] 
+-num of rando glyphs / glyph indexes = g [location], [location] 
+-num of lock glyphs / lock glyph indexes = gi [location], [location] 
+-num of shops/shop index = s [location], [location] 
+-num objs/ obj indexs = o [location], [location] 
+-obj ids = oi [location], [location] 
 r,2,3,4,9,10,11,23,24,25,30,31
 n,false
+i,6
+t,2
+w,7
+h,5
+d,0,34
+m,Hidden Room,Lower Hallway
+l,4,7
+x,22,2
+e,19
+o,1,16,28
+oi,2,0,0

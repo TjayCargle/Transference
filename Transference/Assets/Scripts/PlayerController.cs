@@ -287,7 +287,18 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                     break;
+                case State.PlayerUsingItems:
+                    {
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
 
+                            myManager.CancelMenuAction(current);
+                            currentItem = null;
+                            currentSkill = null;
+                        }
+
+                    }
+                    break;
 
                 default:
                     break;
@@ -297,7 +308,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void UseItem(LivingObject target, TileScript TargetTile)
+    public void UseItem(GridObject target, TileScript TargetTile)
     {
         if (currentItem)
         {
@@ -308,7 +319,7 @@ public class PlayerController : MonoBehaviour
                 {
                     return;
                 }
-                useditem = currentItem.useItem(current, TargetTile);
+                useditem = currentItem.useItem(current, current, TargetTile);
                 if (useditem == true)
                 {
                     GridAnimationObj gao = null;
@@ -317,7 +328,7 @@ public class PlayerController : MonoBehaviour
                     gao.magnitute = 0;
                     gao.LoadGridAnimation();
 
-                  myManager.  CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
                     myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
@@ -326,6 +337,7 @@ public class PlayerController : MonoBehaviour
                     if (current.ACTIONS > 0)
                         myManager.returnState();
                     currentItem = null;
+                    currentSkill = null;
                 }
             }
             if (target)
@@ -342,7 +354,8 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
 
-                useditem = currentItem.useItem(target);
+
+                useditem = currentItem.useItem(target, current);
 
                 if (useditem == false)
                 {
@@ -376,11 +389,14 @@ public class PlayerController : MonoBehaviour
                 {
                     myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME + " on " + target.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
+                    current.INVENTORY.USEABLES.Remove(currentItem);
                     //   myManager.menuManager.ShowItemCanvas(11, current);
-                    current.TakeAction();
+                    if (currentItem.ITYPE != ItemType.dmg)
+                        current.TakeAction();
                     if (current.ACTIONS > 0)
                         myManager.returnState();
                     currentItem = null;
+                    currentSkill = null;
                 }
 
             }
@@ -401,20 +417,22 @@ public class PlayerController : MonoBehaviour
                         case 0:
                             if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                             {
-                                if (myManager.invManager.menuSide == -1)
-                                {
-                                    WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                    current.WEAPON.Equip(newWeapon);
-                                    myManager.ShowGridObjectAffectArea(current);
-                                    myManager.menuManager.ShowExtraCanvas(4, current);
-                                }
-                                else
-                                {
-                                    current.WEAPON.unEquip();
-                                    myManager.menuManager.ShowExtraCanvas(4, current);
-                                    myManager.ShowGridObjectAffectArea(current);
 
+
+                                WeaponScript selectedSkil = (WeaponScript)invm.selectedMenuItem.refItem;
+
+                                if (selectedSkil)
+                                {
+                                    if (current.WEAPON.EQUIPPED != selectedSkil)
+                                    {
+                                        current.WEAPON.Equip(selectedSkil);
+                                    }
                                 }
+
+
+
+                                prepareAttack(selectedSkil);
+
                             }
                             break;
                         case 1:
@@ -423,12 +441,37 @@ public class PlayerController : MonoBehaviour
                                 if (myManager.invManager.menuSide == -1)
                                 {
                                     ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                    current.ARMOR.Equip(newArmor);
-                                    myManager.menuManager.ShowExtraCanvas(5, current);
+                                    if (current.ARMOR.SCRIPT == current.DEFAULT_ARMOR)
+                                    {
+                                        GridAnimationObj gao = null;
+                                        gao = myManager.PrepareGridAnimation(null, current);
+                                        gao.type = -4;
+                                        gao.magnitute = 0;
+                                        gao.LoadGridAnimation();
+
+                                        myManager.menuManager.ShowNone();
+                                        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                                        myManager.CreateTextEvent(this, current.NAME + " summoned a a " + newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+                                        if (myManager.log)
+                                        {
+                                            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
+                                            myManager.log.Log(coloroption + current.NAME + " summoned a " + newArmor.NAME);
+                                        }
+
+                                        myManager.CreateEvent(this, newArmor, "Neo barrier equip", SummonBarrier);
+
+                                    }
+                                    else
+                                    {
+                                        myManager.CreateTextEvent(this, " A barrier is already active ", "Barrier active event", myManager.CheckText, myManager.TextStart);
+                                        myManager.PlayExitSnd();
+                                    }
+                                    // myManager.menuManager.ShowExtraCanvas(5, current);
                                 }
                                 else
                                 {
-                                    current.ARMOR.unEquip();
+                                    //  current.ARMOR.unEquip();
                                     //current.ARMOR.NAME = "none";
                                     //current.ARMOR.DEFENSE = 0;
                                     //current.ARMOR.RESISTANCE = 0;
@@ -438,7 +481,7 @@ public class PlayerController : MonoBehaviour
                                     //    current.ARMOR.HITLIST.Add(EHitType.normal);
                                     //}
                                 }
-                                myManager.menuManager.ShowExtraCanvas(5, current);
+                                //  myManager.menuManager.ShowExtraCanvas(5, current);
 
                             }
                             break;
@@ -503,101 +546,7 @@ public class PlayerController : MonoBehaviour
                                     {
 
                                         currentSkill = selectedSkil;
-                                        myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, selectedSkil);
-                                        myManager.ShowWhite();
-                                        if (myManager.attackableTiles.Count > 0)
-                                        {
-                                            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
-                                            {
-                                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
-                                                {
-                                                    if (currentSkill.SUBTYPE == SubSkillType.Buff)
-                                                    {
-                                                        myManager.attackableTiles[i][j].myColor = Common.lime;
-
-                                                    }
-                                                    else
-                                                    {
-                                                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
-
-                                                    }
-                                                }
-                                            }
-                                            myManager.currentAttackList = myManager.attackableTiles[0];
-
-                                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                                            {
-                                                if (currentSkill.SUBTYPE == SubSkillType.Buff)
-                                                {
-                                                    myManager.currentAttackList[i].myColor = Common.green;
-
-                                                }
-                                                else
-                                                {
-                                                    myManager.currentAttackList[i].myColor = Common.red;
-                                                }
-                                            }
-
-                                            myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
-                                            myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
-
-
-                                        }
-
-                                        else
-                                        {
-                                            currentSkill = null;
-                                            myManager.attackableTiles.Clear();
-                                            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                        }
-                                        myManager.myCamera.potentialDamage = 0;
-                                        myManager.myCamera.UpdateCamera();
-                                        myManager.anchorHpBar();
-
-                                        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
-                                        if (griddy)
-                                        {
-                                            if (griddy.GetComponent<LivingObject>())
-                                            {
-                                                LivingObject livvy = griddy.GetComponent<LivingObject>();
-                                                if (livvy.FACTION != myManager.player.current.FACTION)
-                                                {
-                                                    DmgReaction reac;
-                                                    if (myManager.player.currentSkill)
-                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
-                                                    else
-                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
-                                                    if (reac.reaction > Reaction.weak)
-                                                        reac.damage = 0;
-                                                    myManager.myCamera.potentialDamage = reac.damage;
-                                                    myManager.myCamera.UpdateCamera();
-                                                    if (myManager.potential)
-                                                    {
-                                                        myManager.potential.pulsing = true;
-                                                    }
-
-                                                }
-                                            }
-                                        }
-                                        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                                        if (myMenuManager)
-                                        {
-                                            myMenuManager.ShowNone();
-                                        }
-                                        myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                                        myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                        if (currentSkill.ETYPE == EType.physical)
-                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
-                                        else
-                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSpells);
-                                        //  menuStackEntry entry = new menuStackEntry();
-                                        //  entry.state = State.PlayerAttacking;
-                                        //  entry.index = invm.currentIndex;
-                                        //  entry.menu = currentMenu.CmdSkills;
-                                        //  myManager.enterState(entry);
-
+                                        prepareAttack(currentSkill);
                                     }
                                     else
                                     {
@@ -621,6 +570,24 @@ public class PlayerController : MonoBehaviour
                                         if (invm.selectedMenuItem.refItem.TYPE == 5)
                                         {
                                             currentItem = (ItemScript)invm.selectedMenuItem.refItem;
+                                            if (currentItem)
+                                            {
+                                                if (currentItem.ITYPE == ItemType.dmg)
+                                                {
+
+                                                    CommandSkill itemskill = Common.GenericSkill;
+                                                    itemskill.ACCURACY = 100;
+                                                    itemskill.COST = 0;
+                                                    itemskill.ELEMENT = currentItem.ELEMENT;
+                                                    itemskill.DAMAGE = currentItem.PDMG;
+                                                    itemskill.HITS = 1;
+                                                    itemskill.SKILLTYPE = SkillType.Command;
+                                                    itemskill.SUBTYPE = SubSkillType.Item;
+                                                    itemskill.OWNER = current;
+                                                    itemskill.NAME = currentItem.NAME;
+                                                    currentSkill = itemskill;
+                                                }
+                                            }
                                             myManager.attackableTiles = myManager.GetItemUseableTiles(current, currentItem);
 
                                             myManager.ShowWhite();
@@ -676,293 +643,208 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void useOrEquip(LivingObject living, bool takeAction = true)
-    {
-        if (living)
-        {
+    //public void useOrEquip(LivingObject living, bool takeAction = true)
+    //{
+    //    if (living)
+    //    {
 
-            if (invm.selectedMenuItem)
-            {
-                if (invm.selectedMenuItem.refItem)
-                {
-                    switch (invm.selectedMenuItem.refItem.TYPE)
-                    {
-                        case 0:
-                            if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
-                            {
-                                if (myManager.invManager.menuSide == -1)
-                                {
-                                    WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
-                                    living.WEAPON.Equip(newWeapon);
-                                    myManager.ShowGridObjectAffectArea(living);
-                                    myManager.menuManager.ShowExtraCanvas(4, living);
-                                }
-                                else
-                                {
-                                    living.WEAPON.unEquip();
-                                    myManager.menuManager.ShowExtraCanvas(4, living);
-                                    myManager.ShowGridObjectAffectArea(living);
+    //        if (invm.selectedMenuItem)
+    //        {
+    //            if (invm.selectedMenuItem.refItem)
+    //            {
+    //                switch (invm.selectedMenuItem.refItem.TYPE)
+    //                {
+    //                    case 0:
+    //                        if (invm.selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
+    //                        {
+    //                            if (myManager.invManager.menuSide == -1)
+    //                            {
+    //                                WeaponScript newWeapon = (WeaponScript)invm.selectedMenuItem.refItem;
+    //                                living.WEAPON.Equip(newWeapon);
+    //                                myManager.ShowGridObjectAffectArea(living);
+    //                                myManager.menuManager.ShowExtraCanvas(4, living);
+    //                            }
+    //                            else
+    //                            {
+    //                                living.WEAPON.unEquip();
+    //                                myManager.menuManager.ShowExtraCanvas(4, living);
+    //                                myManager.ShowGridObjectAffectArea(living);
 
-                                }
-                            }
-                            break;
-                        case 1:
-                            if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
-                            {
-                                if (myManager.invManager.menuSide == -1)
-                                {
-                                    ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
-                                    living.ARMOR.Equip(newArmor);
-                                    myManager.menuManager.ShowExtraCanvas(5, current);
-                                }
-                                else
-                                {
-                                    living.ARMOR.unEquip();
-                                    //current.ARMOR.NAME = "none";
-                                    //current.ARMOR.DEFENSE = 0;
-                                    //current.ARMOR.RESISTANCE = 0;
-                                    //current.ARMOR.HITLIST = Common.noAmor;
-                                    //for (int i = 0; i < 7; i++)
-                                    //{
-                                    //    current.ARMOR.HITLIST.Add(EHitType.normal);
-                                    //}
-                                }
-                                myManager.menuManager.ShowExtraCanvas(5, current);
+    //                            }
+    //                        }
+    //                        break;
+    //                    case 1:
+    //                        if (invm.selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
+    //                        {
+    //                            if (myManager.invManager.menuSide == -1)
+    //                            {
+    //                                ArmorScript newArmor = (ArmorScript)invm.selectedMenuItem.refItem;
+    //                                living.ARMOR.Equip(newArmor);
+    //                                myManager.menuManager.ShowExtraCanvas(5, current);
+    //                            }
+    //                            else
+    //                            {
+    //                                living.ARMOR.unEquip();
+    //                                //current.ARMOR.NAME = "none";
+    //                                //current.ARMOR.DEFENSE = 0;
+    //                                //current.ARMOR.RESISTANCE = 0;
+    //                                //current.ARMOR.HITLIST = Common.noAmor;
+    //                                //for (int i = 0; i < 7; i++)
+    //                                //{
+    //                                //    current.ARMOR.HITLIST.Add(EHitType.normal);
+    //                                //}
+    //                            }
+    //                            myManager.menuManager.ShowExtraCanvas(5, current);
 
-                            }
-                            break;
-                        case 2:
+    //                        }
+    //                        break;
+    //                    case 2:
 
-                            break;
-                        case 3:
+    //                        break;
+    //                    case 3:
 
-                            break;
-                        case 4:
-                            {
-                                if (myManager.currentState == State.PlayerEquippingSkills)
-                                {
+    //                        break;
+    //                    case 4:
+    //                        {
+    //                            if (myManager.currentState == State.PlayerEquippingSkills)
+    //                            {
 
-                                    if (myManager.invManager.menuSide == -1)
-                                    {
+    //                                if (myManager.invManager.menuSide == -1)
+    //                                {
 
-                                        myManager.invManager.EquipSkill();
-                                    }
-                                    else
-                                    {
+    //                                    myManager.invManager.EquipSkill();
+    //                                }
+    //                                else
+    //                                {
 
-                                        myManager.invManager.UnequipSkill();
-                                    }
-                                }
+    //                                    myManager.invManager.UnequipSkill();
+    //                                }
+    //                            }
 
-                                else
-                                {
-                                    if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
-                                    {
-                                        break;
-                                    }
-                                    if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Auto)
-                                    {
-                                        break;
-                                    }
-                                    if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Opp)
-                                    {
-                                        break;
-                                    }
-                                    CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
-                                    if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
-                                    {
-                                        //  Debug.Log("Got it");
-                                        selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
-                                    }
-                                    float modification = 1.0f;
-                                    if (selectedSkil.ETYPE == EType.magical)
-                                        modification = living.STATS.SPCHANGE;
-                                    if (selectedSkil.ETYPE == EType.physical)
-                                    {
-                                        if (selectedSkil.COST > 0)
-                                        {
-                                            modification = living.STATS.FTCHARGECHANGE;
-                                        }
-                                        else
-                                        {
-                                            modification = living.STATS.FTCOSTCHANGE;
-                                        }
-                                    }
-                                    if (selectedSkil.CanUse(modification))
-                                    {
+    //                            else
+    //                            {
+    //                                if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
+    //                                {
+    //                                    break;
+    //                                }
+    //                                if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Auto)
+    //                                {
+    //                                    break;
+    //                                }
+    //                                if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Opp)
+    //                                {
+    //                                    break;
+    //                                }
+    //                                CommandSkill selectedSkil = (CommandSkill)invm.selectedMenuItem.refItem;
+    //                                if (current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME) != null)
+    //                                {
+    //                                    //  Debug.Log("Got it");
+    //                                    selectedSkil = (CommandSkill)current.GetComponent<InventoryScript>().ContainsSkillName(selectedSkil.NAME);
+    //                                }
+    //                                float modification = 1.0f;
+    //                                if (selectedSkil.ETYPE == EType.magical)
+    //                                    modification = living.STATS.SPCHANGE;
+    //                                if (selectedSkil.ETYPE == EType.physical)
+    //                                {
+    //                                    if (selectedSkil.COST > 0)
+    //                                    {
+    //                                        modification = living.STATS.FTCHARGECHANGE;
+    //                                    }
+    //                                    else
+    //                                    {
+    //                                        modification = living.STATS.FTCOSTCHANGE;
+    //                                    }
+    //                                }
+    //                                if (selectedSkil.CanUse(modification))
+    //                                {
 
-                                        currentSkill = selectedSkil;
-                                        myManager.attackableTiles = myManager.GetSkillsAttackableTiles(living, selectedSkil);
-                                        myManager.ShowWhite();
-                                        if (myManager.attackableTiles.Count > 0)
-                                        {
-                                            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
-                                            {
-                                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
-                                                {
-                                                    if (currentSkill.SUBTYPE == SubSkillType.Buff)
-                                                    {
-                                                        myManager.attackableTiles[i][j].myColor = Common.lime;
+    //                                    currentSkill = selectedSkil;
+    //                                    prepareAttack(currentSkill);
 
-                                                    }
-                                                    else
-                                                    {
-                                                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+    //                                    //  menuStackEntry entry = new menuStackEntry();
+    //                                    //  entry.state = State.PlayerAttacking;
+    //                                    //  entry.index = invm.currentIndex;
+    //                                    //  entry.menu = currentMenu.CmdSkills;
+    //                                    //  myManager.enterState(entry);
 
-                                                    }
-                                                }
-                                            }
-                                            myManager.currentAttackList = myManager.attackableTiles[0];
+    //                                }
+    //                                else
+    //                                {
+    //                                    myManager.ShowCantUseText(selectedSkil);
+    //                                    myManager.PlayExitSnd();
+    //                                }
 
-                                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                                            {
-                                                if (currentSkill.SUBTYPE == SubSkillType.Buff)
-                                                {
-                                                    myManager.currentAttackList[i].myColor = Common.green;
-
-                                                }
-                                                else
-                                                {
-                                                    myManager.currentAttackList[i].myColor = Common.red;
-                                                }
-                                            }
-
-                                            myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
-                                            myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+    //                            }
+    //                            break;
 
 
-                                        }
+    //                        }
 
-                                        else
-                                        {
-                                            currentSkill = null;
-                                            myManager.attackableTiles.Clear();
-                                            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                                        }
-                                        myManager.myCamera.potentialDamage = 0;
-                                        myManager.myCamera.UpdateCamera();
-                                        myManager.anchorHpBar();
+    //                    case 5:
+    //                        {
+    //                            //UseItem();
+    //                            if (invm.selectedMenuItem)
+    //                            {
+    //                                if (invm.selectedMenuItem.refItem)
+    //                                {
+    //                                    if (invm.selectedMenuItem.refItem.TYPE == 5)
+    //                                    {
+    //                                        currentItem = (ItemScript)invm.selectedMenuItem.refItem;
+    //                                        myManager.attackableTiles = myManager.GetItemUseableTiles(living, currentItem);
 
-                                        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
-                                        if (griddy)
-                                        {
-                                            if (griddy.GetComponent<LivingObject>())
-                                            {
-                                                LivingObject livvy = griddy.GetComponent<LivingObject>();
-                                                if (livvy.FACTION != myManager.player.current.FACTION)
-                                                {
-                                                    DmgReaction reac;
-                                                    if (myManager.player.currentSkill)
-                                                        reac = myManager.CalcDamage(living, livvy, myManager.player.currentSkill, Reaction.none, false);
-                                                    else
-                                                        reac = myManager.CalcDamage(living, livvy, myManager.player.current.WEAPON, Reaction.none, false);
-                                                    if (reac.reaction > Reaction.weak)
-                                                        reac.damage = 0;
-                                                    myManager.myCamera.potentialDamage = reac.damage;
-                                                    myManager.myCamera.UpdateCamera();
-                                                    if (myManager.potential)
-                                                    {
-                                                        myManager.potential.pulsing = true;
-                                                    }
+    //                                        myManager.ShowWhite();
+    //                                        if (myManager.attackableTiles.Count > 0)
+    //                                        {
+    //                                            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+    //                                            {
+    //                                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+    //                                                {
+    //                                                    if (currentItem.TTYPE == TargetType.ally)
+    //                                                    {
+    //                                                        myManager.attackableTiles[i][j].myColor = Common.lime;
+    //                                                    }
+    //                                                    else
+    //                                                    {
+    //                                                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+    //                                                    }
+    //                                                }
+    //                                            }
+    //                                            myManager.currentAttackList = myManager.attackableTiles[0];
 
-                                                }
-                                            }
-                                        }
-                                        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                                        if (myMenuManager)
-                                        {
-                                            myMenuManager.ShowNone();
-                                        }
-                            if (currentSkill.ETYPE == EType.physical)
-                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
-                                        else
-                                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSpells);
-                                        //  menuStackEntry entry = new menuStackEntry();
-                                        //  entry.state = State.PlayerAttacking;
-                                        //  entry.index = invm.currentIndex;
-                                        //  entry.menu = currentMenu.CmdSkills;
-                                        //  myManager.enterState(entry);
+    //                                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
+    //                                            {
+    //                                                if (currentItem.TTYPE == TargetType.ally)
+    //                                                {
+    //                                                    myManager.currentAttackList[i].myColor = Common.green;
 
-                                    }
-                                    else
-                                    {
-                                        myManager.ShowCantUseText(selectedSkil);
-                                        myManager.PlayExitSnd();
-                                    }
+    //                                                }
+    //                                                else
+    //                                                {
+    //                                                    myManager.currentAttackList[i].myColor = Common.red;
+    //                                                }
+    //                                            }
 
-                                }
-                                break;
+    //                                            myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
+    //                                            myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+    //                                            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
 
-
-                            }
-
-                        case 5:
-                            {
-                                //UseItem();
-                                if (invm.selectedMenuItem)
-                                {
-                                    if (invm.selectedMenuItem.refItem)
-                                    {
-                                        if (invm.selectedMenuItem.refItem.TYPE == 5)
-                                        {
-                                            currentItem = (ItemScript)invm.selectedMenuItem.refItem;
-                                            myManager.attackableTiles = myManager.GetItemUseableTiles(living, currentItem);
-
-                                            myManager.ShowWhite();
-                                            if (myManager.attackableTiles.Count > 0)
-                                            {
-                                                for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
-                                                {
-                                                    for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
-                                                    {
-                                                        if (currentItem.TTYPE == TargetType.ally)
-                                                        {
-                                                            myManager.attackableTiles[i][j].myColor = Common.lime;
-                                                        }
-                                                        else
-                                                        {
-                                                            myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
-                                                        }
-                                                    }
-                                                }
-                                                myManager.currentAttackList = myManager.attackableTiles[0];
-
-                                                for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                                                {
-                                                    if (currentItem.TTYPE == TargetType.ally)
-                                                    {
-                                                        myManager.currentAttackList[i].myColor = Common.green;
-
-                                                    }
-                                                    else
-                                                    {
-                                                        myManager.currentAttackList[i].myColor = Common.red;
-                                                    }
-                                                }
-
-                                                myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
-                                                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                                                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
-
-                                                MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                                                if (myMenuManager)
-                                                {
-                                                    myMenuManager.ShowNone();
-                                                }
-                                                myManager.StackNewSelection(State.PlayerUsingItems, currentMenu.CmdItems);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-    }
+    //                                            MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+    //                                            if (myMenuManager)
+    //                                            {
+    //                                                myMenuManager.ShowNone();
+    //                                            }
+    //                                            myManager.StackNewSelection(State.PlayerUsingItems, currentMenu.CmdItems);
+    //                                        }
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //                        break;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
     public void useOppAction(LivingObject oppTarget)
     {
         if (invm.selectedMenuItem)
@@ -1049,7 +931,7 @@ public class PlayerController : MonoBehaviour
                             for (int i = 0; i < myManager.opptargets.Count; i++)
                             {
                                 bool testcheck = myManager.AttackTarget(invoker, myManager.opptargets[i], tempSKill);
-                                if(testcheck == true)
+                                if (testcheck == true)
                                 {
                                     check = true;
                                 }
@@ -1172,6 +1054,7 @@ public class PlayerController : MonoBehaviour
                     {
                         myManager.invManager.currentIndex = 2;
                         //current.TakeAction();
+                        myManager.enterStateTransition();
                         if (currentSkill != null)
                             currentSkill = null;
                     }
@@ -1207,6 +1090,11 @@ public class PlayerController : MonoBehaviour
             {
                 check = myManager.AttackTargets(current, current.WEAPON);
             }
+
+            if (check == true)
+            {
+                myManager.enterStateTransition();
+            }
         }
 
 
@@ -1224,9 +1112,258 @@ public class PlayerController : MonoBehaviour
         //  }
     }
 
+    public void prepareAttack(CommandSkill attack)
+    {
+        if (!current)
+        {
+            return;
+        }
+        myManager.attackableTiles = myManager.GetSkillsAttackableTiles(current, attack);
+        myManager.ShowWhite();
+        GridObject possibleObject = null;
+        myManager.currentAttackList.Clear();
+        if (myManager.attackableTiles.Count > 0)
+        {
+            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+            {
+                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                {
+                    if (possibleObject == null)
+                    {
+                        if (myManager.attackableTiles[i][j].isOccupied)
+                        {
+                            possibleObject = myManager.GetObjectAtTile(myManager.attackableTiles[i][j]);
+                            myManager.currentAttackList = myManager.attackableTiles[i];
+                        }
+                    }
+                    if (currentSkill.SUBTYPE == SubSkillType.Buff)
+                    {
+                        myManager.attackableTiles[i][j].myColor = Common.lime;
+
+                    }
+                    else
+                    {
+                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+
+                    }
+                }
+            }
+            if (myManager.currentAttackList.Count == 0)
+            {
+                myManager.currentAttackList = myManager.attackableTiles[0];
+            }
+
+            if (possibleObject == null)
+            {
+                myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
+                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+            }
+            else
+            {
+                myManager.tempObject.transform.position = possibleObject.transform.position;
+                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+            }
+
+            for (int i = 0; i < myManager.currentAttackList.Count; i++)
+            {
+                if (currentSkill.SUBTYPE == SubSkillType.Buff)
+                {
+                    myManager.currentAttackList[i].myColor = Common.green;
+
+                }
+                else
+                {
+                    myManager.currentAttackList[i].myColor = Common.red;
+                }
+            }
+
+
+
+        }
+
+        else
+        {
+            currentSkill = null;
+            myManager.attackableTiles.Clear();
+            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+        }
+        myManager.myCamera.potentialDamage = 0;
+        myManager.myCamera.UpdateCamera();
+        myManager.anchorHpBar();
+
+        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+        if (griddy)
+        {
+            DmgReaction reac;
+            if (griddy.FACTION != myManager.player.current.FACTION)
+            {
+                if (griddy.GetComponent<LivingObject>())
+                {
+                    LivingObject livvy = griddy.GetComponent<LivingObject>();
+                    if (myManager.player.currentSkill)
+                        reac = myManager.CalcDamage(current, livvy, myManager.player.currentSkill, Reaction.none, false);
+                    else
+                        reac = myManager.CalcDamage(current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                }
+                else
+                {
+                    if (myManager.player.currentSkill)
+                        reac = myManager.CalcDamage(current, griddy, myManager.player.currentSkill, Reaction.none, false);
+                    else
+                        reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
+                }
+                if (reac.reaction > Reaction.weak)
+                    reac.damage = 0;
+                myManager.myCamera.potentialDamage = reac.damage;
+                myManager.myCamera.UpdateCamera();
+                if (myManager.potential)
+                {
+                    myManager.potential.pulsing = true;
+                }
+
+            }
+        }
+        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+        if (myMenuManager)
+        {
+            myMenuManager.ShowNone();
+        }
+        if (currentSkill.ETYPE == EType.physical)
+            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSkills);
+        else
+            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.CmdSpells);
+    }
+    public void prepareAttack(WeaponScript attack)
+    {
+        if (!current)
+        {
+            return;
+        }
+        myManager.attackableTiles = myManager.GetWeaponAttackableTiles(current);
+        myManager.ShowWhite();
+        GridObject possibleObject = null;
+        myManager.currentAttackList.Clear();
+        if (myManager.attackableTiles.Count > 0)
+        {
+            for (int i = 0; i < myManager.attackableTiles.Count; i++) //list of lists
+            {
+                for (int j = 0; j < myManager.attackableTiles[i].Count; j++) //indivisual list
+                {
+                    if (possibleObject == null)
+                    {
+                        if (myManager.attackableTiles[i][j].isOccupied)
+                        {
+                            possibleObject = myManager.GetObjectAtTile(myManager.attackableTiles[i][j]);
+                            myManager.currentAttackList = myManager.attackableTiles[i];
+                        }
+                    }
+
+                    myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+
+
+                }
+            }
+            if (myManager.currentAttackList.Count == 0)
+            {
+                myManager.currentAttackList = myManager.attackableTiles[0];
+            }
+
+            if (possibleObject == null)
+            {
+                myManager.tempObject.transform.position = myManager.currentAttackList[0].transform.position;
+                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+            }
+            else
+            {
+                myManager.tempObject.transform.position = possibleObject.transform.position;
+                myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+            }
+
+            for (int i = 0; i < myManager.currentAttackList.Count; i++)
+            {
+
+                myManager.currentAttackList[i].myColor = Common.red;
+
+            }
+
+
+
+        }
+
+        else
+        {
+            currentSkill = null;
+            myManager.attackableTiles.Clear();
+            myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+            myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+        }
+        myManager.myCamera.potentialDamage = 0;
+        myManager.myCamera.UpdateCamera();
+        myManager.anchorHpBar();
+
+        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+        if (griddy)
+        {
+            DmgReaction reac;
+            if (griddy.FACTION != myManager.player.current.FACTION)
+            {
+                if (griddy.GetComponent<LivingObject>())
+                {
+                    LivingObject livvy = griddy.GetComponent<LivingObject>();
+
+                    reac = myManager.CalcDamage(current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                }
+                else
+                {
+
+                    reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
+                }
+                if (reac.reaction > Reaction.weak)
+                    reac.damage = 0;
+                myManager.myCamera.potentialDamage = reac.damage;
+                myManager.myCamera.UpdateCamera();
+                if (myManager.potential)
+                {
+                    myManager.potential.pulsing = true;
+                }
+
+            }
+        }
+        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+        if (myMenuManager)
+        {
+            myMenuManager.ShowNone();
+        }
+
+        myManager.StackNewSelection(State.PlayerAttacking, currentMenu.Strikes);
+
+    }
+    public void prepareAttack(ItemScript attack)
+    {
+
+    }
+
     public void BuffereduseOrEquip()
     {
         useOrEquip();
+    }
+    public bool SummonBarrier(Object data)
+    {
+        ArmorScript newArmor = data as ArmorScript;
+        if (newArmor != current.ARMOR.SCRIPT)
+        {
+            current.ARMOR.Equip(newArmor);
+            newArmor.Use();
+            current.TakeAction();
+            myManager.CreateEvent(this, null, "waiting for sfx", myManager.WaitForSFXEvent);
+        }
+        myManager.CreateEvent(this, null, "return state", myManager.BufferedReturnEvent);
+        return true;
     }
 
     public bool ShowCmd(Object data)

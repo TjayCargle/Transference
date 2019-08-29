@@ -27,10 +27,10 @@ public class BattleLog : MonoBehaviour
 
             if(rect)
             {
-                if(trueSize == Vector2.up)
-                {
-                    trueSize = rect.sizeDelta;
-                }
+                //if(trueSize == Vector2.up)
+                //{
+                //    trueSize = rect.sizeDelta;
+                //}
 
                 rect.sizeDelta = rect.sizeDelta + new Vector2(0,proText.fontSize + text.Length);
             }

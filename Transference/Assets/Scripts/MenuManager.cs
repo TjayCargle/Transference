@@ -24,6 +24,7 @@ public class MenuManager : MonoBehaviour
     public Canvas gameOverCanvas;
     GridObject prevObj;
     public Canvas newSkillAnnounceCanvas;
+    public Canvas hiddenCanvas;
     public TextMeshProUGUI DESC
     {
         get { return descText; }
@@ -49,7 +50,24 @@ public class MenuManager : MonoBehaviour
             Setup();
         }
     }
-    
+
+    public void ShowHiddenCanvas()
+    {
+        if (hiddenCanvas)
+        {
+            hiddenCanvas.gameObject.SetActive(true);
+            inManager.setContentAndScroll(hiddenCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, hiddenCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
+            inManager.ForceSelect();
+        }
+    }
+    public void DontHiddenCanvas()
+    {
+        if (hiddenCanvas)
+        {
+            hiddenCanvas.gameObject.SetActive(false);
+        }
+    }
+
     public void ShowNewSkillPrompt()
     {
         if(newSkillCanvas)
@@ -221,6 +239,10 @@ public class MenuManager : MonoBehaviour
     }
     public void ShowNone()
     {
+        if (hiddenCanvas)
+        {
+            hiddenCanvas.gameObject.SetActive(false);
+        }
         if (shopCanvas)
         {
             shopCanvas.gameObject.SetActive(false);

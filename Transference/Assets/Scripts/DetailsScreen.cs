@@ -49,7 +49,7 @@ public class DetailsScreen : MonoBehaviour
     Image[] selectableContent;
 
     [SerializeField]
-    Slider wardSlider;
+    Slider Barrierslider;
 
     [SerializeField]
     Text sliderText;
@@ -200,6 +200,7 @@ public class DetailsScreen : MonoBehaviour
                     selectableContent[i].color = Color.white;
                 }
             }
+         
         }
         if (nameText)
         {
@@ -248,16 +249,16 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Str = Strength. Strength determines how much damage is delt with a physical attack.";
                 break;
             case 9:
-                finalText = "Def = Defense. Defense reduces damage from physical attacks. This number your total defense from your base def and ward's def";
+                finalText = "Def = Defense. Defense reduces damage from physical attacks. This number is your total defense from your base def and Barrier's def";
                 break;
             case 10:
                 finalText = "Mag = Magic. Magic determines how much damage is delt with a magical attack.";
                 break;
             case 11:
-                finalText = "Res = Resistance. Resistance reduces damage from magical attacks. This number your total resistance from your base res and ward's res";
+                finalText = "Res = Resistance. Resistance reduces damage from magical attacks. This number is your total resistance from your base res and Barrier's res";
                 break;
             case 12:
-                finalText = "Spd = Speed. Speed affects your action count and slightly affects accurracy/evasion. Every 10 speed generates 1 action. This number your total speed from your base spd and ward's spd";
+                finalText = "Spd = Speed. Speed affects your action count and slightly affects accurracy/evasion. Every 10 speed generates 1 action. This number your total speed from your base spd and Barrier's spd";
                 break;
             case 13:
                 finalText = "Skl = Skill. Skill increases your chances of auto skills activating and ailments such as burn going off.";
@@ -285,11 +286,11 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
             case 28:
-                finalText = "Wards have strength. Once a ward's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
+                finalText = "Barriers have strength. Once a Barrier's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveing this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
                 finalText = "This is your Physical level. This is increased by using <color=yellow>physical skills</color>. Leveling this up randomly increases <color=#ff117a>Strength</color> or <color=orange>Defense</color>.";
@@ -298,21 +299,22 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your magical level. This is increased by using <color=yellow>magical skills</color>. Leveling this up randomly increases <color=#b400e9>Magic</color> or <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Skill level. This is increased by using <color=yellow>basic attacks</color>. Leveling this up randomly increases <color=#00FFFF>Speed</color> or <color=#00FF00>Skill</color>.";
+                finalText = "This is your Skill level. This is increased by using <color=yellow>Strikes</color>. Leveling this up randomly increases <color=#00FFFF>Speed</color> or <color=#00FF00>Skill</color>.";
                 break;
             case 34:
                 finalText = "Force Element. Force based moves generally pull targets in!";
                 break;
             case 35:
-                if(fullDescription)
-                {
-                    finalText = "Display the battle description of selected skills. \n Click to change.";
-                }
-                else
-                {
-                    finalText = "Display the level description of selected skills. \n Click to change.";
-                }
+               
+                    finalText = "Display the battle description of selected skills. \n";
+         
            
+                break;
+            case 36:
+     
+                    finalText = "Display the level description of selected skills. \n ";
+                
+
                 break;
 
         }
@@ -362,7 +364,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Auto Skills";
                         if (selectedContent < 3)
                         {
-                            finalText = "Auto Skills are skills that has a chance to activate after using a basic attack while equipped.";
+                            finalText = "Auto Skills are skills that have a chance to activate after using a Strike while equipped.";
                         }
                         break;
                     case DetailType.Opportunity:
@@ -374,31 +376,31 @@ public class DetailsScreen : MonoBehaviour
                         }
                         break;
                     case DetailType.BasicAtk:
-                        sectionText.text = "Basic Attacks";
+                        sectionText.text = "Strikes";
                         if (selectedContent < 3)
                         {
-                            finalText = "Basic Attacks when equipped replace the default Attack option and doesn't require any cost to use.";
+                            finalText = "Strikes when equipped replace the default Attack option and doesn't require any cost to use.";
                         }
                         break;
                     case DetailType.Armor:
-                        sectionText.text = "Wards";
+                        sectionText.text = "Barriers";
                         if (selectedContent < 3)
                         {
-                            finalText = "Wards when equipped changes elemental affinities and affect spd, def, and res.";
+                            finalText = "Barriers when equipped changes elemental affinities and affect spd, def, and res.";
                         }
                         break;
                     case DetailType.Buffs:
                         sectionText.text = "Buffs";
                         if (selectedContent < 3)
                         {
-                            finalText = "Buffs are temorary stat boosts that generally last 3 turns. While you can stack buffs, you cannot stack the same buff on a character.";
+                            finalText = "Buffs are temporary stat boosts that generally last 3 turns. While you can stack buffs, you cannot stack the same buff on a character.";
                         }
                         break;
                     case DetailType.Debuffs:
                         sectionText.text = "Debuffs";
                         if (selectedContent < 3)
                         {
-                            finalText = "Debuffs are temorary stat drops that generally last 3 turns. The same debuff cannot be applied more than ocne on a character.";
+                            finalText = "Debuffs are temporary stat drops that generally last 3 turns. The same debuff cannot be applied more than once on a character.";
                         }
                         break;
                     case DetailType.Effects:
@@ -423,7 +425,10 @@ public class DetailsScreen : MonoBehaviour
 
                         if (currentSlot.SKILLS.Count > i)
                         {
-                            skills[i].text = currentSlot.SKILLS[i].NAME + " LV: " + currentSlot.SKILLS[i].LEVEL;
+                            if (currentSlot.SKILLS[i].GetType() == typeof(CommandSkill))
+                                skills[i].text = currentSlot.SKILLS[i].NAME + " LV: " + currentSlot.SKILLS[i].LEVEL;
+                            else
+                                skills[i].text = currentSlot.SKILLS[i].NAME;
                             if (selectableContent[selectedContent].GetComponentInChildren<Text>())
                             {
                                 if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
@@ -486,7 +491,7 @@ public class DetailsScreen : MonoBehaviour
                         {
                             if (currentObj.INVENTORY.ARMOR.Count > i)
                             {
-                                skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME;
+                                skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME + " LV: " + currentObj.INVENTORY.ARMOR[i].LEVEL;
                                 if (selectableContent[selectedContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
@@ -494,6 +499,37 @@ public class DetailsScreen : MonoBehaviour
                                         finalText = currentObj.INVENTORY.ARMOR[i].DESC;
                                         selectedHitlist = currentObj.INVENTORY.ARMOR[i].HITLIST;
                                         selectedArmor = currentObj.INVENTORY.ARMOR[i];
+
+                                        if (fullDescription == false)
+                                        {
+
+                                            if (levelShowcase)
+                                            {
+                                                levelShowcase.SetActive(true);
+                                                if (descriptionText)
+                                                    descriptionText.gameObject.SetActive(false);
+                                                if (descriptionText2)
+                                                    descriptionText2.gameObject.SetActive(false);
+                                                if (currentLevelInfo)
+                                                {
+                                                    currentLevelInfo.text = currentObj.INVENTORY.ARMOR[i].GetCurrentLevelStats();
+                                                    currentLevelInfo.color = Color.white;
+                                                }
+                                                if (nextLevelInfo)
+                                                {
+                                                    nextLevelInfo.text = currentObj.INVENTORY.ARMOR[i].GetNextLevelStats();
+                                                    nextLevelInfo.color = Color.white;
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (descriptionText)
+                                                descriptionText.gameObject.SetActive(true);
+                                            if (descriptionText2)
+                                                descriptionText2.gameObject.SetActive(true);
+                                        }
                                     }
                                 }
                             }
@@ -512,6 +548,39 @@ public class DetailsScreen : MonoBehaviour
                                     if (selectableContent[selectedContent].GetComponentInChildren<Text>() == skills[i])
                                     {
                                         finalText = currentObj.INVENTORY.WEAPONS[i].DESC;
+                                        //   if (currentObj.INVENTORY.WEAPONS[i] == typeof(WeaponScript))
+                                        {
+                                            if (fullDescription == false)
+                                            {
+
+                                                if (levelShowcase)
+                                                {
+                                                    levelShowcase.SetActive(true);
+                                                    if (descriptionText)
+                                                        descriptionText.gameObject.SetActive(false);
+                                                    if (descriptionText2)
+                                                        descriptionText2.gameObject.SetActive(false);
+                                                    if (currentLevelInfo)
+                                                    {
+                                                        currentLevelInfo.text = currentObj.INVENTORY.WEAPONS[i].GetCurrentLevelStats();
+                                                        currentLevelInfo.color = Color.white;
+                                                    }
+                                                    if (nextLevelInfo)
+                                                    {
+                                                        nextLevelInfo.text = currentObj.INVENTORY.WEAPONS[i].GetNextLevelStats();
+                                                        nextLevelInfo.color = Color.white;
+                                                    }
+
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (descriptionText)
+                                                    descriptionText.gameObject.SetActive(true);
+                                                if (descriptionText2)
+                                                    descriptionText2.gameObject.SetActive(true);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -689,7 +758,7 @@ public class DetailsScreen : MonoBehaviour
                     switch ((int)selectedHitlist[i])
                     {
                         case 0:
-                            finalText = "Abs = Absorb. Absorbing an element allows it to heal by the damage it would have delt.";
+                            finalText = "Abs = Absorb. Absorbing an element allows it to heal by the damage it would have dealt.";
                             break;
                         case 1:
                             finalText = "Null = Nullify. Nullifying an element reduces the damage to 0.";
@@ -698,22 +767,22 @@ public class DetailsScreen : MonoBehaviour
                             finalText = "Rpl = Repel. Repeling an element sends it back to the attacker.";
                             break;
                         case 3:
-                            finalText = "RS = Resist. Resisting an element reduces the damage it would have delt.";
+                            finalText = "RS = Resist. Resisting an element reduces the damage it would have dealt.";
                             break;
                         case 4:
                             finalText = "Damage applied normally. Str against Def and Mag against Res.";
                             break;
                         case 5:
-                            finalText = "WK = Weak. Weakening damage slightly increases the damage it would have delt.";
+                            finalText = "WK = Weak. Weakening damage slightly increases the damage it would have dealt.";
                             break;
                         case 6:
-                            finalText = "Svg = Savage. Savage damage moderately increases damage it would have delt and reduces generated action count by 1.";
+                            finalText = "Svg = Savage. Savage damage moderately increases damage it would have dealt and reduces generated action count by 1.";
                             break;
                         case 7:
-                            finalText = "Cpl = Cripple. Crippling damage moderately increases damage it would have delt and puts target in crippled state for 1 turn.";
+                            finalText = "Cpl = Cripple. Crippling damage moderately increases damage it would have dealt and puts target in crippled state for 1 turn.";
                             break;
                         case 8:
-                            finalText = "Lthl = Lethal.  Lethal damage heavyily increases damage it would have delt, reduces generated action count by 1, and puts target into crippled state for 1 turn.";
+                            finalText = "Lthl = Lethal.  Lethal damage heavyily increases damage it would have dealt, reduces generated action count by 1, and puts target into crippled state for 1 turn.";
                             break;
                         default:
 
@@ -731,16 +800,16 @@ public class DetailsScreen : MonoBehaviour
             }
         }
 
-        if (wardSlider)
+        if (Barrierslider)
         {
-            if (currentObj.ARMOR.NAME != "none")
+            if (selectedArmor != currentObj.DEFAULT_ARMOR)
             {
-                wardSlider.gameObject.SetActive(true);
-                wardSlider.maxValue = currentObj.ARMOR.MAX_HEALTH;
-                wardSlider.value = currentObj.ARMOR.HEALTH;
+                Barrierslider.gameObject.SetActive(true);
+                Barrierslider.maxValue = selectedArmor.MAX_HEALTH;
+                Barrierslider.value = selectedArmor.HEALTH;
                 if (sliderText)
                 {
-                    float trueAmt = wardSlider.value / wardSlider.maxValue;
+                    float trueAmt = Barrierslider.value / Barrierslider.maxValue;
                     trueAmt *= 100.0f;
                     trueAmt = Mathf.Round(trueAmt);
                     sliderText.text = "" + trueAmt + "%";
@@ -748,7 +817,10 @@ public class DetailsScreen : MonoBehaviour
             }
             else
             {
-                wardSlider.gameObject.SetActive(false);
+                Barrierslider.maxValue = 100;
+                Barrierslider.value = 0;
+                sliderText.text = "No barrier active";
+                //Barrierslider.gameObject.SetActive(false);
             }
         }
 
@@ -828,5 +900,16 @@ public class DetailsScreen : MonoBehaviour
             descriptionText.text = finalText;
         if (descriptionText2)
             descriptionText2.text = finalText;
+
+        if(fullDescription == true)
+        {
+            selectableContent[35].color = Common.orange;
+            selectableContent[36].color = Color.white;
+        }  
+        else
+        {
+            selectableContent[35].color = Color.white;
+            selectableContent[36].color = Common.orange;
+        }
     }
 }

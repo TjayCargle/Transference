@@ -29,6 +29,10 @@ public class SFXManager : MonoBehaviour {
         source.clip = clip;
     }
 
+    public bool isPlaying()
+    {
+        return source.isPlaying;
+    }
     public void playSound()
     {
        // if(!source.isPlaying)

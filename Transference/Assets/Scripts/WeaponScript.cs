@@ -5,7 +5,7 @@ using UnityEngine;
 public class WeaponScript : UsableScript
 {
     [SerializeField]
-    private int myAttack;
+    private DMG myAttack;
     [SerializeField]
     private int myAccurracy;
     [SerializeField]
@@ -18,8 +18,7 @@ public class WeaponScript : UsableScript
     private RangeType range;
     [SerializeField]
     private EType eType;
-    [SerializeField]
-    private int useCount;
+
     [SerializeField]
     private ModifiedStat boost;
     [SerializeField]
@@ -35,7 +34,7 @@ public class WeaponScript : UsableScript
         get { return owner; }
         set { owner = value; }
     }
-    public Element AFINITY
+    public Element ELEMENT
     {
         get { return myAfinity; }
         set { myAfinity = value; }
@@ -46,7 +45,7 @@ public class WeaponScript : UsableScript
         get { return eType; }
         set { eType = value; }
     }
-    public int ATTACK
+    public DMG ATTACK
     {
         get { return myAttack; }
         set { myAttack = value; }
@@ -63,7 +62,7 @@ public class WeaponScript : UsableScript
     }
     public int DIST
     {
-        get { return myStartkDist ; }
+        get { return myStartkDist; }
         set { myStartkDist = value; }
     }
     public int Range
@@ -78,11 +77,7 @@ public class WeaponScript : UsableScript
         set { range = value; }
     }
 
-    public int USECOUNT
-    {
-        get { return useCount; }
-        set { useCount = value; }
-    }
+
 
     public ModifiedStat BOOST
     {
@@ -112,16 +107,18 @@ public class WeaponScript : UsableScript
                     ACCURACY += 5;
                 }
                 break;
-      
-            case Augment.rangeAument:
-                Range++;
-                DIST++;
+
+            case Augment.rangeAugment:
+                {
+                    ATKRANGE = (RangeType)((int)(Random.Range((int)RangeType.adjacent, (int)RangeType.crosshair)));
+                }
+
                 break;
-   
+
             case Augment.elementAugment:
-                AFINITY = Common.ChangeElement(AFINITY);
+                ELEMENT = Common.ChangeElement(ELEMENT);
                 break;
-       
+
         }
     }
 
@@ -132,28 +129,102 @@ public class WeaponScript : UsableScript
         if (USECOUNT % 2 == 0)
         {
             LevelUP();
-           
+
         }
     }
 
     public override void LevelUP()
     {
-        base.LevelUP();
-        LEVEL++;
-        ATTACK++;
-        ACCURACY++;
-        if (LEVEL > Common.MaxSkillLevel)
+        // base.LevelUP();
+        if (LEVEL < Common.MaxSkillLevel)
         {
-            LEVEL = Common.MaxSkillLevel;
+            LEVEL++;
+
+            if (LEVEL > Common.MaxSkillLevel)
+            {
+                LEVEL = Common.MaxSkillLevel;
+            }
+            if (level % 2 == 0)
+                ATTACK = Common.GetNextDmg(ATTACK);
+            if (ATTACK > DMG.collassal)
+            {
+                ATTACK = DMG.collassal;
+            }
+            ACCURACY++;
+            if (ACCURACY > 100)
+            {
+                ACCURACY = 100;
+            }
+            BOOSTVAL++;
         }
-        if (ATTACK > (int)DMG.collassal)
+        UpdateDesc();
+    }
+    public string GetCurrentLevelStats()
+    {
+        string returnedString = "";
+        if (level < Common.MaxSkillLevel)
         {
-            ATTACK = (int)DMG.collassal;
+            returnedString = "Level " + LEVEL + "";
         }
-        if (ACCURACY > 100)
+        else
         {
-            ACCURACY = 100;
+            returnedString = "Max Level ";
         }
+
+        returnedString += "\n Damage: " + ATTACK.ToString() + "";
+        returnedString += "\n Accuracy: " + (ACCURACY) + "";
+      //  returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
+        return returnedString;
+    }
+    public string GetNextLevelStats()
+    {
+        string returnedString = "";
+        if (level + 1 < Common.MaxSkillLevel)
+        {
+            returnedString = "<color=green>Level " + (LEVEL + 1) + "</color>";
+        }
+        else if (level + 1 == Common.MaxSkillLevel)
+        {
+            returnedString = "<color=green>Max Level</color>";
+        }
+        else
+        {
+            return GetCurrentLevelStats();
+        }
+        if (level + 1 % 2 == 0)
+        {
+            if (ATTACK != DMG.collassal)
+            {
+                returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(ATTACK).ToString() + "</color>";
+            }
+            else
+            {
+                returnedString += "\n Damage: " + Common.GetNextDmg(ATTACK).ToString() + "";
+            }
+        }
+        else
+        {
+            returnedString += "\n Damage: " + Common.GetNextDmg(ATTACK).ToString() + "";
+        }
+
+        if (ACCURACY + 1 <= 100)
+        {
+            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 1) + "</color>";
+        }
+        else
+        {
+            returnedString += "\n Accuracy: 100";
+        }
+        if (BOOSTVAL + 1 <= 100)
+        {
+           // returnedString += "\n <color=green>Boost: " + (BOOST) + "  +" + (BOOSTVAL + 1) + "</color>";
+        }
+        else
+        {
+           // returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
+        }
+
+        return returnedString;
     }
 
     public override void UpdateDesc()
@@ -162,7 +233,7 @@ public class WeaponScript : UsableScript
 
         DESC = "" + BOOST.ToString() + " +" + BOOSTVAL + ".";
 
-        DESC += "Deals " + ATTACK_TYPE + " " + AFINITY + " based dmg.";
+        DESC += "Deals " + ATTACK_TYPE + " " + ELEMENT + " based dmg.";
 
         if (Range == 1)
         {

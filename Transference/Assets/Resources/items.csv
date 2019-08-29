@@ -17,4 +17,11 @@
 15, Miraclefruit (Small), Grants 1 random effect to ally or self., random,ally,1,none, none, none
 16, Miraclefruit (medium), Grants 2 random effects to ally or self., random,ally,2,none, none, none
 17, Miraclefruit (large), Grants 3 random effects to ally or self., random,ally,3,none, none, none
+19, Aquabolt (Heavy), Deals heavy magical Water Damage to target.,dmg,enemy,10,Water,none,none,heavy 
+20, Pyrbolt (Heavy), Deals heavy magical Pyro Damage to target.,dmg,enemy,10,Pyro,none,none,heavy 
+21, Frostbolt (Heavy), Deals heavy magical Ice Damage to target.,dmg,enemy,10,Ice,none,none,heavy 
+22, Staticbolt (Heavy), Deals heavy magical Elec Damage to target.,dmg,enemy,10,Electric,none,none,heavy 
+23, Slashbolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Slash,none,none,heavy 
+24, Piercebolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Pierce,none,none,heavy 
+25, Bluntbolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Blunt,none,none,heavy 
 100, Scorpiee Scroll, Summons a scorpiee pawn as an ally., summon,adjecent,0,none,none,none

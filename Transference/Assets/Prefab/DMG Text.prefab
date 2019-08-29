@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659785400467850}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.99}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4023283083814490}
@@ -77,20 +77,20 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659785400467850}
-  m_Text: 192
+  m_Text: Missed
   m_OffsetZ: 0
-  m_CharacterSize: 0.55
+  m_CharacterSize: 0.52
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 0
+  m_FontSize: 20
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 45aa70b34c4cd2647bc1c7d4844f52a9, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190215
 --- !u!1 &1736827509684690
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 0}
   border: {fileID: 0}
+  shadow: {fileID: 0}
   isShowing: 0
   loaded: 0
   isSetup: 0
@@ -220,20 +221,20 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1748833023184152}
-  m_Text: 192
+  m_Text: Missed
   m_OffsetZ: 0
   m_CharacterSize: 0.5
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 0
+  m_FontSize: 20
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 45aa70b34c4cd2647bc1c7d4844f52a9, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4278199807
+    rgba: 4294967295
 --- !u!1 &4367550601928570138
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +261,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4367550601928570138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.087, y: 0.462, z: -0.9899998}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4023283083814490}
@@ -311,14 +312,14 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4367550601928570138}
-  m_Text: 192
+  m_Text: Missed
   m_OffsetZ: 0
-  m_CharacterSize: 0.6
+  m_CharacterSize: 0.54
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 0
+  m_FontSize: 20
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 45aa70b34c4cd2647bc1c7d4844f52a9, type: 3}

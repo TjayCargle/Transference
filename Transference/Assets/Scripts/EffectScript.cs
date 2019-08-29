@@ -28,7 +28,7 @@ public class EffectScript : MonoBehaviour
                     manager.DamageGridObject(living, dmg);
                     manager.CreateDmgTextEvent(dmg.ToString(), Color.yellow, living);
                     living.ACTIONS--;
-                    manager.NextTurn("effectScript");
+                   // manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is stunned", "stun effect", manager.CheckText, manager.TextStart);
 
                     return;

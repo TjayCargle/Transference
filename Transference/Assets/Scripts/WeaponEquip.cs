@@ -29,15 +29,17 @@ public class WeaponEquip : Equipable
     private WeaponScript equipped;
     private GridObject owner;
 
+    public WeaponScript EQUIPPED
+    { get { return equipped; } }
 
     public GridObject USER
     {
         get { return owner; }
         set { owner = value; }
     }
-    public Element AFINITY
+    public Element ELEMENT
     {
-        get { return equipped.AFINITY; }
+        get { return equipped.ELEMENT; }
       
     }
     public EType ATTACK_TYPE
@@ -54,7 +56,7 @@ public class WeaponEquip : Equipable
 
     public int ATTACK
     {
-        get { return equipped.ATTACK + LEVEL; }
+        get { return (int)equipped.ATTACK + LEVEL; }
        
     }
     public int ACCURACY
@@ -81,11 +83,7 @@ public class WeaponEquip : Equipable
         get { return equipped.USECOUNT; }
      
     }
-    public ModifiedStat BOOST    
-    {
-        get { return equipped.BOOST; }
 
-    }
     public int BOOSTVAL
     {
         get { return equipped.BOOSTVAL; }
@@ -118,11 +116,11 @@ public class WeaponEquip : Equipable
     }
     public void unEquip()
     {
-        WeaponScript weapon = Common.noWeapon;
-        weapon.INDEX = -1;
-        weapon.name = "none";
-        weapon.DESC = "No weapon equipped";
-        Equip(weapon);
+        //WeaponScript weapon = Common.noWeapon;
+        //weapon.INDEX = -1;
+        //weapon.name = "none";
+        //weapon.DESC = "No weapon equipped";
+        //Equip(weapon);
 
     }
     public void Use()

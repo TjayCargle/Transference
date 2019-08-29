@@ -23,6 +23,9 @@ public class UsableScript : ScriptableObject
     protected int refType;
 
     [SerializeField]
+    protected int useCount;
+
+    [SerializeField]
     protected List<Augment> augments;
 
     public List<Augment> AUGMENTS
@@ -55,6 +58,11 @@ public class UsableScript : ScriptableObject
     {
         get { return level; }
         set { level = value; }
+    }
+    public int USECOUNT
+    {
+        get { return useCount; }
+        set { useCount = value; }
     }
     public virtual void LevelUP()
     {

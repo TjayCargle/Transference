@@ -42,22 +42,31 @@ public class CameraScript : MonoBehaviour
     public ArmorSet armorSet;
     public AudioClip[] musicClips;
     AudioSource audio;
+    bool isSetup = false;
 
-   
     int soundTrack = 1;
     void Start()
     {
-        transform.localRotation = Quaternion.Euler(0, 0, 0);
-        transform.Rotate(new Vector3(90, 0, 0));
-        manager = GameObject.FindObjectOfType<ManagerScript>();
-        if (manager)
+        Setup();
+    }
+   public void Setup()
+    {
+        if (!isSetup)
         {
-            manager.Setup();
+            isSetup = true;
+
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            transform.Rotate(new Vector3(90, 0, 0));
+            manager = GameObject.FindObjectOfType<ManagerScript>();
+            audio = GetComponent<AudioSource>();
+            SetCameraPosDefault();
+            transparent = new Color(0, 0, 0, 0);
+            opaque = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            if (manager)
+            {
+                manager.Setup();
+            }
         }
-        transparent = new Color(0, 0, 0, 0);
-        opaque = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        SetCameraPosDefault();
-        audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -106,9 +115,9 @@ public class CameraScript : MonoBehaviour
 
     public void PlaySoundTrack1()
     {
-        if(audio)
+        if (audio)
         {
-            if(soundTrack != 1)
+            if (soundTrack != 1)
             {
                 soundTrack = 1;
                 audio.clip = musicClips[0];
@@ -126,6 +135,19 @@ public class CameraScript : MonoBehaviour
             {
                 soundTrack = 2;
                 audio.clip = musicClips[1];
+                audio.Play();
+            }
+        }
+    }
+
+    public void PlaySoundTrack3()
+    {
+        if (audio)
+        {
+            if (soundTrack != 3)
+            {
+                soundTrack = 3;
+                audio.clip = musicClips[2];
                 audio.Play();
             }
         }
@@ -149,7 +171,7 @@ public class CameraScript : MonoBehaviour
                         // infoCanvas.gameObject.SetActive(true);
                         if (infoObject != null)
                         {
-                   
+
 
                             if (!infoObject.GetComponent<TempObject>())
                             {
@@ -161,12 +183,12 @@ public class CameraScript : MonoBehaviour
 
                                 if (actionText.transform.parent.gameObject.activeInHierarchy)
                                 {
-                                   // actionText.gameObject.SetActive(true);
+                                    // actionText.gameObject.SetActive(true);
                                 }
                                 if (faceImage)
                                 {
                                     faceImage.sprite = infoObject.FACE;
-                                    if(faceImage.sprite == null)
+                                    if (faceImage.sprite == null)
                                     {
                                         faceImage.color = Common.trans;
                                     }
@@ -177,13 +199,20 @@ public class CameraScript : MonoBehaviour
                                 }
                                 if (infoObject.GetComponent<LivingObject>())
                                 {
-                                
+
                                     LivingObject liver = infoObject.GetComponent<LivingObject>();
-                                      manager.iconManager.loadIconPanel(liver);
+                                    manager.iconManager.loadIconPanel(liver);
 
                                     if (armorSet)
                                     {
                                         armorSet.currentObj = liver;
+                                        if(manager)
+                                        {
+                                            if(manager.currentState != State.PlayerEquipping)
+                                            {
+                                                armorSet.selectedArmor = null;
+                                            }
+                                        }
                                         armorSet.updateDetails();
                                     }
 
@@ -203,7 +232,7 @@ public class CameraScript : MonoBehaviour
                                         actionText.color = Color.white;
                                         actionText.fontStyle = FontStyle.Normal;
                                     }
-                     
+
                                     if (healthSlider)
                                     {
                                         healthSlider.value = (float)(liver.HEALTH - potentialDamage) / (float)liver.MAX_HEALTH;
@@ -244,10 +273,10 @@ public class CameraScript : MonoBehaviour
                                                     if (txt)
                                                     {
                                                         newText = manager.invManager.selectedMenuItem.refItem.DESC;
-                                                 
+
                                                         txt.text = newText;
                                                         txt.resizeTextForBestFit = true;
-                                                       
+
                                                     }
                                                 }
                                             }
@@ -269,7 +298,7 @@ public class CameraScript : MonoBehaviour
                                 }
                                 else if (infoObject.GetComponent<BaseStats>())
                                 {
-                               
+
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
@@ -296,17 +325,17 @@ public class CameraScript : MonoBehaviour
                                         armorSet.currentGridObj = infoObject;
                                         armorSet.updateGridDetails();
                                     }
-                                    if(infoObject.FACTION == Faction.eventObj)
+                                    if (infoObject.FACTION == Faction.eventObj)
                                     {
-                                        EventDetails eve = Common.GetEventText(infoObject.BASE_STATS.SPEED,null);
+                                        EventDetails eve = Common.GetEventText(infoObject.BASE_STATS.SPEED, null);
                                         actionText.text = eve.eventText;
                                     }
                                     else
                                     {
-                                    actionText.text = "";
+                                        actionText.text = "";
 
                                     }
-                                  
+
                                 }
                             }
                             else
@@ -329,7 +358,7 @@ public class CameraScript : MonoBehaviour
                         }
                         else if (infoObject == null)
                         {
-                           
+
                             if (infoCanvas.gameObject.activeInHierarchy)
                             {
 
@@ -342,7 +371,7 @@ public class CameraScript : MonoBehaviour
                     }
                     else if (currentTile.TTYPE == TileType.door)
                     {
-               
+
                         infoText.text = "Door to " + currentTile.MAP;
                         actionText.text = "";
                     }

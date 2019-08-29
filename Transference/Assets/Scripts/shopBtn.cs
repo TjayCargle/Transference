@@ -97,7 +97,7 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                             shop.selectedContent--;
                             if (shop.selectedContent < 0)
                             {
-                                shop.selectedContent = 4;
+                                shop.selectedContent = 5;
                             }
                             shop.loadBuyerList(shop.selectedContent);
                         }
@@ -108,7 +108,7 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                         if (shop.currentWindow != ShopWindow.augmenting && shop.currentWindow != ShopWindow.confirm && shop.currentWindow != ShopWindow.removingItem)
                         {
                             shop.selectedContent++;
-                            if (shop.selectedContent > 4)
+                            if (shop.selectedContent > 5)
                             {
                                 shop.selectedContent = 0;
                             }

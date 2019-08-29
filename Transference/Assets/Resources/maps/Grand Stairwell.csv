@@ -1,0 +1,37 @@
+-UnoccupiedTiles count = r
+-event room = n  -event tiles -event nums
+-id = i
+-texture num = t
+-map width = w
+-map height = h
+-num of doors/door indexs = d [location], [location] 
+-Room Names = m
+- Room locations = l
+-Start Indexes = x
+-num of enemies / enemy indexs = e [location], [location] 
+-num of rando glyphs / glyph indexes = g [location], [location] 
+-num of lock glyphs / lock glyph indexes = gi [location], [location] 
+-num of shops/shop index = s [location], [location] 
+-num objs/ obj indexs = o [location], [location] 
+-obj ids = oi [location], [location] 
+r,8,9,10,11,12,13,29,30,31,32,33,34
+n,false
+i,5
+t,1
+w,7
+h,6
+d,0
+m,Gift Shop
+l,3
+x,14
+e,19
+g,17
+gi,1
+o,5,37
+oi,1,0
+yE,0.25
+xE,0.025
+yIr,0
+yAr,5
+xIr,-1
+xAr,35

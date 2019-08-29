@@ -44,11 +44,7 @@ public class CommandSkill : SkillScript
     [SerializeField]
     protected Reaction reaction;
 
-    [SerializeField]
-    protected int next;
 
-    [SerializeField]
-    protected int nextCount;
 
     [SerializeField]
     protected int minHit = -1;
@@ -131,17 +127,6 @@ public class CommandSkill : SkillScript
     }
 
 
-    public int NEXT
-    {
-        get { return next; }
-        set { next = value; }
-    }
-
-    public int NEXTCOUNT
-    {
-        get { return nextCount; }
-        set { nextCount = value; }
-    }
 
     public int MIN_HIT
     {
@@ -168,14 +153,18 @@ public class CommandSkill : SkillScript
     }
     public SkillScript UseSkill(LivingObject user, float modification = 1.0f)
     {
-
-        if (ETYPE == EType.magical)
+        if (OWNER)
         {
-            OWNER.STATS.MANA -= (int)(COST * modification);
-        }
-        else
-        {
-            OWNER.STATS.FATIGUE += (int)(COST * modification);
+            if (ETYPE == EType.magical)
+            {
+                OWNER.STATS.MANA -= (int)(COST * modification);
+                useCount++;
+            }
+            else
+            {
+                OWNER.STATS.FATIGUE += (int)(COST * modification);
+                useCount++;
+            }
         }
 
 
@@ -225,15 +214,15 @@ public class CommandSkill : SkillScript
         string potentialDesc;
         if (SUBTYPE == SubSkillType.Buff)
         {
-            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns";
+            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + COST + "Mana";
         }
         else if (SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Decreases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns";
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + COST + "Mana";
         }
         else if (SUBTYPE == SubSkillType.Ailment)
         {
-            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT;
+            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + COST + "Mana";
         }
         else if (ELEMENT == Element.Support)
         {
@@ -241,7 +230,7 @@ public class CommandSkill : SkillScript
             {
                 case SideEffect.heal:
                     {
-                        potentialDesc = "Heals " + DAMAGE + " amount of health to target";
+                        potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + COST + "Mana";
                     }
                     break;
                 default:
@@ -324,6 +313,21 @@ public class CommandSkill : SkillScript
         {
             potentialDesc += " and " + CRIT_RATE + "% chance to land a critical hit.";
         }
+        if(ETYPE == EType.physical)
+        {
+            if(SUBTYPE == SubSkillType.Charge)
+            {
+                potentialDesc += " Must Charge Fatigue by " + COST;
+            }
+            else
+            {
+                potentialDesc += " Costs " + ( COST  * -1)+ " Fatigue";
+            }
+        }
+        else
+        {
+            potentialDesc += "Costs " + COST + " Mana";
+        }
         return potentialDesc;
     }
     public override void ApplyAugment(Augment augment)
@@ -343,8 +347,9 @@ public class CommandSkill : SkillScript
             case Augment.sideEffectAugment:
                 EFFECT = effect;
                 break;
-            case Augment.rangeAument:
-                //todo
+            case Augment.rangeAugment:
+                //todo randomly change range
+                RTYPE = (RangeType)((int)(Random.Range((int)RangeType.adjacent, (int)RangeType.crosshair)));
                 break;
             case Augment.attackCountAugment:
                 if (SUBTYPE == SubSkillType.RngAtk)
@@ -388,10 +393,11 @@ public class CommandSkill : SkillScript
 
     public override void LevelUP()
     {
-        base.LevelUP();
+        // base.LevelUP();
 
-        if (level > 0 && level < Common.MaxLevel)
+        if (level > 0 && level < Common.MaxSkillLevel)
         {
+            LEVEL++;
 
             switch (ELEMENT)
             {
@@ -465,7 +471,8 @@ public class CommandSkill : SkillScript
                     }
                     break;
                 case Element.Electric:
-                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    if (level % 2 == 0)
+                        DAMAGE = Common.GetNextDmg(DAMAGE);
                     MAX_HIT++;
                     if (level == 3)
                     {
@@ -476,7 +483,8 @@ public class CommandSkill : SkillScript
                     }
                     break;
                 case Element.Slash:
-                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    if (level % 2 == 0)
+                        DAMAGE = Common.GetNextDmg(DAMAGE);
                     HITS++;
                     break;
                 case Element.Pierce:
@@ -520,7 +528,7 @@ public class CommandSkill : SkillScript
     }
     public string GetCurrentLevelStats()
     {
-        string returnedString =  "";
+        string returnedString = "";
         if (level < Common.MaxSkillLevel)
         {
             returnedString = "Level " + LEVEL + "";
@@ -572,7 +580,7 @@ public class CommandSkill : SkillScript
                     {
                         returnedString += "\n Chance of freeze";
                     }
-                   
+
 
                     break;
                 case Element.Electric:
@@ -594,8 +602,8 @@ public class CommandSkill : SkillScript
                     returnedString += "\n Damage: " + DAMAGE.ToString() + "";
                     returnedString += "\n Accuracy: " + (ACCURACY) + "";
                     returnedString += "\n Hits: " + (HITS) + " time(s)";
-                    if(CRIT_RATE > 0)
-                    returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
+                    if (CRIT_RATE > 0)
+                        returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
                     break;
                 case Element.Blunt:
                     returnedString += "\n Damage: " + DAMAGE.ToString() + "";
@@ -603,11 +611,11 @@ public class CommandSkill : SkillScript
                     returnedString += "\n Hits: " + (HITS) + " time(s)";
                     if (CRIT_RATE > 0)
                         returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
-                 
+
                     break;
                 case Element.Buff:
 
-                    returnedString += "\n " + BUFFEDSTAT + " +" + (BUFFVAL ) + "% for 3 turns";
+                    returnedString += "\n " + BUFFEDSTAT + " +" + (BUFFVAL) + "% for 3 turns";
                     break;
 
             }
@@ -621,7 +629,7 @@ public class CommandSkill : SkillScript
         string returnedString = "";
         if (level + 1 < Common.MaxSkillLevel)
         {
-            returnedString =  "<color=green>Level " + (LEVEL + 1) + "</color>";
+            returnedString = "<color=green>Level " + (LEVEL + 1) + "</color>";
         }
         else if (level + 1 == Common.MaxSkillLevel)
         {
@@ -638,7 +646,7 @@ public class CommandSkill : SkillScript
             switch (ELEMENT)
             {
                 case Element.Water:
-                    if(DAMAGE != DMG.collassal)
+                    if (DAMAGE != DMG.collassal)
                     {
                         returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                     }
@@ -646,7 +654,7 @@ public class CommandSkill : SkillScript
                     {
                         returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
                     }
-             
+
                     if (ACCURACY + 5 <= 100)
                     {
                         returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
@@ -657,7 +665,7 @@ public class CommandSkill : SkillScript
                         returnedString += "\n Accuracy: 100";
                         returnedString += "\n <color=green>Hits: " + HITS + "-" + (HITS + 1) + " times</color>";
                     }
-                    
+
                     break;
                 case Element.Pyro:
                     if (DAMAGE != DMG.collassal)
@@ -724,14 +732,22 @@ public class CommandSkill : SkillScript
 
                     break;
                 case Element.Electric:
-                    if (DAMAGE != DMG.collassal)
+                    if (level % 2 == 0)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
                     }
                     else
                     {
                         returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
                     }
+                    
                     returnedString += "\n Accuracy: " + (ACCURACY) + "";
                     returnedString += "\n <color=green>Hits: " + MIN_HIT + "-" + (MAX_HIT + 1) + " times</color>";
                     if (level + 1 == 3)
@@ -747,9 +763,16 @@ public class CommandSkill : SkillScript
                     }
                     break;
                 case Element.Slash:
-                    if (DAMAGE != DMG.collassal)
+                    if (level % 2 == 0)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
                     }
                     else
                     {

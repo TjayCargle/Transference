@@ -23,8 +23,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         if (eventData.button == PointerEventData.InputButton.Left)
         {
 
-          //  if (myManager)
-             //   myManager.SelectMenuItem(this);
+            //  if (myManager)
+            //   myManager.SelectMenuItem(this);
         }
     }
     public void OnPointerUp(PointerEventData eventData)
@@ -65,7 +65,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
 
             }
-       
+
             isSetup = true;
         }
     }
@@ -84,7 +84,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             return;
         }
-        if (invokingObject == null)
+        if (invokingObject == null && myManager.player.current != null)
         {
             return;
         }
@@ -118,7 +118,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     if (invokingObject.GetComponent<LivingObject>())
                     {
                         LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                        myManager.attackableTiles = myManager.GetAttackableTiles(liveInvokingObject, myManager.player.current.WEAPON);
+                        myManager.attackableTiles = myManager.GetAttackableTiles(liveInvokingObject, myManager.player.current.WEAPON.EQUIPPED);
                         myManager.ShowWhite();
                         if (myManager.attackableTiles.Count > 0)
                         {
@@ -167,7 +167,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                                     {
                                                         myManager.potential.pulsing = true;
                                                     }
-                                                
+
                                                 }
                                             }
                                         }
@@ -191,13 +191,13 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             {
                                 myMenuManager.ShowNone();
                             }
+                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
                             //menuStackEntry entry = new menuStackEntry();
                             //entry.state = State.PlayerAttacking;
                             //entry.index = myManager.invManager.currentIndex;
                             //entry.menu = currentMenu.command;
                             //myManager.enterState(entry);
 
-                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
 
                         }
                         else
@@ -313,7 +313,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //Debug.Log("curr index = " + myManager.invManager.currentIndex);
                     //entry.menu = currentMenu.invMain;
                     //myManager.enterState(entry);
-                    myManager.StackNewSelection(State.PlayerEquipping, currentMenu.invMain);
+                    myManager.StackNewSelection(State.PlayerEquipping, currentMenu.act);
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
                     if (myMenuManager)
                     {
@@ -321,7 +321,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         {
                             LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
                             myMenuManager.ShowItemCanvas(1, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(5, liveInvokingObject);
+                            // myMenuManager.ShowExtraCanvas(5, liveInvokingObject);
 
                             //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
 
@@ -377,7 +377,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.selectBS:
                 {
-      
+
                     myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
                     MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
@@ -467,7 +467,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     }
                 }
                 break;
-            case MenuItemType.special:
+            case MenuItemType.chooseOptions:
+
+                myManager.StackOptions();
+
                 break;
             case MenuItemType.prevMenu:
 
@@ -476,7 +479,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.generated:
 
-              //  myManager.CreateEvent(this, null, "player user or atk", myManager.ReturnTrue, );
+                //  myManager.CreateEvent(this, null, "player user or atk", myManager.ReturnTrue, );
                 PlayerUseOrAtk(invokingObject.GetComponent<LivingObject>());
 
                 break;
@@ -503,6 +506,12 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                         }
                     }
+                    InventoryMangager invManager = myManager.GetComponent<InventoryMangager>();
+                    if (invManager)
+                    {
+                        invManager.TurnOffNewDesc();
+                    }
+
                 }
                 break;
 
@@ -525,7 +534,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.door:
                 {
-                    myManager.CheckDoorPrompt();
+                    myManager.GotoNewRoom();
+                    // myManager.CheckDoorPrompt();
                 }
                 break;
             case MenuItemType.anEvent:
@@ -550,6 +560,30 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         }
                     }
                 }
+                break;
+            case MenuItemType.selectStrikes:
+                {
+
+                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
+
+                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                    if (myMenuManager)
+                    {
+
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myMenuManager.ShowItemCanvas(13, liveInvokingObject);
+
+                        }
+                    }
+                }
+                break;
+            case MenuItemType.forceEnd:
+                myManager.forceEnd();
+                break;
+            case MenuItemType.openBattleLog:
+                myManager.stackLog();
                 break;
             default:
                 break;

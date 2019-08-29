@@ -43,7 +43,7 @@ public class GameOverBtn : MonoBehaviour, IPointerEnterHandler
             case 0:
                 {
                     //full revive
-                    //Revive each character with full hp,mp, ft, but halve all other stats and lose all unequipped wards and basic attacks.
+                    //Revive each character with full hp,mp, ft, but halve all other stats and lose most used skill, most used spell, and all unequipped Barriers and Strikes.
                     if (manager)
                     {
                         manager.ReviveFull();
@@ -102,7 +102,8 @@ public class GameOverBtn : MonoBehaviour, IPointerEnterHandler
                 break;
             case 3:
                 {
-                    //death
+                    //
+
                     SceneManager.LoadScene("start");
                 }
                 break;

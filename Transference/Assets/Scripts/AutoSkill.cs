@@ -211,7 +211,7 @@ public class AutoSkill : SkillScript
                 break;
         
         }
-        DESC += " a basic attack";
+        DESC += " a Strike";
     }
 
 }

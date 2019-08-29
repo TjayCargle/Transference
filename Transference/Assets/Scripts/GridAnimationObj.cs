@@ -43,6 +43,16 @@ public class GridAnimationObj : GridObject
             path = "Animations/Support/";
 
         }
+        else if (type == -3)
+        {
+            path = "Animations/Wait/";
+
+        }
+        else if (type == -4)
+        {
+            path = "Animations/Barrier/";
+
+        }
         else if (type == (int)Element.Buff)
         {
             path = "Animations/Buffs/";
@@ -111,7 +121,7 @@ public class GridAnimationObj : GridObject
                 if (shake)
                 {
                     float val = script.currentList.Length * Random.Range(1.4f, 1.8f);
-                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, (0.2f * magnitute), (val * 0.5f) * Time.deltaTime));
+                    StartCoroutine(shake.Shake(val * Time.deltaTime * magnitute, Mathf.Max( Mathf.Min( (0.01f * magnitute),10.0f), 0.10f), (val * 0.5f) * Time.deltaTime));
                 }
             }
             // time -= Time.deltaTime;

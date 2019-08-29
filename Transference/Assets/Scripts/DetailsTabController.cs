@@ -66,20 +66,17 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
         {
             if(type == 35)
             {
-                detailsScreen.fullDescription = !detailsScreen.fullDescription;
+                detailsScreen.fullDescription = true;
                 detailsScreen.updateDetails();
-                if(GetComponentInChildren<Text>())
-                {
-                    if(detailsScreen.fullDescription)
-                    {
-                        GetComponentInChildren<Text>().text = "Battle Description";
-                    }
-                    else
-                    {
-                        GetComponentInChildren<Text>().text = "Level Description";
-                    }
-                }
             }
+
+            if (type == 36)
+            {
+                detailsScreen.fullDescription = false;
+                detailsScreen.updateDetails();
+            }
+
+
         }
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HazardManager : MonoBehaviour {
+public class HazardManager : MonoBehaviour
+{
 
     public List<HazardScript> hazards;
     public GameObject hazardPrefab;
     public bool isSetup = false;
-    private int  skilloratk = -1;
+    private int skilloratk = -1;
     public void Setup()
     {
         if (!isSetup)
@@ -33,7 +34,7 @@ public class HazardManager : MonoBehaviour {
                 hazardSetup.Unset();
                 hazardSetup.hazardid = 0;
                 skilloratk = 1;// Random.Range(0, 2);
-                if(skilloratk == 0)
+                if (skilloratk == 0)
                 {
                     hazards[i].dropsSkill = false;
                     hazards[i].REWARD = Random.Range(0, 11);
@@ -79,7 +80,7 @@ public class HazardManager : MonoBehaviour {
                 if (skilloratk == 0)
                 {
                     hazard.dropsSkill = false;
-                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0,5);
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
@@ -90,6 +91,95 @@ public class HazardManager : MonoBehaviour {
                 hazards.Add(hazard);
                 subhazards.Add(hazard);
 
+            }
+        }
+        return subhazards;
+    }
+
+    public List<HazardScript> getHazards(MapData data)
+    {
+        int num = data.glyphIndexes.Count;
+        List<HazardScript> subhazards = new List<HazardScript>();
+        if (num < hazards.Count)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
+                hazards[i].Unset();
+                hazardSetup.Unset();
+                if (data.glyphIds.Count > 0)
+                    hazardSetup.hazardid = data.glyphIds[i];
+                else
+                    hazardSetup.hazardid = 0; 
+                skilloratk = 1;// Random.Range(0, 2);
+                if (skilloratk == 0)
+                {
+                    hazards[i].dropsSkill = false;
+                    hazards[i].REWARD = Random.Range(0, 11);
+                }
+                else
+                {
+                    hazards[i].dropsSkill = true;
+                    hazards[i].REWARD = Random.Range(0, 11);
+                }
+                hazards[i].Setup();
+                subhazards.Add(hazards[i]);
+            }
+        }
+        else
+        {
+            int indx = 0;
+            for (int i = 0; i < hazards.Count; i++)
+            {
+
+                HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
+                hazards[i].Unset();
+                hazardSetup.Unset();
+                if (data.glyphIds.Count > 0)
+                    hazardSetup.hazardid = data.glyphIds[i];
+                else
+                    hazardSetup.hazardid = 0;
+               skilloratk = Random.Range(0, 2);
+                if (skilloratk == 0)
+                {
+                    hazards[i].dropsSkill = false;
+                    hazards[i].REWARD = Random.Range(0, 11);
+                }
+                else
+                {
+                    hazards[i].dropsSkill = true;
+                    hazards[i].REWARD = Random.Range(0, 11);
+                }
+                hazards[i].Setup();
+                subhazards.Add(hazards[i]);
+                indx++;
+            }
+        
+            while (hazards.Count < num)
+            {
+                indx = hazards.Count;
+                GameObject temp = Instantiate(hazardPrefab, Vector2.zero, Quaternion.identity);
+                HazardSetup hazardSetup = temp.GetComponent<HazardSetup>();
+                if (data.glyphIds.Count > 0)
+                    hazardSetup.hazardid = data.glyphIds[indx];
+                else
+                    hazardSetup.hazardid = 0;
+                HazardScript hazard = temp.AddComponent<HazardScript>();
+                skilloratk = 1;// Random.Range(0, 2);
+                if (skilloratk == 0)
+                {
+                    hazard.dropsSkill = false;
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                }
+                else
+                {
+                    hazard.dropsSkill = true;
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                }
+                hazard.Setup();
+                hazards.Add(hazard);
+                subhazards.Add(hazard);
+                indx++;
             }
         }
         return subhazards;

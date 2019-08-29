@@ -41,6 +41,8 @@ public class LivingObject : GridObject
     protected GameObject shadow;
     protected GameObject barrier;
 
+    private ArmorScript defaultArmor;
+
     public GameObject SHADOW
     {
         get { return shadow; }
@@ -119,6 +121,11 @@ public class LivingObject : GridObject
         set { equipedArmor = value; }
     }
 
+    public ArmorScript DEFAULT_ARMOR
+    {
+        get { return defaultArmor; }
+        set { defaultArmor = value; }
+    }
     public override int MOVE_DIST
     {
         get
@@ -138,7 +145,11 @@ public class LivingObject : GridObject
     public int ACTIONS
     {
         get { return actions; }
-        set { actions = value; tookAction = false; }
+        set
+        {
+            actions = value;
+            if (actions < 0) { actions = 0; }
+        }
     }
     public int GENERATED
     {
@@ -153,11 +164,11 @@ public class LivingObject : GridObject
 
     public int STRENGTH
     {
-        get { return STATS.STRENGTH + BASE_STATS.STRENGTH + (WEAPON.BOOST == ModifiedStat.Str ? WEAPON.BOOSTVAL : 0); }
+        get { return STATS.STRENGTH + BASE_STATS.STRENGTH; }
     }
     public int MAGIC
     {
-        get { return STATS.MAGIC + BASE_STATS.MAGIC + (WEAPON.BOOST == ModifiedStat.Mag ? WEAPON.BOOSTVAL : 0); }
+        get { return STATS.MAGIC + BASE_STATS.MAGIC; }
     }
     public int DEFENSE
     {
@@ -173,7 +184,7 @@ public class LivingObject : GridObject
     }
     public int SKILL
     {
-        get { return STATS.SKILL + BASE_STATS.SKILL + (WEAPON.BOOST == ModifiedStat.Skill ? WEAPON.BOOSTVAL : 0); }
+        get { return STATS.SKILL + BASE_STATS.SKILL; }
     }
     public int MAX_HEALTH
     {
@@ -224,10 +235,12 @@ public class LivingObject : GridObject
 
     public bool ChangeHealth(int val)
     {
-
+        int healedVal = 0;
+        int prevHealth = HEALTH;
         if (val > 0 && HEALTH >= MAX_HEALTH)
         {
             STATS.HEALTH = 0;
+            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
             return false;
         }
         if (val + HEALTH > MAX_HEALTH)
@@ -240,6 +253,7 @@ public class LivingObject : GridObject
             STATS.HEALTH += val;
 
         }
+
         if (HEALTH <= 0)
         {
             STATS.HEALTH = MAX_HEALTH * -1;
@@ -254,30 +268,73 @@ public class LivingObject : GridObject
             myManager.gridObjects.Remove(this);
             Die();
         }
+
+        int postHealth = HEALTH;
+        healedVal = postHealth - prevHealth;
+
+        if (prevHealth < postHealth)
+        {
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Common.lime, this);
+        }
+        else if (healedVal != 0)
+        {
+            healedVal = postHealth - prevHealth;
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Common.red, this);
+            Debug.Log("lost health");
+        }
+
         return true;
     }
     public bool ChangeMana(int val)
     {
+        int healedVal = 0;
+        int prevHealth = MANA;
+
         if (val > 0 && MANA >= MAX_MANA)
         {
             return false;
         }
         STATS.MANA += val;
-        if (MANA > MAX_MANA)
+
+
+        if (val + MANA > MAX_MANA)
         {
             STATS.MANA = STATS.MAX_MANA;
             BASE_STATS.MANA = BASE_STATS.MAX_MANA;
+        }
+        else
+        {
+            STATS.MANA += val;
+
         }
         if (MANA <= 0)
         {
             STATS.MANA = -1 * MAX_MANA;
 
         }
+
+        int postHealth = MANA;
+        healedVal = postHealth - prevHealth;
+
+        if (prevHealth < postHealth)
+        {
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Color.magenta, this);
+        }
+        else if (healedVal != 0)
+        {
+            healedVal = postHealth - prevHealth;
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Color.grey, this);
+            Debug.Log("lost mana");
+        }
+
         return true;
     }
     public bool ChangeFatigue(int val)
     {
-        if (val > 0 && STATS.FATIGUE >= MAX_FATIGUE)
+        int healedVal = 0;
+        int prevHealth = FATIGUE;
+
+        if (val > 0 && STATS.FATIGUE <= 0)
         {
             return false;
         }
@@ -292,7 +349,61 @@ public class LivingObject : GridObject
         {
             STATS.FATIGUE = -1 * MAX_FATIGUE;
         }
+
+        int postHealth = FATIGUE;
+        healedVal = postHealth - prevHealth;
+
+        if (prevHealth > postHealth)
+        {
+            healedVal *= -1;
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Common.orange, this);
+        }
+        else if (healedVal != 0)
+        {
+            healedVal = postHealth - prevHealth;
+            myManager.CreateDmgTextEvent(healedVal.ToString(), Color.cyan, this);
+            Debug.Log("lost fatigue");
+        }
         return true;
+    }
+
+    public CommandSkill GetMostUsedSkill()
+    {
+        if (PHYSICAL_SLOTS.SKILLS.Count <= 0)
+        {
+            return null;
+        }
+
+        CommandSkill mostUsed = PHYSICAL_SLOTS.SKILLS[0] as CommandSkill;
+        for (int i = 0; i < PHYSICAL_SLOTS.SKILLS.Count; i++)
+        {
+            CommandSkill aSkill = PHYSICAL_SLOTS.SKILLS[i] as CommandSkill;
+            if (aSkill.USECOUNT > mostUsed.USECOUNT)
+            {
+                mostUsed = aSkill;
+            }
+        }
+        return mostUsed;
+
+    }
+    public CommandSkill GetMostUsedSpell()
+    {
+        if (MAGICAL_SLOTS.SKILLS.Count <= 0)
+        {
+            return null;
+        }
+
+        CommandSkill mostUsed = MAGICAL_SLOTS.SKILLS[0] as CommandSkill;
+        for (int i = 0; i < MAGICAL_SLOTS.SKILLS.Count; i++)
+        {
+            CommandSkill aSkill = MAGICAL_SLOTS.SKILLS[i] as CommandSkill;
+            if (aSkill.USECOUNT > mostUsed.USECOUNT)
+            {
+                mostUsed = aSkill;
+            }
+        }
+        return mostUsed;
+
     }
     public override void Setup()
     {
@@ -313,9 +424,9 @@ public class LivingObject : GridObject
             }
             equippedWeapon = GetComponent<WeaponEquip>();
             equippedWeapon.USER = this;
-            WeaponScript defaultWeapon = Common.noWeapon;
-            defaultWeapon.NAME = "default";
-            equippedWeapon.Equip(defaultWeapon);
+            // WeaponScript defaultWeapon = Common.noWeapon;
+            //defaultWeapon.NAME = "default";
+            //equippedWeapon.Equip(defaultWeapon);
             if (!GetComponent<ArmorEquip>())
             {
                 gameObject.AddComponent<ArmorEquip>();
@@ -326,10 +437,10 @@ public class LivingObject : GridObject
             equipedArmor.USER = this;
 
 
-            ArmorScript defaultArmor = Common.noArmor;
-            defaultArmor.NAME = "default";
-            defaultArmor.HITLIST = Common.noHitList;
-            equipedArmor.Equip(defaultArmor);
+            //  ArmorScript defaultArmor = Common.noArmor;
+            //  defaultArmor.NAME = "default";
+            // defaultArmor.HITLIST = Common.noHitList;
+            //equipedArmor.Equip(defaultArmor);
 
             if (!GetComponent<BaseStats>())
             {
@@ -474,7 +585,7 @@ public class LivingObject : GridObject
 
             if (ARMOR.HITLIST != Common.noHitList)
             {
-                if (ARMOR.ARMORID < 4)
+                if (ARMOR.ARMORID < 200)
                 {
 
                     barrier.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Shields/")[ARMOR.ARMORID];
@@ -552,7 +663,12 @@ public class LivingObject : GridObject
             //  myManager.doubleAdjOppTiles.Clear();
             if (ACTIONS <= 0)
             {
+                tookAction = false;
                 myManager.NextTurn(FullName, myManager.currentState);
+                if(GetComponent<SpriteRenderer>())
+                {
+                    GetComponent<SpriteRenderer>().color = Color.gray;
+                }
                 //myManager.CreateEvent(this, null, "clean state state event", myManager.BufferedCleanEvent);
 
                 //  myManager.CleanMenuStack(true);
@@ -570,10 +686,38 @@ public class LivingObject : GridObject
         myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
         return true;
     }
+
+    public virtual bool WaitEvent(Object data)
+    {
+        TrueWait();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeRealAction();
+        return true;
+    }
     public void Wait()
     {
-        // STATS.HEALTH += 5;
-        // STATS.MANA += 2;
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -3;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, NAME + " decided to wait", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> Barrier broke!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", WaitEvent);
+
+    }
+
+    public void TrueWait()
+    {
         ChangeHealth((int)(0.125 * MAX_HEALTH) * (actions + 1));
         ChangeMana((int)(0.125 * MAX_MANA) * (actions + 1));
         ChangeFatigue((int)(0.125 * MAX_FATIGUE) * (actions + 1));
@@ -599,7 +743,9 @@ public class LivingObject : GridObject
 
 
         }
+
         ACTIONS = 0;
+        tookAction = false;
         if (HEALTH > MAX_HEALTH)
             STATS.HEALTH = MAX_HEALTH;
         if (MANA > MAX_MANA)
@@ -609,17 +755,20 @@ public class LivingObject : GridObject
     }
     public void LevelUp()
     {
-        BASE_STATS.LEVEL++;
-        BASE_STATS.MAX_HEALTH += 5 + skillLevel;
-        BASE_STATS.MAX_MANA += 5 + magLevel;
-        BASE_STATS.MAX_FATIGUE += 5 + physLevel;
-        BASE_STATS.EXP -= 100;
-        BASE_STATS.STRENGTH++;
-        BASE_STATS.DEFENSE++;
-        BASE_STATS.MAGIC++;
-        BASE_STATS.RESIESTANCE++;
-        BASE_STATS.SPEED++;
-        BASE_STATS.SKILL++;
+        if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
+        {
+            BASE_STATS.LEVEL++;
+            BASE_STATS.MAX_HEALTH += skillLevel;
+            BASE_STATS.MAX_MANA += magLevel;
+            BASE_STATS.MAX_FATIGUE += physLevel;
+            BASE_STATS.EXP -= 100;
+            BASE_STATS.STRENGTH++;
+            BASE_STATS.DEFENSE++;
+            BASE_STATS.MAGIC++;
+            BASE_STATS.RESIESTANCE++;
+            BASE_STATS.SPEED++;
+            BASE_STATS.SKILL++;
+        }
 
     }
 

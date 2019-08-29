@@ -7,6 +7,7 @@ public class ArmorSet : MonoBehaviour
 
     public LivingObject currentObj;
     public GridObject currentGridObj;
+    public ArmorScript selectedArmor;
 
     [SerializeField]
     Image[] armorreacts;
@@ -18,7 +19,7 @@ public class ArmorSet : MonoBehaviour
     Text[] attributes;
 
     [SerializeField]
-    Slider wardSlider;
+    Slider Barrierslider;
 
     [SerializeField]
     Text sliderText;
@@ -36,7 +37,11 @@ public class ArmorSet : MonoBehaviour
     {
         if (!currentObj)
             return;
-        selectedHitlist = currentObj.ARMOR.HITLIST;
+        
+
+        if (selectedArmor == null)
+            selectedArmor = currentObj.ARMOR.SCRIPT;
+        selectedHitlist = selectedArmor.HITLIST;
 
         if (selectedHitlist != null)
         {
@@ -53,24 +58,36 @@ public class ArmorSet : MonoBehaviour
             }
         }
 
-        if (wardSlider)
+        if (Barrierslider)
         {
             if (currentObj.ARMOR.NAME != "none")
             {
-                wardSlider.gameObject.SetActive(true);
-                wardSlider.maxValue = currentObj.ARMOR.MAX_HEALTH;
-                wardSlider.value = currentObj.ARMOR.HEALTH;
                 if (sliderText)
                 {
-                    float trueAmt = wardSlider.value / wardSlider.maxValue;
-                    trueAmt *= 100.0f;
-                    trueAmt = Mathf.Round(trueAmt);
-                    sliderText.text = "" + trueAmt + "%";
+
+                    if (currentObj.DEFAULT_ARMOR == selectedArmor)
+                    {
+                        Barrierslider.gameObject.SetActive(true);
+                        Barrierslider.maxValue = 100;
+                        Barrierslider.value = 0;
+                        sliderText.text = "No barrier active";
+                    }
+                    else
+                    {
+                        Barrierslider.gameObject.SetActive(true);
+                        Barrierslider.maxValue = currentObj.ARMOR.MAX_HEALTH;
+                        Barrierslider.value = currentObj.ARMOR.HEALTH;
+
+                        float trueAmt = Barrierslider.value / Barrierslider.maxValue;
+                        trueAmt *= 100.0f;
+                        trueAmt = Mathf.Round(trueAmt);
+                        sliderText.text = "" + trueAmt + "%";
+                    }
                 }
             }
             else
             {
-                wardSlider.gameObject.SetActive(false);
+                Barrierslider.gameObject.SetActive(false);
             }
         }
 
@@ -148,13 +165,13 @@ public class ArmorSet : MonoBehaviour
         }
 
 
-        if (wardSlider)
+        if (Barrierslider)
         {
-                wardSlider.gameObject.SetActive(false);         
+            Barrierslider.gameObject.SetActive(false);
         }
 
-      
-        
+
+
         attributes[0].text = "Str: " + currentGridObj.BASE_STATS.STRENGTH;
 
         attributes[1].text = "Def: " + currentGridObj.BASE_STATS.DEFENSE;//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
@@ -167,7 +184,7 @@ public class ArmorSet : MonoBehaviour
         attributes[3].text = "Mag: " + currentGridObj.BASE_STATS.MAGIC;
         attributes[4].text = "Res: " + currentGridObj.BASE_STATS.RESIESTANCE;// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
 
-     
+
 
         attributes[5].text = "Skl: " + currentGridObj.BASE_STATS.SKILL;
 

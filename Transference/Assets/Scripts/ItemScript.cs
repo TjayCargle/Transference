@@ -21,6 +21,9 @@ public class ItemScript : UsableScript
     [SerializeField]
     private RangeType rType;
 
+    [SerializeField]
+    private DMG possibleDMG;
+
     public ItemType ITYPE
     {
         get { return iType; }
@@ -58,7 +61,13 @@ public class ItemScript : UsableScript
         get { return modStat; }
         set { modStat = value; }
     }
-    public bool useItem(LivingObject target, TileScript targetTile = null)
+
+    public DMG PDMG
+    {
+        get { return possibleDMG; }
+        set { possibleDMG = value; }
+    }
+    public bool useItem(LivingObject target, LivingObject user, TileScript targetTile = null)
     {
         bool usedEffect = false;
         switch (ITYPE)
@@ -155,6 +164,25 @@ public class ItemScript : UsableScript
             case ItemType.buff:
                 break;
             case ItemType.dmg:
+                {
+                    if (target)
+                    {
+                        if (target.FACTION != user.FACTION)
+                        {
+                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            if (manager)
+                            {
+
+                                CommandSkill itemskill = Common.GenericSkill;
+
+                                if (manager.AttackTarget(user, target, itemskill))
+                                {
+                                    usedEffect = true;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case ItemType.actionBoost:
                 float chance = Random.value;
@@ -293,7 +321,7 @@ public class ItemScript : UsableScript
                                 EnemySetup es = temp.GetComponent<EnemySetup>();
                                 GameObject.DestroyImmediate(es);
                             }
-                       
+
                             if (!temp.GetComponent<LivingSetup>())
                             {
                                 temp.gameObject.AddComponent<LivingSetup>();
@@ -329,5 +357,91 @@ public class ItemScript : UsableScript
                 break;
         }
         return usedEffect;
+    }
+
+    public bool useItem(GridObject target, LivingObject user, TileScript targetTile = null)
+    {
+        bool usedEffect = false;
+        switch (ITYPE)
+        {
+
+            case ItemType.dmg:
+                {
+                    if (target)
+                    {
+                        if (target.FACTION != user.FACTION)
+                        {
+                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            if (manager)
+                            {
+
+                                CommandSkill itemskill = Common.GenericSkill;
+                                itemskill.ACCURACY = 100;
+                                itemskill.COST = 0;
+                                itemskill.ELEMENT = ELEMENT;
+                                itemskill.DAMAGE = PDMG;
+                                itemskill.HITS = 1;
+                                itemskill.SKILLTYPE = SkillType.Command;
+                                itemskill.SUBTYPE = SubSkillType.Item;
+                                itemskill.OWNER = user;
+                                itemskill.NAME = NAME;
+                                if (manager.AttackTarget(user, target, itemskill))
+                                {
+                                    usedEffect = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                if(target.GetComponent<LivingObject>())
+                {
+                   return useItem(target as LivingObject, user, targetTile);
+                }
+                break;
+        }
+        return usedEffect;
+    }
+
+    public override void UpdateDesc()
+    {
+        base.UpdateDesc();
+        switch (ITYPE)
+        {
+            case ItemType.healthPotion:
+                DESC = "Restores "+(100.0f * trueValue)+"% of Health to ally or self.";
+                break;
+            case ItemType.manaPotion:
+                DESC = "Restores " + (100.0f * trueValue) + "% of Mana to ally or self.";
+                break;
+            case ItemType.fatiguePotion:
+                {
+                    if(trueValue < 0)
+                    {
+                        DESC = "Increases " + (100.0f * trueValue) + "% of Fatigue to ally or self.";
+                    }
+                    else
+                    {
+                        DESC = "Restores " + (100.0f * trueValue) + "% of Fatigue to ally or self.";
+                    }
+                }
+                break;
+            case ItemType.cure:
+                break;
+            case ItemType.buff:
+                break;
+            case ItemType.dmg:
+                DESC = "Deals heavy magical "+ELEMENT+" Damage to target";
+                break;
+            case ItemType.actionBoost:
+                DESC = "" + (100.0f * trueValue) + "% chance to grant 2 additional action points to ally or self.";
+                break;
+            case ItemType.random:
+                DESC = "Grants " +  trueValue + "random effect to ally or self";
+                break;
+            case ItemType.summon:
+                break;
+        }
     }
 }

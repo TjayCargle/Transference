@@ -1,5 +1,8 @@
-id, nam3, health, def, res
-0,Orange Coffin, 3, 10, 205,0
-1,Purple Coffin, 9,207,25,0
-2,Ankh,99,99,99,1
-3,Ankh,99,99,99,2
+id, nam3, health, def, res,speed,faction
+0,Orange Coffin, 9, 10,181,0,dropsSkill
+1,Purple Coffin, 9,166,25,0,dropsSpell
+2,Ankh,99,99,99,1,eventObj
+3,Ankh,99,99,99,2,eventObj
+4,Red Coffin, 9,91,100,0,dropsStrike
+5,Blue Coffin, 9,100,91,0,dropsBarrier
+6,Pink Coffin, 9,56,135,0,dropsSpell
