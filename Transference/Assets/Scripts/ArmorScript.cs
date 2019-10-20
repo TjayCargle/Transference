@@ -17,6 +17,7 @@ public class ArmorScript : UsableScript
     [SerializeField]
     private List<EHitType> hitList;
 
+    public Sprite mySprite;
     //[SerializeField]
     //private int myHealth;
 
@@ -28,8 +29,7 @@ public class ArmorScript : UsableScript
 
     [SerializeField]
     private float maxHealthPercent = 100.0f;
-    private LivingObject owner;
-
+   
 
     public List<EHitType> HITLIST
     {
@@ -37,10 +37,10 @@ public class ArmorScript : UsableScript
         set { hitList = value; }
     }
 
-    public LivingObject USER
+    public Sprite FACE
     {
-        get { return owner; }
-        set { owner = value; }
+        get { if (mySprite == null) { mySprite = Resources.LoadAll<Sprite>("Shields/")[INDEX]; } return mySprite; }
+        set { mySprite = value; }
     }
     public int DEFENSE
     {
@@ -169,7 +169,13 @@ public class ArmorScript : UsableScript
             if(LEVEL < Common.MaxSkillLevel)
             {
                 LevelUP();
-                UpdateDesc();
+               // UpdateDesc();
+                ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+           
+                  
+                manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, -1, manager.CountStart);
+                manager.CreateTextEvent(this, "" + owner.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
+                
             }
         }
     }
@@ -362,7 +368,7 @@ public class ArmorScript : UsableScript
                 break;
             case Augment.magAugment:
                 break;
-            case Augment.sklAugment:
+            case Augment.dexAugment:
                 break;
             case Augment.defAugment:
                 DEFENSE += 5;

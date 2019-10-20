@@ -42,6 +42,8 @@ public class StatScript : MonoBehaviour
     [SerializeField]
     private float fatigueCostChange = 1.0f;
     [SerializeField]
+    private float healthCostChange = 1.0f;
+    [SerializeField]
     private float fatigueChargeChange = 1.0f;
     private LivingObject owner;
 
@@ -119,7 +121,7 @@ public class StatScript : MonoBehaviour
             }
         }
     }
-    public int SKILL
+    public int DEX
     {
         get { return myBaseSkill; }
         set { myBaseSkill = value;
@@ -192,6 +194,11 @@ public class StatScript : MonoBehaviour
         get { return fatigueCostChange; }
         set { fatigueCostChange = value; }
     }
+    public float HPCOSTCHANGE
+    {
+        get { return healthCostChange; }
+        set { healthCostChange = value; }
+    }
     public float FTCHARGECHANGE
     {
         get { return fatigueChargeChange; }
@@ -228,6 +235,8 @@ public class StatScript : MonoBehaviour
                 STRENGTH += (int)modification;
                 modification = ((float)val / 100) * baseObj.MAGIC;
                 MAGIC += (int)modification;
+                modification = ((float)val / 100) * baseObj.DEX;
+                DEX += (int)modification;
                 break;
             case ModifiedStat.Def:
                 modification = ((float)val / 100) * baseObj.DEFENSE;
@@ -242,14 +251,16 @@ public class StatScript : MonoBehaviour
                 DEFENSE += (int)modification;
                 modification = ((float)val / 100) * baseObj.RESIESTANCE;
                 RESIESTANCE += (int)modification;
+                modification = ((float)val / 100) * baseObj.SPEED;
+                SPEED += (int)modification;
                 break;
             case ModifiedStat.Speed:
                 modification = ((float)val / 100) * baseObj.SPEED;
                 SPEED += (int)modification;
                 break;
-            case ModifiedStat.Skill:
-                modification = ((float)val / 100) * baseObj.SKILL;
-                SKILL += (int)modification;
+            case ModifiedStat.Dex:
+                modification = ((float)val / 100) * baseObj.DEX;
+                DEX += (int)modification;
                 break;
             case ModifiedStat.SP:
                 MAX_MANA += val;
@@ -265,13 +276,13 @@ public class StatScript : MonoBehaviour
                 //  Debug.Log("m = " + modification);
                 //   Debug.Log("FT = " + FTCOSTCHANGE);
                 modification = ((float)val / 100);
-                FTCOSTCHANGE -= modification;
+                FTCOSTCHANGE = 1.0f - modification;
                 if (FTCOSTCHANGE < 0.1)
                     FTCOSTCHANGE = 0.1f;
                 break;
             case ModifiedStat.SPCost:
                 modification = ((float)val / 100.0f);
-                SPCHANGE -= modification;
+                SPCHANGE= 1.0f -modification;
                 if (SPCHANGE < 0.1)
                     SPCHANGE = 0.1f;
                 break;
@@ -279,7 +290,7 @@ public class StatScript : MonoBehaviour
                 break;
             case ModifiedStat.FTCharge:
                 modification = ((float)val / 100);
-                FTCHARGECHANGE -= modification;
+                FTCHARGECHANGE = 1.0f - modification;
                 if (FTCHARGECHANGE < 0.1)
                     FTCHARGECHANGE = 0.1f;
                 break;
@@ -301,7 +312,7 @@ public class StatScript : MonoBehaviour
         DEFENSE = 0;
         RESIESTANCE = 0;
         SPEED = 0;
-        SKILL = 0;
+        DEX = 0;
         FATIGUE = 0;
         FTCOSTCHANGE = 1.0f;
         FTCHARGECHANGE = 1.0f;
@@ -323,7 +334,7 @@ public class StatScript : MonoBehaviour
         DEFENSE = 0;
         RESIESTANCE = 0;
         SPEED = 0;
-        SKILL = 0;
+        DEX = 0;
         FTCOSTCHANGE = 1.0f;
         SPCHANGE = 1.0f;
         FTCHARGECHANGE = 1.0f;

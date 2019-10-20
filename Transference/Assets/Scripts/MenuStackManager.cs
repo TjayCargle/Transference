@@ -51,8 +51,8 @@ public class MenuStackManager : MonoBehaviour {
             oppOptions.state = State.PlayerOppOptions;
             oppOptions.menu = currentMenu.OppSelection;
 
-            oppSelection.state = State.PlayerOppSelecting;
-            oppSelection.menu = currentMenu.command;
+            oppSelection.state = State.PlayerOppOptions;
+            oppSelection.menu = currentMenu.act;
 
             detailsScreen.state = State.CheckDetails;
             detailsScreen.menu = currentMenu.none;

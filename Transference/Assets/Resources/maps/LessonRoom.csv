@@ -20,12 +20,12 @@ i,5
 t,1
 w,7
 h,6
-d,0
-m,Gift Shop
-l,3
-x,14
-e,19
+d,0,27
+m,Art Gallery, Foyer
+l,8,16
+x,49,0
+e,12
 g,17
-gi,0
-o,5,37
-oi,1,0
+gi,2
+o,7
+oi,1

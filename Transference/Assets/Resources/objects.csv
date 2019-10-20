@@ -1,8 +1,11 @@
-id, nam3, health, def, res,speed,faction
-0,Orange Coffin, 9, 10,181,0,dropsSkill
-1,Purple Coffin, 9,166,25,0,dropsSpell
-2,Ankh,99,99,99,1,eventObj
-3,Ankh,99,99,99,2,eventObj
-4,Red Coffin, 9,91,100,0,dropsStrike
-5,Blue Coffin, 9,100,91,0,dropsBarrier
-6,Pink Coffin, 9,56,135,0,dropsSpell
+id, nam3, health, def, res,speed,eventnum,faction
+0,Skill Coffin, 9, 15,95,81,0,dropsSkill
+1,Spell Coffin, 9,71,25,85,0,dropsSpell
+2,Ankh,99,99,99,99,1,eventObj
+3,Ankh,99,99,99,99,2,eventObj
+4,Strike Coffin, 9,91,80,20,0,dropsStrike
+5,Barrier Coffin, 9,42,71,80,0,dropsBarrier
+6,Item Coffin, 9,56,62,73,0,dropsItem
+7,Passive Coffin, 9,56,74,61,0,dropsPassive
+8,Auto Coffin, 9,74,61,56,0,dropsAuto
+9,Ankh,99,99,99,99,3,eventObj

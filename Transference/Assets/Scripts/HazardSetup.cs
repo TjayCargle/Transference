@@ -25,18 +25,18 @@ public class HazardSetup : LivingSetup
             }
             isSetup = true;
             myself.Setup();
-            myself.FACTION = Faction.enemy;
+            myself.FACTION = Faction.hazard;
             // Debug.Log(me.FullName + " is setting up");
             if (dm != null)
             {
-                 dm.GetHazard(hazardid, myself);
-           
+                dm.GetHazard(hazardid, myself);
+
 
                 dm.GetArmor(200, myself);
-                
+
 
             }
-            myself.FACTION = Faction.hazard;
+            // myself.FACTION = Faction.hazard;
 
             if (!manager.gridObjects.Contains(myself))
             {
@@ -45,52 +45,104 @@ public class HazardSetup : LivingSetup
                 if (myself.currentTile)
                     myself.currentTile.isOccupied = true;
             }
-            myself.BASE_STATS.MAX_HEALTH = 50 +  (int)(myself.BASE_STATS.LEVEL * 12f);
+            myself.BASE_STATS.MAX_HEALTH = 50 + (int)(myself.BASE_STATS.LEVEL * 12f);
             myself.BASE_STATS.HEALTH = myself.BASE_STATS.MAX_HEALTH;
-            if (myself.PHYSICAL_SLOTS.SKILLS.Count > 0)
+            myself.generateSequence();
+            if (myself.INVENTORY.CSKILLS.Count > 0)
             {
-                CommandSkill mySkill = myself.PHYSICAL_SLOTS.SKILLS[0] as CommandSkill;
-                myself.dropsSkill = true;
-                myself.ARMOR.HITLIST[(int)mySkill.ELEMENT] = EHitType.reflects;
-                myself.ARMOR.HITLIST[(int)Element.Force - (int)mySkill.ELEMENT] = EHitType.cripples;
+                CommandSkill mySkill = myself.INVENTORY.CSKILLS[0] as CommandSkill;
+               
+                int reflectnum = (int)mySkill.ELEMENT;
+                int weaknum = 7 - reflectnum;
+                for (int i = 0; i < myself.ARMOR.HITLIST.Count; i++)
+                {
+                    if (i == reflectnum)
+                    {
+                        myself.ARMOR.HITLIST[i] = EHitType.reflects;
+                    }
+                    else if (i == weaknum)
+                    {
+                        myself.ARMOR.HITLIST[i] = EHitType.weak;
+                    }
+                    else
+                    {
+                        int choice = Random.Range(0, 1);
+                        if(choice == 0)
+                        {
+                            myself.ARMOR.HITLIST[i] = EHitType.resists;
+                        }
+                        else
+                            myself.ARMOR.HITLIST[i] = EHitType.nulls;
+                    }
+                }
+
+        
                 int amnt = Common.GetDmgIndex(mySkill.DAMAGE) * 5;
                 if (mySkill.ETYPE == EType.magical)
                 {
-                    myself.STATS.MAGIC = 2 * amnt;
-                    myself.STATS.RESIESTANCE = 2 * amnt;
-                    myself.STATS.STRENGTH = amnt;
-                    myself.STATS.DEFENSE =  amnt;
+                    myself.BASE_STATS.MAGIC = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    myself.BASE_STATS.RESIESTANCE = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    myself.BASE_STATS.STRENGTH = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.DEFENSE = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.SPEED = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.DEX = Random.Range(1, amnt * 2);
                 }
                 else
                 {
-                    myself.STATS.STRENGTH = 2 * amnt;
-                    myself.STATS.DEFENSE = 2 * amnt;
-                    myself.STATS.MAGIC = amnt;
-                    myself.STATS.RESIESTANCE = amnt;
+                    myself.BASE_STATS.STRENGTH = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    myself.BASE_STATS.DEFENSE = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    myself.BASE_STATS.MAGIC = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.RESIESTANCE = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.SPEED = Random.Range(1, amnt * 2);
+                    myself.BASE_STATS.DEX = Random.Range(1, amnt * 2);
                 }
             }
             else
             {
                 if (myself.INVENTORY.WEAPONS.Count > 0)
                 {
-                    myself.dropsSkill = false;
-                    myself.ARMOR.HITLIST[(int)myself.WEAPON.ELEMENT] = EHitType.reflects;
+                   
+
+                   
+                    int reflectnum = (int)myself.WEAPON.ELEMENT;
+                    int weaknum = 7 - reflectnum;
+                    for (int i = 0; i < myself.ARMOR.HITLIST.Count; i++)
+                    {
+                        if (i == reflectnum)
+                        {
+                            myself.ARMOR.HITLIST[i] = EHitType.reflects;
+                        }
+                        else if (i == weaknum)
+                        {
+                            myself.ARMOR.HITLIST[i] = EHitType.weak;
+                        }
+                        else
+                        {
+                            int choice = Random.Range(0, 1);
+                            if (choice == 0)
+                            {
+                                myself.ARMOR.HITLIST[i] = EHitType.resists;
+                            }
+                            else
+                                myself.ARMOR.HITLIST[i] = EHitType.nulls;
+                        }
+                    }
                     WeaponEquip weapon = myself.WEAPON;
-                    int amnt = (1 +(weapon.ATTACK) )* 5;
-                    if (weapon.ATTACK_TYPE == EType.magical)
+                    int amnt = (1 + (weapon.ATTACK)) * 5;
+                    //   if (weapon.ATTACK_TYPE == EType.magical)
                     {
-                        myself.BASE_STATS.MAGIC = 2 * amnt;
-                        myself.BASE_STATS.RESIESTANCE = 2 * amnt;
-                        myself.BASE_STATS.STRENGTH = amnt;
-                        myself.BASE_STATS.DEFENSE = amnt;
+                        myself.BASE_STATS.MAGIC = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                        myself.BASE_STATS.RESIESTANCE = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                        myself.BASE_STATS.STRENGTH = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                        myself.BASE_STATS.DEFENSE = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
                     }
-                    else
-                    {
-                        myself.BASE_STATS.STRENGTH = 2 * amnt;
-                        myself.BASE_STATS.DEFENSE = 2 * amnt;
-                        myself.BASE_STATS.MAGIC = amnt;
-                        myself.BASE_STATS.RESIESTANCE = amnt;
-                    }
+                    //else
+                    //{
+                    //    myself.BASE_STATS.STRENGTH = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    //    myself.BASE_STATS.DEFENSE = (2 * Random.Range(1, amnt)) + Random.Range(0, myself.BASE_STATS.LEVEL);
+                    //    myself.BASE_STATS.MAGIC = Random.Range(1, amnt * 2 );
+                    //    myself.BASE_STATS.RESIESTANCE = Random.Range(1, amnt * 2);
+                    //}
                 }
             }
 

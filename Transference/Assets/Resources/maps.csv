@@ -7,3 +7,12 @@
 5,Lesson Room,1,7,6,1,0,Gift Shop,3,14,1,19,1,17,0,2,7,37,1,0
 6,Western Hallway,2,7,5,2,0, 34,Hidden Room,Lower Hallway,4,7,22,2,1,19,0,0,3,1,16,28,2,0,0
 7,Lower Hallway, 2,5,8,3, 1,37,4,Western Hallway,Private study,Gift Shop,6,0,3,34,2,10,2, 17, 18, 0,0,0
+8,Art Gallery, 2,10,9
+9,Bridge, 2,18,5
+10,Upper Passage, 2,5,10
+11,Theatre, 2,8,5
+12,Lounge, 2,8,7
+13,Solarium, 2,7,12
+14,Library, 0,12,9
+15,Patio, 0,7,4
+16,Foyer,2,5,8 

@@ -29,6 +29,8 @@ public class Equipable : MonoBehaviour {
 
     public virtual void Equip(UsableScript usable)
     {
+        if (usable == null)
+            return;
         this.DESC = usable.DESC;
         this.NAME = usable.NAME;
         this.TYPE = usable.TYPE;

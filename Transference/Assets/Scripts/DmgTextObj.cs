@@ -38,7 +38,11 @@ public class DmgTextObj : MonoBehaviour
                 manager.MoveCameraAndShow(target);
             gameObject.SetActive(true);
             isShowing = true;
-            time = 1.00f;
+            time = 0.75f;
+            if(manager)
+            {
+                manager.PlayHitSound();
+            }
         }
     }
 

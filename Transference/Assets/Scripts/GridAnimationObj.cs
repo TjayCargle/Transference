@@ -9,6 +9,7 @@ public class GridAnimationObj : GridObject
     public Animation anim;
     public bool isShowing = false;
     public int type = 0;
+    public int subtype = -1;
     public CameraShake shake;
     public int magnitute = 1;
     public GridObject target;
@@ -33,6 +34,10 @@ public class GridAnimationObj : GridObject
 
     public void LoadGridAnimation()
     {
+        if(type == -10)
+        {
+            return;
+        }
         if (type == -1)
         {
             path = "Animations/Break/";
@@ -61,11 +66,30 @@ public class GridAnimationObj : GridObject
         else
         {
             path = "Animations/" + ((Element)type).ToString().ToLower() + "/";
+            if(subtype != -1)
+            {
+                if(subtype == 2)
+                {
+                    path += "strike/";
+                }
+                else if(subtype == 0)
+                {
+                    path += "skill/";
+                }
+                else
+                {
+                    path += "spell/";
+                }
+            }
         }
         script.LoadList(path, false);
     }
     public void StartCountDown()
     {
+        if (type == -10)
+        {
+            return;
+        }
         if (isShowing == false)
         {
             if(target)
@@ -83,6 +107,7 @@ public class GridAnimationObj : GridObject
                     {
                         manager.sfx.loadAudio(audios[0]);
                         manager.sfx.playSound();
+                       // myManager.CreateEvent(this, null, "waiting for sfx", myManager.WaitForSFXEvent,null,0);
                     }
                 }
             }

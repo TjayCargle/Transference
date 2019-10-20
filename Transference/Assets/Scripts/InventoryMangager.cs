@@ -24,7 +24,7 @@ public class InventoryMangager : MonoBehaviour
     public MenuItem[] extraSlots;
     // UsableScript genericMove;
     UsableScript genericAtk;
-
+    public int lastIndex;
     public List<UsableScript> currentList = null;
     public List<UsableScript> extraList = null;
     public int slotIndex;
@@ -324,6 +324,39 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
                     break;
+
+                case State.EventRunning:
+                    {
+                        if (Input.GetKeyDown(KeyCode.W))
+                        {
+                            IncreaseScroll();
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.S))
+                        {
+                            DecreaseScroll();
+                        }
+                        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        {
+                            IncreaseScroll();
+                        }
+
+                        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                        {
+                            DecreaseScroll();
+                        }
+
+
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            if (selectedMenuItem)
+                            {
+                                selectedMenuItem.ApplyAction(lastObject);
+                            }
+                        }
+
+                    }
+                    break;
             }
 
         }
@@ -448,7 +481,12 @@ public class InventoryMangager : MonoBehaviour
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(true);
                                     UpdateDescriptions(wep);
                                 }
+                                if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
+                                {
+                                    OppSkill opp = selectedMenuItem.refItem as OppSkill;
 
+                                    UpdateDescriptions(opp);
+                                }
                                 if (selectedMenuItem.refItem.GetType() == typeof(ItemScript))
                                 {
                                     manager.ShowItemAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as ItemScript));
@@ -595,6 +633,13 @@ public class InventoryMangager : MonoBehaviour
                                     manager.showAttackableTiles();
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(true);
                                     UpdateDescriptions(wep);
+                                }
+
+                                if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
+                                {
+                                    OppSkill opp = selectedMenuItem.refItem as OppSkill;
+
+                                    UpdateDescriptions(opp);
                                 }
 
                                 if (selectedMenuItem.refItem.GetType() == typeof(ItemScript))
@@ -756,16 +801,22 @@ public class InventoryMangager : MonoBehaviour
                                 else if (selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                 {
                                     WeaponScript wep = selectedMenuItem.refItem as WeaponScript;
-                                    manager.showAttackableTiles();
+                                    manager.ShowWeaponAttackbleTiles(manager.player.current, (selectedMenuItem.refItem as WeaponScript));
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(true);
                                     UpdateDescriptions(wep);
+                                }
+                                else if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
+                                {
+                                    OppSkill opp = selectedMenuItem.refItem as OppSkill;
+                                    newdescs[0].transform.parent.parent.gameObject.SetActive(true);
+                                    UpdateDescriptions(opp);
                                 }
                                 else
                                 {
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(false);
                                 }
 
-                                if(selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
+                                if (selectedMenuItem.refItem.GetType() == typeof(ArmorScript))
                                 {
                                     manager.myCamera.armorSet.selectedArmor = selectedMenuItem.refItem as ArmorScript;
                                     manager.myCamera.armorSet.updateDetails();
@@ -911,7 +962,7 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     case SideEffect.pullin:
                         {
-                            newdescs[5].text = "Pulls target enemy forward 1 tile";
+                            newdescs[5].text = "Pulls target enemy back 1 tile";
                         }
                         break;
                     case SideEffect.pushforward:
@@ -921,7 +972,7 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     case SideEffect.pullback:
                         {
-                            newdescs[5].text = "Pulls self and target enemy forward 1 tile";
+                            newdescs[5].text = "Pulls self and target enemy back 1 tile";
                         }
                         break;
                     case SideEffect.jumpback:
@@ -941,7 +992,7 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     default:
                         {
-                            newdescs[5].text = "" + ((float)cmd.DAMAGE * cmd.OWNER.SKILL).ToString() + "% chance of " + cmd.EFFECT.ToString();
+                            newdescs[5].text = "" + ((cmd.OWNER.MAGIC * 0.5f) + cmd.LEVEL).ToString() + "% chance of " + cmd.EFFECT.ToString();
                         }
                         break;
                 }
@@ -957,14 +1008,7 @@ public class InventoryMangager : MonoBehaviour
     {
         if (newdescs.Length == 6)
         {
-            if (cmd.ATTACK_TYPE == EType.physical)
-            {
-                newdescs[0].text = "<sprite=0> \n Physical";
-            }
-            else
-            {
-                newdescs[0].text = "<sprite=1> \n Magical";
-            }
+            newdescs[0].text = "<sprite=4> \n Natural";
             int indxex = (int)cmd.ELEMENT;
             elemImg.sprite = attributeImages[indxex];
 
@@ -974,13 +1018,59 @@ public class InventoryMangager : MonoBehaviour
             if (cmd.ELEMENT <= Element.Force)
             {
                 dmgImg.color = Color.white;
-                dmgImg.sprite = dmgSprites[Common.GetDmgIndex(DMG.tiny) - 1];
+                dmgImg.sprite = dmgSprites[Common.GetDmgIndex(cmd.ATTACK) - 1];
                 newdescs[3].text = "" + cmd.ATTACK.ToString() + " damage";
             }
             else
             {
                 dmgImg.color = Common.trans;
                 switch (cmd.ELEMENT)
+                {
+
+                    default:
+                        newdescs[3].text = "";
+                        break;
+                }
+
+            }
+
+            newdescs[4].text = "Hits \n 1";
+
+            // if(cmd.EFFECT != SideEffect.none)
+            {
+                newdescs[5].text = "May trigger an Auto Skill";// + cmd.BOOST + " + " + cmd.BOOSTVAL + " when equipped";
+            }
+        }
+    }
+
+    private void UpdateDescriptions(OppSkill opp)
+    {
+        if (newdescs.Length == 6)
+        {
+            if (opp.SUBTYPE == SubSkillType.Skill)
+            {
+                newdescs[0].text = "<sprite=0> \n Physical";
+            }
+            else
+            {
+                newdescs[0].text = "<sprite=1> \n Magical";
+            }
+            int indxex = (int)opp.REACTION;
+            elemImg.sprite = attributeImages[indxex];
+
+            newdescs[1].text = opp.REACTION.ToString();
+            newdescs[2].text = "100% \n Accuracy";
+
+            if (opp.REACTION <= Element.Force)
+            {
+                dmgImg.color = Color.white;
+                dmgImg.sprite = dmgSprites[Common.GetDmgIndex(opp.DAMAGE)];
+                newdescs[3].text = "" + opp.DAMAGE.ToString() + " damage";
+            }
+            else
+            {
+                dmgImg.color = Common.trans;
+                switch (opp.DAMAGE)
                 {
 
                     default:
@@ -1364,6 +1454,7 @@ public class InventoryMangager : MonoBehaviour
 
         lastObject = liveObject;
         currentContent = content;
+        lastIndex = index;
         currentRect = rect;
         currentList.Clear();
         //UsableScript itemType = new UsableScript();
@@ -1404,16 +1495,16 @@ public class InventoryMangager : MonoBehaviour
                 useType = 4;
                 windowType = -1;
                 // currentList.Add(genericMove);
-                if (liveObject.WEAPON.EQUIPPED)
-                {
-                    genericAtk.NAME = liveObject.WEAPON.NAME;
-                    currentList.Add(genericAtk);
-                }
+                //if (liveObject.WEAPON.EQUIPPED)
+                //{
+                //    genericAtk.NAME = liveObject.WEAPON.NAME;
+                //    currentList.Add(genericAtk);
+                //}
 
-                for (int i = 0; i < liveObject.INVENTORY.CSKILLS.Count; i++)
+                for (int i = 0; i < liveObject.OPP_SLOTS.SKILLS.Count; i++)
                 {
-                    if (liveObject.INVENTORY.CSKILLS[i].ELEMENT <= Element.Force)
-                        currentList.Add(liveObject.INVENTORY.CSKILLS[i]);
+
+                    currentList.Add(liveObject.OPP_SLOTS.SKILLS[i]);
                 }
                 break;
             case 4:
@@ -1483,6 +1574,7 @@ public class InventoryMangager : MonoBehaviour
                 break;
             case 11:
                 useType = 5;
+                windowType = 3;
                 // items
 
                 for (int i = 0; i < liveObject.INVENTORY.ITEMS.Count; i++)
@@ -1544,29 +1636,28 @@ public class InventoryMangager : MonoBehaviour
 
                     if (attr)
                         attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-                    if (item.TYPE != 4 && item.TYPE != 0)
+
+
+                    newText = item.NAME;
+                    if (selectedText)
                     {
-                        newText = item.NAME;
-                        if (selectedText)
+                        selectedText.resizeTextForBestFit = true;
+                        selectedText.text = newText;
+                    }
+                    if (proText)
+                    {
+                        proText.text = newText;
+                        if (item.NAME.Length >= 7)
                         {
-                            selectedText.resizeTextForBestFit = true;
-                            selectedText.text = newText;
+                            proText.enableAutoSizing = true;
                         }
-                        if (proText)
+                        else
                         {
-                            proText.text = newText;
-                            if (item.NAME.Length >= 7)
-                            {
-                                proText.enableAutoSizing = true;
-                            }
-                            else
-                            {
-                                proText.enableAutoSizing = false;
-                                proText.fontSize = 25.0f;
-                            }
+                            proText.enableAutoSizing = false;
+                            proText.fontSize = 25.0f;
                         }
                     }
-                    else
+
                     {
 
                         if (windowType == 3 || windowType == -1)
@@ -1574,7 +1665,7 @@ public class InventoryMangager : MonoBehaviour
 
                             if (item.GetType() == typeof(CommandSkill))
                             {
-                                if (manager.currentState == State.PlayerEquipping || manager.currentState == State.playerUsingSkills || manager.currentState == State.PlayerOppOptions)
+                               //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -1609,6 +1700,394 @@ public class InventoryMangager : MonoBehaviour
                                     if (((CommandSkill)item).ETYPE == EType.physical)
                                     {
                                         //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
+                                        if (cmd.COST > 0)
+                                        {
+                                            int cost = (cmd.GetCost(lastObject, lastObject.STATS.FTCOSTCHANGE));
+                                            extraText = cost.ToString();
+                                            proText.text += " <size=32><sprite=0></size><color=#72a8ff><size=28>+ </size>" + extraText + "</color>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
+
+                                        }
+                                        else
+                                        {
+                                            // extraText = (cmd.COST * -1).ToString();
+                                            int cost = (-1 * (cmd.GetCost(lastObject, lastObject.STATS.FTCOSTCHANGE)));
+                                            extraText = cost.ToString();
+                                            proText.text += " <size=32><sprite=0></size><color=#72a8ff><size=28>- </size>" + extraText + "</color>";
+
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        //extraText = " SP";
+                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
+                                        proText.text += " <color=#a770ef>" + cost.ToString() + "</color><size=32><sprite=1></size><color=#4ba0bc><size=28>";
+
+                                    }
+                                }
+                                else
+                                {
+                                    if (selectedText)
+                                    {
+                                        selectedText.text = newText;
+                                        selectedText.supportRichText = true;
+
+                                        if (((CommandSkill)item).ETYPE == EType.physical)
+                                        {
+                                            extraText = cmd.GetCost().ToString();// " " + "FT";
+                                            if (cmd.COST > 0)
+                                            {
+                                                selectedText.text += " <color=#4ba0bc>FT +" + extraText + "</color>";
+
+                                            }
+                                            else
+                                            {
+                                                selectedText.text += "  <color=#63d5d8>FT " + extraText + "</color>";
+
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            extraText = " SP";
+                                            int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
+                                            selectedText.text += " <color=#a770ef>" + cost.ToString() + extraText + "</color>";
+
+                                        }
+                                    }
+                                }
+                            }
+                            else if (item.GetType() == typeof(WeaponScript))
+                            {
+                               //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                {
+                                    if (attr)
+                                    {
+                                        attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                        if (item != genericAtk)
+                                        {
+                                            int indxex = (int)((WeaponScript)item).ELEMENT;
+                                            attr.sprite = attributeImages[indxex];
+                                        }
+                                        else
+                                        {
+                                            int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                            attr.sprite = attributeImages[indxex];
+                                        }
+                                    }
+                                }
+
+                                WeaponScript cmd = ((WeaponScript)item);
+
+                                if (proText)
+                                {
+
+                                   // proText.text += newText;
+                                    int cost = (cmd.GetCost(lastObject, lastObject.STATS.HPCOSTCHANGE));
+                                    
+                                    proText.text += "<size=32><color=#FFC0CB>-" + cost.ToString()+ "</color></size> <size=32><sprite=2></size>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
+
+                                    //if (((WeaponScript)item).ATTACK_TYPE == EType.physical)
+                                    //{
+                                    //    proText.text = "<sprite=0>";
+
+                                    //}
+                                    //else
+                                    //{
+
+                                    //    proText.text = "<sprite=1>";
+                                    //}
+
+                                    proText.enableAutoSizing = true;
+
+
+                                }
+                                else
+                                {
+                                    if (selectedText)
+                                    {
+                                        selectedText.text = newText;
+                                        selectedText.supportRichText = true;
+
+
+                                    }
+                                }
+
+                            }
+                            else if (item.GetType() == typeof(ArmorScript))
+                            {
+                                ArmorScript armor = item as ArmorScript;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                 
+                                        // int indxex = (int)realitem.ELEMENT;
+                                        attr.sprite = armor.FACE; //attributeImages[indxex];
+                              
+                                }
+
+                            }
+                            else if (item.GetType() == typeof(ItemScript))
+                            {
+                                ItemScript realitem = item as ItemScript;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                    if (item != genericAtk)
+                                    {
+                                        int indxex = (int)realitem.ELEMENT;
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                    else
+                                    {
+                                        int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                }
+
+                                if (realitem.ITYPE == ItemType.dmg)
+                                {
+                                    if (proText)
+                                    {
+
+
+                                        proText.text = "<sprite=1>";
+
+                                        proText.text += newText;
+
+                                        proText.enableAutoSizing = true;
+
+
+                                    }
+                                    else
+                                    {
+                                        if (selectedText)
+                                        {
+                                            selectedText.text = newText;
+                                            selectedText.supportRichText = true;
+
+
+                                        }
+                                    }
+                                }
+                            }
+                            else if (item.GetType() == typeof(OppSkill))
+                            {
+                                OppSkill opp = item as OppSkill;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+                                    int indxex = (int)opp.REACTION;
+                                    attr.sprite = attributeImages[indxex];
+
+                                }
+
+
+                                if (proText)
+                                {
+
+
+                                    proText.text = "<sprite=1>";
+
+                                    proText.text += newText;
+
+                                    proText.enableAutoSizing = true;
+
+
+                                }
+                                else
+                                {
+                                    if (selectedText)
+                                    {
+                                        selectedText.text = newText;
+                                        selectedText.supportRichText = true;
+
+
+                                    }
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+
+                }
+                if (selectableItem.GetComponent<MenuItem>())
+                {
+                    //    //  MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
+                    item.TYPE = useType;//itemType.TYPE;
+                                        //    if (item.NAME.Equals("MOVE") || item.NAME.Equals("ATTACK"))
+                                        //    {
+                                        //        item.TYPE = 3;
+                                        //    }
+                    selectableItem.refItem = item;
+                    //    if (index == 3)
+                    //    {
+                    //        //   if (item == genericMove)
+                    //        {
+
+                    //            //     selectableItem.refItem.DESC = "Move a number of tiles";
+
+                    //        }
+
+
+                    //    }
+                }
+
+
+            }
+            else
+            {
+                if (selectedText)
+                    selectedText.text = "";
+                if (proText)
+                    proText.text = "";
+                selectableItem.refItem = null;
+                //if (windowType < 5)
+                //    selectableItem.gameObject.SetActive(false);
+                if (attr)
+                    attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            }
+
+
+        }
+
+        slotIndex = 5;
+
+        //UpdateColors(itemSlots);
+
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                if (currentContent.transform.childCount > 0)
+                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                Validate("inv manager for loading");
+            }
+        }
+        if (menuManager)
+        {
+            if (menuManager.DESC)
+            {
+
+
+                if (selectedMenuItem)
+                {
+                    if (selectedMenuItem.refItem)
+                    {
+                        menuManager.DESC.text = selectedMenuItem.refItem.DESC;
+
+                    }
+                }
+            }
+        }
+
+
+    }
+    public void loadExtra(UsableScript useable, LivingObject liveObject)
+    {
+        extraList.Clear();
+        int useType = -1;
+        int windowType = -1;
+        extraList.Add(useable);
+        for (int useCount = 0; useCount < 6; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
+        {
+            MenuItem selectableItem = extraSlots[useCount];
+            selectableItem.itemType = 15;
+            Image attr = selectableItem.GetComponentsInChildren<Image>()[2];
+            Text selectedText = selectableItem.GetComponentInChildren<Text>();
+            TextMeshProUGUI proText = selectableItem.GetComponentInChildren<TextMeshProUGUI>();
+            string newText = "";
+            selectableItem.gameObject.SetActive(true);
+            if (useCount < extraList.Count)
+            {
+                UsableScript item = extraList[useCount];
+                newText = item.NAME;
+                if (selectedText)
+                {
+                    selectedText.resizeTextForBestFit = true;
+                    selectedText.text = newText;
+                }
+                if (proText)
+                {
+                    proText.text = newText;
+                }
+                //  if (selectableItem.GetComponentInChildren<Text>())
+                {
+
+                    if (attr)
+                        attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+
+
+                    newText = item.NAME;
+                    if (selectedText)
+                    {
+                        selectedText.resizeTextForBestFit = true;
+                        selectedText.text = newText;
+                    }
+                    if (proText)
+                    {
+                        proText.text = newText;
+                        if (item.NAME.Length >= 7)
+                        {
+                            proText.enableAutoSizing = true;
+                        }
+                        else
+                        {
+                            proText.enableAutoSizing = false;
+                            proText.fontSize = 25.0f;
+                        }
+                    }
+
+                    {
+
+                        if (windowType == 3 || windowType == -1)
+                        {
+
+                            if (item.GetType() == typeof(CommandSkill))
+                            {
+                               ////  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                {
+                                    if (attr)
+                                    {
+                                        attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                        if (item != genericAtk)
+                                        {
+                                            int indxex = (int)((CommandSkill)item).ELEMENT;
+                                            attr.sprite = attributeImages[indxex];
+                                        }
+                                        else
+                                        {
+                                            int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                            attr.sprite = attributeImages[indxex];
+                                        }
+                                    }
+                                }
+                                CommandSkill cmd = ((CommandSkill)item);
+                                string extraText = "";
+                                if (proText)
+                                {
+
+                                    proText.text = newText;
+                                    if (item.NAME.Length > 7)
+                                    {
+                                        proText.enableAutoSizing = true;
+                                    }
+                                    else
+                                    {
+                                        proText.enableAutoSizing = false;
+                                        proText.fontSize = 25.0f;
+                                    }
+                                    if (((CommandSkill)item).ETYPE == EType.physical)
+                                    {
+                                        //  int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+
                                         if (cmd.COST > 0)
                                         {
                                             int cost = (cmd.GetCost(lastObject, lastObject.STATS.FTCOSTCHANGE));
@@ -1670,7 +2149,7 @@ public class InventoryMangager : MonoBehaviour
                             }
                             else if (item.GetType() == typeof(WeaponScript))
                             {
-                                if (manager.currentState == State.PlayerEquipping || manager.currentState == State.playerUsingSkills || manager.currentState == State.PlayerOppOptions)
+                              // //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -1692,16 +2171,108 @@ public class InventoryMangager : MonoBehaviour
 
                                 if (proText)
                                 {
-                                    if (((WeaponScript)item).ATTACK_TYPE == EType.physical)
+                                    // if (((WeaponScript)item).ATTACK_TYPE == EType.physical)
+                                    int cost = (cmd.GetCost(lastObject, lastObject.STATS.HPCOSTCHANGE));
+
+                                    proText.text += "<size=32><color=#FFC0CB> -" + cost.ToString() + "</color></size> <size=32><sprite=2></size>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
+
+
+                                    
+                                   
+                                   // proText.text += newText;
+
+                                    proText.enableAutoSizing = true;
+
+
+                                }
+                                else
+                                {
+                                    if (selectedText)
                                     {
-                                        proText.text = "<sprite=0>";
+                                        selectedText.text = newText;
+                                        selectedText.supportRichText = true;
+
+
+                                    }
+                                }
+
+                            }
+                            else if (item.GetType() == typeof(ArmorScript))
+                            {
+                                ArmorScript armor = item as ArmorScript;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+                                    // int indxex = (int)realitem.ELEMENT;
+                                    attr.sprite = armor.FACE; //attributeImages[indxex];
+
+                                }
+
+                            }
+                            else if (item.GetType() == typeof(ItemScript))
+                            {
+                                ItemScript realitem = item as ItemScript;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                    if (item != genericAtk)
+                                    {
+                                        int indxex = (int)realitem.ELEMENT;
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                    else
+                                    {
+                                        int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                }
+
+                                if (realitem.ITYPE == ItemType.dmg)
+                                {
+                                    if (proText)
+                                    {
+
+
+                                        proText.text = "<sprite=1>";
+
+                                        proText.text += newText;
+
+                                        proText.enableAutoSizing = true;
+
 
                                     }
                                     else
                                     {
+                                        if (selectedText)
+                                        {
+                                            selectedText.text = newText;
+                                            selectedText.supportRichText = true;
 
-                                        proText.text = "<sprite=1>";
+
+                                        }
                                     }
+                                }
+                            }
+                            else if (item.GetType() == typeof(OppSkill))
+                            {
+                                OppSkill opp = item as OppSkill;
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+                                    int indxex = (int)opp.REACTION;
+                                    attr.sprite = attributeImages[indxex];
+
+                                }
+
+
+                                if (proText)
+                                {
+
+
+                                    proText.text = "<sprite=1>";
+
                                     proText.text += newText;
 
                                     proText.enableAutoSizing = true;
@@ -1729,24 +2300,24 @@ public class InventoryMangager : MonoBehaviour
                 }
                 if (selectableItem.GetComponent<MenuItem>())
                 {
-                    //  MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
+                    //    //  MenuItem selectedItem = selectableItem.GetComponent<MenuItem>();
                     item.TYPE = useType;//itemType.TYPE;
-                    if (item.NAME.Equals("MOVE") || item.NAME.Equals("ATTACK"))
-                    {
-                        item.TYPE = 3;
-                    }
+                                        //    if (item.NAME.Equals("MOVE") || item.NAME.Equals("ATTACK"))
+                                        //    {
+                                        //        item.TYPE = 3;
+                                        //    }
                     selectableItem.refItem = item;
-                    if (index == 3)
-                    {
-                        //   if (item == genericMove)
-                        {
+                    //    if (index == 3)
+                    //    {
+                    //        //   if (item == genericMove)
+                    //        {
 
-                            //     selectableItem.refItem.DESC = "Move a number of tiles";
+                    //            //     selectableItem.refItem.DESC = "Move a number of tiles";
 
-                        }
+                    //        }
 
 
-                    }
+                    //    }
                 }
 
 
@@ -1771,15 +2342,7 @@ public class InventoryMangager : MonoBehaviour
 
         //UpdateColors(itemSlots);
 
-        if (currentRect)
-        {
-            if (currentContent)
-            {
-                if (currentContent.transform.childCount > 0)
-                    selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                Validate("inv manager for loading");
-            }
-        }
+    
         if (menuManager)
         {
             if (menuManager.DESC)
@@ -1797,9 +2360,7 @@ public class InventoryMangager : MonoBehaviour
             }
         }
 
-
     }
-
     public void loadExtra(int index, LivingObject liveObject)
     {
         extraList.Clear();

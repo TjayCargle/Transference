@@ -42,6 +42,7 @@ public class CameraScript : MonoBehaviour
     public ArmorSet armorSet;
     public AudioClip[] musicClips;
     AudioSource audio;
+    public AudioClip previousClip;
     bool isSetup = false;
 
     int soundTrack = 1;
@@ -49,7 +50,7 @@ public class CameraScript : MonoBehaviour
     {
         Setup();
     }
-   public void Setup()
+    public void Setup()
     {
         if (!isSetup)
         {
@@ -66,10 +67,11 @@ public class CameraScript : MonoBehaviour
             {
                 manager.Setup();
             }
+            previousClip = musicClips[0];
         }
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
 
         if (currentTile)
@@ -82,6 +84,16 @@ public class CameraScript : MonoBehaviour
             Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd);
             transform.position = smooth;
 
+        }
+        else if (infoObject)
+        {
+            Vector3 tilePos = infoObject.transform.position;
+            Vector3 camPos = transform.position;
+            tilePos.y += y;
+            tilePos.z += z;
+            Vector3 targetLocation = tilePos - camPos;
+            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd);
+            transform.position = smooth;
         }
     }
 
@@ -119,6 +131,7 @@ public class CameraScript : MonoBehaviour
         {
             if (soundTrack != 1)
             {
+                previousClip = musicClips[soundTrack - 1];
                 soundTrack = 1;
                 audio.clip = musicClips[0];
                 audio.Play();
@@ -133,6 +146,7 @@ public class CameraScript : MonoBehaviour
         {
             if (soundTrack != 2)
             {
+                previousClip = musicClips[soundTrack - 1];
                 soundTrack = 2;
                 audio.clip = musicClips[1];
                 audio.Play();
@@ -146,8 +160,46 @@ public class CameraScript : MonoBehaviour
         {
             if (soundTrack != 3)
             {
+                previousClip = musicClips[soundTrack - 1];
                 soundTrack = 3;
                 audio.clip = musicClips[2];
+                audio.Play();
+            }
+        }
+    }
+
+    public void PlaySoundTrack(int num)
+    {
+        if (audio)
+        {
+            if (num <= musicClips.Length)
+            {
+                if (soundTrack != num)
+                {
+                    previousClip = musicClips[soundTrack - 1];
+                    soundTrack = num;
+                    audio.clip = musicClips[num - 1];
+                    audio.Play();
+                }
+            }
+        }
+    }
+
+    public void PlayPreviousSoundTrack()
+    {
+        if (audio)
+        {
+            if (previousClip != null)
+            {
+                audio.clip = previousClip;
+                for (int i = 0; i < musicClips.Length; i++)
+                {
+                    if(previousClip == musicClips[i])
+                    {
+                        soundTrack = i + 1;
+                        break;
+                    }
+                }
                 audio.Play();
             }
         }
@@ -206,9 +258,9 @@ public class CameraScript : MonoBehaviour
                                     if (armorSet)
                                     {
                                         armorSet.currentObj = liver;
-                                        if(manager)
+                                        if (manager)
                                         {
-                                            if(manager.currentState != State.PlayerEquipping)
+                                            if (manager.currentState != State.PlayerEquipping)
                                             {
                                                 armorSet.selectedArmor = null;
                                             }
@@ -221,16 +273,29 @@ public class CameraScript : MonoBehaviour
                                     {
                                         //  actionText.transform.parent.gameObject.SetActive(true);
                                     }
-                                    actionText.text = "Actions: " + liver.ACTIONS;
-                                    if (liver.ACTIONS == 1)
+                                    if (manager.liveEnemies.Count > 0)
+                                        actionText.text = "Actions: " + liver.ACTIONS;
+                                    else
+                                        actionText.text = "Actions: unlimited";
+
+                                    if (manager.liveEnemies.Count > 0)
                                     {
-                                        actionText.color = Color.red;
-                                        actionText.fontStyle = FontStyle.BoldAndItalic;
+                                        if (liver.ACTIONS == 1)
+                                        {
+                                            actionText.color = Color.red;
+                                            actionText.fontStyle = FontStyle.BoldAndItalic;
+                                        }
+                                        else
+                                        {
+
+                                            actionText.color = Color.white;
+                                            actionText.fontStyle = FontStyle.Normal;
+                                        }
                                     }
                                     else
                                     {
-                                        actionText.color = Color.white;
-                                        actionText.fontStyle = FontStyle.Normal;
+                                        actionText.color = Color.blue;
+                                        actionText.fontStyle = FontStyle.BoldAndItalic;
                                     }
 
                                     if (healthSlider)
@@ -257,7 +322,7 @@ public class CameraScript : MonoBehaviour
                                         fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
                                     }
 
-                                    if (manager.currentState == State.PlayerEquipping)
+                                    if (manager.GetState() == State.PlayerEquipping)
                                     {
                                         if (DescriptionCanvas)
                                         {
@@ -327,7 +392,7 @@ public class CameraScript : MonoBehaviour
                                     }
                                     if (infoObject.FACTION == Faction.eventObj)
                                     {
-                                        EventDetails eve = Common.GetEventText(infoObject.BASE_STATS.SPEED, null);
+                                        EventDetails eve = Common.GetEventText(infoObject.BASE_STATS.DEX, null);
                                         actionText.text = eve.eventText;
                                     }
                                     else

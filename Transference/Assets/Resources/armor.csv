@@ -1,20 +1,22 @@
 id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect, Force Affect
 0,Dragon Barrier,Hardened skinned, 4, 3, 3, weak, nulls, cripples, normal, resists, resists, normal,resists
 1,Witch Barrier,Hardened skinned, 2, 4, 4, nulls, resists, normal, normal, weak, cripples, normal,resists
-2,Bumblebee Barrier,Hardened skinned, 2, 5, 3, resists, lethal, nulls, normal, weak, nulls, normal,resists
-3,Scorpion Barrier,Hardened skinned, 5, 3, 2, savage, resists, lethal, resists, normal, weak, resists,normal
-4,Fairy Barrier,Fire, 1, 3, 5, resists, weak, resists, reflects, normal, normal, normal,lethal
-5,Ghost Barrier,ghost,1,2,7,normal,cripples,resists,cripples,nulls,nulls,nulls,weak
-6,Phoenix Barrier,Fire, 3, 2, 5, weak, reflects, cripples, normal, normal, savage, normal,resists
-7,Pixie Barrier,Fire, 5, 3, 2, normal, normal, reflects, normal, resists, lethal, normal,resists
-8,Gorgan Barrier,Fire, 8, 2, 0, normal, cripples, cripples, cripples, nulls, nulls, nulls,resists
-9,Arachnid Barrier,Fire, 0, 2, 8, savage, cripples, nulls, resists, absorbs, normal, weak,normal
+2,Bumblebee Barrier,Hardened skinned, 2, 5, 3, weak, nulls, nulls, normal, cripples, nulls, normal,resists
+3,Scorpion Barrier,Hardened skinned, 5, 3, 2, normal, resists, nulls, resists, normal, weak, cripples,normal
+4,Fairy Barrier,Fire, 1, 3, 5, resists, weak, resists, reflects, normal, normal, normal,cripples
+5,Ghost Barrier,ghost,1,2,7,normal,cripples,resists,weak,nulls,nulls,nulls,weak
+6,Phoenix Barrier,Fire, 3, 2, 5, normal, reflects, cripples, normal, normal, weak, normal,resists
+7,Pixie Barrier,Fire, 5, 3, 2, normal, normal, reflects, normal, resists, cripples, normal,resists
+8,Gorgan Barrier,Fire, 8, 2, 0, weak, nulls, normal, cripples, nulls, nulls, nulls,weak
+9,Arachnid Barrier,Fire, 0, 2, 8, weak, cripples, nulls, resists, absorbs, normal, weak,normal
 10,Wolf Barrier,Fire, 5, 4, 1, normal, weak, normal, resists, nulls, cripples, normal,resists
-11,Neutral Barrier,Purely Neutral, 3, 3, 4, normal,normal,normal,normal,normal,normal, normal,resists
+11,Neutral Barrier,Purely Neutral, 3, 3, 4, normal,normal,normal,normal,normal,normal, normal,normal
 12,Speed Barrier,Purely Neutral, 0, 0, 10, cripples,normal,normal,nulls,normal,weak, resists,resists
 200,Glyph Barrier,Purely Neutral, 5, 5, 0, resists,resists,resists,resists,resists,resists, resists,resists
-201,Black Wings,Purely Neutral, 0, 0, 0, resists,normal,weak,normal,normal,resists, weak,weak
-202,Green Wings,Purely Neutral, 0, 0, 0, weak,resists,normal,weak,normal,weak,resists ,normal
-203,Rough Hide,Purely Neutral, 0, 0, 0, resists,weak,weak,normal,weak,normal, normal,normal
-204,Soft Fuzz,Purely Neutral, 0, 0, 0, weak,weak,normal,normal,normal,resists, normal,weak
-205,Dust,Purely Neutral, 0, 0, 0, normal,normal,resists,resists,normal,weak, weak,normal
+201,Black Wings,Purely Neutral, 0, 0, 0, resists,normal,cripples,normal,normal,lethal, resists,normal
+202,Green Wings,Purely Neutral, 0, 0, 0, lethal,resists,normal,weak,resists,weak,normal ,normal
+203,Rough Hide,Purely Neutral, 0, 0, 0, cripples,weak,savage,normal,resists,normal, normal,normal
+204,Soft Fuzz,Purely Neutral, 0, 0, 0, normal,lethal,normal,savage,normal,resists, normal,weak
+205,Dust,Purely Neutral, 0, 0, 0, normal,resists,resists,resists,normal,lethal, savage,cripples
+-204,Royal Barrier,Purely Neutral, 0, 0, 0, resists,resists,resists,resists,resists,resists, cripples,normal
+-204,Queen Barrier,Purely Neutral, 0, 0, 0, resists,nulls,reflects,nulls,cripples,weak, reflects,resists

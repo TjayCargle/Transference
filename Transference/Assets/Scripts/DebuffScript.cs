@@ -35,7 +35,7 @@ public class DebuffScript : MonoBehaviour {
         countDown--;
         if (countDown <= 0)
         {
-            living.INVENTORY.BUFFS.Remove(refSkill);
+            living.INVENTORY.DEBUFFS.Remove(refSkill);
             living.ApplyPassives();
             Destroy(this);
         }

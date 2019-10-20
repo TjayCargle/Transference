@@ -344,12 +344,14 @@ public class DatabaseManager : MonoBehaviour
                     skill.INDEX = id;
                     skill.OWNER = livingObject;
                     skill.NAME = parsed[1];
+                    skill.AUGMENTS = new List<Augment>();
                     //   skill.DESC = parsed[4];
                     skill.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[2]);
                     skill.SUBTYPE = (SubSkillType)Enum.Parse(typeof(SubSkillType), parsed[3]);
 
                     //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                     skill.TYPE = 4;
+                    skill.USER = livingObject;
                     if (!livingObject.INVENTORY.ContainsSkillName(skill.NAME))
                     {
                         switch (skill.ELEMENT)
@@ -391,24 +393,24 @@ public class DatabaseManager : MonoBehaviour
                                         case BuffType.attack:
                                             mod.affectedStat = ModifiedStat.Atk;
                                             break;
-                                        case BuffType.speed:
+                                        case BuffType.Spd:
                                             mod.affectedStat = ModifiedStat.Speed;
                                             break;
-                                        case BuffType.defense:
+                                        case BuffType.Def:
                                             mod.affectedStat = ModifiedStat.Def;
                                             break;
-                                        case BuffType.resistance:
+                                        case BuffType.Res:
                                             mod.affectedStat = ModifiedStat.Res;
                                             break;
-                                        case BuffType.skill:
-                                            mod.affectedStat = ModifiedStat.Skill;
+                                        case BuffType.Dex:
+                                            mod.affectedStat = ModifiedStat.Dex;
                                             break;
                                         case BuffType.none:
                                             break;
-                                        case BuffType.str:
+                                        case BuffType.Str:
                                             mod.affectedStat = ModifiedStat.Str;
                                             break;
-                                        case BuffType.mag:
+                                        case BuffType.Mag:
                                             mod.affectedStat = ModifiedStat.Mag;
                                             break;
                                         case BuffType.all:
@@ -565,17 +567,18 @@ public class DatabaseManager : MonoBehaviour
 
                                     OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
                                     skill.Transfer(opp);
-                                    opp.TRIGGER = (Element)Enum.Parse(typeof(Element), parsed[4]);
-                                    opp.MOD = (float)Double.Parse(parsed[5]);
-                                    opp.DESC = "Allows a free attack after an ally hits with a " + opp.TRIGGER + " attack.";
+                                    opp.TRIGGERS.Add ( (Element)Enum.Parse(typeof(Element), parsed[4]));
+                                    opp.REACTION = ((Element)Enum.Parse(typeof(Element), parsed[5]));
+                            
+                                    opp.UpdateDesc();
 
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().OPPS.Add(opp);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(opp);
                                     // if (equip == true)
                                     {
-                                        if (livingObject.OPP_SLOTS.CanAdd())
-                                            livingObject.OPP_SLOTS.SKILLS.Add(opp);
+                                        //if (livingObject.OPP_SLOTS.CanAdd())
+                                        //    livingObject.OPP_SLOTS.SKILLS.Add(opp);
                                     }
 
                                     return opp;
@@ -820,7 +823,7 @@ public class DatabaseManager : MonoBehaviour
                 //skill.AUGMENTS = ScriptableObject.CreateInstance<AugmentScript>();
                 //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                 skill.TYPE = 4;
-
+                
                 switch (skill.ELEMENT)
                 {
 
@@ -850,24 +853,24 @@ public class DatabaseManager : MonoBehaviour
                                 case BuffType.attack:
                                     mod.affectedStat = ModifiedStat.Atk;
                                     break;
-                                case BuffType.speed:
+                                case BuffType.Spd:
                                     mod.affectedStat = ModifiedStat.Speed;
                                     break;
-                                case BuffType.defense:
+                                case BuffType.Def:
                                     mod.affectedStat = ModifiedStat.Def;
                                     break;
-                                case BuffType.resistance:
+                                case BuffType.Res:
                                     mod.affectedStat = ModifiedStat.Res;
                                     break;
-                                case BuffType.skill:
-                                    mod.affectedStat = ModifiedStat.Skill;
+                                case BuffType.Dex:
+                                    mod.affectedStat = ModifiedStat.Dex;
                                     break;
                                 case BuffType.none:
                                     break;
-                                case BuffType.str:
+                                case BuffType.Str:
                                     mod.affectedStat = ModifiedStat.Str;
                                     break;
-                                case BuffType.mag:
+                                case BuffType.Mag:
                                     mod.affectedStat = ModifiedStat.Mag;
                                     break;
                                 case BuffType.all:
@@ -969,10 +972,10 @@ public class DatabaseManager : MonoBehaviour
 
                             OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
                             skill.Transfer(opp);
-                            opp.TRIGGER = (Element)Enum.Parse(typeof(Element), parsed[4]);
-                            opp.MOD = (float)Double.Parse(parsed[5]);
+                            opp.TRIGGERS.Add( (Element)Enum.Parse(typeof(Element), parsed[4]));
+                            opp.REACTION = ((Element)Enum.Parse(typeof(Element), parsed[5]));
 
-                            opp.DESC = "Allows a free attack after an ally hits with a " + opp.TRIGGER + " attack.";
+                            opp.UpdateDesc();
                             return opp;
                         }
                         break;
@@ -1107,32 +1110,46 @@ public class DatabaseManager : MonoBehaviour
                 //  weapon.DESC = parsed[2];
                 weapon.AUGMENTS = new List<Augment>();
                 weapon.ATTACK = DMG.tiny;//(DMG)Enum.Parse(typeof(DMG),parsed[3]);
-                weapon.ATTACK_TYPE = (EType)Enum.Parse(typeof(EType), parsed[4]);
+                weapon.ATTACK_TYPE = EType.natural;//(EType)Enum.Parse(typeof(EType), parsed[4]);
                 weapon.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[5]);
                 weapon.ATKRANGE = (RangeType)Enum.Parse(typeof(RangeType), parsed[6]);
                 //weapon.DIST = Int32.Parse(parsed[6]);
                 //weapon.Range = Int32.Parse(parsed[7]);
-                Common.SetWeaponDistRange(weapon);
+              //  Common.SetWeaponDistRange(weapon);
                 weapon.ACCURACY = Int32.Parse(parsed[7]);
                 weapon.CRIT = Int32.Parse(parsed[8]);
                 weapon.BOOST = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
-                weapon.BOOSTVAL = Int32.Parse(parsed[10]);
+             
                 weapon.TYPE = 0;
 
-                if (weapon.BOOST != ModifiedStat.none)
+                //if (weapon.Range == 1)
+                //{
+                //    weapon.DESC += " Hits a tile " + weapon.DIST + " space away.";
+                //}
+                //else if (weapon.Range == weapon.DIST)
+                //{
+                //    weapon.DESC += " Hits tiles up to " + weapon.DIST + " spaces away.";
+                //}
+                switch(weapon.ATKRANGE)
                 {
-                    weapon.DESC = "" + weapon.BOOST.ToString() + " +" + weapon.BOOSTVAL + ".";
+                    case RangeType.adjacent:
+                        {
+                            weapon.COST = 8;
+                        }
+                        break;
+                    case RangeType.pinWheel:
+                        {
+                            weapon.COST = 12;
+                        }
+                        break;
+                    default:
+                        {
+                            weapon.COST = 10;
+                        }
+                        break;
                 }
-                weapon.DESC += "Deals " + weapon.ATTACK_TYPE + " " + weapon.ELEMENT + " based dmg.";
 
-                if (weapon.Range == 1)
-                {
-                    weapon.DESC += " Hits a tile " + weapon.DIST + " space away.";
-                }
-                else if (weapon.Range == weapon.DIST)
-                {
-                    weapon.DESC += " Hits tiles up to " + weapon.DIST + " spaces away.";
-                }
+                weapon.UpdateDesc();
                 if (livingObject)
                 {
 
@@ -1149,6 +1166,7 @@ public class DatabaseManager : MonoBehaviour
                             livingObject.WEAPON.Equip(weapon);
                         }
                     }
+                    weapon.USER = livingObject;
                 }
 
                 return weapon;
@@ -1242,6 +1260,7 @@ public class DatabaseManager : MonoBehaviour
                             livingObject.INVENTORY.USEABLES.Add(armor);
                         }
                     }
+                    armor.USER = livingObject;
                 }
                 return armor;
             }
@@ -1278,6 +1297,11 @@ public class DatabaseManager : MonoBehaviour
                 if (parsed.Length == 10)
                     item.PDMG = (DMG)Enum.Parse(typeof(DMG), parsed[9]);
                 item.RTYPE = RangeType.adjacent;
+
+                if(item.ELEMENT == Element.none)
+                {
+                    item.ELEMENT = Element.Support;
+                }
                 if (livingObject)
                 {
 
@@ -1286,6 +1310,7 @@ public class DatabaseManager : MonoBehaviour
                         livingObject.INVENTORY.ITEMS.Add(item);
                         livingObject.INVENTORY.USEABLES.Add(item);
                     }
+                    item.USER = livingObject;
                 }
                 return item;
             }
@@ -1351,6 +1376,11 @@ public class DatabaseManager : MonoBehaviour
                                 newHazard.HTYPE = HazardType.redirect;
                             }
                             break;
+                        case 3:
+                            {
+                                newHazard.HTYPE = HazardType.controller;
+                            }
+                            break;
                     }
 
                 }
@@ -1400,7 +1430,7 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     newEnemy.BASE_STATS.SPEED = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
-                    newEnemy.BASE_STATS.SKILL = Int32.Parse(parsed[fileIndex]);
+                    newEnemy.BASE_STATS.DEX = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
                     newEnemy.BASE_STATS.MOVE_DIST = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1490,7 +1520,7 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     newEnemy.BASE_STATS.SPEED = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
-                    newEnemy.BASE_STATS.SKILL = Int32.Parse(parsed[fileIndex]);
+                    newEnemy.BASE_STATS.DEX = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
                     newEnemy.BASE_STATS.MOVE_DIST = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1568,9 +1598,11 @@ public class DatabaseManager : MonoBehaviour
                 baseStats.RESIESTANCE = Int32.Parse(parsed[fileIndex]);
                 fileIndex++;
                 baseStats.SPEED = Int32.Parse(parsed[fileIndex]);
-                baseStats.MOVE_DIST = 0;
+                fileIndex++;
+                baseStats.DEX = Int32.Parse(parsed[fileIndex]);
                 fileIndex++;
                 newObject.FACTION = (Faction)Enum.Parse(typeof(Faction), parsed[fileIndex]);
+                baseStats.MOVE_DIST = 0;
                
             }
         }
@@ -1613,7 +1645,7 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     living.BASE_STATS.SPEED = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
-                    living.BASE_STATS.SKILL = Int32.Parse(parsed[fileIndex]);
+                    living.BASE_STATS.DEX = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
                     living.BASE_STATS.MOVE_DIST = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1670,6 +1702,8 @@ public class DatabaseManager : MonoBehaviour
         map.startIndexes = new List<int>();
         map.objMapIndexes = new List<int>();
         map.objIds = new List<int>();
+        map.unOccupiedIndexes = new List<int>();
+        map.hazardIds = new List<int>();
         string lines = "";
         if (mapDictionary.TryGetValue(id, out lines))
         {
@@ -1688,72 +1722,72 @@ public class DatabaseManager : MonoBehaviour
                 map.height = Int32.Parse(parsed[fileIndex]);
                 fileIndex++;
 
-                int numOfDoors = Int32.Parse(parsed[fileIndex]);
-                fileIndex++;
-                for (int i = 0; i < numOfDoors; i++)
-                {
-                    map.doorIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
+        //        int numOfDoors = Int32.Parse(parsed[fileIndex]);
+        //        fileIndex++;
+        //        for (int i = 0; i < numOfDoors; i++)
+        //        {
+        //            map.doorIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
 
-                for (int i = 0; i < numOfDoors; i++)
-                {
-                    map.roomNames.Add(parsed[fileIndex]);
-                    fileIndex++;
-                }
-
-
-                for (int i = 0; i < numOfDoors; i++)
-                {
-                    map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
+        //        for (int i = 0; i < numOfDoors; i++)
+        //        {
+        //            map.roomNames.Add(parsed[fileIndex]);
+        //            fileIndex++;
+        //        }
 
 
-                for (int i = 0; i < numOfDoors; i++)
-                {
-                    map.startIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
-
-                int numOfEnemies = Int32.Parse(parsed[fileIndex]);
-                fileIndex++;
-                for (int i = 0; i < numOfEnemies; i++)
-                {
-                    map.enemyIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
-
-                int numOfHazards = Int32.Parse(parsed[fileIndex]);
-                fileIndex++;
-                for (int i = 0; i < numOfHazards; i++)
-                {
-                    map.hazardIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
-
-                int numOfShops = Int32.Parse(parsed[fileIndex]);
-                fileIndex++;
-                for (int i = 0; i < numOfShops; i++)
-                {
-                    map.shopIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
-
-                int numOfObjs = Int32.Parse(parsed[fileIndex]);
-                fileIndex++;
-                for (int i = 0; i < numOfObjs; i++)
-                {
-                    map.objMapIndexes.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
+        //        for (int i = 0; i < numOfDoors; i++)
+        //        {
+        //            map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
 
 
-                for (int i = 0; i < numOfObjs; i++)
-                {
-                    map.objIds.Add(Int32.Parse(parsed[fileIndex]));
-                    fileIndex++;
-                }
+        //        for (int i = 0; i < numOfDoors; i++)
+        //        {
+        //            map.startIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
+
+        //        int numOfEnemies = Int32.Parse(parsed[fileIndex]);
+        //        fileIndex++;
+        //        for (int i = 0; i < numOfEnemies; i++)
+        //        {
+        //            map.enemyIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
+
+        //        int numOfHazards = Int32.Parse(parsed[fileIndex]);
+        //        fileIndex++;
+        //        for (int i = 0; i < numOfHazards; i++)
+        //        {
+        //            map.hazardIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
+
+        //        int numOfShops = Int32.Parse(parsed[fileIndex]);
+        //        fileIndex++;
+        //        for (int i = 0; i < numOfShops; i++)
+        //        {
+        //            map.shopIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
+
+        //        int numOfObjs = Int32.Parse(parsed[fileIndex]);
+        //        fileIndex++;
+        //        for (int i = 0; i < numOfObjs; i++)
+        //        {
+        //            map.objMapIndexes.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
+
+
+        //        for (int i = 0; i < numOfObjs; i++)
+        //        {
+        //            map.objIds.Add(Int32.Parse(parsed[fileIndex]));
+        //            fileIndex++;
+        //        }
             }
         }
 
@@ -1789,6 +1823,7 @@ public class DatabaseManager : MonoBehaviour
         data.yMaxRestriction = -1;
         data.xMinRestriction = -1;
         data.xMaxRestriction = -1;
+        data.revealCount = 0;
         TextAsset asset = Resources.Load("maps/" + shrtname) as TextAsset;
         if (asset)
         {
@@ -1891,6 +1926,15 @@ public class DatabaseManager : MonoBehaviour
                                 {
                                     data.glyphIds.Add(Int32.Parse(parsed[j + 1]));
                                 }
+                            }
+                            break;
+                        case "gr":
+                            {
+                                data.revealCount = Int32.Parse(parsed[1]);
+                                //for (int j = 0; j < parsed.Length - 1; j++)
+                                //{
+                                //    data.glyphIds.Add(Int32.Parse(parsed[j + 1]));
+                                //}
                             }
                             break;
                         case "s":

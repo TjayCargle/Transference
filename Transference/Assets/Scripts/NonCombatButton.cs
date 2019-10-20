@@ -66,7 +66,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void playJax()
     {
-        PlayerPrefs.SetInt("defaultSceneEntry", 5);
+        PlayerPrefs.SetInt("defaultSceneEntry", 15);
         SceneManager.LoadSceneAsync("DemoMap4");
     }
 

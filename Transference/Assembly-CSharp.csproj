@@ -109,6 +109,8 @@
     <Compile Include="Assets\Scripts\GridAnimationObj.cs" />
     <Compile Include="Assets\Scripts\GridObject.cs" />
     <Compile Include="Assets\Scripts\GridOjectManager.cs" />
+    <Compile Include="Assets\Scripts\HackingButton.cs" />
+    <Compile Include="Assets\Scripts\HackingCtrl.cs" />
     <Compile Include="Assets\Scripts\HazardManager.cs" />
     <Compile Include="Assets\Scripts\HazardScript.cs" />
     <Compile Include="Assets\Scripts\HazardSetup.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Assets\Scripts\TextObj.cs" />
     <Compile Include="Assets\Scripts\TileManager.cs" />
     <Compile Include="Assets\Scripts\TileScript.cs" />
+    <Compile Include="Assets\Scripts\TurnImageManager.cs" />
     <Compile Include="Assets\Scripts\UsableScript.cs" />
     <Compile Include="Assets\Scripts\UsedText.cs" />
     <Compile Include="Assets\Scripts\VoicesManager.cs" />

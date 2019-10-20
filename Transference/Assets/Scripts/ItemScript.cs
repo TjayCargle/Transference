@@ -190,6 +190,8 @@ public class ItemScript : UsableScript
                 {
                     target.ACTIONS += 3;
                     usedEffect = true;
+                    if (trueValue == 1.0)
+                        target.ACTIONS++;
                 }
                 else
                 {
@@ -304,12 +306,22 @@ public class ItemScript : UsableScript
                 break;
             case ItemType.summon:
                 {
+                    if (targetTile == null)
+                    {
+                        usedEffect = false;
+                        return usedEffect;
+                    }
                     EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
                     ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
                     if (enemyManager)
                     {
                         if (manager)
                         {
+                    if(manager.GetObjectAtTile(targetTile))
+                            {
+                                usedEffect = false;
+                                return usedEffect;
+                            }
 
                             GameObject temp = Instantiate(enemyManager.enemyPrefab, Vector2.zero, Quaternion.identity);
                             if (temp.GetComponent<EnemySetup>())
@@ -324,14 +336,14 @@ public class ItemScript : UsableScript
 
                             if (!temp.GetComponent<LivingSetup>())
                             {
-                                temp.gameObject.AddComponent<LivingSetup>();
+                                LivingSetup setup = temp.gameObject.AddComponent<LivingSetup>();
+                                setup.indexId = (int)VALUE;
                             }
 
                             ActorScript actor = temp.gameObject.AddComponent<ActorScript>();
                             actor.FACTION = Faction.ally;
 
                             actor.Setup();
-                            DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
 
                             SpriteRenderer shadowRender = actor.SHADOW.GetComponent<SpriteRenderer>();
                             shadowRender.color = Common.GetFactionColor(actor.FACTION) - new Color(0, 0, 0, 0.3f);
@@ -435,12 +447,20 @@ public class ItemScript : UsableScript
                 DESC = "Deals heavy magical "+ELEMENT+" Damage to target";
                 break;
             case ItemType.actionBoost:
+                if(trueValue == 1.0f)
+                {
+                    DESC = "Grants 3 additional action points to ally or self.";
+                }
+                else
+                {
                 DESC = "" + (100.0f * trueValue) + "% chance to grant 2 additional action points to ally or self.";
+                }
                 break;
             case ItemType.random:
                 DESC = "Grants " +  trueValue + "random effect to ally or self";
                 break;
             case ItemType.summon:
+                DESC = "Summons a " +NAME.Split(' ')[0] +" as an ally. Cannot be used if you already have a summon." ;
                 break;
         }
     }

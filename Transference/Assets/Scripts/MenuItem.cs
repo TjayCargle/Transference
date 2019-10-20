@@ -80,7 +80,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             return;
         }
-        if (myManager.currentState == State.ChangeOptions)
+        if (myManager. GetState() == State.ChangeOptions)
         {
             return;
         }
@@ -103,8 +103,17 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //entry.index = myManager.invManager.currentIndex;
                     //entry.menu = currentMenu.command;
                     //myManager.enterState(entry);
-
+                    
                     myManager.StackNewSelection(State.PlayerMove, currentMenu.command);
+
+                    if(invokingObject.GetComponent<AnimationScript>())
+                    {
+                        AnimationScript anim = invokingObject.GetComponent<AnimationScript>();
+                        if(anim.hasMove)
+                        {
+                            anim.LoadList(anim.movePath);
+                        }
+                    }
 
                     MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
                     if (myMenuManager)
@@ -235,6 +244,10 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     break;
                 }
             case MenuItemType.Wait:
+                if (myManager)
+                {
+                    myManager.myCamera.SetCameraPosFar();
+                }
                 if (invokingObject.GetComponent<LivingObject>())
                 {
                     invokingObject.GetComponent<LivingObject>().Wait();
@@ -585,6 +598,22 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.openBattleLog:
                 myManager.stackLog();
                 break;
+            case MenuItemType.yesPrompt:
+                myManager.YesPrompt();
+                break;
+            case MenuItemType.noPrompt:
+                myManager.NoPrompt();
+                break;
+            case MenuItemType.trade:
+                break;
+            case MenuItemType.hack:
+                {
+                    if(myManager)
+                    {
+                        myManager.BeginHacking();
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -592,9 +621,13 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void PlayerUseOrAtk(LivingObject invokingObject)
     {
-        if (myManager.currentState == State.PlayerOppOptions)
+        if (myManager. GetState() == State.PlayerOppOptions)
         {
             myManager.player.useOppAction(myManager.oppObj);
+        }
+        else if(myManager.GetState() == State.AquireNewSkill)
+        {
+            myManager.player.forgetSkill();
         }
         else
         {
@@ -648,14 +681,34 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     if (checkTile.isOccupied == false)
                     {
 
-                        myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                         // myManager.currentState = State.PlayerInput;
                         // myManager.returnState();
+                        myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                         myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
                         return true;
                     }
                     else
                     {
+
+                        GridObject obj = null;
+                        if ((obj = myManager.GetObjectAtTile(checkTile)) != null)
+                        {
+                            if(checkTile == invokingObject.currentTile)
+                            {
+                                myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
+                                myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                                return true;
+                            }
+                            return false;
+                  
+
+                        }
+                        else
+                        {
+                            Debug.Log("No obj found at occupied tile: " + checkTile.name);
+                            myManager. SoftReset();
+                        }
+
                         return false;
                     }
                 }

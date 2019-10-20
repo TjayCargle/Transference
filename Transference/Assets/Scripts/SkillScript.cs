@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SkillScript : UsableScript
 {
-    [SerializeField]
-    protected LivingObject owner;
+  
 
     [SerializeField]
     protected Element affinity;
@@ -58,6 +57,7 @@ public class SkillScript : UsableScript
         skill.SKILLTYPE = this.SKILLTYPE;
         skill.SUBTYPE = this.SUBTYPE;
         skill.AUGMENTS = this.AUGMENTS;
+        skill.USER = this.USER;
     }
 
 

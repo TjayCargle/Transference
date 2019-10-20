@@ -21,6 +21,7 @@ public class GridObject : MonoBehaviour
    protected Sprite faceSprite = null;
     public int MapIndex = -1;
     public int id = -1;
+    protected SpriteRenderer mySR; 
     public virtual string NAME
     {
         get { return FullName; }
@@ -66,7 +67,7 @@ public class GridObject : MonoBehaviour
     {
         if (!isSetup)
         {
-
+            mySR = GetComponent<SpriteRenderer>();
             if (GameObject.FindObjectOfType<ManagerScript>())
             {
                 myManager = GameObject.FindObjectOfType<ManagerScript>();
@@ -116,7 +117,8 @@ public class GridObject : MonoBehaviour
     protected bool startedDeathAnimation = false;
     public virtual void DeathStart()
     {
-            startedDeathAnimation = false;
+       // Debug.Log("griddy death event starting");
+        startedDeathAnimation = false;
             myManager.PlaySquishSnd();
             isdoneDying = false;
             StartCoroutine(FadeOut());      
@@ -129,15 +131,15 @@ public class GridObject : MonoBehaviour
     }
     public virtual IEnumerator FadeOut()
     {
+           // Debug.Log("griddy fade out start");
         startedDeathAnimation = true;
-        //    Debug.Log("living dying");
         if (GetComponent<SpriteRenderer>())
         {
-            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+      
             Color subtract = new Color(0, 0, 0, 0.1f);
             int num = 0;
         
-            while (renderer.color.a > 0)
+            while (mySR.color.a > 0)
             {
                 num++;
                 if (num > 999)
@@ -145,7 +147,7 @@ public class GridObject : MonoBehaviour
                     Debug.Log("time expired");
                     break;
                 }
-                renderer.color = renderer.color - subtract;
+                mySR.color = mySR.color - subtract;
                 yield return null;
             }
             if (currentTile)
@@ -153,6 +155,7 @@ public class GridObject : MonoBehaviour
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
             isdoneDying = true;
+           // Debug.Log("griddy fade out end");
         }
       
     }

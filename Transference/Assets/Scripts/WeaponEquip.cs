@@ -69,25 +69,19 @@ public class WeaponEquip : Equipable
         get { return equipped.CRIT; }
       
     }
-    public int DIST
-    {
-        get { return equipped.DIST; }
+    //public int DIST
+    //{
+    //    get { return equipped.DIST; }
        
-    }
-    public int Range
-    {
-        get { return equipped.Range; }
-    }
+    //}
+    //public int Range
+    //{
+    //    get { return equipped.Range; }
+    //}
     public int USECOUNT
     {
         get { return equipped.USECOUNT; }
      
-    }
-
-    public int BOOSTVAL
-    {
-        get { return equipped.BOOSTVAL; }
-
     }
 
     public int LEVEL
@@ -121,6 +115,15 @@ public class WeaponEquip : Equipable
         //weapon.name = "none";
         //weapon.DESC = "No weapon equipped";
         //Equip(weapon);
+
+    }
+    public int GetCost(LivingObject user, float mod =1.0f)
+    {
+        return equipped.GetCost(user, mod);
+    }
+    public bool CanUse(float mod = 1.0f)
+    {
+       return equipped.CanUse(mod);
 
     }
     public void Use()

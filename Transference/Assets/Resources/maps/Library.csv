@@ -1,0 +1,25 @@
+-UnoccupiedTiles count = r
+-event room = n  -event tiles -event nums
+-id = i
+-texture num = t
+-map width = w
+-map height = h
+-num of doors/door indexs = d [location], [location] 
+-Room Names = m
+- Room locations = l
+-Start Indexes = x
+-num of enemies / enemy indexs = e [location], [location] 
+-num of rando glyphs / glyph indexes = g [location], [location] 
+-num of lock glyphs / lock glyph indexes = gi [location], [location] 
+-num of shops/shop index = s [location], [location] 
+-num objs/ obj indexs = o [location], [location] 
+-obj ids = oi [location], [location] 
+n,false
+i,14
+t,5
+w,8
+h,7
+d,47,0
+m,Upper Passage,Solarium
+l,10,13
+x,27,79

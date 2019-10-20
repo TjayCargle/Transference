@@ -616,7 +616,7 @@ public class ShopScreen : MonoBehaviour
                 skillCount = buyer.AUTO_SLOTS.SKILLS.Count;
                 break;
             case 6:
-                skillCount = buyer.OPP_SLOTS.SKILLS.Count;
+                skillCount = buyer.INVENTORY.OPPS.Count;
                 break;
         }
         if (buyerNameText)
@@ -671,7 +671,7 @@ public class ShopScreen : MonoBehaviour
                                 currentTypeText.text = "Auto SKills";
                             break;
                         case 6:
-                            refUseable = buyer.OPP_SLOTS.SKILLS[i];
+                            refUseable = buyer.INVENTORY.OPPS[i];
                             selectedType = 5;
                             if (currentTypeText)
                                 currentTypeText.text = "Opportunitty Skills";

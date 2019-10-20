@@ -20,8 +20,8 @@ i,0
 t,0
 w,8
 h,6
-d,43,3
-m,Upper Hallway,Lower Hallway
-l,1,7
-x,1,37
-e,34,27,28
+d,46,1,41
+m,Patio,Lower Hallway,Foyer
+l,15,7,16
+x,0,14,39
+e,27

@@ -19,7 +19,7 @@ public class StatusIconManager : MonoBehaviour
         GameObject newText = new GameObject();
 
         StatIcon icon = newContainer.AddComponent<StatIcon>();
-        newContainer.transform.parent = transform;
+        newContainer.transform.SetParent(transform);
 
         HorizontalLayoutGroup horizontal = newContainer.AddComponent<HorizontalLayoutGroup>();
         horizontal.spacing = 16;
@@ -30,11 +30,11 @@ public class StatusIconManager : MonoBehaviour
         horizontal.childForceExpandWidth = true;
 
         icon.myImage = newImage.AddComponent<Image>();
-        newImage.transform.parent = newContainer.transform;
+        newImage.transform.SetParent(newContainer.transform,false);
 
 
         icon.myText = newText.AddComponent<Text>();
-        newText.transform.parent = newContainer.transform;
+        newText.transform.SetParent(newContainer.transform, false);
         icon.myText.resizeTextForBestFit = true;
         icon.myText.font = usedFont;
 
@@ -154,33 +154,33 @@ public class StatusIconManager : MonoBehaviour
             {
                 case BuffType.none:
                     break;
-                case BuffType.str:
+                case BuffType.Str:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.AtkUP];
                     statcon.myText.text = "Atk +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
                     break;
-                case BuffType.mag:
+                case BuffType.Mag:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.MagUp];
                     statcon.myText.text = "Mag +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
                     break;
-                case BuffType.defense:
+                case BuffType.Def:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.DefUP];
                     statcon.myText.text = "Def +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
                     break;
-                case BuffType.resistance:
+                case BuffType.Res:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.ResUp];
                     statcon.myText.text = "Res +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
 
 
                     break;
-                case BuffType.speed:
+                case BuffType.Spd:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.SpdUp];
                     statcon.myText.text = "Spd +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
 
 
                     break;
-                case BuffType.skill:
+                case BuffType.Dex:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.SklUp];
-                    statcon.myText.text = "Skl +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
+                    statcon.myText.text = "Dex +" + living.INVENTORY.BUFFS[i].BUFFVAL + "%";
 
 
                     break;
@@ -202,36 +202,36 @@ public class StatusIconManager : MonoBehaviour
             {
                 case BuffType.none:
                     break;
-                case BuffType.str:
+                case BuffType.Str:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.AtkDown];
                     statcon.myText.text = "Atk " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
                     break;
-                case BuffType.mag:
+                case BuffType.Mag:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.MagDown];
                     statcon.myText.text = "Mag " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
 
                     break;
-                case BuffType.defense:
+                case BuffType.Def:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.DefDown];
                     statcon.myText.text = "Def " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
 
 
                     break;
-                case BuffType.resistance:
+                case BuffType.Res:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.ResDown];
                     statcon.myText.text = "Res " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
 
 
                     break;
-                case BuffType.speed:
+                case BuffType.Spd:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.SpdDown];
                     statcon.myText.text = "Spd " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
 
 
                     break;
-                case BuffType.skill:
+                case BuffType.Dex:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.SklDown];
-                    statcon.myText.text = "Skl " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
+                    statcon.myText.text = "Dex " + living.INVENTORY.DEBUFFS[i].BUFFVAL + "%";
 
 
                     break;

@@ -36,13 +36,14 @@ public class LivingObject : GridObject
     public int refreshState;
     private int physLevel = 1;
     private int magLevel = 1;
-    private int skillLevel = 1;
+    private int dexLevel = 1;
     private bool tookAction = false;
     protected GameObject shadow;
     protected GameObject barrier;
 
-    private ArmorScript defaultArmor;
 
+    private ArmorScript defaultArmor;
+    public List<TileScript> moveableTiles = new List<TileScript>();
     public GameObject SHADOW
     {
         get { return shadow; }
@@ -130,13 +131,25 @@ public class LivingObject : GridObject
     {
         get
         {
+            int bypass = base.MOVE_DIST = STATS.MOVE_DIST + BASE_STATS.MOVE_DIST;
+            if (myManager)
+            {
+                if (myManager.isSetup)
+                {
+
+                    if (myManager.liveEnemies.Count == 0)
+                    {
+                        bypass = 100;
+                    }
+                }
+            }
             if (PSTATUS != PrimaryStatus.crippled)
             {
-                return (base.MOVE_DIST = STATS.MOVE_DIST + BASE_STATS.MOVE_DIST);
+                return (bypass);
             }
             else
             {
-                return (int)(((float)STATS.MOVE_DIST + (float)BASE_STATS.MOVE_DIST) * 0.5f);
+                return 1;
             }
         }
 
@@ -157,10 +170,10 @@ public class LivingObject : GridObject
         set { generatedActions = value; }
     }
 
-    public int Atk_DIST
-    {
-        get { return equippedWeapon.DIST; }
-    }
+    //public int Atk_DIST
+    //{
+    //    get { return equippedWeapon.DIST; }
+    //}
 
     public int STRENGTH
     {
@@ -182,9 +195,9 @@ public class LivingObject : GridObject
     {
         get { return STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED; }
     }
-    public int SKILL
+    public int DEX
     {
-        get { return STATS.SKILL + BASE_STATS.SKILL; }
+        get { return STATS.DEX + BASE_STATS.DEX; }
     }
     public int MAX_HEALTH
     {
@@ -222,9 +235,9 @@ public class LivingObject : GridObject
     {
         get { return magLevel; }
     }
-    public int SKLEVEL
+    public int DEXLEVEL
     {
-        get { return skillLevel; }
+        get { return dexLevel; }
     }
 
     //public bool IsEnenmy
@@ -233,7 +246,7 @@ public class LivingObject : GridObject
     //    set { isEnenmy = value; }
     //}
 
-    public bool ChangeHealth(int val)
+    public bool ChangeHealth(int val, bool showchange = true)
     {
         int healedVal = 0;
         int prevHealth = HEALTH;
@@ -268,19 +281,22 @@ public class LivingObject : GridObject
             myManager.gridObjects.Remove(this);
             Die();
         }
-
-        int postHealth = HEALTH;
-        healedVal = postHealth - prevHealth;
-
-        if (prevHealth < postHealth)
+        if (showchange == true)
         {
-            myManager.CreateDmgTextEvent(healedVal.ToString(), Common.lime, this);
-        }
-        else if (healedVal != 0)
-        {
+
+            int postHealth = HEALTH;
             healedVal = postHealth - prevHealth;
-            myManager.CreateDmgTextEvent(healedVal.ToString(), Common.red, this);
-            Debug.Log("lost health");
+
+            if (prevHealth < postHealth)
+            {
+                myManager.CreateDmgTextEvent(healedVal.ToString(), Common.lime, this);
+            }
+            else if (healedVal != 0)
+            {
+                healedVal = postHealth - prevHealth;
+                myManager.CreateDmgTextEvent(healedVal.ToString(), Common.red, this);
+                // Debug.Log("lost health");
+            }
         }
 
         return true;
@@ -334,19 +350,20 @@ public class LivingObject : GridObject
         int healedVal = 0;
         int prevHealth = FATIGUE;
 
-        if (val > 0 && STATS.FATIGUE <= 0)
+        if (val > 0 && FATIGUE <= 0)
         {
             return false;
         }
         STATS.FATIGUE -= val;
         if (FATIGUE > MAX_FATIGUE)
         {
-            STATS.FATIGUE = STATS.MAX_FATIGUE;
-            BASE_STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
+            STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
+            BASE_STATS.FATIGUE = 0;
         }
 
         if (FATIGUE < 0)
         {
+            BASE_STATS.FATIGUE = 0;
             STATS.FATIGUE = -1 * MAX_FATIGUE;
         }
 
@@ -362,14 +379,14 @@ public class LivingObject : GridObject
         {
             healedVal = postHealth - prevHealth;
             myManager.CreateDmgTextEvent(healedVal.ToString(), Color.cyan, this);
-            Debug.Log("lost fatigue");
+            //   Debug.Log("lost fatigue");
         }
         return true;
     }
 
     public CommandSkill GetMostUsedSkill()
     {
-        if (PHYSICAL_SLOTS.SKILLS.Count <= 0)
+        if (PHYSICAL_SLOTS.SKILLS.Count <= 1)
         {
             return null;
         }
@@ -388,7 +405,7 @@ public class LivingObject : GridObject
     }
     public CommandSkill GetMostUsedSpell()
     {
-        if (MAGICAL_SLOTS.SKILLS.Count <= 0)
+        if (MAGICAL_SLOTS.SKILLS.Count <= 1)
         {
             return null;
         }
@@ -397,6 +414,46 @@ public class LivingObject : GridObject
         for (int i = 0; i < MAGICAL_SLOTS.SKILLS.Count; i++)
         {
             CommandSkill aSkill = MAGICAL_SLOTS.SKILLS[i] as CommandSkill;
+            if (aSkill.USECOUNT > mostUsed.USECOUNT)
+            {
+                mostUsed = aSkill;
+            }
+        }
+        return mostUsed;
+
+    }
+
+    public WeaponScript GetMostUsedStrike()
+    {
+        if (INVENTORY.WEAPONS.Count <= 1)
+        {
+            return null;
+        }
+
+        WeaponScript mostUsed = INVENTORY.WEAPONS[0] as WeaponScript;
+        for (int i = 0; i < INVENTORY.WEAPONS.Count; i++)
+        {
+            WeaponScript aSkill = INVENTORY.WEAPONS[i] as WeaponScript;
+            if (aSkill.USECOUNT > mostUsed.USECOUNT)
+            {
+                mostUsed = aSkill;
+            }
+        }
+        return mostUsed;
+
+    }
+
+    public ArmorScript GetMostUsedBarrier()
+    {
+        if (INVENTORY.ARMOR.Count <= 1)
+        {
+            return null;
+        }
+
+        ArmorScript mostUsed = INVENTORY.ARMOR[0] as ArmorScript;
+        for (int i = 0; i < INVENTORY.ARMOR.Count; i++)
+        {
+            ArmorScript aSkill = INVENTORY.ARMOR[i] as ArmorScript;
             if (aSkill.USECOUNT > mostUsed.USECOUNT)
             {
                 mostUsed = aSkill;
@@ -657,7 +714,8 @@ public class LivingObject : GridObject
 
             //   Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
         }
-        ACTIONS--;
+        if (myManager.liveEnemies.Count > 0)
+            ACTIONS--;
         if (myManager)
         {
             //  myManager.doubleAdjOppTiles.Clear();
@@ -665,7 +723,7 @@ public class LivingObject : GridObject
             {
                 tookAction = false;
                 myManager.NextTurn(FullName, myManager.currentState);
-                if(GetComponent<SpriteRenderer>())
+                if (GetComponent<SpriteRenderer>())
                 {
                     GetComponent<SpriteRenderer>().color = Color.gray;
                 }
@@ -709,7 +767,7 @@ public class LivingObject : GridObject
         if (myManager.log)
         {
             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
-            myManager.log.Log(coloroption + NAME + "</color> Barrier broke!");
+            myManager.log.Log(coloroption + NAME + "</color> decided to wait!");
         }
 
         myManager.CreateEvent(this, gao, "Neo wait action", WaitEvent);
@@ -753,21 +811,51 @@ public class LivingObject : GridObject
         if (FATIGUE < 0)
             STATS.FATIGUE = 0;
     }
+
+    public void TrueCharge()
+    {
+        ChangeHealth((int)(0.125 * MAX_HEALTH) * (actions + 1));
+        ChangeMana((int)(0.125 * MAX_MANA) * (actions + 1));
+        ChangeFatigue((int)(-0.125 * MAX_FATIGUE) * (actions + 1));
+
+        float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
+        spd = (int)(spd / 10);
+
+        //   if (actions == spd || actions == (spd + 2))
+        if (tookAction == false)
+        {
+            GENERATED += 2;
+
+
+        }
+
+        ACTIONS = 0;
+        tookAction = false;
+        if (HEALTH > MAX_HEALTH)
+            STATS.HEALTH = MAX_HEALTH;
+        if (MANA > MAX_MANA)
+            STATS.MANA = MAX_MANA;
+        if (FATIGUE < 0)
+            STATS.FATIGUE = 0;
+    }
     public void LevelUp()
     {
         if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
         {
             BASE_STATS.LEVEL++;
-            BASE_STATS.MAX_HEALTH += skillLevel;
+            BASE_STATS.MAX_HEALTH += dexLevel;
+            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
             BASE_STATS.MAX_MANA += magLevel;
+            BASE_STATS.MAX_MANA = BASE_STATS.MAX_MANA;
             BASE_STATS.MAX_FATIGUE += physLevel;
+
             BASE_STATS.EXP -= 100;
             BASE_STATS.STRENGTH++;
             BASE_STATS.DEFENSE++;
             BASE_STATS.MAGIC++;
             BASE_STATS.RESIESTANCE++;
             BASE_STATS.SPEED++;
-            BASE_STATS.SKILL++;
+            BASE_STATS.DEX++;
         }
 
     }
@@ -782,18 +870,19 @@ public class LivingObject : GridObject
         BASE_STATS.PHYSEXP += val;
         if (BASE_STATS.PHYSEXP > 100)
         {
-            float chance = Random.Range(0, 2);
-            if (chance > 0)
-            {
-                BASE_STATS.STRENGTH++;
+            //float chance = Random.Range(0, 2);
+            //if (chance > 0)
+            //{
 
-            }
-            else
-            {
-                BASE_STATS.DEFENSE++;
-            }
+            //}
+            //else
+            //{
+            //}
+            BASE_STATS.STRENGTH++;
+            BASE_STATS.DEFENSE++;
             BASE_STATS.PHYSEXP = 0;
             physLevel++;
+            BASE_STATS.FTCOSTCHANGE -= 0.05f;
         }
     }
     public void GainMagExp(int val)
@@ -801,47 +890,50 @@ public class LivingObject : GridObject
         BASE_STATS.MAGEXP += val;
         if (BASE_STATS.MAGEXP > 100)
         {
-            float chance = Random.Range(0, 2);
-            if (chance > 0)
-            {
-                BASE_STATS.MAGIC++;
+            //float chance = Random.Range(0, 2);
+            //if (chance > 0)
+            //{
 
-            }
-            else
-            {
-                BASE_STATS.RESIESTANCE++;
-            }
+            //}
+            //else
+            //{
+            //}
+            BASE_STATS.MAGIC++;
+            BASE_STATS.RESIESTANCE++;
             BASE_STATS.MAGEXP = 0;
             magLevel++;
+            BASE_STATS.SPCHANGE -= 0.05f;
         }
     }
-    public void GainSklExp(int val)
+    public void GainDexExp(int val)
     {
         BASE_STATS.SKILLEXP += val;
         if (BASE_STATS.SKILLEXP > 100)
         {
-            float chance = Random.Range(0, 2);
-            if (chance > 0)
+            //float chance = Random.Range(0, 2);
+            //if (chance > 0)
             {
                 BASE_STATS.SPEED++;
+                BASE_STATS.DEX++;
 
             }
-            else
+            //else
             {
-                BASE_STATS.SKILL++;
             }
             BASE_STATS.SKILLEXP = 0;
-            skillLevel++;
+            dexLevel++;
+            BASE_STATS.HPCOSTCHANGE -= 0.05f;
         }
     }
     public override void Die()
     {
-
-        myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart);
+        //  Debug.Log("liv die");
+        myManager.CreateEvent(this, null, "death event for " + NAME, DieEvent, DeathStart, 0);
     }
 
     public override void DeathStart()
     {
+        // Debug.Log("Live death event starting");
         INVENTORY.BUFFS.Clear();
         INVENTORY.DEBUFFS.Clear();
         INVENTORY.EFFECTS.Clear();
@@ -851,26 +943,33 @@ public class LivingObject : GridObject
     public override IEnumerator FadeOut()
     {
         startedDeathAnimation = true;
-        // Debug.Log("enemy dying");
-        if (GetComponent<SpriteRenderer>())
-        {
-            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-            Color subtract = new Color(0, 0, 0, 0.1f);
-            int num = 0;
-            while (renderer.color.a > 0)
-            {
-                num++;
-                if (num > 9999)
-                {
-                    Debug.Log("time expired");
-                    break;
-                }
-                renderer.color = renderer.color - subtract;
-                yield return null;
-            }
-            isdoneDying = true;
+        // Debug.Log("livr fade start");
 
+
+        Color subtract = new Color(0, 0, 0, 0.1f);
+        int num = 0;
+        while (mySR.color.a > 0)
+        {
+            if (SHADOW)
+            {
+                if (SHADOW.GetComponent<SpriteRenderer>())
+                {
+
+                    SHADOW.GetComponent<SpriteRenderer>().color = mySR.color;
+                }
+            }
+            num++;
+            if (num > 9999)
+            {
+                Debug.Log("time expired");
+                break;
+            }
+            mySR.color = mySR.color - subtract;
+            yield return null;
         }
+        isdoneDying = true;
+
+        //Debug.Log("livr fade end");
     }
     public override bool DieEvent(Object data)
     {
@@ -878,4 +977,78 @@ public class LivingObject : GridObject
         return isdoneDying;
     }
 
+    public bool SummonBarrier(Object data)
+    {
+        ArmorScript newArmor = data as ArmorScript;
+        if (newArmor != ARMOR.SCRIPT)
+        {
+            ARMOR.Equip(newArmor);
+            newArmor.Use();
+            TakeAction();
+            myManager.CreateEvent(this, null, "waiting for sfx", myManager.WaitForSFXEvent);
+        }
+        myManager.CreateEvent(this, null, "return state", myManager.BufferedReturnEvent);
+        return true;
+    }
+
+
+    public bool PrepareBarrier(Object data)
+    {
+        ArmorScript newArmor = data as ArmorScript;
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, NAME + " summoned a a " + newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + " summoned a " + newArmor.NAME);
+        }
+
+        myManager.CreateEvent(this, newArmor, "Neo barrier equip", SummonBarrier);
+
+        return true;
+    }
+
+    public void LivingUnset()
+    {
+        isSetup = false;
+        DEAD = false;
+        STATS.Reset(true);
+        BASE_STATS.Reset();
+        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        INVENTORY.Clear();
+        PHYSICAL_SLOTS.SKILLS.Clear();
+        PASSIVE_SLOTS.SKILLS.Clear();
+        MAGICAL_SLOTS.SKILLS.Clear();
+        OPP_SLOTS.SKILLS.Clear();
+        AUTO_SLOTS.SKILLS.Clear();
+        DEFAULT_ARMOR = null;
+        ARMOR.unEquip();
+        PSTATUS = PrimaryStatus.normal;
+       
+        shadow.GetComponent<AnimationScript>().Unset();
+        if (GetComponent<AnimationScript>())
+        {
+            GetComponent<AnimationScript>().Unset();
+        }
+        if (GetComponent<EffectScript>())
+        {
+            Destroy(GetComponent<EffectScript>());
+        }
+        if (GetComponent<BuffScript>())
+        {
+            Destroy(GetComponent<BuffScript>());
+        }
+        if (GetComponent<DebuffScript>())
+        {
+            Destroy(GetComponent<DebuffScript>());
+        }
+    }
 }

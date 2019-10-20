@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class TextObj : MonoBehaviour {
 
     public Text text;
+    public TextMeshProUGUI textmeshpro;
     public bool isShowing = false;
     private float time = 2;
     public bool isSetup = false;
@@ -22,7 +24,7 @@ public class TextObj : MonoBehaviour {
         if (!isSetup)
         {
             text = GetComponent<Text>();
-   
+            textmeshpro = GetComponent<TextMeshProUGUI>();
             isSetup = true;
         }
     }

@@ -15,6 +15,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool requiresSelectedorSpecialTile = false;
     ManagerScript manager;
     public bool debugging = false;
+    public bool checksForGlyph = false;
     // Use this for initialization
     void Start()
     {
@@ -28,7 +29,7 @@ public class ConditionalDisplay : MonoBehaviour
     //    {
     //        for (int i = 0; i < displayStates.Length; i++)
     //        {
-    //            if (manager.currentState == displayStates[i])
+    //            if (manager. GetState() == displayStates[i])
     //            {
     //                gameObject.SetActive(true);
 
@@ -69,6 +70,7 @@ public class ConditionalDisplay : MonoBehaviour
             }
 
         }
+
 
 
         if (requriesSelectedLiving == true)
@@ -117,6 +119,24 @@ public class ConditionalDisplay : MonoBehaviour
                 }
                
             }
+            if (checksForGlyph == true)
+            {
+                if (manager.myCamera.infoObject == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (manager.myCamera.infoObject != manager.player.current)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (!manager.CheckAdjecentTilesGlyphs(manager.player.current))
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
             if (checksForEvent == true)
             {
                 if (manager.myCamera.infoObject == null)
@@ -134,6 +154,8 @@ public class ConditionalDisplay : MonoBehaviour
                     gameObject.SetActive(false);
                     return;
                 }
+
+
             }
 
             if (requiresShopTile == true)
@@ -154,7 +176,7 @@ public class ConditionalDisplay : MonoBehaviour
 
             for (int i = 0; i < displayStates.Length; i++)
             {
-                if (manager.currentState == displayStates[i])
+                if (manager. GetState() == displayStates[i])
                 {
                 
                     found = true;

@@ -27,7 +27,13 @@ public class UsableScript : ScriptableObject
 
     [SerializeField]
     protected List<Augment> augments;
-
+    [SerializeField]
+    protected LivingObject owner;
+    public LivingObject USER
+    {
+        get { return owner; }
+        set { owner = value; }
+    }
     public List<Augment> AUGMENTS
     {
         get { return augments; }

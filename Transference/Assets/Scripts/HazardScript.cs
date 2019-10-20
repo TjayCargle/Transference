@@ -8,10 +8,17 @@ public class HazardScript : LivingObject
     BaseStats myStats;
 
     public int droppedItemNum = -1;
-    [SerializeField]
-    public bool dropsSkill = false;
+  
     [SerializeField]
     private HazardType htype = HazardType.attacker;
+
+    public List<SubSkillType> hackingSequence = new List<SubSkillType>();
+    public float hackingTimer;
+    public int hackStrikes = 0;
+    public int hackSkills = 0;
+    public int hackSpells = 0;
+    public List<int> revealTiles = new List<int>();
+    private float internalTimer = 1.0f;
     public int REWARD
     {
         get { return droppedItemNum; }
@@ -46,6 +53,16 @@ public class HazardScript : LivingObject
 
     }
 
+
+
+    public void AttackStart()
+    {
+        internalTimer = 1.0f;
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
+        myManager.myCamera.UpdateCamera();
+
+    }
+
     public LivingObject FindNearestEnemy()
     {
         LivingObject newTarget = null;
@@ -59,7 +76,18 @@ public class HazardScript : LivingObject
         }
         else
         {
-            attackbleTiles = myManager.GetWeaponAttackableTiles(this);
+            if (!WEAPON.EQUIPPED)
+            {
+                if (INVENTORY.WEAPONS.Count > 0)
+                {
+                    WEAPON.Equip(INVENTORY.WEAPONS[0]);
+                    attackbleTiles = myManager.GetWeaponAttackableTiles(this);
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
         if (attackbleTiles == null)
             return null;
@@ -80,7 +108,7 @@ public class HazardScript : LivingObject
                             {
                                 testLoc = attackbleTiles[i][j].transform.position;
                                 TileScript aTile = myManager.GetTileAtIndex(myManager.GetTileIndex(testLoc));
-                 
+
                                 if (living.currentTile == aTile)
                                 {
                                     if (newTarget == null)
@@ -104,8 +132,13 @@ public class HazardScript : LivingObject
 
     public bool HAtkEvent(Object target)
     {
-        myManager.MoveCameraAndShow(this); 
-      //  Debug.Log(FullName + " atacking");
+        if (internalTimer >= 0)
+        {
+            internalTimer -= 0.02f;
+            return false;
+        }
+        //  myManager.MoveCameraAndShow(this); 
+        //  Debug.Log(FullName + " atacking");
         bool isDone = true;
         {
 
@@ -127,7 +160,7 @@ public class HazardScript : LivingObject
                 conatiner.dmgObject = realTarget;
                 conatiner.attackingElement = bestReaction.dmgElement;
                 //Debug.Log("checkin real" + realTarget);
-                myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
+                //myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
             }
             // Debug.Log(FullName + " used " + bestReaction.atkName);
@@ -140,7 +173,7 @@ public class HazardScript : LivingObject
 
     public DmgReaction DetermineBestDmgOutput(LivingObject target, bool checkdistance = true)
     {
-      //  Debug.Log("determining best output");
+        //  Debug.Log("determining best output");
         DmgReaction bestReaction;
         CommandSkill usedSkill = null;
         if (INVENTORY.CSKILLS.Count > 0)
@@ -160,7 +193,7 @@ public class HazardScript : LivingObject
 
         if (usedSkill)
         {
-        float modification = 1.0f;
+            float modification = 1.0f;
 
             if (usedSkill.ETYPE == EType.magical)
                 modification = STATS.SPCHANGE;
@@ -181,14 +214,14 @@ public class HazardScript : LivingObject
     }
     public void DetermineActions()
     {
-      //  Debug.Log("determining actions");
+        //  Debug.Log("determining actions");
 
         isPerforming = true;
         int psudeoActions = -1;
         psudeoActions = ACTIONS;
 
         List<EActType> etypes = new List<EActType>();
-      
+
         LivingObject liveObj = null;
         for (int i = 0; i < psudeoActions; i++)
         {
@@ -196,13 +229,13 @@ public class HazardScript : LivingObject
             liveObj = FindNearestEnemy();
             if (liveObj)
             {
-               // Debug.Log("glyph creatign atk event");
-                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent);
+                // Debug.Log("glyph creatign atk event");
+                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent, AttackStart);
             }
         }
-        if(!liveObj)
+        if (!liveObj)
         {
-        //    Debug.Log("glyph decide to wait");
+            //    Debug.Log("glyph decide to wait");
             //myManager.CreateEvent(this, this, "" + FullName + " Next event", myManager.NextTurnEvent,null, 0);
 
             Wait();
@@ -212,8 +245,111 @@ public class HazardScript : LivingObject
         isPerforming = false;
     }
 
+    private void IncreaseHacks(SubSkillType sub)
+    {
+        switch (sub)
+        {
 
+            case SubSkillType.Movement:
+                {
+                    int rng = Random.Range(0, 1);
+                    if (rng == 0)
+                        hackSpells++;
+                    else
+                        hackSkills++;
 
+                }
+                break;
+            case SubSkillType.Item:
+                {
+                    int rng = Random.Range(0, 1);
+                    if (rng == 0)
+                        hackStrikes++;
+                    else
+                        hackSkills++;
+
+                }
+                break;
+            case SubSkillType.Strike:
+                {
+                    hackStrikes++;
+                }
+                break;
+            case SubSkillType.Skill:
+                {
+                    hackSkills++;
+                }
+                break;
+            case SubSkillType.Spell:
+                {
+                    hackSpells++;
+                }
+                break;
+            case SubSkillType.None:
+                {
+                    int rng = Random.Range(0, 2);
+                    if (rng == 0)
+                        hackStrikes++;
+                    else if (rng == 1)
+                        hackSkills++;
+                    else
+                        hackSpells++;
+                }
+                break;
+        }
+    }
+    public void generateSequence()
+    {
+        hackingSequence.Clear();
+        hackStrikes = 0;
+        hackSkills = 0;
+        hackSpells = 0;
+        if (LEVEL < 3)
+        {
+            //3
+            hackingTimer = 20.0f;
+            for (int i = 0; i < 6; i++)
+            {
+                SubSkillType sub = (SubSkillType)Random.Range((int)SubSkillType.Movement, ((int)SubSkillType.None) + 1);
+                IncreaseHacks(sub);
+                hackingSequence.Add(sub);
+
+            }
+        }
+        else if (LEVEL >= 3 && LEVEL < 8)
+        {
+            //5
+            hackingTimer = 15.0f;
+            for (int i = 0; i < 7; i++)
+            {
+                SubSkillType sub = (SubSkillType)Random.Range((int)SubSkillType.Movement, ((int)SubSkillType.None) + 1);
+                IncreaseHacks(sub);
+                hackingSequence.Add(sub);
+            }
+        }
+        else if (LEVEL >= 8 && LEVEL < 12)
+        {
+            //7
+            hackingTimer = 10.0f;
+            for (int i = 0; i < 8; i++)
+            {
+                SubSkillType sub = (SubSkillType)Random.Range((int)SubSkillType.Movement, ((int)SubSkillType.None) + 1);
+                IncreaseHacks(sub);
+                hackingSequence.Add(sub);
+            }
+        }
+        else
+        {
+            //9
+            hackingTimer = 5.0f;
+            for (int i = 0; i < 9; i++)
+            {
+                SubSkillType sub = (SubSkillType)Random.Range((int)SubSkillType.Movement, ((int)SubSkillType.None) + 1);
+                IncreaseHacks(sub);
+                hackingSequence.Add(sub);
+            }
+        }
+    }
 
 
     public UsableScript GiveReward(LivingObject killer)
@@ -224,14 +360,8 @@ public class HazardScript : LivingObject
             if (database)
             {
 
-                if (dropsSkill)
-                {
                     return database.LearnSkill(droppedItemNum, killer);
-                }
-                else
-                {
-                    return database.GetWeapon(droppedItemNum, killer);
-                }
+            
             }
         }
         return null;
@@ -244,10 +374,10 @@ public class HazardScript : LivingObject
         //  Debug.Log("hazard dying");
         if (GetComponent<SpriteRenderer>())
         {
-            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+
             Color subtract = new Color(0, 0, 0, 0.1f);
             int num = 0;
-            while (renderer.color.a > 0)
+            while (mySR.color.a > 0)
             {
                 num++;
                 if (num > 9999)
@@ -255,16 +385,16 @@ public class HazardScript : LivingObject
                     Debug.Log("time expired");
                     break;
                 }
-                renderer.color = renderer.color - subtract;
+                mySR.color = mySR.color - subtract;
                 yield return null;
             }
             isdoneDying = true;
 
             myManager.gridObjects.Remove(this);
             gameObject.SetActive(false);
-            if(currentTile)
+            if (currentTile)
             {
-            currentTile.isOccupied = false;
+                currentTile.isOccupied = false;
 
             }
 
@@ -284,6 +414,28 @@ public class HazardScript : LivingObject
         PASSIVE_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
+        DEFAULT_ARMOR = null;
+        ARMOR.unEquip();
+        PSTATUS = PrimaryStatus.normal;
+
+        shadow.GetComponent<AnimationScript>().Unset();
+        if (GetComponent<AnimationScript>())
+        {
+            GetComponent<AnimationScript>().Unset();
+        }
+
+        if (GetComponent<EffectScript>())
+        {
+            Destroy(GetComponent<EffectScript>());
+        }
+        if (GetComponent<BuffScript>())
+        {
+            Destroy(GetComponent<BuffScript>());
+        }
+        if (GetComponent<DebuffScript>())
+        {
+            Destroy(GetComponent<DebuffScript>());
+        }
     }
 
 }

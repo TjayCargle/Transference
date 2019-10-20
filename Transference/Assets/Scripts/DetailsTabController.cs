@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
+public class DetailsTabController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
 
     public int type;
@@ -12,7 +12,7 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
     public Image myimage;
     public void Setup()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
             detailsScreen = GameObject.FindObjectOfType<DetailsScreen>();
             myimage = GetComponent<Image>();
@@ -25,14 +25,14 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
     }
     public void SelectTab()
     {
-        if(detailsScreen)
+        if (detailsScreen)
         {
             int currDetail = (int)detailsScreen.detail;
 
             if (type == 2) //right
             {
                 currDetail++;
-                if(currDetail > (int)DetailType.Exp)
+                if (currDetail > (int)DetailType.Exp)
                 {
                     currDetail = 0;
                 }
@@ -56,15 +56,15 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(detailsScreen)
-        detailsScreen.selectedContent = type;
+        if (detailsScreen)
+            detailsScreen.hoverContent = type;
     }
 
     public void ChangeDescriptionType()
     {
-       if(detailsScreen)
+        if (detailsScreen)
         {
-            if(type == 35)
+            if (type == 35)
             {
                 detailsScreen.fullDescription = true;
                 detailsScreen.updateDetails();
@@ -77,6 +77,25 @@ public class DetailsTabController : MonoBehaviour, IPointerEnterHandler
             }
 
 
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (detailsScreen)
+        {
+
+            detailsScreen.hoverContent = -1;
+        }
+
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (detailsScreen)
+        {
+            if (type != 35 && type != 36)
+                detailsScreen.selectedContent = type;
         }
     }
 }

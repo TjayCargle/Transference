@@ -16,6 +16,9 @@ public class AnimationScript : MonoBehaviour
     CameraScript cam;
     public Animator anim;
     Animator shadowAnimator;
+    public string idlePath;
+    public string movePath;
+    public bool hasMove = false;
     public Animator SHADOWANIM
     {
         get { return shadowAnimator; }
@@ -35,9 +38,9 @@ public class AnimationScript : MonoBehaviour
                 return;
             }
 
-            if(render == null)
+            if (render == null)
             {
-            render = obj.gameObject.GetComponent<SpriteRenderer>();
+                render = obj.gameObject.GetComponent<SpriteRenderer>();
             }
 
 
@@ -65,16 +68,24 @@ public class AnimationScript : MonoBehaviour
             }
 
             currentList = Resources.LoadAll<Sprite>("" + shrtname + "/Idle/"); //obj.FullName + "/Idle/");
+            idlePath = "" + shrtname + "/Idle/";
+            movePath = "" + shrtname + "/Move/";
+            if (Resources.LoadAll<Sprite>(movePath).Length > 0)
+            {
+                hasMove = true;
+            }
             Sprite[] possibleFaces = Resources.LoadAll<Sprite>("" + shrtname + "/Face/");
             index = 0;
             if (currentList.Length > 0)
             {
                 render.sprite = currentList[index];
+                obj.FACE = currentList[0];
             }
             if (possibleFaces.Length > 0)
             {
                 obj.FACE = possibleFaces[0];
             }
+
             if (me == null)
             {
                 me = GetComponent<LivingObject>();
@@ -92,11 +103,19 @@ public class AnimationScript : MonoBehaviour
     }
     public void LoadList(string path, bool repeation = true)
     {
-        index = 0;
-        Resources.UnloadUnusedAssets();
-        currentList = Resources.LoadAll<Sprite>(path);
-        repeat = repeation;
-        render.sprite = currentList[index];
+        Sprite[] possiblelist = Resources.LoadAll<Sprite>(path);
+        if (possiblelist != null)
+        {
+            if (possiblelist.Length > 0)
+            {
+                index = 0;
+                Resources.UnloadUnusedAssets();
+                currentList = possiblelist;
+                repeat = repeation;
+                render.sprite = currentList[index];
+            }
+        }
+
     }
     public void NextImage()
     {
@@ -128,7 +147,7 @@ public class AnimationScript : MonoBehaviour
             }
             else if (obj)
             {
-                if(obj.FACTION == Faction.ordinary)
+                if (obj.FACTION == Faction.ordinary)
                 {
                     if (cam.infoObject == obj)
                     {
@@ -147,7 +166,7 @@ public class AnimationScript : MonoBehaviour
                     render.sprite = currentList[index];
                 }
             }
-            else 
+            else
             {
 
                 index++;
@@ -163,7 +182,7 @@ public class AnimationScript : MonoBehaviour
     }
     public void CheckAnimation()
     {
-     
+
         if (anim)
         {
 

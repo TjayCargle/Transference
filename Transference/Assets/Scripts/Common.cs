@@ -29,7 +29,10 @@ public enum State
     ShopCanvas,
     PlayerUsingItems,
     EventRunning,
-    SceneRunning
+    SceneRunning,
+    FairyPhase,
+    PlayerAct
+
 
 
 }
@@ -86,7 +89,7 @@ public enum ModifiedStat
     Res,
     Guard,
     Speed,
-    Skill,
+    Dex,
     dmg,
     all,
     ElementBody
@@ -132,12 +135,12 @@ public enum TargetType
 public enum BuffType
 {
     none,
-    str,
-    mag,
-    defense,
-    resistance,
-    speed,
-    skill,
+    Str,
+    Mag,
+    Def,
+    Res,
+    Spd,
+    Dex,
     attack,
     guard,
     act,
@@ -166,6 +169,10 @@ public enum SubSkillType
     RngAtk,
     Movement,
     Item,
+    //for opps
+    Strike,
+    Skill,
+    Spell,
     None
 }
 public enum Augment
@@ -185,7 +192,7 @@ public enum Augment
     effectAugment3,
     strAugment,
     magAugment,
-    sklAugment,
+    dexAugment,
     defAugment,
     resAugment,
     spdAugment,
@@ -242,6 +249,7 @@ public enum EType
 {
     physical,
     magical,
+    natural
 }
 public enum Reaction
 {
@@ -364,7 +372,10 @@ public enum MenuItemType
     selectSpells,
     selectStrikes,
     openBattleLog,
-    forceEnd
+    forceEnd,
+    yesPrompt,
+    noPrompt,
+    hack
 
 }
 public enum AutoAct
@@ -395,7 +406,11 @@ public enum AutoReact
     reduceRes,
     reduceSpd,
     reduceLuck,
-    discoverItem
+    discoverItem,
+    debuff,
+    cripple,
+    instaKill,
+
 
 }
 
@@ -416,7 +431,8 @@ public enum SecondaryStatus
     rage,
     charm,
     seal,
-    confusion
+    confusion,
+    Summon
 }
 
 public enum StatusEffect
@@ -450,7 +466,7 @@ public enum SideEffect
     reduceMag,
     reduceRes,
     reduceSpd,
-    reduceSkill,
+    reduceDex,
     reduceAtk,
     reduceGuard,
     reduceAct,
@@ -509,7 +525,7 @@ public enum HazardType
     attacker,
     zeroExp,
     lockDoor,
-    mapHider,
+    controller,
     redirect
 
 }
@@ -552,7 +568,7 @@ public class AtkContainer : ScriptableObject
     public CommandSkill command;
     public DmgReaction react;
     public bool crit = false;
-
+    public WeaponScript strike;
     public void Inherit(AtkContainer container)
     {
         this.attackingObject = container.attackingObject;
@@ -563,7 +579,7 @@ public class AtkContainer : ScriptableObject
         this.alteration = container.alteration;
         this.command = container.command;
         this.react = container.react;
-
+        this.strike = container.strike;
     }
 }
 public class ItemContainer : ScriptableObject
@@ -587,6 +603,7 @@ public struct DmgReaction
     public string atkName;
     public Element dmgElement;
     public CommandSkill usedSkill;
+    public WeaponScript usedStrike;
 }
 public struct Modification
 {
@@ -633,7 +650,9 @@ public enum Faction
     dropsSpell,
     dropsStrike,
     dropsBarrier,
-    dropsItem
+    dropsItem,
+    dropsPassive,
+    dropsAuto
 }
 
 
@@ -662,11 +681,13 @@ public struct MapDetail
     public List<int> startIndexes;
     public List<int> enemyIndexes;
     public List<int> hazardIndexes;
+    public List<int> hazardIds;
     public List<int> shopIndexes;
     public List<int> objMapIndexes;
     public List<int> objIds;
     public Texture texture;
     public int StartingPosition;
+    public List<int> unOccupiedIndexes;
 }
 
 public struct SceneContainer
@@ -720,6 +741,8 @@ public struct MapData
     public int yMaxRestriction;
     public int xMinRestriction;
     public int xMaxRestriction;
+
+    public int revealCount;
 
 }
 public enum descState
@@ -821,6 +844,10 @@ public class Common : ScriptableObject
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 
+    public static Color denied = new Color(0.21569f, 0.0f, 0.00784f);
+    public static Color granted = new Color(0.03137f, 0.91765f, 0.14902f);
+
+
     public static CommandSkill CommonDebuffStr = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffDef = CreateInstance<CommandSkill>();
     public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
@@ -832,7 +859,8 @@ public class Common : ScriptableObject
     public static BoolConatainer container = new BoolConatainer();
 
     public static EventDetails eventdetail = new EventDetails();
-
+    public static bool summonedJax = false;
+    public static bool summonedZeffron = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
@@ -893,7 +921,7 @@ public class Common : ScriptableObject
             case SideEffect.reduceSpd:
                 text = "speed";
                 break;
-            case SideEffect.reduceSkill:
+            case SideEffect.reduceDex:
                 text = "skill";
                 break;
             case SideEffect.none:
@@ -974,8 +1002,8 @@ public class Common : ScriptableObject
             case SideEffect.reduceSpd:
                 stat = ModifiedStat.Speed;
                 break;
-            case SideEffect.reduceSkill:
-                stat = ModifiedStat.Skill;
+            case SideEffect.reduceDex:
+                stat = ModifiedStat.Dex;
                 break;
         }
         return stat;
@@ -1151,7 +1179,7 @@ public class Common : ScriptableObject
             case Augment.magAugment:
                 returnText = "increase the magic boost of ";
                 break;
-            case Augment.sklAugment:
+            case Augment.dexAugment:
                 returnText = "increase the skill boost of ";
                 break;
             case Augment.defAugment:
@@ -1280,7 +1308,7 @@ public class Common : ScriptableObject
             case Augment.magAugment:
                 returnText = "Increases the magic boost  of the Strike. ";
                 break;
-            case Augment.sklAugment:
+            case Augment.dexAugment:
                 returnText = "Increases the skill boost  of the Strike.";
                 break;
             case Augment.defAugment:
@@ -1359,38 +1387,247 @@ public class Common : ScriptableObject
         return newElement;
     }
 
-    public static void SetWeaponDistRange(WeaponScript weapon)
+    public static int GetnAtkDist(LivingObject livingObject)
+    {
+
+        int higestRange = 0;
+        for (int i = 0; i < livingObject.INVENTORY.WEAPONS.Count; i++)
+        {
+
+            int check = GetWeaponAtkDist(livingObject.INVENTORY.WEAPONS[i]);
+            if (higestRange < check)
+                higestRange = check;
+
+        }
+        for (int i = 0; i < livingObject.INVENTORY.CSKILLS.Count; i++)
+        {
+
+            int check = GetWeaponAtkDist(livingObject.INVENTORY.CSKILLS[i]);
+            if (higestRange < check)
+                higestRange = check;
+
+        }
+        return higestRange;
+    }
+    public static int GetAtkRange(LivingObject livingObject)
+    {
+
+        int higestRange = 0;
+        for (int i = 0; i < livingObject.INVENTORY.WEAPONS.Count; i++)
+        {
+            int check = GetWeaponAtkRange(livingObject.INVENTORY.WEAPONS[i]);
+            if (higestRange < check)
+                higestRange = check;
+        }
+        for (int i = 0; i < livingObject.INVENTORY.CSKILLS.Count; i++)
+        {
+
+            int check = GetWeaponAtkRange(livingObject.INVENTORY.CSKILLS[i]);
+            if (higestRange < check)
+                higestRange = check;
+
+        }
+        return higestRange;
+    }
+    public static int GetWeaponAtkDist(WeaponScript weapon)
     {
         switch (weapon.ATKRANGE)
         {
 
             case RangeType.adjacent:
-                weapon.Range = 1;
-                weapon.DIST = 1;
+                return 1;
                 break;
             case RangeType.pinWheel:
-                weapon.Range = 2;
-                weapon.DIST = 2;
+                return 2;
                 break;
             case RangeType.detached:
-                weapon.Range = 1;
-                weapon.DIST = 2;
+                return 2;
                 break;
             case RangeType.stretched:
-                weapon.Range = 2;
-                weapon.DIST = 3;
+                return 3;
+                break;
+            case RangeType.rotator:
+                return 1;
+                break;
+            case RangeType.fan:
+                return 1;
                 break;
             case RangeType.spear:
-                weapon.Range = 2;
-                weapon.DIST = 2;
+                return 2;
                 break;
             case RangeType.lance:
-                weapon.Range = 3;
-                weapon.DIST = 3;
+                return 3;
+                break;
+            case RangeType.line:
+                return 3;
                 break;
 
+        }
+        return 0;
+    }
+    public static int GetWeaponAtkDist(CommandSkill weapon)
+    {
+        switch (weapon.RTYPE)
+        {
+
+            case RangeType.adjacent:
+                return 1;
+                break;
+            case RangeType.pinWheel:
+                return 2;
+                break;
+            case RangeType.detached:
+                return 2;
+                break;
+            case RangeType.stretched:
+                return 3;
+                break;
+            case RangeType.rotator:
+                return 1;
+                break;
+            case RangeType.fan:
+                return 1;
+                break;
+            case RangeType.spear:
+                return 2;
+                break;
+            case RangeType.lance:
+                return 3;
+                break;
+            case RangeType.line:
+                return 3;
+                break;
+
+            case RangeType.rect:
+                return 4;
+                break;
+            case RangeType.cone:
+                return 3;
+                break;
+            case RangeType.tpose:
+                return 4;
+                break;
+            case RangeType.clover:
+                return 1;
+                break;
+            case RangeType.cross:
+                return 1;
+                break;
+            case RangeType.square:
+                return 2;
+                break;
+            case RangeType.box:
+                return 5;
+                break;
+            case RangeType.diamond:
+                return 1;
+                break;
+            case RangeType.crosshair:
+                return 2;
+                break;
+        }
+        return 0;
+    }
+    public static int GetWeaponAtkRange(WeaponScript weapon)
+    {
+        switch (weapon.ATKRANGE)
+        {
+
+            case RangeType.adjacent:
+                return 1;
+                break;
+            case RangeType.pinWheel:
+                return 2;
+                break;
+            case RangeType.detached:
+                return 2;
+                break;
+            case RangeType.stretched:
+                return 2;
+                break;
+            case RangeType.rotator:
+                return 1;
+                break;
+            case RangeType.fan:
+                return 1;
+                break;
+            case RangeType.spear:
+                return 1;
+                break;
+            case RangeType.lance:
+                return 1;
+                break;
+            case RangeType.line:
+                return 1;
+                break;
 
         }
+        return 0;
+    }
+
+    public static int GetWeaponAtkRange(CommandSkill weapon)
+    {
+        switch (weapon.RTYPE)
+        {
+
+            case RangeType.adjacent:
+                return 1;
+                break;
+            case RangeType.pinWheel:
+                return 2;
+                break;
+            case RangeType.detached:
+                return 2;
+                break;
+            case RangeType.stretched:
+                return 2;
+                break;
+            case RangeType.rotator:
+                return 1;
+                break;
+            case RangeType.fan:
+                return 1;
+                break;
+            case RangeType.spear:
+                return 1;
+                break;
+            case RangeType.lance:
+                return 1;
+                break;
+            case RangeType.line:
+                return 1;
+                break;
+
+            case RangeType.rect:
+                return 1;
+                break;
+            case RangeType.cone:
+                return 1;
+                break;
+            case RangeType.tpose:
+                return 1;
+                break;
+            case RangeType.clover:
+                return 1;
+                break;
+            case RangeType.cross:
+                return 1;
+                break;
+            case RangeType.square:
+                return 1;
+                break;
+            case RangeType.box:
+                return 1;
+                break;
+            case RangeType.diamond:
+                return 2;
+                break;
+            case RangeType.crosshair:
+                return 2;
+                break;
+
+        }
+        return 0;
     }
 
     public static EventDetails GetEventText(int eventnum, LivingObject living)
@@ -1421,6 +1658,15 @@ public class Common : ScriptableObject
                     eventdetail.eventNum = 2;
                 }
                 break;
+            case 3:
+                {
+                    eventdetail.eventText = "Do you want to reset the maps?";
+                    eventdetail.choice1 = "Yes";
+                    eventdetail.choice2 = "No";
+                    eventdetail.affectedObject = living;
+                    eventdetail.eventNum = 3;
+                }
+                break;
         }
 
         return eventdetail;
@@ -1444,7 +1690,7 @@ public class Common : ScriptableObject
         switch (type)
         {
             case EPType.tactical:
-                return EPCluster.logical;
+                return EPCluster.physical;
                 break;
             case EPType.itemist:
                 return EPCluster.logical;
@@ -1453,7 +1699,7 @@ public class Common : ScriptableObject
                 return EPCluster.logical;
                 break;
             case EPType.forceful:
-                return EPCluster.physical;
+                return EPCluster.logical;
                 break;
             case EPType.aggro:
                 return EPCluster.physical;
@@ -1609,22 +1855,86 @@ public class Common : ScriptableObject
     public static MapDetail ConvertMapData2Detail(MapData data, MapDetail detail)
     {
 
+        // detail.mapName = data.mapName;
+        detail.width = data.width;
+        detail.height = data.height;
+        detail.mapIndex = data.mapIndex;
+
+
+        detail.doorIndexes.Clear();
+        detail.roomNames.Clear();
+        detail.roomIndexes.Clear();
+        detail.enemyIndexes.Clear();
+        detail.hazardIndexes.Clear();
+        detail.shopIndexes.Clear();
+        detail.startIndexes.Clear();
+        detail.objMapIndexes.Clear();
+        detail.objIds.Clear();
+        detail.hazardIds.Clear();
+
+        detail.unOccupiedIndexes.Clear();
+        detail.unOccupiedIndexes.AddRange(data.unOccupiedIndexes);
+
+        detail.doorIndexes.AddRange(data.doorIndexes);
+        detail.roomNames.AddRange(data.roomNames);
+        detail.roomIndexes.AddRange(data.roomIndexes);
+
+        detail.startIndexes.AddRange(data.startIndexes);
+        detail.enemyIndexes.AddRange(data.enemyIndexes);
+        detail.hazardIndexes.AddRange(data.glyphIndexes);
+
+        detail.shopIndexes.AddRange(data.shopIndexes);
+        detail.objMapIndexes.AddRange(data.objMapIndexes);
+        detail.objIds.AddRange(data.objIds);
+        detail.StartingPosition = data.StartingPosition;
+
+        detail.hazardIds.AddRange(data.glyphIds);
+
+        return detail;
+    }
+
+    public static MapData ConvertMapDetail2Data(MapDetail data, MapData detail)
+    {
+
         detail.mapName = data.mapName;
         detail.width = data.width;
         detail.height = data.height;
         detail.mapIndex = data.mapIndex;
 
-        detail.doorIndexes = data.doorIndexes;
-        detail.roomNames = data.roomNames;
-        detail.roomIndexes = data.roomIndexes;
 
-        detail.startIndexes = data.startIndexes;
-        detail.enemyIndexes = data.enemyIndexes;
-        detail.hazardIndexes = data.glyphIndexes;
 
-        detail.shopIndexes = data.shopIndexes;
-        detail.objMapIndexes = data.objMapIndexes;
-        detail.objIds = data.objIds;
+        detail.doorIndexes.Clear();
+        detail.roomNames.Clear();
+        detail.roomIndexes.Clear();
+        detail.enemyIndexes.Clear();
+        detail.glyphIndexes.Clear();
+        detail.glyphIds.Clear();
+        detail.shopIndexes.Clear();
+        detail.startIndexes.Clear();
+        detail.objMapIndexes.Clear();
+        detail.objIds.Clear();
+        if (data.hazardIds.Count > 0)
+        {
+            detail.glyphIds.Clear();
+            detail.glyphIds.AddRange(data.hazardIds);
+        }
+        if (data.unOccupiedIndexes.Count > 0)
+        {
+            detail.unOccupiedIndexes.Clear();
+            detail.unOccupiedIndexes.AddRange(data.unOccupiedIndexes);
+        }
+
+        detail.doorIndexes.AddRange(data.doorIndexes);
+        detail.roomNames.AddRange(data.roomNames);
+        detail.roomIndexes.AddRange(data.roomIndexes);
+
+        detail.startIndexes.AddRange(data.startIndexes);
+        detail.enemyIndexes.AddRange(data.enemyIndexes);
+        detail.glyphIndexes.AddRange(data.hazardIndexes);
+
+        detail.shopIndexes.AddRange(data.shopIndexes);
+        detail.objMapIndexes.AddRange(data.objMapIndexes);
+        detail.objIds.AddRange(data.objIds);
         detail.StartingPosition = data.StartingPosition;
 
         return detail;

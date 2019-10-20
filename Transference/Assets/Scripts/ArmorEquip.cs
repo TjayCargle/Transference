@@ -162,13 +162,20 @@ public class ArmorEquip : Equipable
         //noArmor.NAME = "none";
         //noArmor.HITLIST = Common.noHitList;
         //noArmor.DESC = "No armor equipped";
-
-        Equip(owner.DEFAULT_ARMOR);
-        if (owner)
+        if (owner.DEFAULT_ARMOR == null)
         {
-            if (owner.BARRIER)
+            equipped = null;
+        }
+        else
+        {
+
+            Equip(owner.DEFAULT_ARMOR);
+            if (owner)
             {
-                owner.BARRIER.GetComponent<SpriteRenderer>().color = Common.trans;
+                if (owner.BARRIER)
+                {
+                    owner.BARRIER.GetComponent<SpriteRenderer>().color = Common.trans;
+                }
             }
         }
     }

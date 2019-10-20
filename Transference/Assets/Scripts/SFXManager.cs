@@ -33,6 +33,7 @@ public class SFXManager : MonoBehaviour {
     {
         return source.isPlaying;
     }
+    
     public void playSound()
     {
        // if(!source.isPlaying)

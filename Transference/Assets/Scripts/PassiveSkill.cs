@@ -105,25 +105,33 @@ public class PassiveSkill : SkillScript
             case ModifiedStat.ElementDmg:
 
                 // DESC = ModElements[0] + " and "+ModElements[1]+" attacks do "+ModValues[0].ToString()+"% more dmg ";
-                DESC = ModElements[0] + " and " + ModElements[1] + " attacks do 2x more dmg ";
+                DESC = ModElements[0] + " and " + ModElements[1] + " attacks do "+ (ModValues[0] / 100)+"x more dmg. This DOES stack with other passives. ";
                 break;
             case ModifiedStat.Movement:
                 break;
             case ModifiedStat.Str:
+                DESC = "Increases Strength by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Mag:
+                DESC = "Increases Magic by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Atk:
+                DESC = "Increases Strength, Magic, and Dexterity by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Def:
+                DESC = "Increases Defense by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Res:
+                DESC = "Increases Resistance by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Guard:
+                DESC = "Increases Defense, Resistance, and Speed  by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Speed:
+                DESC = "Increases Speed by " + ModValues[0].ToString() + "%"; ;
                 break;
-            case ModifiedStat.Skill:
+            case ModifiedStat.Dex:
+                DESC = "Increases Dexterity by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.dmg:
                 break;

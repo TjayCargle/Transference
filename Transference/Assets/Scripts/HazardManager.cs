@@ -36,13 +36,13 @@ public class HazardManager : MonoBehaviour
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
-                    hazards[i].dropsSkill = false;
-                    hazards[i].REWARD = Random.Range(0, 11);
+                     
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
-                    hazards[i].dropsSkill = true;
-                    hazards[i].REWARD = Random.Range(0, 11);
+ 
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 hazards[i].Setup();
                 subhazards.Add(hazards[i]);
@@ -59,13 +59,13 @@ public class HazardManager : MonoBehaviour
                 hazardSetup.hazardid = 0; skilloratk = Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
-                    hazards[i].dropsSkill = false;
-                    hazards[i].REWARD = Random.Range(0, 11);
+                     
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
-                    hazards[i].dropsSkill = true;
-                    hazards[i].REWARD = Random.Range(0, 11);
+ 
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 hazards[i].Setup();
                 subhazards.Add(hazards[i]);
@@ -79,12 +79,12 @@ public class HazardManager : MonoBehaviour
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
-                    hazard.dropsSkill = false;
+                     
                     hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
-                    hazard.dropsSkill = true;
+                     
                     hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 hazard.Setup();
@@ -114,13 +114,13 @@ public class HazardManager : MonoBehaviour
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
-                    hazards[i].dropsSkill = false;
-                    hazards[i].REWARD = Random.Range(0, 11);
+                     
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
-                    hazards[i].dropsSkill = true;
-                    hazards[i].REWARD = Random.Range(0, 11);
+ 
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 hazards[i].Setup();
                 subhazards.Add(hazards[i]);
@@ -139,17 +139,11 @@ public class HazardManager : MonoBehaviour
                     hazardSetup.hazardid = data.glyphIds[i];
                 else
                     hazardSetup.hazardid = 0;
-               skilloratk = Random.Range(0, 2);
-                if (skilloratk == 0)
-                {
-                    hazards[i].dropsSkill = false;
-                    hazards[i].REWARD = Random.Range(0, 11);
-                }
-                else
-                {
-                    hazards[i].dropsSkill = true;
-                    hazards[i].REWARD = Random.Range(0, 11);
-                }
+         
+                     
+                    hazards[i].REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                
+        
                 hazards[i].Setup();
                 subhazards.Add(hazards[i]);
                 indx++;
@@ -168,12 +162,12 @@ public class HazardManager : MonoBehaviour
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
-                    hazard.dropsSkill = false;
+                     
                     hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 else
                 {
-                    hazard.dropsSkill = true;
+                     
                     hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
                 }
                 hazard.Setup();

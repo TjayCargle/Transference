@@ -53,7 +53,7 @@ public class CommandSkill : SkillScript
 
     public int COST
     {
-        get { return cost; }
+        get { return GetCost(); }
         set { cost = value; }
     }
 
@@ -139,16 +139,59 @@ public class CommandSkill : SkillScript
         get { return maxHit; }
         set { maxHit = value; }
     }
-    public int GetCost(LivingObject user, float modification = 1.0f)
+    public int GetCost(LivingObject user = null, float modification = 1.0f)
     {
+        if (user == null)
+            user = USER;
         if (ETYPE == EType.physical)
         {
-            return (int)(COST * modification); ;
+            switch (SUBTYPE)
+            {
+                case SubSkillType.Charge:
+                    {
+                        if (OWNER)
+                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE * user.STATS.FTCHARGECHANGE);
+                        else
+                            return (int)(cost * modification);
+                    }
+                    break;
+                case SubSkillType.Cost:
+                    {
+                        if (OWNER)
+                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE * user.STATS.FTCOSTCHANGE);
+                        else
+                            return (int)(cost * modification);
+                    }
+                    break;
+                case SubSkillType.RngAtk:
+                    {
+                        if (cost < 0)
+                        {
+                            if (OWNER)
+                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE * user.STATS.FTCOSTCHANGE);
+
+                            else
+                                return (int)(cost * modification);
+                        }
+                        else
+                        {
+                            if (OWNER)
+                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE * user.BASE_STATS.FTCOSTCHANGE);
+                            else
+                                return (int)(cost * modification);
+                        }
+                    }
+                    break;
+                default:
+                    return cost;
+            }
         }
         else
         {
-            return (int)(COST * modification);
-
+            if (OWNER)
+                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_MANA) * user.BASE_STATS.SPCHANGE * user.STATS.SPCHANGE);
+            else
+                return (int)(cost * modification);
         }
     }
     public SkillScript UseSkill(LivingObject user, float modification = 1.0f)
@@ -157,12 +200,39 @@ public class CommandSkill : SkillScript
         {
             if (ETYPE == EType.magical)
             {
-                OWNER.STATS.MANA -= (int)(COST * modification);
+                OWNER.STATS.MANA -= GetCost();
                 useCount++;
             }
             else
             {
-                OWNER.STATS.FATIGUE += (int)(COST * modification);
+
+                switch (SUBTYPE)
+                {
+                    case SubSkillType.Charge:
+                        {
+                            OWNER.STATS.FATIGUE += GetCost();
+                        }
+                        break;
+                    case SubSkillType.Cost:
+                        {
+                            int amt = GetCost();
+                            amt *= -1;
+                            OWNER.STATS.FATIGUE += amt;
+                        }
+                        break;
+                    case SubSkillType.RngAtk:
+                        {
+
+                            int amt = GetCost();
+                            if (cost < 0)
+                            {
+                                amt *= -1;
+                            }
+                            OWNER.STATS.FATIGUE += amt;
+
+                        }
+                        break;
+                }
                 useCount++;
             }
         }
@@ -178,20 +248,72 @@ public class CommandSkill : SkillScript
         switch (ETYPE)
         {
             case EType.physical:
-                amt = owner.FATIGUE + (int)(COST * modification);
-                if (amt <= owner.MAX_FATIGUE)
+                switch (SUBTYPE)
                 {
-                    if (amt >= 0)
-                    {
+                    case SubSkillType.Charge:
+                        {
+                            amt = GetCost();//owner.FATIGUE + (int)((((float)(COST * 10) / 100.0f) * OWNER.MAX_FATIGUE)  * modification);
+                            if (owner.FATIGUE + amt <= owner.MAX_FATIGUE)
+                            {
+                                if (amt >= 0)
+                                {
 
-                        can = true;
-                    }
+                                    can = true;
+                                }
+                            }
+                        }
+                        break;
+                    case SubSkillType.Cost:
+                        {
+                            amt = GetCost();// (int)((((float)(COST * 10) / 100.0f) * OWNER.MAX_FATIGUE) * OWNER.STATS.FTCOSTCHANGE);
+                            amt *= -1;
+
+                            //  if (amt <= owner.FATIGUE)
+                            {
+                                if (owner.FATIGUE >= amt)
+                                {
+
+                                    can = true;
+                                }
+                            }
+                        }
+                        break;
+
+                    case SubSkillType.RngAtk:
+                        {
+                            if (cost < 0)
+                            {
+                                amt = GetCost();// (int)((((float)(COST * 10) / 100.0f) * OWNER.MAX_FATIGUE) * OWNER.STATS.FTCOSTCHANGE);
+                                amt *= -1;
+                                if (owner.FATIGUE >= amt)
+                                {
+
+                                    can = true;
+                                }
+                            }
+                            else
+                            {
+                                amt = GetCost();// owner.FATIGUE + (int)(COST * modification);
+                                if (owner.FATIGUE + amt <= owner.MAX_FATIGUE)
+                                {
+                                    if (amt >= 0)
+                                    {
+
+                                        can = true;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        return true;
                 }
+
                 break;
             case EType.magical:
-                amt = owner.MANA - (int)(COST * modification);
+                amt = GetCost();//owner.MANA - (int)(COST * modification);
 
-                if (amt >= 0)
+                if (OWNER.MANA >= amt)
                 {
                     if (amt <= OWNER.MAX_MANA)
                     {
@@ -218,11 +340,11 @@ public class CommandSkill : SkillScript
         }
         else if (SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Decreases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + COST + "Mana";
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy " + BUFFVAL + "% for 3 turns. Costs " + COST + " Mana";
         }
         else if (SUBTYPE == SubSkillType.Ailment)
         {
-            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + COST + "Mana";
+            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + COST + " Mana";
         }
         else if (ELEMENT == Element.Support)
         {
@@ -230,7 +352,7 @@ public class CommandSkill : SkillScript
             {
                 case SideEffect.heal:
                     {
-                        potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + COST + "Mana";
+                        potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + COST + " Mana";
                     }
                     break;
                 default:
@@ -277,11 +399,11 @@ public class CommandSkill : SkillScript
 
         if (SUBTYPE == SubSkillType.RngAtk)
         {
-            potentialDesc += " " + MIN_HIT + "-" + MAX_HIT + " times";
+            potentialDesc += " " + MIN_HIT + "-" + MAX_HIT + " times ";
         }
         else if (HITS > 1)
         {
-            potentialDesc += " " + HITS + " times";
+            potentialDesc += " " + HITS + " times ";
 
         }
 
@@ -313,20 +435,24 @@ public class CommandSkill : SkillScript
         {
             potentialDesc += " and " + CRIT_RATE + "% chance to land a critical hit.";
         }
-        if(ETYPE == EType.physical)
+        else
         {
-            if(SUBTYPE == SubSkillType.Charge)
+            potentialDesc += ". ";
+        }
+        if (ETYPE == EType.physical)
+        {
+            if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " + COST;
+                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER);
             }
             else
             {
-                potentialDesc += " Costs " + ( COST  * -1)+ " Fatigue";
+                potentialDesc += " Costs " + GetCost(OWNER) + " Fatigue";
             }
         }
         else
         {
-            potentialDesc += "Costs " + COST + " Mana";
+            potentialDesc += "Costs " + GetCost(OWNER) + " Mana";
         }
         return potentialDesc;
     }
@@ -336,7 +462,7 @@ public class CommandSkill : SkillScript
         {
             case Augment.levelAugment:
                 // DAMAGE = Common.GetNextDmg(DAMAGE);
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     LevelUP();
                 }
@@ -506,19 +632,37 @@ public class CommandSkill : SkillScript
                     CRIT_RATE += 5.0f;
                     break;
                 case Element.Buff:
-                    BUFFVAL += 15.0f;
+                    if (SUBTYPE == SubSkillType.Buff)
+                        BUFFVAL += 15.0f;
+                    else if (SUBTYPE == SubSkillType.Debuff)
+                        BUFFVAL -= 15.0f;
+
                     break;
-                case Element.Support:
+                case Element.Force:
+                    DAMAGE = Common.GetNextDmg(DAMAGE);
+                    //TILES.Add(Common.GetNextTileRange(TILES));
+                    if (ACCURACY < 100)
+                    {
+                        ACCURACY += 5;
+                    }
+                    else
+                    {
+                        if (EFFECT == SideEffect.none)
+                        {
+                            EFFECT = SideEffect.pullin;
+                        }
+                        else
+                        {
+                            HITS++;
+                        }
+
+                    }
+                    if (ACCURACY > 100)
+                    {
+                        ACCURACY = 100;
+                    }
                     break;
-                case Element.Ailment:
-                    break;
-                case Element.Passive:
-                    break;
-                case Element.Opp:
-                    break;
-                case Element.Auto:
-                    break;
-                case Element.none:
+
                     break;
             }
 
@@ -614,8 +758,22 @@ public class CommandSkill : SkillScript
 
                     break;
                 case Element.Buff:
+                    if (SUBTYPE == SubSkillType.Buff)
+                        returnedString += "\n " + BUFFEDSTAT + " +" + (BUFFVAL) + "% for 3 turns";
+                    else if (SUBTYPE == SubSkillType.Debuff)
+                        returnedString += "\n " + BUFFEDSTAT + " " + (BUFFVAL) + "% for 3 turns";
+                    break;
+                case Element.Force:
+                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                    returnedString += "\n Hits: " + HITS + " time(s)";
+                    if (CRIT_RATE > 0)
+                        returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
+                    if (EFFECT == SideEffect.pullin)
+                    {
+                        returnedString += "\n Pulls target 1 tile";
+                    }
 
-                    returnedString += "\n " + BUFFEDSTAT + " +" + (BUFFVAL) + "% for 3 turns";
                     break;
 
             }
@@ -740,14 +898,14 @@ public class CommandSkill : SkillScript
                         }
                         else
                         {
-                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
                         }
                     }
                     else
                     {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        returnedString += "\n Damage: " + DAMAGE.ToString() + "";
                     }
-                    
+
                     returnedString += "\n Accuracy: " + (ACCURACY) + "";
                     returnedString += "\n <color=green>Hits: " + MIN_HIT + "-" + (MAX_HIT + 1) + " times</color>";
                     if (level + 1 == 3)
@@ -835,10 +993,42 @@ public class CommandSkill : SkillScript
                     ;
                     break;
                 case Element.Buff:
-
-                    returnedString += "\n <color=green> " + BUFFEDSTAT + " +" + (BUFFVAL + 15.0f) + "% for 3 turns</color>";
+                    if (SUBTYPE == SubSkillType.Buff)
+                        returnedString += "\n <color=green> " + BUFFEDSTAT + " +" + (BUFFVAL + 15.0f) + "% for 3 turns</color>";
+                    else if (SUBTYPE == SubSkillType.Debuff)
+                        returnedString += "\n <color=green> " + BUFFEDSTAT + " " + (BUFFVAL - 15.0f) + "% for 3 turns</color>";
                     break;
 
+                case Element.Force:
+                    if (DAMAGE != DMG.collassal)
+                    {
+                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                    }
+                    else
+                    {
+                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                    }
+                    if (ACCURACY + 5 <= 100)
+                    {
+                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                        returnedString += "\n Hits: " + HITS + " time(s)";
+                    }
+                    else
+                    {
+                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                        if (EFFECT == SideEffect.none)
+                        {
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                            returnedString += "\n <color=green>Pulls target 1 tile</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+                            returnedString += "\n Pulls target 1 tile";
+                        }
+
+                    }
+                    break;
             }
 
         }

@@ -10,6 +10,7 @@ public class ImgObj : MonoBehaviour {
     private float time = 2;
     public bool isSetup = false;
     public ManagerScript manager;
+    public int index = 0;
     private void Start()
     {
         myImage = GetComponent<Image>();
@@ -45,4 +46,16 @@ public class ImgObj : MonoBehaviour {
         }
     }
 
+    public void SelectMe()
+    {
+        if(manager)
+        {
+            if(manager.turnOrder.Count > index)
+            {
+                manager.selectCharacter(index);
+            }
+        }
+    }
+
+ 
 }

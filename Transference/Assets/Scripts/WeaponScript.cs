@@ -11,9 +11,9 @@ public class WeaponScript : UsableScript
     [SerializeField]
     private int myCritChance;
     [SerializeField]
-    private int myStartkDist;
-    [SerializeField]
-    private int myAttackRange;
+    private int cost;
+  //  [SerializeField]
+//    private int myAttackRange;
     [SerializeField]
     private RangeType range;
     [SerializeField]
@@ -27,13 +27,7 @@ public class WeaponScript : UsableScript
 
     private Element myAfinity = Element.Slash;
 
-    private LivingObject owner;
 
-    public LivingObject USER
-    {
-        get { return owner; }
-        set { owner = value; }
-    }
     public Element ELEMENT
     {
         get { return myAfinity; }
@@ -60,16 +54,22 @@ public class WeaponScript : UsableScript
         get { return myCritChance; }
         set { myCritChance = value; }
     }
-    public int DIST
+
+    public int COST
     {
-        get { return myStartkDist; }
-        set { myStartkDist = value; }
+            get { return cost; }
+            set { cost = value; }
     }
-    public int Range
-    {
-        get { return myAttackRange; }
-        set { myAttackRange = value; }
-    }
+    //public int DIST
+    //{
+    //    get { return myStartkDist; }
+    //    set { myStartkDist = value; }
+    //}
+    //public int Range
+    //{
+    //    get { return myAttackRange; }
+    //    set { myAttackRange = value; }
+    //}
 
     public RangeType ATKRANGE
     {
@@ -90,6 +90,33 @@ public class WeaponScript : UsableScript
         get { return boostVal; }
         set { boostVal = value; }
     }
+
+    public int GetCost(LivingObject user, float modification = 1.0f)
+    {
+        if (USER)
+            return (int)((((float)(cost) / 100.0f) * USER.MAX_HEALTH) * user.STATS.HPCOSTCHANGE);
+        else
+            return (int)(cost * modification);
+    }
+  
+    public bool CanUse(float modification = 1.0f)
+    {
+        bool can = false;
+        int amt = 0;
+        amt = (int)((((float)(COST) / 100.0f) * USER.MAX_HEALTH) * USER.STATS.HPCOSTCHANGE);
+       
+
+        //  if (amt <= owner.FATIGUE)
+        {
+            if (owner.HEALTH > amt)
+            {
+
+                can = true;
+            }
+        }
+        return can;
+    }
+
     public override void ApplyAugment(Augment aug)
     {
         switch (aug)
@@ -125,6 +152,7 @@ public class WeaponScript : UsableScript
 
     public void Use()
     {
+        USER.ChangeHealth(-1 * GetCost(USER, USER.STATS.HPCOSTCHANGE),false);
         useCount++;
         if (USECOUNT % 2 == 0)
         {
@@ -155,7 +183,7 @@ public class WeaponScript : UsableScript
             {
                 ACCURACY = 100;
             }
-            BOOSTVAL++;
+          
         }
         UpdateDesc();
     }
@@ -215,15 +243,7 @@ public class WeaponScript : UsableScript
         {
             returnedString += "\n Accuracy: 100";
         }
-        if (BOOSTVAL + 1 <= 100)
-        {
-           // returnedString += "\n <color=green>Boost: " + (BOOST) + "  +" + (BOOSTVAL + 1) + "</color>";
-        }
-        else
-        {
-           // returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
-        }
-
+    
         return returnedString;
     }
 
@@ -231,17 +251,18 @@ public class WeaponScript : UsableScript
     {
         base.UpdateDesc();
 
-        DESC = "" + BOOST.ToString() + " +" + BOOSTVAL + ".";
+      //  DESC = "" + BOOST.ToString() + " +" + BOOSTVAL + ".";
 
-        DESC += "Deals " + ATTACK_TYPE + " " + ELEMENT + " based dmg.";
+        DESC = "Deals " + ATTACK_TYPE + " " + ELEMENT + " based dmg.";
+        DESC += " Costs " + COST + " Health.";
 
-        if (Range == 1)
-        {
-            DESC += " Hits a tile " + DIST + " space away";
-        }
-        else
-        {
-            DESC += " Hits " + Range + " tiles  " + DIST + " spaces away";
-        }
+        //if (Range == 1)
+        //{
+        //    DESC += " Hits a tile " + DIST + " space away";
+        //}
+        //else
+        //{
+        //    DESC += " Hits " + Range + " tiles  " + DIST + " spaces away";
+        //}
     }
 }

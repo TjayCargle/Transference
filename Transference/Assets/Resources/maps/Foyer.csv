@@ -1,0 +1,37 @@
+-UnoccupiedTiles count = r
+-event room = n  -event tiles -event nums
+-id = i
+-texture num = t
+-map width = w
+-map height = h
+-num of doors/door indexs = d [location], [location] 
+-Room Names = m
+- Room locations = l
+-Start Indexes = x
+-num of enemies / enemy indexs = e [location], [location] 
+-num of rando glyphs / glyph indexes = g [location], [location] 
+-num of lock glyphs / lock glyph indexes = gi [location], [location] 
+-num of shops/shop index = s [location], [location] 
+-num objs/ obj indexs = o [location], [location] 
+-obj ids = oi [location], [location] 
+r,2,8,10,11,12,13,14,23,24,27,28,29,32,37
+n,false
+i,16
+t,1
+w,5
+h,8
+d,39,0
+m,Private Study,Lesson Room
+l,0,5
+x,41,27
+g,5,38
+gi,3,3
+gr,7
+o,30,4
+oi,4,6
+yE,0.25
+xE,0.025
+yIr,0
+yAr,20
+xIr,-1
+xAr,30

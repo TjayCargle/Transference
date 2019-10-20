@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class AutoSkill : SkillScript
@@ -62,7 +59,7 @@ public class AutoSkill : SkillScript
         set { actReact = value; }
     }
 
-    public Reaction Activate(float amount)
+    public Reaction Activate(float amount, GridObject target)
     {
         if (NEXT > 0)
         {
@@ -133,6 +130,60 @@ public class AutoSkill : SkillScript
                 break;
             case AutoReact.reduceLuck:
                 break;
+            case AutoReact.debuff:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = (BuffType)Random.Range(1, 6);
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+
+                            liveTarget.INVENTORY.BUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+                            liveTarget.ApplyPassives();
+                        }
+                    }
+                }
+                break;
+            case AutoReact.cripple:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            liveTarget.PSTATUS = PrimaryStatus.crippled;
+                        }
+                    }
+                }
+                break;
+            case AutoReact.instaKill:
+                {
+                    if (target)
+                    {
+                        if (!target.DEAD)
+                        {
+                            target.DEAD = true;
+                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            if (manager)
+                            {
+                                manager.gridObjects.Remove(target);
+                            }
+
+                            target.Die();
+                        }
+                    }
+                }
+                break;
             default:
                 Debug.Log("No reaction error");
                 return Reaction.none;
@@ -147,7 +198,7 @@ public class AutoSkill : SkillScript
     {
         switch (augment)
         {
-          
+
             case Augment.effectAugment1:
                 CHANCE += 20.0f;
                 break;
@@ -157,20 +208,20 @@ public class AutoSkill : SkillScript
             case Augment.effectAugment3:
                 CHANCE += 20.0f;
                 break;
-         
+
         }
     }
     public override void UpdateDesc()
     {
         base.UpdateDesc();
-        DESC = CHANCE + " % chance + skl to ";
+        DESC = CHANCE + " % chance + Dex to ";
 
         switch (REACT)
         {
             case AutoReact.healByDmg:
                 DESC += "heal the damage you dealt";
                 break;
-   
+
             case AutoReact.GainManaByDmg:
                 DESC += "gain mana by the damage you dealt";
                 break;
@@ -178,26 +229,38 @@ public class AutoSkill : SkillScript
             case AutoReact.ChargeFTByDmg:
                 DESC += "charge FT by the damage you dealt";
                 break;
-      
+
             case AutoReact.HealFTByDmg:
                 DESC += "reduce FT by the damage you dealt";
                 break;
- 
+
             case AutoReact.extraAction:
                 DESC += "gain an additional action";
                 break;
-   
+
             case AutoReact.reduceDef:
                 DESC += "deal damage as if enemy def has halved";
                 break;
-       
+
             case AutoReact.reduceRes:
                 DESC += "deal damage as if enemy res has halved";
                 break;
-       
-         
+
+
             case AutoReact.discoverItem:
                 DESC += "discover a random item";
+                break;
+
+            case AutoReact.debuff:
+                DESC += "apply a random debuff";
+                break;
+
+            case AutoReact.cripple:
+                DESC += "to cripple";
+                break;
+
+            case AutoReact.instaKill:
+                DESC += "instantly defeat a non boss enemy";
                 break;
         }
 
@@ -209,7 +272,7 @@ public class AutoSkill : SkillScript
             case AutoAct.afterDmg:
                 DESC += " after hitting with ";
                 break;
-        
+
         }
         DESC += " a Strike";
     }

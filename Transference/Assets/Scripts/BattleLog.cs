@@ -9,16 +9,24 @@ public class BattleLog : MonoBehaviour
     public TextMeshProUGUI proText;
     RectTransform rect;
     private Vector2 trueSize = Vector2.up;
+    public bool isSetup = false;
     private void Start()
     {
-        if(proText)
-        {
-
-        rect = proText.GetComponent<RectTransform>();
-        }
+        Setup();
       
     }
+    public void Setup()
+    {
+        if(!isSetup)
+        {
+            if (proText)
+            {
 
+                rect = proText.GetComponent<RectTransform>();
+            }
+            isSetup = true;
+        }
+    }
     public void Log(string text)
     {
         if(proText)

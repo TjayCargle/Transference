@@ -10,7 +10,7 @@ public class Expbar : MonoBehaviour
     public bool updating = false;
     public Slider slider;
     public Text text;
-   public ManagerScript manager;
+    public ManagerScript manager;
     private float timer = 0.0f;
     private float startValue;
     private float finalValue;
@@ -25,10 +25,11 @@ public class Expbar : MonoBehaviour
     {
         if (updating)
         {
-            if (currentUser)
+            if (timer >= 0)
             {
-                if (timer >= 0)
+                if (currentUser)
                 {
+
                     if (slider.value < currentUser.BASE_STATS.EXP)
                     {
                         slider.value += Mathf.Lerp(startValue, finalValue, Time.deltaTime);//Mathf.Max(0.18f, Mathf.Abs(slider.value - currentUser.BASE_STATS.EXP) * 0.03f);
@@ -41,7 +42,7 @@ public class Expbar : MonoBehaviour
                         {
                             currentUser.LevelUp();
                             slider.value = 0;
-                            if(manager)
+                            if (manager)
                             {
                                 manager.CreateTextEvent(this, currentUser.NAME + " leveled up!", "level up event", manager.CheckText, manager.TextStart);
                             }
@@ -52,24 +53,26 @@ public class Expbar : MonoBehaviour
                     {
                         slider.value = currentUser.BASE_STATS.EXP;
                         text.text = ((int)slider.value).ToString() + "/100";
-                  
-                      
+
+
                     }
-                    timer -= 0.01f;
+                   
                 }
-                else
-                {
-                    gameObject.SetActive(false);
-                    updating = false;
-                }
+            
+                timer -= 0.01f;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                updating = false;
             }
         }
     }
     public void StartUpdating(bool resetTime = true)
     {
-        if(resetTime)
+        if (resetTime)
         {
-        timer = 0.5f;
+            timer = 0.5f;
 
         }
         startValue = slider.value;
