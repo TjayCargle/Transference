@@ -12,8 +12,8 @@ public class WeaponScript : UsableScript
     private int myCritChance;
     [SerializeField]
     private int cost;
-  //  [SerializeField]
-//    private int myAttackRange;
+    //  [SerializeField]
+    //    private int myAttackRange;
     [SerializeField]
     private RangeType range;
     [SerializeField]
@@ -24,7 +24,7 @@ public class WeaponScript : UsableScript
     [SerializeField]
     private int boostVal;
 
-
+    [SerializeField]
     private Element myAfinity = Element.Slash;
 
 
@@ -57,8 +57,8 @@ public class WeaponScript : UsableScript
 
     public int COST
     {
-            get { return cost; }
-            set { cost = value; }
+        get { return cost; }
+        set { cost = value; }
     }
     //public int DIST
     //{
@@ -98,13 +98,13 @@ public class WeaponScript : UsableScript
         else
             return (int)(cost * modification);
     }
-  
+
     public bool CanUse(float modification = 1.0f)
     {
         bool can = false;
         int amt = 0;
         amt = (int)((((float)(COST) / 100.0f) * USER.MAX_HEALTH) * USER.STATS.HPCOSTCHANGE);
-       
+
 
         //  if (amt <= owner.FATIGUE)
         {
@@ -152,13 +152,15 @@ public class WeaponScript : UsableScript
 
     public void Use()
     {
-        USER.ChangeHealth(-1 * GetCost(USER, USER.STATS.HPCOSTCHANGE),false);
+        USER.ChangeHealth(-1 * GetCost(USER, USER.STATS.HPCOSTCHANGE), false);
         useCount++;
-        if (USECOUNT % 2 == 0)
-        {
-            LevelUP();
+        //if (USECOUNT % 2 == 0)
+        //{
+        //    LevelUP();
+       
 
-        }
+
+        //}
     }
 
     public override void LevelUP()
@@ -183,7 +185,7 @@ public class WeaponScript : UsableScript
             {
                 ACCURACY = 100;
             }
-          
+
         }
         UpdateDesc();
     }
@@ -201,7 +203,7 @@ public class WeaponScript : UsableScript
 
         returnedString += "\n Damage: " + ATTACK.ToString() + "";
         returnedString += "\n Accuracy: " + (ACCURACY) + "";
-      //  returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
+        //  returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
         return returnedString;
     }
     public string GetNextLevelStats()
@@ -243,7 +245,7 @@ public class WeaponScript : UsableScript
         {
             returnedString += "\n Accuracy: 100";
         }
-    
+
         return returnedString;
     }
 
@@ -251,10 +253,10 @@ public class WeaponScript : UsableScript
     {
         base.UpdateDesc();
 
-      //  DESC = "" + BOOST.ToString() + " +" + BOOSTVAL + ".";
+        //  DESC = "" + BOOST.ToString() + " +" + BOOSTVAL + ".";
 
         DESC = "Deals " + ATTACK_TYPE + " " + ELEMENT + " based dmg.";
-        DESC += " Costs " + COST + " Health.";
+        DESC += " Costs " + (cost) + "% Health.";
 
         //if (Range == 1)
         //{

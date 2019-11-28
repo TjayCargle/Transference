@@ -32,6 +32,8 @@ public class InventoryMangager : MonoBehaviour
     //  private Sprite[] imgTypes;
     [SerializeField]
     private Sprite[] attributeImages;
+    [SerializeField]
+    private Sprite[] dmgTriImages;
     public bool isSetup = false;
     public int attrOffset = 120;
     public int otherOffset = 100;
@@ -43,6 +45,16 @@ public class InventoryMangager : MonoBehaviour
     public Image elemImg;
     public Image dmgImg;
     public Sprite[] dmgSprites;
+
+    public Sprite[] ELEMENTS
+    {
+        get { return attributeImages; }
+    }
+    public Sprite[] DMGTYPES
+    {
+        get { return dmgTriImages; }
+    }
+
     public void Setup()
     {
         if (!isSetup)
@@ -627,14 +639,15 @@ public class InventoryMangager : MonoBehaviour
 
                                     UpdateDescriptions(cmd);
                                 }
+                       
                                 if (selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                 {
                                     WeaponScript wep = selectedMenuItem.refItem as WeaponScript;
-                                    manager.showAttackableTiles();
+
+                                    manager.ShowWeaponAttackbleTiles(manager.player.current, wep);
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(true);
                                     UpdateDescriptions(wep);
                                 }
-
                                 if (selectedMenuItem.refItem.GetType() == typeof(OppSkill))
                                 {
                                     OppSkill opp = selectedMenuItem.refItem as OppSkill;
@@ -957,37 +970,37 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     case SideEffect.knockback:
                         {
-                            newdescs[5].text = "Pushes target enemy away 1 tile";
+                            newdescs[5].text = "Pushe target 1 tile";
                         }
                         break;
                     case SideEffect.pullin:
                         {
-                            newdescs[5].text = "Pulls target enemy back 1 tile";
+                            newdescs[5].text = "Pull target 1 tile";
                         }
                         break;
                     case SideEffect.pushforward:
                         {
-                            newdescs[5].text = "Pushes self and target enemy away 1 tile";
+                            newdescs[5].text = "Push self and target 1 tile";
                         }
                         break;
                     case SideEffect.pullback:
                         {
-                            newdescs[5].text = "Pulls self and target enemy back 1 tile";
+                            newdescs[5].text = "Pull self and target 1 tile";
                         }
                         break;
                     case SideEffect.jumpback:
                         {
-                            newdescs[5].text = "Pulls self away 1 tile";
+                            newdescs[5].text = "Pull self away 1 tile";
                         }
                         break;
                     case SideEffect.reposition:
                         {
-                            newdescs[5].text = "Jump to opposite side of enemy";
+                            newdescs[5].text = "Jump past target";
                         }
                         break;
                     case SideEffect.swap:
                         {
-                            newdescs[5].text = "Swaps locations with target.";
+                            newdescs[5].text = "Swap locations with target.";
                         }
                         break;
                     default:

@@ -45,4 +45,6 @@ public class BaseStats : StatScript {
         get { return myLevel; }
         set { myLevel = value; }
     }
+
+
 }

@@ -27,6 +27,7 @@ public class ImgObj : MonoBehaviour {
 
     public virtual void StopCountDown()
     {
+
         time = 0;
         isShowing = false;
         gameObject.SetActive(false);

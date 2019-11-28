@@ -111,7 +111,7 @@ public class GridObject : MonoBehaviour
     public virtual void Die()
     {
 
-        myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart);
+        myManager.CreateEvent(this, null, "death event", DieEvent, DeathStart,0);
     }
     protected bool isdoneDying = false;
     protected bool startedDeathAnimation = false;

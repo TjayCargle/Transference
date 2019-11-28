@@ -39,17 +39,17 @@ public class ArmorEquip : Equipable
     }
     public int DEFENSE
     {
-        get { return equipped.DEFENSE; }
+        get { return equipped ? equipped.DEFENSE : 0; }
 
     }
     public int RESISTANCE
     {
-        get { return equipped.RESISTANCE; }
+        get { return equipped ? equipped.RESISTANCE : 0; }
 
     }
     public int SPEED
     {
-        get { return equipped.SPEED; }
+        get { return equipped ? equipped.SPEED : 0; }
 
     }
 
@@ -136,6 +136,11 @@ public class ArmorEquip : Equipable
     }
     public void Equip(ArmorScript armor)
     {
+        if (armor == null)
+        {
+            Debug.Log("NOOOSZ");
+            return;
+        }
         base.Equip(armor);
         currentTurnCount = armor.TURNCOUNT;
         maxHealthPercent = armor.MAX_HEALTH;
@@ -153,7 +158,9 @@ public class ArmorEquip : Equipable
                     owner.BARRIER.GetComponent<SpriteRenderer>().color = Color.white;
                 }
             }
+            owner.updateWeaknessIcon();
         }
+
     }
 
     public void unEquip()
@@ -162,9 +169,14 @@ public class ArmorEquip : Equipable
         //noArmor.NAME = "none";
         //noArmor.HITLIST = Common.noHitList;
         //noArmor.DESC = "No armor equipped";
+        if (!owner)
+            return;
+
+
         if (owner.DEFAULT_ARMOR == null)
         {
             equipped = null;
+            Debug.Log("NULLS  " + NAME);
         }
         else
         {
@@ -176,8 +188,10 @@ public class ArmorEquip : Equipable
                 {
                     owner.BARRIER.GetComponent<SpriteRenderer>().color = Common.trans;
                 }
+                owner.updateWeaknessIcon();
             }
         }
+
     }
     public bool DamageArmor(float amt)
     {

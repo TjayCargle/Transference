@@ -18,15 +18,27 @@ public class EnemyScript : LivingObject
     private float internalTimer = 1.0f;
     [SerializeField]
     path currentPath;
-    private bool waiting = false;
+    protected bool waiting = false;
     private List<AtkContainer> possibleAttacks = new List<AtkContainer>();
     private List<CommandSkill> reflectedSkills = new List<CommandSkill>();
     private List<ItemContainer> possibleItems = new List<ItemContainer>();
     public List<string> atkNames = new List<string>();
     private int chosen = -1;
     public DmgReaction lastReaction;
-    private AtkContainer lastAttack;
-    private List<GridObject> adjacentObjects = new List<GridObject>();
+    protected AtkContainer lastAttack;
+    protected List<GridObject> adjacentObjects = new List<GridObject>();
+    protected List<int> possibleIndexs = new List<int>();
+    public bool enemyHitMyResist = false;
+    [SerializeField]
+    protected TalkStage talk = TalkStage.initial;
+    private Element talkElement;
+    private List<TileScript> personalAttackList = new List<TileScript>();
+    public TalkStage TALK
+    {
+        get { return talk; }
+        set { talk = value; }
+    }
+
     public void MoveStart(Object checkPath)
     {
         path apath = checkPath as path;
@@ -142,7 +154,7 @@ public class EnemyScript : LivingObject
         bool isDone = true;
 
         Wait();
-        TakeRealAction();
+       // TakeRealAction();
 
         return isDone;
     }
@@ -174,6 +186,49 @@ public class EnemyScript : LivingObject
         {
             internalTimer -= 0.02f;
             return false;
+        }
+
+        if (lastReaction.usedStrike)
+        {
+            WEAPON.Equip(lastReaction.usedStrike);
+            myManager.attackableTiles = myManager.GetWeaponAttackableTiles(this);
+            //GridObject possibleObject = null;
+            myManager.currentAttackList.Clear();
+            possibleIndexs.Clear();
+            personalAttackList.Clear();
+            if (lastAttack.dmgObject)
+                personalAttackList.Add(lastAttack.dmgObject.currentTile);
+
+            myManager.currentAttackList.AddRange(personalAttackList);
+
+            if (myManager.currentAttackList.Count > 0)
+            {
+            }
+            else
+            {
+                Debug.Log("we are confusing");
+            }
+        }
+
+        if (lastReaction.usedSkill)
+        {
+            WEAPON.Equip(lastReaction.usedStrike);
+            myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, lastReaction.usedSkill);
+           // GridObject possibleObject = null;
+            myManager.currentAttackList.Clear();
+            personalAttackList.Clear();
+            if (lastAttack.dmgObject)
+                personalAttackList.Add(lastAttack.dmgObject.currentTile);
+
+            myManager.currentAttackList.AddRange(personalAttackList);
+
+            if (myManager.currentAttackList.Count > 0)
+            {
+            }
+            else
+            {
+                Debug.Log("we are confusing");
+            }
         }
         // Debug.Log(FullName + " atacking");
         bool isDone = true;
@@ -217,52 +272,65 @@ public class EnemyScript : LivingObject
 
             if (bestReaction.usedSkill != null)
             {
-                for (int i = 0; i < bestReaction.usedSkill.HITS; i++)
-                {
-                    if (health > 0)
-                    {
+                //for (int i = 0; i < bestReaction.usedSkill.HITS; i++)
+                //{
+                //    if (health > 0)
+                //    {
 
-                        if (i == 0)
-                        {
+                //        if (i == 0)
+                //        {
 
-                            lastAttack.react = bestReaction;
-                            // myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement, lastAttack.command);
-                            myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
-                            if (bestReaction.reaction != Reaction.missed && bestReaction.reaction != Reaction.nulled && bestReaction.reaction != Reaction.absorb && bestReaction.reaction != Reaction.reflected)
-                            {
+                //            lastAttack.react = bestReaction;
+                //            // myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement, lastAttack.command);
+                //            myManager.CreateGridAnimationEvent(lastAttack.dmgObject.currentTile.transform.position, lastAttack.command, lastAttack.dmg);
+                //            myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
+                //            if (bestReaction.reaction != Reaction.missed && bestReaction.reaction != Reaction.nulled && bestReaction.reaction != Reaction.absorb && bestReaction.reaction != Reaction.reflected)
+                //            {
 
-                                health -= bestReaction.damage;
-                                // Debug.Log("first cmd");
-                            }
-                        }
-                        else
-                        {
-                            if (lastAttack == null)
-                            {
-                                Debug.Log("last attack null in enemey");
+                //                health -= bestReaction.damage;
+                //                Debug.Log("first cmd");
+                //            }
+                //        }
+                //        else
+                //        {
+                //            if (lastAttack == null)
+                //            {
+                //                Debug.Log("last attack null in enemey");
 
-                            }
-                            DmgReaction secondReaction = myManager.CalcDamage(lastAttack);
-                            lastAttack.react = secondReaction;
-                            myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
-                            //       Debug.Log("other cmd");
-                            //  myManager.ApplyReaction(this, atkTarget, secondReaction, secondReaction.dmgElement);
-                            if (secondReaction.reaction != Reaction.missed && secondReaction.reaction != Reaction.nulled && secondReaction.reaction != Reaction.absorb && secondReaction.reaction != Reaction.reflected)
-                            {
+                //            }
+                //            DmgReaction secondReaction = myManager.CalcDamage(lastAttack);
+                //            lastAttack.react = secondReaction;
+                //            myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
+                //            //       Debug.Log("other cmd");
+                //            //  myManager.ApplyReaction(this, atkTarget, secondReaction, secondReaction.dmgElement);
+                //            if (secondReaction.reaction != Reaction.missed && secondReaction.reaction != Reaction.nulled && secondReaction.reaction != Reaction.absorb && secondReaction.reaction != Reaction.reflected)
+                //            {
 
-                                health -= secondReaction.damage;
-                            }
-                        }
-                    }
+                //                health -= secondReaction.damage;
+                //                Debug.Log("additional hit");
+                //            }
+                //        }
+                //    }
 
-                }
+                //}
+                //bestReaction.usedSkill.GrantXP(1);
+
+                lastAttack.react = bestReaction;
+                myManager.AttackTargets(this, lastReaction.usedSkill, true);
+            }
+            else if (bestReaction.usedStrike != null)
+            {
+                lastAttack.react = bestReaction;
+                //myManager.CreateGridAnimationEvent(lastAttack.dmgObject.currentTile.transform.position, bestReaction.usedStrike, lastAttack.dmg);
+                //myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
+                //bestReaction.usedStrike.GrantXP(1);
+                myManager.AttackTargets(this, WEAPON, true);
+                Debug.Log("a strike");
+                //myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement);
             }
             else
             {
-                lastAttack.react = bestReaction;
-                myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
-                // Debug.Log("a strike");
-                //myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement);
+                Debug.Log("Enemy fked up");
             }
             myManager.myCamera.infoObject = atkTarget;
             myManager.myCamera.UpdateCamera();
@@ -474,7 +542,20 @@ public class EnemyScript : LivingObject
                             WeaponScript possibleSkill = INVENTORY.WEAPONS[j];
                             if (possibleSkill.CanUse())
                             {
-                                Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH + " hp, " + MANA + " mp, " + FATIGUE + "ft");
+                                bool reflected = false;
+                                for (int r = 0; r < reflectedSkills.Count; r++)
+                                {
+                                    if (reflectedSkills[r].ELEMENT == possibleSkill.ELEMENT)
+                                    {
+                                        reflected = true;
+                                        break;
+                                    }
+                                }
+                                if (reflected == true)
+                                {
+                                    continue;
+                                }
+                                //  Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH + " hp, " + MANA + " mp, " + FATIGUE + "ft");
 
                                 List<TileScript> skilltiles = myManager.GetWeaponAttackableTilesOneList(currentTile, possibleSkill);
 
@@ -507,7 +588,7 @@ public class EnemyScript : LivingObject
                         CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
                         if (possibleSkill.CanUse())
                         {
-                        //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
+                            //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
                             if (objects[i].INVENTORY.BUFFS.Contains(possibleSkill))
                             {
                                 continue;
@@ -619,7 +700,7 @@ public class EnemyScript : LivingObject
 
                                     possibleAttacks.Add(conatiner);
                                     atkNames.Add(possibleSkill.NAME + " " + objects[i].NAME);
-                                  
+
                                 }
                             }
 
@@ -902,7 +983,25 @@ public class EnemyScript : LivingObject
         List<int> attackOptions = new List<int>();
         for (int i = 0; i < possibleAttacks.Count; i++)
         {
+
             attackOptions.Add(i);
+            if (possibleAttacks[i].strike != null)
+            {
+                WEAPON.Equip(possibleAttacks[i].strike);
+                if(possibleAttacks[i].strike.CanUse() == false)
+                {
+                    Debug.Log("problemo");
+                    continue;
+                }
+            }
+            else
+            {
+                if (possibleAttacks[i].command.CanUse() == false)
+                {
+                    Debug.Log("problemasd");
+                    continue;
+                }
+            }
             DmgReaction aReaction = myManager.CalcDamage(possibleAttacks[i], false);
             if (aReaction.reaction <= Reaction.weak && aReaction.reaction >= Reaction.leathal)
             {
@@ -954,7 +1053,7 @@ public class EnemyScript : LivingObject
             {
                 bestReaction.atkName = chosenContainer.command.NAME;
                 bestReaction.usedSkill = chosenContainer.command;
-
+                
                 chosenContainer.command.UseSkill(this);
                 bestReaction.dmgElement = chosenContainer.command.ELEMENT;
 
@@ -1064,7 +1163,7 @@ public class EnemyScript : LivingObject
         //if enemies don't exist
         if (waiting)
         {
-            TakeRealAction();
+            //TakeRealAction();
             return true;
         }
         if (myManager)
@@ -1184,7 +1283,7 @@ public class EnemyScript : LivingObject
 
                     case EPType.tactical:
                         {
-                            if (HEALTH > (MAX_HEALTH * 0.5f) && FATIGUE < (MAX_FATIGUE * 0.9f))
+                            if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
                             {
                                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                             }
@@ -1200,7 +1299,7 @@ public class EnemyScript : LivingObject
                         }
                         break;
                     case EPType.mystical:
-                        if (MANA >= 5)
+                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
                         {
                             myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                         }
@@ -1215,7 +1314,8 @@ public class EnemyScript : LivingObject
                         }
                         break;
                     case EPType.forceful:
-                        if (HEALTH > (MAX_HEALTH * 0.5f))
+
+                        if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
                         {
                             myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                         }
@@ -1302,7 +1402,7 @@ public class EnemyScript : LivingObject
                         }
                         break;
                     case EPType.biologist:
-                        if (MANA >= 5)
+                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
                         {
                             myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                         }
@@ -1317,7 +1417,7 @@ public class EnemyScript : LivingObject
                         }
                         break;
                     case EPType.support:
-                        if (MANA >= 5)
+                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
                         {
                             myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                         }
@@ -1489,7 +1589,198 @@ public class EnemyScript : LivingObject
         // Destroy(gameObject);
 
     }
+    public void CheckAttackRequirements(Element atk, LivingObject player)
+    {
+        if(player.GetComponent<ActorScript>())
+        {
+            if(talk == TalkStage.Attack)
+            {
+                if(atk == talkElement)
+                {
+                    enemyHitMyResist = true;
+                    talk = TalkStage.learn;
+                }
+            }
+        }
+    }
+    public string CheckTalkRequirements(LivingObject invokingObject)
+    {
+        string returnedString = "no change";
 
+        switch (TALK)
+        {
+            case TalkStage.initial:
+                {
+                    switch (Common.GetEPCluster(personality))
+                    {
+                        case EPCluster.physical:
+                            {
+                                if(FACTION == Faction.enemy)
+                                    returnedString = "Listen hybrid, talk to me again when i'm at half FATIGUE.";
+                                else
+                                {
+                                    returnedString = "Hey Pleb! Talk to me again when i'm at half FATIGUE.";
+                                }
+                            }
+                            break;
+                        case EPCluster.magical:
+                            {
+
+                                if (FACTION == Faction.enemy)
+                                    returnedString = "Magic is everything young one. Talke to me when i'm at half MANA";
+                                else
+                                {
+                                    returnedString = "Horrid! Unpure creature. No! Talk to me at again when I have half MANA.";
+                                }
+
+                            }
+                            break;
+                        case EPCluster.logical:
+                            {
+
+
+                                if (FACTION == Faction.enemy)
+                                    returnedString = "You think your Tough? Talke to me when i'm at half HEALTH";
+                                else
+                                {
+                                    returnedString = "Wipe that smirk off your face simpleton! Talk to me at again when I have half HEALTH.";
+                                }
+                            }
+                            break;
+                        case EPCluster.natural:
+                            {
+                               
+                                        returnedString = "I'm going to leave for the DOOR now, bye.";
+                         
+
+                            }
+                            break;
+                    }
+                    talk = TalkStage.Stats;
+                }
+                break;
+
+            case TalkStage.Stats:
+                {
+                    switch (Common.GetEPCluster(personality))
+                    {
+                        case EPCluster.physical:
+                            {
+                                if (FATIGUE < ((float)MAX_FATIGUE * 0.5f))
+                                    returnedString = "You think im in a mood to talk when I have less than half FATIGUE?";
+                                else
+                                {
+                                    returnedString = "Ok I'm listening. But how do I know your not trying to trick me?";
+                                    TALK = TalkStage.Attack;
+
+                                }
+                            }
+                            break;
+                        case EPCluster.magical:
+                            {
+                                if (MANA > ((float)MAX_MANA * 0.5f))
+                                    returnedString = "I still have enough MANA to destroy you. Your words are irrelevent.";
+                                else
+                                {
+                                    returnedString = "Ok I'm listening. But how do I know your not trying to trick me?";
+                                    TALK = TalkStage.Attack;
+
+                                }
+                            }
+                            break;
+                        case EPCluster.logical:
+                            {
+                                if (HEALTH < ((float)MAX_HEALTH * 0.5f))
+                                    returnedString = "Why would I talk to you when I have a good amount of HEALTH left?";
+                                else
+                                {
+                                    returnedString = "Ok I'm listening. But how do I know your not trying to trick me?";
+                                    TALK = TalkStage.Attack;
+
+                                }
+                            }
+                            break;
+                        case EPCluster.natural:
+                            {
+                                TileScript tile = FindNearestDoorTile();
+                                if (tile)
+                                {
+                                    if (tile.isOccupied)
+                                    {
+                                        returnedString = "Ok I'm listening. But u gotta do what I say ok";
+                                        TALK = TalkStage.Attack;
+                                    }
+                                    else
+                                    {
+                                        returnedString = "Don't hurt me, please don't BLOCK the door.";
+                                    }
+                                }
+                                else
+                                {
+                                    returnedString = "Don't hurt me please.";
+
+                                }
+
+                            }
+                            break;
+                    }
+                }
+                break;
+            case TalkStage.Attack:
+                {
+                    if (enemyHitMyResist == false)
+                    {
+
+                        Element bestElement = Element.Water;
+                        EHitType bestType = EHitType.normal;
+                        for (int i = 0; i < ARMOR.HITLIST.Count; i++)
+                        {
+                            EHitType testType = ARMOR.HITLIST[i];
+                            if (testType < bestType)
+                            {
+                                bestType = testType;
+                                bestElement = (Element)i;
+                            }
+                        }
+                        talkElement = bestElement;
+                        returnedString = "If you want to talk, hit me with a " + bestElement.ToString() + "attack";
+                    }
+                    else
+                    {
+                        returnedString = "Wow, you listened to me. I didn't expect that.";
+                    }
+                }
+                break;
+            case TalkStage.learn:
+                {
+                    returnedString = "Alright, I'll help you out. Take this summon scroll";
+                    DatabaseManager database = Common.GetDatabase();
+                    if(database)
+                    {
+                    database.GenerateScroll(this, invokingObject);
+
+                    }
+                    STATS.HEALTH = 0;
+                    BASE_STATS.HEALTH = 0;
+                    Die();
+                }
+                break;
+            case TalkStage.rejected:
+                {
+                    returnedString = "I'm done talking to you!";
+                }
+                break;
+            default:
+                {
+
+                }
+                break;
+        }
+
+
+
+        return returnedString;
+    }
     public void Unset()
     {
         isSetup = false;
@@ -1503,8 +1794,8 @@ public class EnemyScript : LivingObject
         MAGICAL_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
-        DEFAULT_ARMOR = null;
         ARMOR.unEquip();
+        DEFAULT_ARMOR = null;
         PSTATUS = PrimaryStatus.normal;
         reflectedSkills.Clear();
         shadow.GetComponent<AnimationScript>().Unset();
@@ -1525,4 +1816,8 @@ public class EnemyScript : LivingObject
             Destroy(GetComponent<DebuffScript>());
         }
     }
+
+
+
+
 }

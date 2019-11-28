@@ -22,6 +22,7 @@ public class EnemyManager : MonoBehaviour {
 
     public List<EnemyScript> getEnemies(int num)
     {
+
         List<EnemyScript> subenemies = new List<EnemyScript>();
         if (num < enemies.Count)
         {
@@ -30,7 +31,7 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                enemySetup.enemyId = Random.Range(0, 4);
+                enemySetup.enemyId = Random.Range(0, 6);
                 enemies[i].Setup();
                 if(enemySetup.enemyId == 2)
                 {
@@ -67,7 +68,7 @@ public class EnemyManager : MonoBehaviour {
             {
                 GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
                 EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
-                enemySetup.enemyId = Random.Range(0, 4);
+                enemySetup.enemyId = Random.Range(0, 6);
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
                 if (enemySetup.enemyId == 2)
@@ -85,4 +86,74 @@ public class EnemyManager : MonoBehaviour {
         }
         return subenemies;
     }
+
+    public List<EnemyScript> getEnemies(MapData data)
+    {
+        int num = data.enemyIndexes.Count;
+        List<EnemyScript> subenemies = new List<EnemyScript>();
+        if (num < enemies.Count)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
+                enemies[i].Unset();
+                enemySetup.Unset();
+                if(i < data.EnemyIds.Count)
+                {
+                    enemySetup.enemyId = data.EnemyIds[i];
+                }
+                else
+                {
+                enemySetup.enemyId = Random.Range(0, 6);
+                }
+                enemies[i].Setup();
+    
+                subenemies.Add(enemies[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < enemies.Count; i++)
+            {
+
+                EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
+                enemies[i].Unset();
+                enemySetup.Unset();
+                if (i < data.EnemyIds.Count)
+                {
+                    enemySetup.enemyId = data.EnemyIds[i];
+                }
+                else
+                {
+                    enemySetup.enemyId = Random.Range(0, 6);
+                }
+        
+                enemies[i].Setup();
+            
+                subenemies.Add(enemies[i]);
+            }
+            while (enemies.Count < num)
+            {
+                int indx = enemies.Count;
+                GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
+                EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
+                if (indx < data.EnemyIds.Count)
+                {
+                    enemySetup.enemyId = data.EnemyIds[indx];
+                }
+                else
+                {
+                    enemySetup.enemyId = Random.Range(0, 6);
+                }
+                EnemyScript enemy = temp.AddComponent<EnemyScript>();
+                enemy.Setup();
+
+                enemies.Add(enemy);
+                subenemies.Add(enemy);
+
+            }
+        }
+        return subenemies;
+    }
+
 }

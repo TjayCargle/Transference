@@ -8,7 +8,7 @@ public class HazardScript : LivingObject
     BaseStats myStats;
 
     public int droppedItemNum = -1;
-  
+
     [SerializeField]
     private HazardType htype = HazardType.attacker;
 
@@ -19,6 +19,8 @@ public class HazardScript : LivingObject
     public int hackSpells = 0;
     public List<int> revealTiles = new List<int>();
     private float internalTimer = 1.0f;
+    private bool waiting = false;
+    private LivingObject lastTarget;
     public int REWARD
     {
         get { return droppedItemNum; }
@@ -38,7 +40,7 @@ public class HazardScript : LivingObject
         {
 
             base.Setup();
-            BASE_STATS.MANA = 0;
+          //  BASE_STATS.MANA = 0;
             BASE_STATS.MAX_MANA = 0;
             BASE_STATS.MAX_FATIGUE = 0;
             FACTION = Faction.hazard;
@@ -129,9 +131,29 @@ public class HazardScript : LivingObject
 
         return newTarget;
     }
+    public bool HWaitEvent(Object target)
+    {
 
+        bool isDone = true;
+
+        Wait();
+        TakeRealAction();
+
+        return isDone;
+    }
     public bool HAtkEvent(Object target)
     {
+        if (INVENTORY.CSKILLS.Count > 0)
+        {
+           
+                myManager.ShowSkillAttackbleTiles(this, INVENTORY.CSKILLS[0], lastTarget);
+        }
+        else if(INVENTORY.WEAPONS.Count > 0)
+        {
+      
+                myManager.ShowWeaponAttackbleTiles(this, INVENTORY.WEAPONS[0], lastTarget);
+        }
+
         if (internalTimer >= 0)
         {
             internalTimer -= 0.02f;
@@ -146,27 +168,56 @@ public class HazardScript : LivingObject
 
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
             myManager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", myManager.CheckText, myManager.TextStart);
+
             if (myManager.log)
             {
-                myManager.log.Log(FullName + " used " + bestReaction.atkName);
+                myManager.log.Log("<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">" + FullName + "</color> used " + bestReaction.atkName);
             }
-            myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
-            myManager.myCamera.infoObject = realTarget;
-            myManager.myCamera.UpdateCamera();
+            // myManager.ApplyReaction(this, realTarget, bestReaction, bestReaction.dmgElement);
+            //myManager.myCamera.infoObject = realTarget;
+            //myManager.myCamera.UpdateCamera();
+            
+      
             if (bestReaction.reaction != Reaction.missed)
             {
+                if(INVENTORY.CSKILLS.Count > 0)
+                {
+                CommandSkill skill = INVENTORY.CSKILLS[0];             
                 AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                conatiner.alteration = skill.REACTION;
+                conatiner.attackingElement = skill.ELEMENT;
+                conatiner.attackType = skill.ETYPE;
+                conatiner.command = skill;
+                conatiner.dmg = (int)skill.DAMAGE;
                 conatiner.attackingObject = this;
                 conatiner.dmgObject = realTarget;
-                conatiner.attackingElement = bestReaction.dmgElement;
-                //Debug.Log("checkin real" + realTarget);
+                conatiner.attackingElement = bestReaction.dmgElement;          
+                myManager.CreateEvent(this, conatiner, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
+                myManager.CreateGridAnimationEvent(conatiner.dmgObject.currentTile.transform.position, conatiner.command, conatiner.dmg);
+                }
+                else if (INVENTORY.WEAPONS.Count > 0)
+                {
+                    WeaponScript skill = INVENTORY.WEAPONS[0];
+                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                    conatiner.alteration = Reaction.none;
+                    conatiner.attackingElement = skill.ELEMENT;
+                    conatiner.attackType = skill.ATTACK_TYPE;
+                    conatiner.strike = skill;
+                    conatiner.dmg = (int)skill.ATTACK;
+                    conatiner.attackingObject = this;
+                    conatiner.dmgObject = realTarget;
+                    conatiner.attackingElement = bestReaction.dmgElement;
+                    myManager.CreateEvent(this, conatiner, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
+                    myManager.CreateGridAnimationEvent(conatiner.dmgObject.currentTile.transform.position, conatiner.strike, conatiner.dmg);
+                }
+                //Debug.Log("checkin real" + realTarget); > 0
                 //myManager.CreateEvent(this, conatiner, "" + FullName + "enemy opp event", myManager.ECheckForOppChanceEvent, null, 1);
 
             }
             // Debug.Log(FullName + " used " + bestReaction.atkName);
 
-            TakeAction();
-
+            // TakeAction();
+            TakeRealAction();
         }
         return isDone;
     }
@@ -212,6 +263,34 @@ public class HazardScript : LivingObject
         }
         return bestReaction;
     }
+
+    public bool DetermineNextAction(Object target)
+    {
+        if (DEAD)
+        {
+            return true;
+        }
+        if(waiting)
+        {
+            return true;
+        }
+
+        LivingObject liveObj = null;
+        liveObj = FindNearestEnemy();
+        if (liveObj)
+        {
+            // Debug.Log("glyph creatign atk event");
+            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent, AttackStart);
+        }
+        else
+        {
+            waiting = true;
+            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", HWaitEvent);
+        }
+
+        return true;
+    }
+
     public void DetermineActions()
     {
         //  Debug.Log("determining actions");
@@ -219,28 +298,15 @@ public class HazardScript : LivingObject
         isPerforming = true;
         int psudeoActions = -1;
         psudeoActions = ACTIONS;
+        waiting = false;
 
-        List<EActType> etypes = new List<EActType>();
 
-        LivingObject liveObj = null;
         for (int i = 0; i < psudeoActions; i++)
         {
+            myManager.CreateEvent(this, null, "" + FullName + "determine action event " + i, DetermineNextAction, null, 0);
 
-            liveObj = FindNearestEnemy();
-            if (liveObj)
-            {
-                // Debug.Log("glyph creatign atk event");
-                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", HAtkEvent, AttackStart);
-            }
         }
-        if (!liveObj)
-        {
-            //    Debug.Log("glyph decide to wait");
-            //myManager.CreateEvent(this, this, "" + FullName + " Next event", myManager.NextTurnEvent,null, 0);
 
-            Wait();
-            TakeAction();
-        }
 
         isPerforming = false;
     }
@@ -356,12 +422,12 @@ public class HazardScript : LivingObject
     {
         if (droppedItemNum >= 0)
         {
-            DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+            DatabaseManager database = Common.GetDatabase();
             if (database)
             {
 
-                    return database.LearnSkill(droppedItemNum, killer);
-            
+                return database.LearnSkill(droppedItemNum, killer);
+
             }
         }
         return null;

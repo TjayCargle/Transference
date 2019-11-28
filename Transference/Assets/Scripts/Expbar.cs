@@ -13,13 +13,22 @@ public class Expbar : MonoBehaviour
     public ManagerScript manager;
     private float timer = 0.0f;
     private float startValue;
-    private float finalValue;
+    public float finalValue;
+    public bool isSetup = false;
+    public void Setup()
+    {
+        if(!isSetup)
+        {
+            slider = GetComponent<Slider>();
+            text = GetComponentInChildren<Text>();
+            gameObject.SetActive(false);
+            finalValue = 0;
+            isSetup = true;
+        }
+    }
     private void Start()
     {
-        slider = GetComponent<Slider>();
-        text = GetComponentInChildren<Text>();
-        gameObject.SetActive(false);
-
+        Setup();
     }
     void Update()
     {
@@ -32,21 +41,28 @@ public class Expbar : MonoBehaviour
 
                     if (slider.value < currentUser.BASE_STATS.EXP)
                     {
-                        slider.value += Mathf.Lerp(startValue, finalValue, Time.deltaTime);//Mathf.Max(0.18f, Mathf.Abs(slider.value - currentUser.BASE_STATS.EXP) * 0.03f);
+                        slider.value += Mathf.Lerp(startValue, finalValue, Time.smoothDeltaTime);//Mathf.Max(0.18f, Mathf.Abs(slider.value - currentUser.BASE_STATS.EXP) * 0.03f);
                         text.text = ((int)slider.value).ToString() + "/100";
+                       
                     }
                     if (slider.value >= 100)
                     {
 
                         if (currentUser.BASE_STATS.EXP >= 100)
                         {
+                            int leftover = currentUser.BASE_STATS.EXP - 100;
                             currentUser.LevelUp();
-                            slider.value = 0;
+                            currentUser.BASE_STATS.EXP += leftover;
+
+                            if(leftover > 0)
+                            {
+                                finalValue = leftover;
+                            }
                             if (manager)
                             {
                                 manager.CreateTextEvent(this, currentUser.NAME + " leveled up!", "level up event", manager.CheckText, manager.TextStart);
                             }
-                            StartUpdating(false);
+                            //StartUpdating(false);
                         }
                     }
                     if (slider.value >= currentUser.BASE_STATS.EXP)
@@ -56,6 +72,8 @@ public class Expbar : MonoBehaviour
 
 
                     }
+                    if (slider.value == finalValue)
+                        timer -= 0.02f;
                    
                 }
             
@@ -63,6 +81,9 @@ public class Expbar : MonoBehaviour
             }
             else
             {
+
+                slider.value = 0;
+                finalValue = 0;
                 gameObject.SetActive(false);
                 updating = false;
             }
@@ -72,16 +93,19 @@ public class Expbar : MonoBehaviour
     {
         if (resetTime)
         {
-            timer = 0.5f;
+            timer = 0.9f;
 
         }
         startValue = slider.value;
-        if (currentUser)
-            finalValue = slider.value + (float)currentUser.BASE_STATS.EXP;
-        else
-            finalValue = startValue + 2;
-        if (finalValue > 100)
-            finalValue = 100;
+        //if (currentUser)
+        //    finalValue = slider.value + (float)currentUser.BASE_STATS.EXP;
+        //else
+        //    finalValue = startValue + 2;
+        //if (finalValue > 100)
+        //    finalValue = 100;
+
+        //Debug.Log("start:" + startValue);
+        //Debug.Log("final:" + finalValue);
         updating = true;
     }
 }

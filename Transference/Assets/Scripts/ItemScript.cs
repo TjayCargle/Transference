@@ -317,7 +317,7 @@ public class ItemScript : UsableScript
                     {
                         if (manager)
                         {
-                    if(manager.GetObjectAtTile(targetTile))
+                            if (manager.GetObjectAtTile(targetTile))
                             {
                                 usedEffect = false;
                                 return usedEffect;
@@ -355,10 +355,297 @@ public class ItemScript : UsableScript
                             {
                                 actor.LevelUp();
                             }
-                            actor.BASE_STATS.HEALTH = actor.BASE_STATS.MAX_HEALTH;
-                            actor.BASE_STATS.MANA = actor.BASE_STATS.MAX_MANA;
+
+                            string[] additionals = DEATS.Split(',');
+                            int deatindex = 0;
+                            int MAX_HEALTH = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int MAX_MANA = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int MAX_FATIGUE = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int MOVE_DIST = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int STRENGTH = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int MAGIC = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int DEX = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int DEFENSE = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int RESIESTANCE = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+                            int SPEED = System.Int32.Parse(additionals[deatindex]);
+                            deatindex++;
+
+
+
+                            actor.BASE_STATS.MAX_HEALTH = MAX_HEALTH;
+                            actor.BASE_STATS.MAX_MANA = MAX_MANA;
+                            actor.BASE_STATS.MAX_FATIGUE = MAX_FATIGUE;
+                            actor.BASE_STATS.HEALTH = MAX_HEALTH;
+                            actor.STATS.MANA = MAX_MANA;
+                            actor.BASE_STATS.STRENGTH = STRENGTH;
+                            actor.BASE_STATS.MAGIC = MAGIC;
+                            actor.BASE_STATS.DEX = DEX;
+                            actor.BASE_STATS.DEFENSE = DEFENSE;
+                            actor.BASE_STATS.RESIESTANCE = RESIESTANCE;
+                            actor.BASE_STATS.SPEED = SPEED;
+                            DatabaseManager dm = Common.GetDatabase();
+                            if (dm)
+                            {
+
+                                int weaponCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < weaponCount; i++)
+                                {
+                                    int weapNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int weapLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    if (i < actor.INVENTORY.WEAPONS.Count )
+                                    {
+                                        WeaponScript wep = actor.INVENTORY.WEAPONS[i];
+                                        if (wep.INDEX == weapNum)
+                                        {
+                                            if (wep.LEVEL < weapLevel)
+                                            {
+                                                while (wep.LEVEL < weapLevel)
+                                                {
+                                                    wep.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                        else
+                                        {
+                                            WeaponScript wep2 = dm.GetWeapon(weapNum, actor);
+                                            if(wep2)
+                                            {
+                                                if (wep2.LEVEL < weapLevel)
+                                                {
+                                                    while (wep2.LEVEL < weapLevel)
+                                                    {
+                                                        wep2.LevelUP();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                   
+                                }
+
+                                int armorCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < armorCount; i++)
+                                {
+                                    int armNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int armLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    if (i < actor.INVENTORY.ARMOR.Count)
+                                    {
+                                        ArmorScript arm = actor.INVENTORY.ARMOR[i];
+                                        if (arm.INDEX == armNum)
+                                        {
+                                            if (arm.LEVEL < armLevel)
+                                            {
+                                                while (arm.LEVEL < armLevel)
+                                                {
+                                                    arm.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                        else
+                                        {
+                                            ArmorScript arm2 = dm.GetArmor(armNum, actor);
+                                            if (arm2)
+                                            {
+                                                if (arm2.LEVEL < armLevel)
+                                                {
+                                                    while (arm2.LEVEL < armLevel)
+                                                    {
+                                                        arm2.LevelUP();
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                             
+                                }
+
+
+                                int cmdCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < cmdCount; i++)
+                                {
+                                    int cmdNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int cmdLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+
+                                    if (i < actor.INVENTORY.CSKILLS.Count)
+                                    {
+                                        CommandSkill cmd = actor.INVENTORY.CSKILLS[i];
+                                        if (cmd.INDEX == cmdNum)
+                                        {
+                                            if (cmd.LEVEL < cmdLevel)
+                                            {
+                                                while (cmd.LEVEL < cmdLevel)
+                                                {
+                                                    cmd.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        CommandSkill cmd2 = dm.LearnSkill(cmdNum, actor) as CommandSkill;
+                                        if (cmd2)
+                                        {
+                                            if (cmd2.LEVEL < cmdLevel)
+                                            {
+                                                while (cmd2.LEVEL < cmdLevel)
+                                                {
+                                                    cmd2.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+
+
+                                }
+
+                                int passCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < passCount; i++)
+                                {
+                                    int passNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int passLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+
+
+                                    if (actor.INVENTORY.PASSIVES.Count < i)
+                                    {
+                                        PassiveSkill pass = actor.INVENTORY.PASSIVES[i];
+                                        if (pass.INDEX == passNum)
+                                        {
+                                            if (pass.LEVEL < passLevel)
+                                            {
+                                                while (pass.LEVEL < passLevel)
+                                                {
+                                                    pass.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                        else
+                                        {
+                                            PassiveSkill pass2 = dm.LearnSkill(passNum, actor) as PassiveSkill;
+                                            if (pass2)
+                                            {
+                                                if (pass2.LEVEL < passLevel)
+                                                {
+                                                    while (pass2.LEVEL < passLevel)
+                                                    {
+                                                        pass2.LevelUP();
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+                                }
+
+                                int autoCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < autoCount; i++)
+                                {
+                                    int autoNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int autoLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+
+                                    if (actor.INVENTORY.AUTOS.Count < i)
+                                    {
+                                        AutoSkill autos = actor.INVENTORY.AUTOS[i];
+                                        if (autos.INDEX == autoNum)
+                                        {
+                                            if (autos.LEVEL < autoLevel)
+                                            {
+                                                while (autos.LEVEL < autoLevel)
+                                                {
+                                                    autos.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        AutoSkill autos2 = dm.LearnSkill(autoNum, actor) as AutoSkill;
+                                        if (autos2)
+                                        {
+                                            if (autos2.LEVEL < autoLevel)
+                                            {
+                                                while (autos2.LEVEL < autoLevel)
+                                                {
+                                                    autos2.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                int oppCount = System.Int32.Parse(additionals[deatindex]);
+                                deatindex++;
+                                for (int i = 0; i < oppCount; i++)
+                                {
+                                    int oppNum = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+                                    int oppLevel = System.Int32.Parse(additionals[deatindex]);
+                                    deatindex++;
+
+                                    if (actor.INVENTORY.OPPS.Count < i)
+                                    {
+                                        OppSkill autos = actor.INVENTORY.OPPS[i];
+                                        if (autos.INDEX == oppNum)
+                                        {
+                                            if (autos.LEVEL < oppLevel)
+                                            {
+                                                while (autos.LEVEL < oppLevel)
+                                                {
+                                                    autos.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        OppSkill autos2 = dm.LearnSkill(oppNum, actor) as OppSkill;
+                                        if (autos2)
+                                        {
+                                            if (autos2.LEVEL < oppLevel)
+                                            {
+                                                while (autos2.LEVEL < oppLevel)
+                                                {
+                                                    autos2.LevelUP();
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                Debug.Log("no dm...");
+                            }
                             actor.ACTIONS = 0;
-                            actor.BASE_STATS.FATIGUE = 0;
+                            actor.STATS.FATIGUE = 0;
                             actor.BASE_STATS.EXP = 0;
                             manager.gridObjects.Add(actor);
                             manager.SoftReset();
@@ -407,9 +694,9 @@ public class ItemScript : UsableScript
                 }
                 break;
             default:
-                if(target.GetComponent<LivingObject>())
+                if (target.GetComponent<LivingObject>())
                 {
-                   return useItem(target as LivingObject, user, targetTile);
+                    return useItem(target as LivingObject, user, targetTile);
                 }
                 break;
         }
@@ -422,14 +709,14 @@ public class ItemScript : UsableScript
         switch (ITYPE)
         {
             case ItemType.healthPotion:
-                DESC = "Restores "+(100.0f * trueValue)+"% of Health to ally or self.";
+                DESC = "Restores " + (100.0f * trueValue) + "% of Health to ally or self.";
                 break;
             case ItemType.manaPotion:
                 DESC = "Restores " + (100.0f * trueValue) + "% of Mana to ally or self.";
                 break;
             case ItemType.fatiguePotion:
                 {
-                    if(trueValue < 0)
+                    if (trueValue < 0)
                     {
                         DESC = "Increases " + (100.0f * trueValue) + "% of Fatigue to ally or self.";
                     }
@@ -444,23 +731,24 @@ public class ItemScript : UsableScript
             case ItemType.buff:
                 break;
             case ItemType.dmg:
-                DESC = "Deals heavy magical "+ELEMENT+" Damage to target";
+                DESC = "Deals heavy magical " + ELEMENT + " Damage to target";
                 break;
             case ItemType.actionBoost:
-                if(trueValue == 1.0f)
+                if (trueValue == 1.0f)
                 {
                     DESC = "Grants 3 additional action points to ally or self.";
                 }
                 else
                 {
-                DESC = "" + (100.0f * trueValue) + "% chance to grant 2 additional action points to ally or self.";
+                    DESC = "" + (100.0f * trueValue) + "% chance to grant 2 additional action points to ally or self.";
                 }
                 break;
             case ItemType.random:
-                DESC = "Grants " +  trueValue + "random effect to ally or self";
+                DESC = "Grants " + trueValue + "random effect to ally or self";
                 break;
             case ItemType.summon:
-                DESC = "Summons a " +NAME.Split(' ')[0] +" as an ally. Cannot be used if you already have a summon." ;
+                DESC = "Summons a " + NAME.Split(' ')[0] + " as an ally. Cannot be used if you already have a summon.";
+
                 break;
         }
     }

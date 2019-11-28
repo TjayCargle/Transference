@@ -15,7 +15,7 @@ public class HackingCtrl : MonoBehaviour
     public LivingObject currentObj;
     public int currentChip = 0;
     public SubSkillType currentChipType = SubSkillType.Strike;
-
+    private ManagerScript manager;
     public List<SubSkillType> currentSequence = new List<SubSkillType>();
     [SerializeField]
     TextMeshProUGUI headerText;
@@ -51,6 +51,7 @@ public class HackingCtrl : MonoBehaviour
 
     public bool isPlaying = false;
     public bool won = false;
+    private bool instaFail = false;
 
     public void Setup()
     {
@@ -66,6 +67,7 @@ public class HackingCtrl : MonoBehaviour
             LoadSequence(defaultList);
             updateTarget();
             isSetup = true;
+            manager = GameObject.FindObjectOfType<ManagerScript>();
         }
     }
     private void Start()
@@ -77,6 +79,7 @@ public class HackingCtrl : MonoBehaviour
     {
         if (accessChips.Length == 0)
             return;
+        instaFail = false;
         currentSequence.Clear();
         for (int i = 0; i < accessChips.Length; i++)
         {
@@ -85,6 +88,7 @@ public class HackingCtrl : MonoBehaviour
                 currentSequence.Add(aSequence[i]);
                 accessChips[i].transform.parent.gameObject.SetActive(true);
                 accessChips[i].color = Common.denied;
+
             }
             else
             {
@@ -137,12 +141,23 @@ public class HackingCtrl : MonoBehaviour
     }
     public void CheckForEnd()
     {
+       
 
         if (currentChip >= currentSequence.Count)
         {
+            if (instaFail == true)
+            {
+                won = false;
+                isPlaying = false;
+                gameObject.SetActive(false);
+            }
+            else
+            {
+
             won = true;
             isPlaying = false;
             gameObject.SetActive(false);
+            }
         }
         else if (strikeCount == 0 && skillCount == 0 && spellCount == 0)
         {
@@ -177,6 +192,24 @@ public class HackingCtrl : MonoBehaviour
                 if (currentChip < currentSequence.Count)
                     currentChipType = currentSequence[currentChip];
                 updateTarget();
+            
+                if(manager)
+                {
+                    manager.PlayOppSnd();
+                }
+            }
+            else
+            {
+                accessChips[currentChip].color = Common.errored;
+                currentChip++;
+                if (currentChip < currentSequence.Count)
+                    currentChipType = currentSequence[currentChip];
+                instaFail = true;
+                updateTarget();
+                if (manager)
+                {
+                    manager.PlayExitSnd();
+                }
             }
         }
         if (strikeCount <= 0)
@@ -208,6 +241,24 @@ public class HackingCtrl : MonoBehaviour
                     currentChipType = currentSequence[currentChip];
 
                 updateTarget();
+                if (manager)
+                {
+                    manager.PlayOppSnd();
+                }
+            }
+            else
+            {
+                accessChips[currentChip].color = Common.errored;
+                currentChip++;
+                if (currentChip < currentSequence.Count)
+                    currentChipType = currentSequence[currentChip];
+                instaFail = true;
+                updateTarget();
+                if (manager)
+                {
+                    manager.PlayExitSnd();
+                }
+
             }
         }
         if (skillCount <= 0)
@@ -237,6 +288,23 @@ public class HackingCtrl : MonoBehaviour
                 if (currentChip < currentSequence.Count)
                     currentChipType = currentSequence[currentChip];
                 updateTarget();
+                if (manager)
+                {
+                    manager.PlayOppSnd();
+                }
+            }
+            else
+            {
+                accessChips[currentChip].color = Common.errored;
+                currentChip++;
+                if (currentChip < currentSequence.Count)
+                    currentChipType = currentSequence[currentChip];
+                instaFail = true;
+                updateTarget();
+                if (manager)
+                {
+                    manager.PlayExitSnd();
+                }
             }
         }
         if (spellCount <= 0)

@@ -107,7 +107,7 @@ public class ArmorSet : MonoBehaviour
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE;
         //else
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
-        attributes[1].text = "Def: " + (currentObj.DEFENSE + selectedArmor.DEFENSE);//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+        attributes[3].text = "Def: " + (currentObj.DEFENSE + selectedArmor.DEFENSE);//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
 
         //val = currentObj.STATS.MAGIC;
         //if (val > 0)
@@ -117,7 +117,7 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
 
-        attributes[2].text = "Spd: " + (currentObj.SPEED + selectedArmor.SPEED);//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+        attributes[5].text = "Spd: " + (currentObj.SPEED + selectedArmor.SPEED);//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
 
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         //if (val > 0)
@@ -127,7 +127,7 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
 
-        attributes[3].text = "Mag: " + currentObj.MAGIC;
+        attributes[1].text = "Mag: " + currentObj.MAGIC;
         attributes[4].text = "Res: " + (currentObj.RESIESTANCE + selectedArmor.RESISTANCE);// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
 
         //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
@@ -147,7 +147,7 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
-        attributes[5].text = "Dex: " + currentObj.DEX;
+        attributes[2].text = "Dex: " + currentObj.DEX;
 
     }
     public void updateGridDetails()
@@ -174,19 +174,19 @@ public class ArmorSet : MonoBehaviour
 
         attributes[0].text = "Str: " + currentGridObj.BASE_STATS.STRENGTH;
 
-        attributes[1].text = "Def: " + (currentGridObj.BASE_STATS.DEFENSE + selectedArmor.DEFENSE) ;//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
+        attributes[3].text = "Def: " + (currentGridObj.BASE_STATS.DEFENSE ) ;//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
 
 
 
-        attributes[2].text = "Spd: " + (currentGridObj.BASE_STATS.SPEED + selectedArmor.SPEED);//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
+        attributes[5].text = "Spd: " + (currentGridObj.BASE_STATS.SPEED );//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
 
 
-        attributes[3].text = "Mag: " + currentGridObj.BASE_STATS.MAGIC;
-        attributes[4].text = "Res: " + (currentGridObj.BASE_STATS.RESIESTANCE + selectedArmor.RESISTANCE);// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
+        attributes[1].text = "Mag: " + currentGridObj.BASE_STATS.MAGIC;
+        attributes[4].text = "Res: " + (currentGridObj.BASE_STATS.RESIESTANCE );// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
 
 
 
-        attributes[5].text = "Dex: " + currentGridObj.BASE_STATS.DEX;
+        attributes[2].text = "Dex: " + currentGridObj.BASE_STATS.DEX;
 
     }
 }

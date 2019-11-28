@@ -16,6 +16,7 @@ public class ConditionalDisplay : MonoBehaviour
     ManagerScript manager;
     public bool debugging = false;
     public bool checksForGlyph = false;
+    public bool checksForEnemy = false;
     // Use this for initialization
     void Start()
     {
@@ -132,6 +133,24 @@ public class ConditionalDisplay : MonoBehaviour
                     return;
                 }
                 if (!manager.CheckAdjecentTilesGlyphs(manager.player.current))
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
+            if (checksForEnemy == true)
+            {
+                if (manager.myCamera.infoObject == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (manager.myCamera.infoObject != manager.player.current)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (!manager.CheckAdjecentTilesEnemy(manager.player.current))
                 {
                     gameObject.SetActive(false);
                     return;

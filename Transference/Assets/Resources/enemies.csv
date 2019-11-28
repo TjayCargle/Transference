@@ -1,6 +1,8 @@
 -id, name, level, health, mana, fatigue, str, mag, def, res, speed, skill, movement, num of skills, num of weapons, num of armor, num of items,personality cluster
-0, Scorpiee Pawn, 1, 35, 20, 45,7,12,5,9,12,2,3,5,1,2,1,logical,1, 20, 21, 32,200,0, 204,2,19
-1, Scorpiee Drone, 1, 50, 15, 35,14,5,10,5,11,5,2,5,1,2,1,physical,2, 10, 11, 52, 200, 14, 203,3,21
+0, Scorpiee Pawn, 1, 35, 20, 45,7,12,5,9,12,2,3,1,1,2,0,logical,113,0, 204,2
+1, Scorpiee Drone, 1, 50, 15, 35,14,5,10,5,11,5,2,5,1,2,1,physical,2, 10, 11, 52, 200, 23, 203,3,21
 2, Fairy Assassin, 1, 40, 35, 25,3,16,5,9,12,2,3,7,1,2,1,magical,50, 80, 93, 61,62,14,210,39,205, 4,22
 3, Scorpiee Bishop, 1, 30, 49, 21,3,16,5,9,12,2,3,6,1,2,1,magical,2, 24, 74, 41,42,200,47,204, 2,23
-4, Fairy Warrior, 1, 40, 35, 25,3,16,5,9,12,2,3,7,1,2,1,magical,50, 80, 93, 61,62,14,210,6,205, 4,22
+4, Fairy Warrior, 1, 40, 35, 25,3,16,5,9,12,2,3,7,1,2,1,physical,50, 90, 11, 42,33,13,218,6,205, 4,22
+5, Scorpiee Knight, 1, 40, 35, 25,3,16,5,9,12,2,3,7,1,2,1,physical,50, 20, 32, 30,100,23,217,6,205, 4,22
+-0, Scorpiee Pawn, 1, 35, 20, 45,7,12,5,9,12,2,3,5,1,2,1,logical,1, 20, 21, 32,200,0, 204,2,19

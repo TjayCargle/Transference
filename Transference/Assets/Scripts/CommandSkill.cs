@@ -216,7 +216,7 @@ public class CommandSkill : SkillScript
                     case SubSkillType.Cost:
                         {
                             int amt = GetCost();
-                            amt *= -1;
+                            // amt *= -1;
                             OWNER.STATS.FATIGUE += amt;
                         }
                         break;
@@ -226,7 +226,7 @@ public class CommandSkill : SkillScript
                             int amt = GetCost();
                             if (cost < 0)
                             {
-                                amt *= -1;
+                                //amt *= -1;
                             }
                             OWNER.STATS.FATIGUE += amt;
 
@@ -336,15 +336,15 @@ public class CommandSkill : SkillScript
         string potentialDesc;
         if (SUBTYPE == SubSkillType.Buff)
         {
-            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + COST + "Mana";
+            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
         }
         else if (SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy " + BUFFVAL + "% for 3 turns. Costs " + COST + " Mana";
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
         }
         else if (SUBTYPE == SubSkillType.Ailment)
         {
-            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + COST + " Mana";
+            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + ((cost * 10)) + "% Mana";
         }
         else if (ELEMENT == Element.Support)
         {
@@ -352,7 +352,7 @@ public class CommandSkill : SkillScript
             {
                 case SideEffect.heal:
                     {
-                        potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + COST + " Mana";
+                        potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + ((cost * 10)) + "% Mana";
                     }
                     break;
                 default:
@@ -443,16 +443,16 @@ public class CommandSkill : SkillScript
         {
             if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER);
+                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + "%";
             }
             else
             {
-                potentialDesc += " Costs " + GetCost(OWNER) + " Fatigue";
+                potentialDesc += " Costs " + ((cost * 10)) + "% Fatigue";
             }
         }
         else
         {
-            potentialDesc += "Costs " + GetCost(OWNER) + " Mana";
+            potentialDesc += "Costs " + ((cost * 10)) + "% Mana";
         }
         return potentialDesc;
     }
@@ -469,6 +469,8 @@ public class CommandSkill : SkillScript
                 break;
             case Augment.accurracyAugment:
                 ACCURACY = (int)((float)ACCURACY * 1.2f);
+                if (ACCURACY > 100)
+                    ACCURACY = 100;
                 break;
             case Augment.sideEffectAugment:
                 EFFECT = effect;
@@ -489,13 +491,13 @@ public class CommandSkill : SkillScript
                 }
                 break;
             case Augment.costAugment:
-                COST = (int)((float)COST * 0.5f);
+                cost = (int)((float)cost * 0.5f);
                 break;
             case Augment.chargeIncreaseAugment:
-                COST = (int)((float)COST * 1.5f);
+                cost = (int)((float)cost * 1.5f);
                 break;
             case Augment.chargeDecreaseAugment:
-                COST = (int)((float)COST * 0.5f);
+                cost = (int)((float)cost * 0.5f);
                 break;
             case Augment.effectAugment1:
                 BUFFVAL *= 2;
@@ -804,125 +806,8 @@ public class CommandSkill : SkillScript
             switch (ELEMENT)
             {
                 case Element.Water:
-                    if (DAMAGE != DMG.collassal)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
 
-                    if (ACCURACY + 5 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                    }
-                    else
-                    {
-                        returnedString += "\n Accuracy: 100";
-                        returnedString += "\n <color=green>Hits: " + HITS + "-" + (HITS + 1) + " times</color>";
-                    }
-
-                    break;
-                case Element.Pyro:
-                    if (DAMAGE != DMG.collassal)
-                    {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
-                    if (ACCURACY + 5 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                    }
-                    else
-                    {
-                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                        if (EFFECT == SideEffect.none)
-                        {
-                            returnedString += "\n Hits: " + HITS + " time(s)";
-                            returnedString += "\n <color=green>Chance of burn</color>";
-                        }
-                        else
-                        {
-                            returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
-                            returnedString += "\n Chance of burn";
-                        }
-
-                    }
-
-                    break;
-                case Element.Ice:
-                    if (DAMAGE != DMG.collassal)
-                    {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
-                    if (ACCURACY + 5 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                        returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 3.0f) + "%</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
-
-                        if (EFFECT == SideEffect.none)
-                        {
-                            returnedString += "\n Hits: " + HITS + " time(s)";
-                            returnedString += "\n <color=green>Chance of freeze</color>";
-                        }
-                        else
-                        {
-                            returnedString += "\n Hits: " + HITS + " time(s)";
-                            returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 6.0f) + "%</color>";
-                            returnedString += "\n Chance of freeze";
-                        }
-                    }
-
-                    break;
-                case Element.Electric:
-                    if (level % 2 == 0)
-                    {
-                        if (DAMAGE != DMG.collassal)
-                        {
-                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                        }
-                        else
-                        {
-                            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                        }
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    }
-
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                    returnedString += "\n <color=green>Hits: " + MIN_HIT + "-" + (MAX_HIT + 1) + " times</color>";
-                    if (level + 1 == 3)
-                    {
-                        if (EFFECT == SideEffect.none)
-                        {
-                            returnedString += "\n <color=green>Chance to paralyze</color>";
-                        }
-                    }
-                    else if (level + 1 > 3)
-                    {
-                        returnedString += "\n Chance to paralyze";
-                    }
-                    break;
-                case Element.Slash:
-                    if (level % 2 == 0)
-                    {
                         if (DAMAGE != DMG.collassal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
@@ -931,66 +816,204 @@ public class CommandSkill : SkillScript
                         {
                             returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
                         }
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                    returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
 
+                        if (ACCURACY + 5 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: 100";
+                            returnedString += "\n <color=green>Hits: " + HITS + "-" + (HITS + 1) + " times</color>";
+                        }
+
+                    }
+                    break;
+                case Element.Pyro:
+                    {
+
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
+                        if (ACCURACY + 5 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                            if (EFFECT == SideEffect.none)
+                            {
+                                returnedString += "\n Hits: " + HITS + " time(s)";
+                                returnedString += "\n <color=green>Chance of burn</color>";
+                            }
+                            else
+                            {
+                                returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+                                returnedString += "\n Chance of burn";
+                            }
+
+                        }
+
+                    }
+                    break;
+                case Element.Ice:
+                    {
+
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
+                        if (ACCURACY + 5 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                            returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 3.0f) + "%</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
+                            if (EFFECT == SideEffect.none)
+                            {
+                                returnedString += "\n Hits: " + HITS + " time(s)";
+                                returnedString += "\n <color=green>Chance of freeze</color>";
+                            }
+                            else
+                            {
+                                returnedString += "\n Hits: " + HITS + " time(s)";
+                                returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 6.0f) + "%</color>";
+                                returnedString += "\n Chance of freeze";
+                            }
+                        }
+
+                    }
+                    break;
+                case Element.Electric:
+                    {
+
+                        if (level % 2 == 0)
+                        {
+                            if (DAMAGE != DMG.collassal)
+                            {
+                                returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                            }
+                            else
+                            {
+                                returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+                            }
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+                        }
+
+                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                        returnedString += "\n <color=green>Hits: " + MIN_HIT + "-" + (MAX_HIT + 1) + " times</color>";
+                        if (level + 1 == 3)
+                        {
+                            if (EFFECT == SideEffect.none)
+                            {
+                                returnedString += "\n <color=green>Chance to paralyze</color>";
+                            }
+                        }
+                        else if (level + 1 > 3)
+                        {
+                            returnedString += "\n Chance to paralyze";
+                        }
+                    }
+                    break;
+                case Element.Slash:
+                    {
+
+                        if ((level + 1) % 2 == 0)
+                        {
+                            if (DAMAGE != DMG.collassal)
+                            {
+                                returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                            }
+                            else
+                            {
+                                returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                            }
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+                        }
+                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                        returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+
+                    }
                     break;
                 case Element.Pierce:
-                    if (DAMAGE != DMG.collassal)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
 
-                    if (ACCURACY + 2 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                    }
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
 
-                    if ((level + 1) % 2 == 0)
-                    {
-                        returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+                        if (ACCURACY + 2 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                        }
+
+                        if ((level + 1) % 2 == 0)
+                        {
+                            returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 2.0f) + "%</color>";
                     }
-                    else
-                    {
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                    }
-                    returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 2.0f) + "%</color>";
                     break;
                 case Element.Blunt:
-                    if (DAMAGE != DMG.collassal)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
 
-                    if (ACCURACY + 5 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
+                        if (DAMAGE != DMG.collassal)
+                        {
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
+                        }
+                        else
+                        {
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
+                        }
+
+                        if (ACCURACY + 5 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 5.0f) + "%</color>";
+                        ;
                     }
-                    else
-                    {
-                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                    }
-                    returnedString += "\n <color=green>Chance of critical hit: " + (CRIT_RATE + 5.0f) + "%</color>";
-                    ;
                     break;
                 case Element.Buff:
                     if (SUBTYPE == SubSkillType.Buff)
@@ -1000,33 +1023,36 @@ public class CommandSkill : SkillScript
                     break;
 
                 case Element.Force:
-                    if (DAMAGE != DMG.collassal)
                     {
-                        returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
-                    }
-                    else
-                    {
-                        returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
-                    }
-                    if (ACCURACY + 5 <= 100)
-                    {
-                        returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
-                        returnedString += "\n Hits: " + HITS + " time(s)";
-                    }
-                    else
-                    {
-                        returnedString += "\n Accuracy: " + (ACCURACY) + "";
-                        if (EFFECT == SideEffect.none)
+
+                        if (DAMAGE != DMG.collassal)
                         {
-                            returnedString += "\n Hits: " + HITS + " time(s)";
-                            returnedString += "\n <color=green>Pulls target 1 tile</color>";
+                            returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
                         else
                         {
-                            returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
-                            returnedString += "\n Pulls target 1 tile";
+                            returnedString += "\n Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "";
                         }
+                        if (ACCURACY + 5 <= 100)
+                        {
+                            returnedString += "\n <color=green>Accuracy: " + (ACCURACY + 5) + "</color>";
+                            returnedString += "\n Hits: " + HITS + " time(s)";
+                        }
+                        else
+                        {
+                            returnedString += "\n Accuracy: " + (ACCURACY) + "";
+                            if (EFFECT == SideEffect.none)
+                            {
+                                returnedString += "\n Hits: " + HITS + " time(s)";
+                                returnedString += "\n <color=green>Pulls target</color>";
+                            }
+                            else
+                            {
+                                returnedString += "\n <color=green>Hits: " + (HITS + 1) + " time(s)</color>";
+                                returnedString += "\n Pulls target 1 tile";
+                            }
 
+                        }
                     }
                     break;
             }

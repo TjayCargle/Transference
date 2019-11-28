@@ -144,6 +144,7 @@ MonoBehaviour:
   loaded: 0
   isSetup: 0
   manager: {fileID: 0}
+  target: {fileID: 0}
 --- !u!1 &1748833023184152
 GameObject:
   m_ObjectHideFlags: 0

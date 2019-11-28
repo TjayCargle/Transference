@@ -1,8 +1,7 @@
 -folder,facdnum, name, text
-a,1,Jax? 
+a,1,Jax?,1
 a,0,Zeffron!?
 a,0,What the hell are you doing here? 
 a,1,I could ask you the same thing.
-a,1,Where are we anyway?
-e,0, Bzztz!
+a,1,Where are we anyway?,1
 a,0,I'll explain later. Looks like we have bigger problems.

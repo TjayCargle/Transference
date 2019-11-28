@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
                     {
                         //myManager.invManager.prevIndex = myManager.invManager.currentIndex;
                         //myManager.invManager.currentIndex = 0;
+
                         myManager.SelectMenuItem(current);
                     }
                     break;
@@ -100,7 +101,22 @@ public class PlayerController : MonoBehaviour
                     {
                         if (myManager.ComfirmMenuAction(current))
                         {
+                            bool useation = true;
+
+                            for (int i = 0; i < current.INVENTORY.PASSIVES.Count; i++)
+                            {
+                                PassiveSkill passive = current.INVENTORY.PASSIVES[i];
+                                if(passive.ModStat == ModifiedStat.moveAct)
+                                {
+                                    useation = false;
+                                    break;
+                                }
+                            }
+
+                            if(useation)
+                            {
                             current.TakeAction();
+                            }
                             // myManager.ComfirmMoveGridObject(current,myManager.GetTileIndex(current));
                         }
 
@@ -111,18 +127,13 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 case State.PlayerAttacking:
-
-                    if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        UseOrAttack();
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                         
+                            UseOrAttack();
 
-                    }
-                    if (Input.GetKeyDown(KeyCode.Escape))
-                    {
-                        // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
-                        // myManager.returnState();
-                        myManager.CancelMenuAction(current);
-                        currentSkill = null;
+                        }
                     }
                     break;
                 case State.PlayerEquippingMenu:
@@ -168,19 +179,10 @@ public class PlayerController : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
                             //  useOrEquip();
-                        }
-                        if (Input.GetKeyDown(KeyCode.Escape))
-                        {
-                            // myManager.invManager.currentIndex = myManager.invManager.prevIndex;
-                            myManager.CancelMenuAction(current);
-                            currentSkill = null;
+                            myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
 
                         }
-                        if (Input.GetMouseButtonDown(1))
-                        {
-                            currentSkill = null;
-                            myManager.CancelMenuAction(current);
-                        }
+                        break;
                     }
                     break;
                 case State.playerUsingSkills:
@@ -188,6 +190,7 @@ public class PlayerController : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
                             //  useOrEquip();
+
                             myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
 
                         }
@@ -219,16 +222,15 @@ public class PlayerController : MonoBehaviour
                     break;
                 case State.PlayerEquippingSkills:
 
-                    if (Input.GetKeyDown(KeyCode.Escape))
+                    if (Input.GetKeyDown(KeyCode.Return))
                     {
 
-                        myManager.CancelMenuAction(current);
+                        //  UseItem();
+                        myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
+                        //   useOrEquip();
                     }
-                    if (Input.GetMouseButtonDown(1))
-                    {
 
-                        myManager.CancelMenuAction(current);
-                    }
+            
 
                     break;
                 case State.PlayerSkillsMenu:
@@ -261,7 +263,7 @@ public class PlayerController : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
-
+                            Debug.Log("playa itms");
                             //  UseItem();
                             myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
                             //   useOrEquip();
@@ -278,6 +280,41 @@ public class PlayerController : MonoBehaviour
                     break;
                 case State.PlayerUsingItems:
                     {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+
+                            if (Input.GetKeyDown(KeyCode.Return))
+                            {
+                             
+                                if (myManager.myCamera.infoObject)
+                                {
+                                  
+                                    if (myManager.myCamera.infoObject)
+                                    {
+                                      
+                                        if (myManager.myCamera.infoObject.GetComponent<LivingObject>())
+                                        {
+                                       
+                                            UseItem(myManager.myCamera.infoObject.GetComponent<LivingObject>(), myManager.myCamera.currentTile);
+                                        }
+                                        else if (currentItem.ITYPE == ItemType.dmg)
+                                        {
+                                            UseItem(myManager.myCamera.infoObject, myManager.myCamera.currentTile);
+                                        }
+                                        else
+                                        {
+                                           myManager.CreateTextEvent(this, "Invalid target", "validation text", myManager.CheckText, myManager.TextStart);
+                                            myManager.PlayExitSnd();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        UseItem(null, myManager.myCamera.currentTile);
+                                    }
+                                }
+                            }
+
+                        }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
 
@@ -301,16 +338,18 @@ public class PlayerController : MonoBehaviour
     {
         if (TargetTile)
         {
-
+            Debug.Log("4 a");
             myManager.CreateEvent(this, TargetTile, "use item 1 event", UseItemEvent);
         }
         else if (target)
         {
+            Debug.Log("4 b");
             myManager.CreateEvent(this, target.currentTile, "use item 1 event", UseItemEvent);
         }
     }
     public bool UseItemEvent(Object data)
     {
+        Debug.Log("5");
         TileScript TargetTile = data as TileScript;
         GridObject target = null;
         if (TargetTile)
@@ -342,7 +381,7 @@ public class PlayerController : MonoBehaviour
                     if (myManager.log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
-                        myManager.log.Log(coloroption + current.NAME + " used " + currentItem.NAME);
+                        myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME);
                     }
 
                     myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
@@ -422,7 +461,8 @@ public class PlayerController : MonoBehaviour
                     if (myManager.log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
-                        myManager.log.Log(coloroption + current.NAME + " used " + currentItem.NAME + " on " + target.NAME);
+                        string coloroption2 = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(target.FACTION)) + ">";
+                        myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME + " on " + coloroption2 + target.NAME + "</color>");
                     }
                     myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME + " on " + target.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
@@ -508,7 +548,7 @@ public class PlayerController : MonoBehaviour
                                             if (myManager.log)
                                             {
                                                 string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
-                                                myManager.log.Log(coloroption + current.NAME + " summoned a " + newArmor.NAME);
+                                                myManager.log.Log(coloroption + current.NAME + "</color> summoned a " + newArmor.NAME);
                                             }
 
                                             myManager.CreateEvent(this, newArmor, "Neo barrier equip", current.SummonBarrier);
@@ -1686,7 +1726,7 @@ public class PlayerController : MonoBehaviour
             {
                 myManager.tempObject.transform.position = possibleObject.transform.position;
                 myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+                myManager.tempObject.GetComponent<GridObject>().currentTile = possibleObject.currentTile;
             }
 
             for (int i = 0; i < myManager.currentAttackList.Count; i++)
@@ -1763,11 +1803,13 @@ public class PlayerController : MonoBehaviour
 
     public void prepareAttack(WeaponScript attack)
     {
+        Debug.Log("prepare ");
         if (!current)
         {
             return;
         }
-        myManager.attackableTiles = myManager.GetWeaponAttackableTiles(current);
+        myManager.player.current.WEAPON.Equip(attack);
+        myManager.attackableTiles = myManager.GetAttackableTiles(current, attack);
         myManager.ShowWhite();
         GridObject possibleObject = null;
         myManager.currentAttackList.Clear();
@@ -1813,7 +1855,7 @@ public class PlayerController : MonoBehaviour
             {
                 myManager.tempObject.transform.position = possibleObject.transform.position;
                 myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+                myManager.tempObject.GetComponent<GridObject>().currentTile = possibleObject.currentTile;
             }
 
             for (int i = 0; i < myManager.currentAttackList.Count; i++)
@@ -1847,16 +1889,17 @@ public class PlayerController : MonoBehaviour
                 if (griddy.GetComponent<LivingObject>())
                 {
                     LivingObject livvy = griddy.GetComponent<LivingObject>();
-
+                    
                     reac = myManager.CalcDamage(current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
                 else
                 {
-
+                   
                     reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
                 if (reac.reaction > Reaction.weak)
                     reac.damage = 0;
+               
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
                 if (myManager.potential)
@@ -1936,7 +1979,7 @@ public class PlayerController : MonoBehaviour
             {
                 myManager.tempObject.transform.position = possibleObject.transform.position;
                 myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-                myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentAttackList[0];
+                myManager.tempObject.GetComponent<GridObject>().currentTile = possibleObject.currentTile;
             }
 
             for (int i = 0; i < myManager.currentAttackList.Count; i++)
@@ -2010,6 +2053,7 @@ public class PlayerController : MonoBehaviour
 
     public void BuffereduseOrEquip()
     {
+    
         useOrEquip();
     }
 
@@ -2020,6 +2064,11 @@ public class PlayerController : MonoBehaviour
         {
             if (current)
             {
+                SpriteRenderer sr = current.GetComponent<SpriteRenderer>();
+                if (sr)
+                {
+                    sr.color = Color.white;
+                }
                 current.TakeAction();
 
             }
@@ -2028,10 +2077,17 @@ public class PlayerController : MonoBehaviour
 
         if (current)
         {
-            if (!current.DEAD)
+            if (!current.DEAD && current)
             {
+                if(current.ACTIONS > 1)
+                {
                 myManager.CleanMenuStack();
                 myManager.ShowGridObjectAffectArea(current);
+                }
+                else
+                {
+                    myManager.CleanMenuStack(true);
+                }
             }
             else
             {
@@ -2042,6 +2098,7 @@ public class PlayerController : MonoBehaviour
         {
             myManager.CleanMenuStack(true);
         }
+      
         return true;
     }
     public bool BeforeOpp(Object data)

@@ -21,6 +21,31 @@ public class PhaseImg : ImgObj
             myColor = GetComponent<Image>().color;
         }
     }
+    public override void StopCountDown()
+    {
+       // Debug.Log("stopping");
+        if (manager)
+        {
+            if (manager.GetState() == State.PlayerTransition)
+            {
+                manager.currentState = State.FreeCamera;
+            }
+        }
+        else
+        {
+            Debug.Log("lost manager");
+            manager = GameObject.FindObjectOfType<ManagerScript>();
+            if (manager)
+            {
+                if (manager.GetState() == State.EventRunning)
+                {
+                    manager.currentState = State.FreeCamera;
+                }
+            }
+        }
+
+        base.StopCountDown();
+    }
     public void StartCountDown(Color phaseColor, string whooseTurn)
     {
         if (isShowing == false)

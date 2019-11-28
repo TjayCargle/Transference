@@ -173,7 +173,7 @@ public class ArmorScript : UsableScript
                 ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
            
                   
-                manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, -1, manager.CountStart);
+                manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
                 manager.CreateTextEvent(this, "" + owner.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
                 
             }

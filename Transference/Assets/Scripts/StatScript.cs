@@ -11,12 +11,10 @@ public class StatScript : MonoBehaviour
     private int myHealth;
     [SerializeField]
     private int myMaxMana = 100;
-    [SerializeField]
-    private int myMana;
+
     [SerializeField]
     private int myMaxFatigue = 100;
-    [SerializeField]
-    private int myFatigue;
+
     [SerializeField]
     private int myBaseStr;
     [SerializeField]
@@ -154,33 +152,11 @@ public class StatScript : MonoBehaviour
         get { return myMaxMana; }
         set { myMaxMana = value; }
     }
-    public int MANA
-    {
-        get { return myMana; }
-        set
-        {
-            myMana = value;
 
-        }
-    }
     public int MAX_FATIGUE
     {
         get { return myMaxFatigue; }
         set { myMaxFatigue = value; }
-    }
-    public int FATIGUE
-    {
-        get { return myFatigue; }
-        set
-        {
-            myFatigue = value;
-            if (myFatigue < 0)
-            {
-                myFatigue = 0;
-            }
-
-
-        }
     }
 
 
@@ -204,8 +180,15 @@ public class StatScript : MonoBehaviour
         get { return fatigueChargeChange; }
         set { fatigueChargeChange = value; }
     }
-    public void IncreaseStat(ModifiedStat mod, int val, LivingObject baseObj)
+
+    public override string ToString()
     {
+        return "" + MAX_HEALTH + "," + MAX_MANA + "," + MAX_FATIGUE + "," + MOVE_DIST + "," + STRENGTH + "," + MAGIC + "," + DEX + "," + DEFENSE + "," + RESIESTANCE + "," + SPEED;
+    }
+
+    public virtual void IncreaseStat(ModifiedStat mod, int val, LivingObject baseObj)
+    {
+
         float modification = val;
         switch (mod)
         {
@@ -254,7 +237,7 @@ public class StatScript : MonoBehaviour
                 modification = ((float)val / 100) * baseObj.SPEED;
                 SPEED += (int)modification;
                 break;
-            case ModifiedStat.Speed:
+            case ModifiedStat.Spd:
                 modification = ((float)val / 100) * baseObj.SPEED;
                 SPEED += (int)modification;
                 break;
@@ -262,13 +245,7 @@ public class StatScript : MonoBehaviour
                 modification = ((float)val / 100) * baseObj.DEX;
                 DEX += (int)modification;
                 break;
-            case ModifiedStat.SP:
-                MAX_MANA += val;
-                if (MANA == MAX_MANA - val)
-                {
-                    MANA = MAX_MANA;
-                }
-                break;
+
             case ModifiedStat.FT:
                 break;
             case ModifiedStat.FTCost:
@@ -302,18 +279,18 @@ public class StatScript : MonoBehaviour
                 break;
         }
     }
-    public void SetZero(bool hard = false)
+    public virtual void SetZero(bool hard = false)
     {
         Atk_DIST = 0;
         HEALTH = 0;
-        MANA = 0;
+
         STRENGTH = 0;
         MAGIC = 0;
         DEFENSE = 0;
         RESIESTANCE = 0;
         SPEED = 0;
         DEX = 0;
-        FATIGUE = 0;
+
         FTCOSTCHANGE = 1.0f;
         FTCHARGECHANGE = 1.0f;
         SPCHANGE = 1.0f;
@@ -327,8 +304,9 @@ public class StatScript : MonoBehaviour
 
         }
     }
-    public void Reset(bool hard = false)
+    public virtual void Reset(bool hard = false)
     {
+
         STRENGTH = 0;
         MAGIC = 0;
         DEFENSE = 0;
@@ -344,8 +322,8 @@ public class StatScript : MonoBehaviour
             MAX_MANA = 0;
             MAX_FATIGUE = 0;
             HEALTH = 0;
-            MANA = 0;
-            FATIGUE = 0;
+       
+          
         }
 
     }

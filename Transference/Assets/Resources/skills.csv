@@ -126,13 +126,14 @@
 -6,Ice Opportunity,Opp,None,Ice,1.0
 -7,Elec Opportunity,Opp,None,Electric,1.0
 -
-1,Forgotten Blade,Opp,Strike,Slash,Slash
-2,Forgotten Pulse,Opp,Strike,Pierce,Force
-3,Forgotten Breath,Opp,Strike,Blunt,Pyro
-4,Forgotten Static,Opp,Strike,Water,Electric
-5,Forgotten Frost,Opp,Strike,Pyro,Ice
-6,Forgotten Stab,Opp,Strike,Ice,Pierce
-7,Forgotten Hammer,Opp,Strike,Electric,Blunt
+1,Slashing Hydro,Opp,Strike,Slash,Water
+2,Piercing Pulse,Opp,Strike,Pierce,Force
+3,Crushing Pyre,Opp,Strike,Blunt,Pyro
+4,Splashing Static,Opp,Strike,Water,Electric
+5,Blazing Frost,Opp,Strike,Pyro,Ice
+6,Freezing Stab,Opp,Strike,Ice,Pierce
+7,Shocking Slap,Opp,Strike,Electric,Blunt
+8,Pulsing Blade,Opp,Strike,Force,Slash
 -
 -1,Slash Skill Opportunity,Opp,Skill,Slash,1.0
 -2,Pierce Skill Opportunity,Opp,Skill,Pierce,1.0
@@ -161,6 +162,10 @@
 117,Breakdown,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,debuff,0,210,5
 118,Snare,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,cripple,0,210,5
 119,DeathTouch,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,instaKill,0,210,5
+120,Poison Strike,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,poison,0,210,5
+121,Blazing Strike,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,burn,0,210,5
+122,Freezing Strike,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,freeze,0,210,5
+123,Confusing Strike,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,confuse,0,210,5
 -
 -Support
 150,Heal,Support,Heal,heal,8,magical,any,1,0,100,tiny,1,0,1,0,1
@@ -184,7 +189,7 @@
 200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
 201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
 202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
-203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,50,0,FTCharge,0
+203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,150,0,FTCharge,0
 204,DragonStone,Passive,None,Pyro and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Slash
 205,WitchStone,Passive,None,Pyro and Water attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Water
 206,PhoenixStone,Passive,None,Pyro and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Pierce
@@ -201,11 +206,7 @@
 217,Speed Gem,Passive,None,Strength increased by 5,1,10,0,Spd,0
 218,Defense Gem,Passive,None,Strength increased by 5,1,10,0,Def,0
 219,Resistance Gem,Passive,None,Strength increased by 5,1,10,0,Res,0
--214,Flame Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Pyro,Water
--215,Aqua Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Water,Electric
--216,Static Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Electric,Ice
--217,Frost Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Ice,Blunt
--218,Hammer Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Blunt,Slash
--219,Chain Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Slash,Pierce
--220,Flame Body,Passive, None,Nulls Pyro but take cripling damage from Water,1,0,0,ElementBody,2,Pierce,Pyro
+220,Death Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,deathAct,0  
+221,Opportunity Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,oppAct,0  
+222,Movement Pearl,Passive,None,No action points used for moving,1,0,0,moveAct,0
 -212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage

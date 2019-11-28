@@ -82,4 +82,45 @@ public class HackingButton : MonoBehaviour, IPointerDownHandler
     {
         Setup();
     }
+
+    private void Update()
+    {
+        if(isActiveAndEnabled)
+        {
+            if (control)
+            {
+                switch (hackType)
+                {
+                    case 0:
+                        {
+                            if(Input.GetKeyDown(KeyCode.Z))
+                            {
+                                control.useStrike(this);
+                            }
+               
+                        }
+                        break;
+                    case 1:
+                        {
+                            if (Input.GetKeyDown(KeyCode.X))
+                            {
+                                control.useSkill(this);
+                            }
+                     
+                        }
+                        break;
+
+                    case 2:
+                        {
+                            if (Input.GetKeyDown(KeyCode.C))
+                            {
+                                control.useSpell(this);
+                            }
+                          
+                        }
+                        break;
+                }
+            }
+        }
+    }
 }

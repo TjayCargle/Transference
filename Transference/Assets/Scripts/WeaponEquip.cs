@@ -56,12 +56,12 @@ public class WeaponEquip : Equipable
 
     public int ATTACK
     {
-        get { return (int)equipped.ATTACK + LEVEL; }
+        get { return (equipped != null ? ((int)equipped.ATTACK + LEVEL) : 0); }
        
     }
     public int ACCURACY
     {
-        get { return equipped.ACCURACY; }
+        get { return (equipped != null ? equipped.ACCURACY : 0); }
        
     }
     public int CRIT

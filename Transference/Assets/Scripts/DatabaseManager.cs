@@ -134,11 +134,12 @@ public class DatabaseManager : MonoBehaviour
                 for (int i = 1; i < enemyLines.Length; i++)
                 {
                     string line = enemyLines[i];
-                    if (line[0] != '-')
-                    {
-                        string[] parsed = line.Split(',');
-                        enemyDictionary.Add(Int32.Parse(parsed[0]), line);
-                    }
+                    if (line.Length > 0)
+                        if (line[0] != '-')
+                        {
+                            string[] parsed = line.Split(',');
+                            enemyDictionary.Add(Int32.Parse(parsed[0]), line);
+                        }
                 }
             }
 
@@ -251,9 +252,11 @@ public class DatabaseManager : MonoBehaviour
             data.startIndexes = new List<int>();
             data.objMapIndexes = new List<int>();
             data.objIds = new List<int>();
+            data.EnemyIds = new List<int>();
 
             scene.speakerNames = new List<string>();
             scene.speakertext = new List<string>();
+            scene.speakerFace = new List<Sprite>();
 
             isSetup = true;
         }
@@ -394,7 +397,7 @@ public class DatabaseManager : MonoBehaviour
                                             mod.affectedStat = ModifiedStat.Atk;
                                             break;
                                         case BuffType.Spd:
-                                            mod.affectedStat = ModifiedStat.Speed;
+                                            mod.affectedStat = ModifiedStat.Spd;
                                             break;
                                         case BuffType.Def:
                                             mod.affectedStat = ModifiedStat.Def;
@@ -567,9 +570,9 @@ public class DatabaseManager : MonoBehaviour
 
                                     OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
                                     skill.Transfer(opp);
-                                    opp.TRIGGERS.Add ( (Element)Enum.Parse(typeof(Element), parsed[4]));
+                                    opp.TRIGGERS.Add((Element)Enum.Parse(typeof(Element), parsed[4]));
                                     opp.REACTION = ((Element)Enum.Parse(typeof(Element), parsed[5]));
-                            
+
                                     opp.UpdateDesc();
 
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(opp);
@@ -823,7 +826,7 @@ public class DatabaseManager : MonoBehaviour
                 //skill.AUGMENTS = ScriptableObject.CreateInstance<AugmentScript>();
                 //Debug.Log(id + " " + skill.NAME + " " +skill.ELEMENT);
                 skill.TYPE = 4;
-                
+
                 switch (skill.ELEMENT)
                 {
 
@@ -854,7 +857,7 @@ public class DatabaseManager : MonoBehaviour
                                     mod.affectedStat = ModifiedStat.Atk;
                                     break;
                                 case BuffType.Spd:
-                                    mod.affectedStat = ModifiedStat.Speed;
+                                    mod.affectedStat = ModifiedStat.Spd;
                                     break;
                                 case BuffType.Def:
                                     mod.affectedStat = ModifiedStat.Def;
@@ -972,7 +975,7 @@ public class DatabaseManager : MonoBehaviour
 
                             OppSkill opp = ScriptableObject.CreateInstance<OppSkill>();
                             skill.Transfer(opp);
-                            opp.TRIGGERS.Add( (Element)Enum.Parse(typeof(Element), parsed[4]));
+                            opp.TRIGGERS.Add((Element)Enum.Parse(typeof(Element), parsed[4]));
                             opp.REACTION = ((Element)Enum.Parse(typeof(Element), parsed[5]));
 
                             opp.UpdateDesc();
@@ -1115,11 +1118,11 @@ public class DatabaseManager : MonoBehaviour
                 weapon.ATKRANGE = (RangeType)Enum.Parse(typeof(RangeType), parsed[6]);
                 //weapon.DIST = Int32.Parse(parsed[6]);
                 //weapon.Range = Int32.Parse(parsed[7]);
-              //  Common.SetWeaponDistRange(weapon);
+                //  Common.SetWeaponDistRange(weapon);
                 weapon.ACCURACY = Int32.Parse(parsed[7]);
                 weapon.CRIT = Int32.Parse(parsed[8]);
                 weapon.BOOST = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
-             
+
                 weapon.TYPE = 0;
 
                 //if (weapon.Range == 1)
@@ -1130,7 +1133,7 @@ public class DatabaseManager : MonoBehaviour
                 //{
                 //    weapon.DESC += " Hits tiles up to " + weapon.DIST + " spaces away.";
                 //}
-                switch(weapon.ATKRANGE)
+                switch (weapon.ATKRANGE)
                 {
                     case RangeType.adjacent:
                         {
@@ -1243,7 +1246,7 @@ public class DatabaseManager : MonoBehaviour
                     if (livingObject.INVENTORY)
                     {
 
-                     
+
                         if (!livingObject.ARMOR)
                         {
                             //livingObject.ARMOR.Equip(armor);
@@ -1273,6 +1276,8 @@ public class DatabaseManager : MonoBehaviour
         return null;
     }
 
+
+
     public ItemScript GetItem(int id, LivingObject livingObject)
     {
 
@@ -1298,7 +1303,7 @@ public class DatabaseManager : MonoBehaviour
                     item.PDMG = (DMG)Enum.Parse(typeof(DMG), parsed[9]);
                 item.RTYPE = RangeType.adjacent;
 
-                if(item.ELEMENT == Element.none)
+                if (item.ELEMENT == Element.none)
                 {
                     item.ELEMENT = Element.Support;
                 }
@@ -1311,6 +1316,88 @@ public class DatabaseManager : MonoBehaviour
                         livingObject.INVENTORY.USEABLES.Add(item);
                     }
                     item.USER = livingObject;
+                }
+                return item;
+            }
+        }
+
+
+        return null;
+        // reader.Close();
+
+    }
+
+    public ItemScript GenerateScroll(LivingObject enemy, LivingObject reciever)
+    {
+
+
+
+        string lines = "";
+        if (enemy != null)
+        {
+            string[] parsed = lines.Split(',');
+            if (reciever != null)
+            {
+                ItemScript item = ScriptableObject.CreateInstance<ItemScript>();
+                item.INDEX = 101;
+                item.NAME = enemy.NAME + " Scroll";
+
+                item.ITYPE = ItemType.summon;
+                item.TTYPE = TargetType.adjecent;
+                item.VALUE = enemy.id;
+                item.ELEMENT = Element.Support;
+                item.STAT = ModifiedStat.none;
+                item.EFFECT = SideEffect.none;
+
+                item.RTYPE = RangeType.adjacent;
+                string details = "";
+                details += "" + (enemy.BASE_STATS as StatScript).ToString() + ",";
+
+                details += "" + enemy.INVENTORY.WEAPONS.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.WEAPONS.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.WEAPONS[i].INDEX + "," + enemy.INVENTORY.WEAPONS[i].LEVEL;
+                }
+
+                details += "," + enemy.INVENTORY.ARMOR.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.ARMOR.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.ARMOR[i].INDEX + "," + enemy.INVENTORY.ARMOR[i].LEVEL;
+                }
+                details += "," + enemy.INVENTORY.CSKILLS.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.CSKILLS.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.CSKILLS[i].INDEX + "," + enemy.INVENTORY.CSKILLS[i].LEVEL;
+                }
+                details += "," + enemy.INVENTORY.PASSIVES.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.PASSIVES.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.PASSIVES[i].INDEX + "," + enemy.INVENTORY.PASSIVES[i].LEVEL;
+                }
+
+                details += "," + enemy.INVENTORY.AUTOS.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.AUTOS.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.AUTOS[i].INDEX + "," + enemy.INVENTORY.AUTOS[i].LEVEL;
+                }
+
+                details += "," + enemy.INVENTORY.OPPS.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.OPPS.Count; i++)
+                {
+                    details += "," + enemy.INVENTORY.OPPS[i].INDEX + "," + enemy.INVENTORY.OPPS[i].LEVEL;
+                }
+                item.DEATS = details;
+                item.UpdateDesc();
+
+                if (reciever)
+                {
+
+                    if (reciever.INVENTORY)
+                    {
+                        reciever.INVENTORY.ITEMS.Add(item);
+                        reciever.INVENTORY.USEABLES.Add(item);
+                    }
+                    item.USER = reciever;
                 }
                 return item;
             }
@@ -1335,6 +1422,7 @@ public class DatabaseManager : MonoBehaviour
                 string[] parsed = lines.Split(',');
                 if (Int32.Parse(parsed[0]) == id)
                 {
+                    newHazard.id = id;
                     int fileIndex = 1;
                     newHazard.FullName = parsed[fileIndex];
                     fileIndex++;
@@ -1359,7 +1447,7 @@ public class DatabaseManager : MonoBehaviour
                         fileIndex++;
                     }
 
-                    switch(id)
+                    switch (id)
                     {
                         case 0:
                             {
@@ -1403,22 +1491,36 @@ public class DatabaseManager : MonoBehaviour
                 string[] parsed = lines.Split(',');
                 if (Int32.Parse(parsed[0]) == id)
                 {
+                    newEnemy.id = id;
                     newEnemy.BASE_STATS.Reset(true);
                     newEnemy.STATS.Reset(true);
                     newEnemy.DEAD = false;
                     int fileIndex = 1;
                     newEnemy.FullName = parsed[fileIndex];
                     fileIndex++;
+
+                    string[] factionName = newEnemy.FullName.Split(' ');
+                    if (factionName.Length > 0)
+                    {
+                        if (factionName[0].ToLower() == "fairy")
+                        {
+                            newEnemy.FACTION = Faction.fairy;
+                        }
+                        else
+                        {
+                            newEnemy.FACTION = Faction.enemy;
+                        }
+                    }
                     newEnemy.BASE_STATS.LEVEL = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
                     newEnemy.BASE_STATS.MAX_HEALTH = Int32.Parse(parsed[fileIndex]);
                     newEnemy.BASE_STATS.HEALTH = newEnemy.BASE_STATS.MAX_HEALTH;
                     fileIndex++;
                     newEnemy.BASE_STATS.MAX_MANA = Int32.Parse(parsed[fileIndex]);
-                    newEnemy.BASE_STATS.MANA = newEnemy.BASE_STATS.MAX_MANA;
+                    newEnemy.STATS.MANA = newEnemy.BASE_STATS.MAX_MANA;
                     fileIndex++;
                     newEnemy.BASE_STATS.MAX_FATIGUE = Int32.Parse(parsed[fileIndex]);
-                    newEnemy.BASE_STATS.FATIGUE = 0;
+                    newEnemy.STATS.FATIGUE = 0;
                     fileIndex++;
                     newEnemy.BASE_STATS.STRENGTH = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1442,7 +1544,7 @@ public class DatabaseManager : MonoBehaviour
                     fileIndex++;
                     int numofItems = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
-                    
+
 
                     EPCluster cluster = (EPCluster)Enum.Parse(typeof(EPCluster), parsed[fileIndex]);
                     fileIndex++;
@@ -1505,10 +1607,10 @@ public class DatabaseManager : MonoBehaviour
                     newEnemy.BASE_STATS.HEALTH = newEnemy.BASE_STATS.MAX_HEALTH;
                     fileIndex++;
                     newEnemy.BASE_STATS.MAX_MANA = Int32.Parse(parsed[fileIndex]);
-                    newEnemy.BASE_STATS.MANA = newEnemy.BASE_STATS.MAX_MANA;
+                    newEnemy.STATS.MANA = newEnemy.BASE_STATS.MAX_MANA;
                     fileIndex++;
                     newEnemy.BASE_STATS.MAX_FATIGUE = Int32.Parse(parsed[fileIndex]);
-                    newEnemy.BASE_STATS.FATIGUE = 0;
+                    newEnemy.STATS.FATIGUE = 0;
                     fileIndex++;
                     newEnemy.BASE_STATS.STRENGTH = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1603,7 +1705,7 @@ public class DatabaseManager : MonoBehaviour
                 fileIndex++;
                 newObject.FACTION = (Faction)Enum.Parse(typeof(Faction), parsed[fileIndex]);
                 baseStats.MOVE_DIST = 0;
-               
+
             }
         }
         return newObject;
@@ -1622,6 +1724,7 @@ public class DatabaseManager : MonoBehaviour
                 if (Int32.Parse(parsed[0]) == id)
                 {
                     int fileIndex = 1;
+                    living.STATS.Reset(true);
                     living.FullName = parsed[fileIndex];
                     fileIndex++;
                     living.BASE_STATS.LEVEL = Int32.Parse(parsed[fileIndex]);
@@ -1630,10 +1733,10 @@ public class DatabaseManager : MonoBehaviour
                     living.BASE_STATS.HEALTH = living.BASE_STATS.MAX_HEALTH;
                     fileIndex++;
                     living.BASE_STATS.MAX_MANA = Int32.Parse(parsed[fileIndex]);
-                    living.BASE_STATS.MANA = living.BASE_STATS.MAX_MANA;
+                    living.STATS.MANA = living.BASE_STATS.MAX_MANA;
                     fileIndex++;
                     living.BASE_STATS.MAX_FATIGUE = Int32.Parse(parsed[fileIndex]);
-                    living.BASE_STATS.FATIGUE = 0;
+                    living.STATS.FATIGUE = 0;
                     fileIndex++;
                     living.BASE_STATS.STRENGTH = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
@@ -1702,6 +1805,7 @@ public class DatabaseManager : MonoBehaviour
         map.startIndexes = new List<int>();
         map.objMapIndexes = new List<int>();
         map.objIds = new List<int>();
+        map.enemyIds = new List<int>();
         map.unOccupiedIndexes = new List<int>();
         map.hazardIds = new List<int>();
         string lines = "";
@@ -1722,72 +1826,72 @@ public class DatabaseManager : MonoBehaviour
                 map.height = Int32.Parse(parsed[fileIndex]);
                 fileIndex++;
 
-        //        int numOfDoors = Int32.Parse(parsed[fileIndex]);
-        //        fileIndex++;
-        //        for (int i = 0; i < numOfDoors; i++)
-        //        {
-        //            map.doorIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
+                //        int numOfDoors = Int32.Parse(parsed[fileIndex]);
+                //        fileIndex++;
+                //        for (int i = 0; i < numOfDoors; i++)
+                //        {
+                //            map.doorIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
 
-        //        for (int i = 0; i < numOfDoors; i++)
-        //        {
-        //            map.roomNames.Add(parsed[fileIndex]);
-        //            fileIndex++;
-        //        }
-
-
-        //        for (int i = 0; i < numOfDoors; i++)
-        //        {
-        //            map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
+                //        for (int i = 0; i < numOfDoors; i++)
+                //        {
+                //            map.roomNames.Add(parsed[fileIndex]);
+                //            fileIndex++;
+                //        }
 
 
-        //        for (int i = 0; i < numOfDoors; i++)
-        //        {
-        //            map.startIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
-
-        //        int numOfEnemies = Int32.Parse(parsed[fileIndex]);
-        //        fileIndex++;
-        //        for (int i = 0; i < numOfEnemies; i++)
-        //        {
-        //            map.enemyIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
-
-        //        int numOfHazards = Int32.Parse(parsed[fileIndex]);
-        //        fileIndex++;
-        //        for (int i = 0; i < numOfHazards; i++)
-        //        {
-        //            map.hazardIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
-
-        //        int numOfShops = Int32.Parse(parsed[fileIndex]);
-        //        fileIndex++;
-        //        for (int i = 0; i < numOfShops; i++)
-        //        {
-        //            map.shopIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
-
-        //        int numOfObjs = Int32.Parse(parsed[fileIndex]);
-        //        fileIndex++;
-        //        for (int i = 0; i < numOfObjs; i++)
-        //        {
-        //            map.objMapIndexes.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
+                //        for (int i = 0; i < numOfDoors; i++)
+                //        {
+                //            map.roomIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
 
 
-        //        for (int i = 0; i < numOfObjs; i++)
-        //        {
-        //            map.objIds.Add(Int32.Parse(parsed[fileIndex]));
-        //            fileIndex++;
-        //        }
+                //        for (int i = 0; i < numOfDoors; i++)
+                //        {
+                //            map.startIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
+
+                //        int numOfEnemies = Int32.Parse(parsed[fileIndex]);
+                //        fileIndex++;
+                //        for (int i = 0; i < numOfEnemies; i++)
+                //        {
+                //            map.enemyIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
+
+                //        int numOfHazards = Int32.Parse(parsed[fileIndex]);
+                //        fileIndex++;
+                //        for (int i = 0; i < numOfHazards; i++)
+                //        {
+                //            map.hazardIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
+
+                //        int numOfShops = Int32.Parse(parsed[fileIndex]);
+                //        fileIndex++;
+                //        for (int i = 0; i < numOfShops; i++)
+                //        {
+                //            map.shopIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
+
+                //        int numOfObjs = Int32.Parse(parsed[fileIndex]);
+                //        fileIndex++;
+                //        for (int i = 0; i < numOfObjs; i++)
+                //        {
+                //            map.objMapIndexes.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
+
+
+                //        for (int i = 0; i < numOfObjs; i++)
+                //        {
+                //            map.objIds.Add(Int32.Parse(parsed[fileIndex]));
+                //            fileIndex++;
+                //        }
             }
         }
 
@@ -1912,6 +2016,14 @@ public class DatabaseManager : MonoBehaviour
                                 }
                             }
                             break;
+                        case "ei":
+                            {
+                                for (int j = 0; j < parsed.Length - 1; j++)
+                                {
+                                    data.EnemyIds.Add(Int32.Parse(parsed[j + 1]));
+                                }
+                            }
+                            break;
                         case "g":
                             {
                                 for (int j = 0; j < parsed.Length - 1; j++)
@@ -2002,11 +2114,24 @@ public class DatabaseManager : MonoBehaviour
         return data;
     }
 
+    public SceneContainer GenerateScene( string name, string text, Sprite face)
+    {
+        scene.speakertext.Clear();
+        scene.speakerNames.Clear();
+        scene.speakerFace.Clear();
+
+        scene.speakerNames.Add(name);
+        scene.speakertext.Add(text);
+        scene.speakerFace.Add(face);
+
+        return scene;
+    }
     public SceneContainer GetSceneData(string name)
     {
 
         scene.speakertext.Clear();
         scene.speakerNames.Clear();
+        scene.speakerFace.Clear();
         TextAsset asset = Resources.Load("Dialogue/" + name) as TextAsset;
         if (asset)
         {
@@ -2033,7 +2158,19 @@ public class DatabaseManager : MonoBehaviour
                                     if (actorDictionary.TryGetValue(actorNum, out lines))
                                     {
                                         string[] actorParse = lines.Split(',');
-                                        scene.speakerNames.Add(actorParse[1]);
+                                        string actorName = actorParse[1];
+                                        scene.speakerNames.Add(actorName);
+                                        string shrtName = Common.GetShortName(actorName);
+                                        if (parsed.Length > 3)
+                                        {
+                                            scene.speakerFace.Add(Resources.LoadAll<Sprite>("" + shrtName + "/Face/")[Int32.Parse(parsed[3])]);
+
+                                        }
+                                        else
+                                        {
+                                            scene.speakerFace.Add(Resources.LoadAll<Sprite>("" + shrtName + "/Face/")[0]);
+
+                                        }
                                     }
 
                                     scene.speakertext.Add(parsed[2]);

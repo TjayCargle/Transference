@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DmgTextObj : MonoBehaviour
 {
-    public TextMesh text;
-    public TextMesh border;
-    public TextMesh shadow;
+    public TextMeshPro text;
+    public TextMeshPro border;
+    public TextMeshPro shadow;
     public bool isShowing = false;
     public bool loaded = false;
     private float time = 2;
@@ -24,9 +25,13 @@ public class DmgTextObj : MonoBehaviour
     {
         if (!isSetup)
         {
-            text = GetComponentsInChildren<TextMesh>()[0];
-            border = GetComponentsInChildren<TextMesh>()[1];
-            shadow = GetComponentsInChildren<TextMesh>()[2];
+            if(GetComponentsInChildren<TextMeshPro>().Length > 2)
+            {
+
+            text = GetComponentsInChildren<TextMeshPro>()[0];
+            border = GetComponentsInChildren<TextMeshPro>()[1];
+            shadow = GetComponentsInChildren<TextMeshPro>()[2];
+            }
             isSetup = true;
         }
     }
@@ -36,6 +41,7 @@ public class DmgTextObj : MonoBehaviour
         {
             if (target)
                 manager.MoveCameraAndShow(target);
+            manager.myCamera.SetCameraPosFar();
             gameObject.SetActive(true);
             isShowing = true;
             time = 0.75f;

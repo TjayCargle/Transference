@@ -69,7 +69,7 @@ public class AutoSkill : SkillScript
                 if (NEXTCOUNT <= 0)
                 {
 
-                    DatabaseManager database = GameObject.FindObjectOfType<DatabaseManager>();
+                    DatabaseManager database = Common.GetDatabase();
                     if (database != null)
                     {
                         database.LearnSkill(NEXT, OWNER);
@@ -161,7 +161,8 @@ public class AutoSkill : SkillScript
                         if (target.GetComponent<LivingObject>())
                         {
                             LivingObject liveTarget = target.GetComponent<LivingObject>();
-                            liveTarget.PSTATUS = PrimaryStatus.crippled;
+                            if (liveTarget.PSTATUS != PrimaryStatus.guarding)
+                                liveTarget.PSTATUS = PrimaryStatus.crippled;
                         }
                     }
                 }

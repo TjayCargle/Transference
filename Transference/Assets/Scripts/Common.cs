@@ -31,7 +31,8 @@ public enum State
     EventRunning,
     SceneRunning,
     FairyPhase,
-    PlayerAct
+    PlayerAct,
+    PlayerDead
 
 
 
@@ -88,11 +89,15 @@ public enum ModifiedStat
     Def,
     Res,
     Guard,
-    Speed,
+    Spd,
     Dex,
     dmg,
     all,
-    ElementBody
+    ElementBody,
+    deathAct,
+    oppAct,
+    moveAct
+
 
 }
 public enum RangeType
@@ -375,7 +380,9 @@ public enum MenuItemType
     forceEnd,
     yesPrompt,
     noPrompt,
-    hack
+    hack,
+    guard,
+    talk
 
 }
 public enum AutoAct
@@ -410,6 +417,11 @@ public enum AutoReact
     debuff,
     cripple,
     instaKill,
+    poison,
+    burn,
+    freeze,
+    confuse
+
 
 
 }
@@ -420,8 +432,8 @@ public enum PrimaryStatus
     crippled,
     great,
     tired,
-    knockedOut,
-    dead
+    dead,
+    guarding
 }
 //remove seconf
 public enum SecondaryStatus
@@ -529,19 +541,27 @@ public enum HazardType
     redirect
 
 }
-
+public enum TalkStage
+{
+    initial,
+    Stats,
+    Attack,
+    learn,
+    rejected
+}
 public enum EPType
 {
-    tactical,//prefers skills over spells or attacks
+    tactical,//prefers skills over spells or strikes
     itemist,//prefers to use items
     optimal,//priortizes using moves that will trigger opportunity attacks
-    forceful,//prefers attacks over spells or skills
+    forceful,//prefers stikes over spells or skills
     aggro,//constantly tries to attack
     finisher,//never changes target until dead
-    mystical,//prefers spells over skills or attacks
+    mystical,//prefers spells over skills or strikes
     biologist,//attempts to use status effect before anything else
     support,//will attempt to buff/debuff before anything else
     scared,//runs away to nearest door
+    patrol,//moves back and forth between 2 tiles, upon seeing enemy switch personality types
     custom
 }
 public enum EPCluster
@@ -652,7 +672,9 @@ public enum Faction
     dropsBarrier,
     dropsItem,
     dropsPassive,
-    dropsAuto
+    dropsAuto,
+    inflictsAilment,
+    inflictsDmg
 }
 
 
@@ -685,6 +707,7 @@ public struct MapDetail
     public List<int> shopIndexes;
     public List<int> objMapIndexes;
     public List<int> objIds;
+    public List<int> enemyIds;
     public Texture texture;
     public int StartingPosition;
     public List<int> unOccupiedIndexes;
@@ -696,6 +719,7 @@ public struct SceneContainer
     public int index;
     public List<string> speakerNames;
     public List<string> speakertext;
+    public List<Sprite> speakerFace;
 
 }
 public struct EventDetails
@@ -734,6 +758,8 @@ public struct MapData
     public List<int> objIds;
     public Texture texture;
     public int StartingPosition;
+    public List<int> EnemyIds;
+
 
     public float yElevation;
     public float xElevation;
@@ -844,6 +870,7 @@ public class Common : ScriptableObject
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 
+    public static Color errored = new Color(0.81569f, 0.25f, 0.00784f);
     public static Color denied = new Color(0.21569f, 0.0f, 0.00784f);
     public static Color granted = new Color(0.03137f, 0.91765f, 0.14902f);
 
@@ -856,6 +883,9 @@ public class Common : ScriptableObject
     //public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
     // public static readonly ArmorScript noArmor = new ArmorScript();
 
+    private static ManagerScript manager = null;
+    private static DatabaseManager database = null;
+
     public static BoolConatainer container = new BoolConatainer();
 
     public static EventDetails eventdetail = new EventDetails();
@@ -864,6 +894,29 @@ public class Common : ScriptableObject
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
+
+    public static ManagerScript GetManager()
+    {
+        if(manager == null)
+        {
+            manager = GameObject.FindObjectOfType<ManagerScript>();
+        }
+
+        return manager;
+    }
+
+    public static DatabaseManager GetDatabase()
+    {
+        if (database == null)
+        {
+            database = GameObject.FindObjectOfType<DatabaseManager>();
+        }
+
+        return database;
+    }
+
+
+
     public static List<EHitType> noHitList = new List<EHitType>()
     {
         EHitType.normal,
@@ -1000,7 +1053,7 @@ public class Common : ScriptableObject
                 stat = ModifiedStat.Res;
                 break;
             case SideEffect.reduceSpd:
-                stat = ModifiedStat.Speed;
+                stat = ModifiedStat.Spd;
                 break;
             case SideEffect.reduceDex:
                 stat = ModifiedStat.Dex;
@@ -1870,6 +1923,7 @@ public class Common : ScriptableObject
         detail.startIndexes.Clear();
         detail.objMapIndexes.Clear();
         detail.objIds.Clear();
+        detail.enemyIds.Clear();
         detail.hazardIds.Clear();
 
         detail.unOccupiedIndexes.Clear();
@@ -1886,6 +1940,7 @@ public class Common : ScriptableObject
         detail.shopIndexes.AddRange(data.shopIndexes);
         detail.objMapIndexes.AddRange(data.objMapIndexes);
         detail.objIds.AddRange(data.objIds);
+        detail.enemyIds.AddRange(data.EnemyIds);
         detail.StartingPosition = data.StartingPosition;
 
         detail.hazardIds.AddRange(data.glyphIds);
@@ -1934,6 +1989,7 @@ public class Common : ScriptableObject
 
         detail.shopIndexes.AddRange(data.shopIndexes);
         detail.objMapIndexes.AddRange(data.objMapIndexes);
+        detail.EnemyIds.AddRange(data.enemyIds);
         detail.objIds.AddRange(data.objIds);
         detail.StartingPosition = data.StartingPosition;
 

@@ -89,9 +89,9 @@ public class PassiveSkill : SkillScript
 
                 break;
             case ModifiedStat.FTCharge:
-                if(PERCENT < 0)
+                if (PERCENT < 0)
                 {
-                DESC = "Decreases FT charge by " + ModValues[0].ToString() + "%";
+                    DESC = "Decreases FT charge by " + ModValues[0].ToString() + "%";
                 }
                 else
                 {
@@ -105,7 +105,7 @@ public class PassiveSkill : SkillScript
             case ModifiedStat.ElementDmg:
 
                 // DESC = ModElements[0] + " and "+ModElements[1]+" attacks do "+ModValues[0].ToString()+"% more dmg ";
-                DESC = ModElements[0] + " and " + ModElements[1] + " attacks do "+ (ModValues[0] / 100)+"x more dmg. This DOES stack with other passives. ";
+                DESC = ModElements[0] + " and " + ModElements[1] + " attacks do " + (ModValues[0] / 100) + "x more dmg. This DOES stack with other passives. ";
                 break;
             case ModifiedStat.Movement:
                 break;
@@ -127,7 +127,7 @@ public class PassiveSkill : SkillScript
             case ModifiedStat.Guard:
                 DESC = "Increases Defense, Resistance, and Speed  by " + ModValues[0].ToString() + "%"; ;
                 break;
-            case ModifiedStat.Speed:
+            case ModifiedStat.Spd:
                 DESC = "Increases Speed by " + ModValues[0].ToString() + "%"; ;
                 break;
             case ModifiedStat.Dex:
@@ -138,6 +138,16 @@ public class PassiveSkill : SkillScript
             case ModifiedStat.none:
                 break;
             case ModifiedStat.all:
+                break;
+            case ModifiedStat.ElementBody:
+                break;
+            case ModifiedStat.deathAct:
+                DESC = "Gain an additional action point after defeating an enemy";
+                break;
+            case ModifiedStat.oppAct:
+                break;
+            case ModifiedStat.moveAct:
+                DESC = "No action points are used when moving.";
                 break;
         }
     }

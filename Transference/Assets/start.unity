@@ -1069,7 +1069,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Sept 29th build
+  m_text: Nov 27th build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3442,7 +3442,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Sept 29th build
+  m_text: Nov 27th build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3470,7 +3470,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 29.95
+  m_fontSize: 31.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3511,7 +3511,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 594743949}
-    characterCount: 15
+    characterCount: 14
     spriteCount: 0
     spaceCount: 2
     wordCount: 3
@@ -8052,7 +8052,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Sept 29th build
+  m_text: Nov 27th build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9997,39 +9997,56 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "-------------Sept 29th--------------\n-Resistances have changed for all
-    characters and barriers for balance\r\n-Strikes now use character's HEALTH as
-    cost.\r\n-Strikes, Skills, and Spell costs are now ALL % based.\r\n-\"Skl\" renamed
-    to \"Dex\" Skill -> Dexterity\r\n-Strikes damage is now calculated by Dexterity
-    vs Speed\r\n-\"SKL Level\" renamed to \"Dex Level\"\r\n-Higher Physical Levels
-    will reduce the % cost of Skills that COST fatigue\r\n-Higher Magical Levels will
-    reduce the % cost of Spells\r\n-Higher Dex Levels will reduce the % cost of Strikes
-    \r\n-thunder moves changed to \"zap\"\r\n-Buffs and Debuffs boost or reduce a
-    sats by 20% at level 1.\r\n-Enemy skills now level up \r\n-Can no longer miss
-    when attacking an object such as a coffin\r\n-Chance of inflicting ailments (i.e.
-    burn is now based on User's MAGIC)\r\n-Chance of landing a critical hit is now
-    based on STRENGTH(yes this includes for Spells and Strikes)\r\nNow all attacks
-    have a chance to crit. Some moves upon leveling up still grant an ADDITIONAL boost
-    to the crit chance.\r\n-prompt asks u to forget a skill if u would learn a new
-    skill that exceeds your skill slots\r\n-When next to a SINGLE glyph, an option
-    to \"Hack\" will appear.\r\n-Hacking mini game is now implemented to instantly
-    defeat Glyphs\r\nNo exp will be earned from defeating a glyph via hacking but
-    you still will recieve their skill.\n-New map \"Foyer\" added. Connects to private
-    study and the Lesson room.\n-Control Glyph added. Upon defeat, it reveals a hidden
-    path of tiles that were not there previously.\n-------------Sept 20th--------------\nBug
-    Fixes only, no new changes.\n-Keyboard shortcut for battle log is now actually
-    L.\n-Shop bug fixed.\n-Mispellings cocrrected.\n-Battle log text for #color corrected\n\n-------------Sept
-    15th--------------\nMore Quality of life changes added.\r\n\n-There is now a \"Turn
-    Order\" displayed at the top.\r\n\nAs long as a character hasn't selected an attack
-    or to move then the player\r\ncan switch between the party members by clicking
-    their image or using \"Q\" and \"E.\"\r\n\n-The keyboard shortcut for Battle Log
-    has moved to \"L\"\r\n\n-Opportunity Attacks have been re-worked and now work
-    like regular attacks except you can only get to them when an ally hits with a
-    specific element.\n\n-Jax and Zeffrons starting skills have changed slightly.\r\n\nJax's
-    default stats have been edited.\r\n-Leveling up skill in shop now only levels
-    up the skill 2 times instead of 5.\r\n\n-There is now text at the bottom that
-    displays name of the room.\r\n\n-Shadows no longer stay behind when a plaer character
-    dies.\r\n\n-Lounge has been fixed."
+  m_text: "-------------Nov 27th---------------\n-Fixed bug with \"Spd\" not found.\n-Added
+    icons to healing and charging.\n-edited music in game over? and shop.\n-added
+    keyboard shortcuts Z,X,C for hacking mini game.\n-Slight change to colors and
+    transparency in various locations.\n-------------Nov 26th---------------\n-Added
+    \"critical\" weakness icon to upper left of character. (still testing)\n-Added
+    guard option\r\n\"Guard Charge\" will reduce damage from attacks and also charge
+    the Fatigue meter.\r\nSimilar to the \"Wait\" option it will charge the Fatigue
+    meter more based on how many actions the user has and end their turn.\r\n-Added
+    talk option\r\nWhen next to an enemy a \"Talk\" option will appear.\r\nAfter talking
+    a few times and fufilling requriements the enemy will give you an item that will
+    summon them as an ally.\r\n*Note* this is still early and there may be several
+    issues surrounding this.\n-changed the order/color displayed for stats and updated
+    descriptions in the detail screen\r\n-fixed bug so friendly fire is back in\r\n-fixed
+    delay and restructured attacks in general\r\n-fixed some keyboard controls\r\n-Added
+    more faces for Jax and Zeffron in scenes.\n-------------Oct 25th---------------\n-Fixed
+    bug with not being able to see passives\n-Fixed bug with Fatigure not updating
+    properly\n-Fixed bug with Glyphs not showing attacks\n-Updated image for hacking
+    mini game.\n-------------Oct 24th---------------\n-Added movement/flying animations
+    for Jax and Zeffron.\r\nNote when selecting a tile to move to they will directly
+    go towards that tile.\r\nThis will be updated in the future to work like enemy
+    movement.\r\n-Added \"Glyoh Core\" item that can only be obtained from winning
+    the hacking mini game.\r\nGlyph Core is an item that gives 3 action points to
+    target ally or user.\r\n-Names of some attacks have changed. More Strikes added\r\n-New
+    animations depending on wether an attack is a strike/skill/spell and are shorter\r\n
+    Note some sound effects will be changed later.\r\n-Animations no longer play per
+    enemy but damage numbers do pop up per hit still.\r\n-Changed how characters are
+    loaded into levels so fix errors with foyer and other rooms.\r\n-Skills slightly
+    changed for Jax.\r\n-Hp used when using a stike is no longer displayed.\r\nFixed
+    issue with strikes useing health per enemy.\r\n-Scorpiee Pawn Face Image updated\r\n-Enemy
+    AI slightly updated.\r\n-Enemies now showcase their attacks better.\r\n-Fixed
+    issues with battle log, but caused a color issue that is still being looked into\n-------------Sept
+    29th--------------\n-Resistances have changed for all characters and barriers
+    for balance\r\n-Strikes now use character's HEALTH as cost.\r\n-Strikes, Skills,
+    and Spell costs are now ALL % based.\r\n-\"Skl\" renamed to \"Dex\" Skill -> Dexterity\r\n-Strikes
+    damage is now calculated by Dexterity vs Speed\r\n-\"SKL Level\" renamed to \"Dex
+    Level\"\r\n-Higher Physical Levels will reduce the % cost of Skills that COST
+    fatigue\r\n-Higher Magical Levels will reduce the % cost of Spells\r\n-Higher
+    Dex Levels will reduce the % cost of Strikes \r\n-thunder moves changed to \"zap\"\r\n-Buffs
+    and Debuffs boost or reduce a sats by 20% at level 1.\r\n-Enemy skills now level
+    up \r\n-Can no longer miss when attacking an object such as a coffin\r\n-Chance
+    of inflicting ailments (i.e. burn is now based on User's MAGIC)\r\n-Chance of
+    landing a critical hit is now based on STRENGTH(yes this includes for Spells and
+    Strikes)\r\nNow all attacks have a chance to crit. Some moves upon leveling up
+    still grant an ADDITIONAL boost to the crit chance.\r\n-prompt asks u to forget
+    a skill if u would learn a new skill that exceeds your skill slots\r\n-When next
+    to a SINGLE glyph, an option to \"Hack\" will appear.\r\n-Hacking mini game is
+    now implemented to instantly defeat Glyphs\r\nNo exp will be earned from defeating
+    a glyph via hacking but you still will recieve their skill.\n-New map \"Foyer\"
+    added. Connects to private study and the Lesson room.\n-Control Glyph added. Upon
+    defeat, it reveals a hidden path of tiles that were not there previously."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10057,7 +10074,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 23.1
+  m_fontSize: 19.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10098,12 +10115,12 @@ MonoBehaviour:
   m_margin: {x: 1.6833255, y: 5.884517, z: 4.1227107, w: 222.75206}
   m_textInfo:
     textComponent: {fileID: 1989601720}
-    characterCount: 2541
+    characterCount: 3962
     spriteCount: 0
-    spaceCount: 438
-    wordCount: 427
+    spaceCount: 651
+    wordCount: 655
     linkCount: 0
-    lineCount: 60
+    lineCount: 72
     pageCount: 1
     materialCount: 1
   m_havePropertiesChanged: 0

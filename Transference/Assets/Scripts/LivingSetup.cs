@@ -26,7 +26,7 @@ public class LivingSetup : MonoBehaviour
     {
         if (!isSetup)
         {
-            dm = GameObject.FindObjectOfType<DatabaseManager>();
+            dm = Common.GetDatabase();
             if (!dm.isSetup)
             {
                 dm.Setup();
