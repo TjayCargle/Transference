@@ -33,29 +33,13 @@ public class SecondStatusScript : MonoBehaviour {
     public void ReduceCount(ManagerScript manager, LivingObject living)
     {
         float chance = Random.Range(0, 2);
-        Debug.Log("Chance = " + chance);
-        switch (status)
-        {
-            case SecondaryStatus.slow:
-                break;
-            case SecondaryStatus.rage:
-                break;
-            case SecondaryStatus.charm:
-                break;
-            case SecondaryStatus.seal:
-                break;
       
-        }
-
         COUNTDOWN--;
         if(COUNTDOWN < 0)
         {
             if(GetComponent<LivingObject>())
             {
-                if(status == SecondaryStatus.slow)
-                {
-                    GetComponent<LivingObject>().STATS.MOVE_DIST -= Mathf.RoundToInt(GetComponent<LivingObject>().STATS.MOVE_DIST * 0.5f);
-                }
+      
 
                 GetComponent<LivingObject>().SSTATUS = SecondaryStatus.normal;
             }

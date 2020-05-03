@@ -80,12 +80,12 @@ public class HazardManager : MonoBehaviour
                 if (skilloratk == 0)
                 {
                      
-                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(5, 8);
                 }
                 else
                 {
                      
-                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(5, 8);
                 }
                 hazard.Setup();
                 hazards.Add(hazard);
@@ -163,12 +163,12 @@ public class HazardManager : MonoBehaviour
                 if (skilloratk == 0)
                 {
                      
-                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(5, 8);
                 }
                 else
                 {
                      
-                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(0, 5);
+                    hazard.REWARD = (Random.Range(1, 7) * 10) + Random.Range(5, 8);
                 }
                 hazard.Setup();
                 hazards.Add(hazard);

@@ -55,8 +55,11 @@ public class TextEventManager : MonoBehaviour
                         currentEvent.START();
                     }
                     if (flavor)
-                        if (flavor.myText)
-                            flavor.myText.text = currentEvent.data;
+                    {
+                        flavor.theText = currentEvent.data;
+                        flavor.SetText();
+                    }
+
 
                     //     Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 

@@ -34,38 +34,48 @@ public class LivingObject : GridObject
     [SerializeField]
     private InventoryScript inventory;
     public int refreshState;
-    private int physLevel = 1;
-    private int magLevel = 1;
-    private int dexLevel = 1;
+    [SerializeField]
+    protected int physLevel = 0;
+    [SerializeField]
+    protected int magLevel = 0;
+    [SerializeField]
+    protected int dexLevel = 0;
     private bool tookAction = false;
-    protected GameObject shadow;
-    protected GameObject barrier;
-    protected GameObject worstWeakness;
-    protected GameObject highestDamage;
+    protected ShadowObject shadow;
+    protected SpriteObject barrier;
+    protected SpriteObject worstWeakness;
+    protected SpriteObject highestDamage;
+    protected List<SpriteObject> ailments;
 
     private ArmorScript defaultArmor;
     public List<TileScript> moveableTiles = new List<TileScript>();
-    public GameObject SHADOW
+    public ShadowObject SHADOW
     {
         get { return shadow; }
         set { shadow = value; }
     }
-    public GameObject BARRIER
+    public SpriteObject BARRIER
     {
         get { return barrier; }
         set { barrier = value; }
     }
 
-    public GameObject WEAKNESS
+    public SpriteObject WEAKNESS
     {
         get { return worstWeakness; }
         set { worstWeakness = value; }
     }
 
-    public GameObject DMGICON
+    public SpriteObject DMGICON
     {
         get { return highestDamage; }
         set { highestDamage = value; }
+    }
+
+    public List<SpriteObject> AILMENTS
+    {
+        get { return ailments; }
+        set { ailments = value; }
     }
 
     public InventoryScript INVENTORY
@@ -80,9 +90,13 @@ public class LivingObject : GridObject
         set
         {
             pStatus = value;
-            if (PSTATUS != PrimaryStatus.normal)
+            if (PSTATUS == PrimaryStatus.crippled)
             {
                 refreshState = 2;
+            }
+            if (PSTATUS == PrimaryStatus.guarding)
+            {
+                refreshState = 1;
             }
         }
     }
@@ -92,11 +106,7 @@ public class LivingObject : GridObject
         get { return sStatus; }
         set { sStatus = value; }
     }
-    public StatusEffect ESTATUS
-    {
-        get { return eStatus; }
-        set { eStatus = value; }
-    }
+
     public skillSlots PHYSICAL_SLOTS
     {
         get { return physicalSlots; }
@@ -154,6 +164,20 @@ public class LivingObject : GridObject
                     if (myManager.liveEnemies.Count == 0)
                     {
                         bypass = 100;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < myManager.liveEnemies.Count; i++)
+                        {
+                            if (myManager.liveEnemies[i].GetComponent<HazardScript>())
+                            {
+                                if ((myManager.liveEnemies[i] as HazardScript).HTYPE == HazardType.movement)
+                                {
+                                    bypass = 1;
+
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -219,7 +243,7 @@ public class LivingObject : GridObject
     }
     public int HEALTH
     {
-        get { return STATS.HEALTH + BASE_STATS.HEALTH; }
+        get { return STATS.HEALTH; }
     }
     public int MAX_MANA
     {
@@ -240,7 +264,7 @@ public class LivingObject : GridObject
     }
     public int LEVEL
     {
-        get { return BASE_STATS.LEVEL; }
+        get { return physLevel + magLevel + dexLevel; }
     }
     public int PHYSLEVEL
     {
@@ -267,18 +291,15 @@ public class LivingObject : GridObject
         int prevHealth = HEALTH;
         if (val > 0 && HEALTH >= MAX_HEALTH)
         {
-            STATS.HEALTH = 0;
-            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
             return false;
         }
-        if (val + HEALTH > MAX_HEALTH)
+
+        STATS.HEALTH += val;
+
+        if (STATS.HEALTH > MAX_HEALTH)
         {
-            STATS.HEALTH = STATS.MAX_HEALTH;
-            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
-        }
-        else
-        {
-            STATS.HEALTH += val;
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 
         }
 
@@ -304,7 +325,7 @@ public class LivingObject : GridObject
 
             if (prevHealth < postHealth)
             {
-                myManager.CreateDmgTextEvent( "<sprite=2> "+ healedVal.ToString(), Color.green, this);
+                myManager.CreateDmgTextEvent("<sprite=2> " + healedVal.ToString(), Color.green, this);
             }
             else if (healedVal != 0)
             {
@@ -328,16 +349,12 @@ public class LivingObject : GridObject
         STATS.MANA += val;
 
 
-        if (MANA > MAX_MANA)
+        if (STATS.MANA > MAX_MANA)
         {
             STATS.MANA = BASE_STATS.MAX_MANA;
-           // BASE_STATS.MANA = BASE_STATS.MAX_MANA;
+            // BASE_STATS.MANA = BASE_STATS.MAX_MANA;
         }
-        else
-        {
-            STATS.MANA += val;
 
-        }
         if (MANA <= 0)
         {
             STATS.MANA = 0;// -1 * MAX_MANA;
@@ -373,12 +390,12 @@ public class LivingObject : GridObject
         if (FATIGUE > MAX_FATIGUE)
         {
             STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
-         
+
         }
 
         if (FATIGUE < 0)
         {
-            
+
             STATS.FATIGUE = 0;// -1 * MAX_FATIGUE;
         }
 
@@ -525,7 +542,7 @@ public class LivingObject : GridObject
             modifiedStats = GetComponent<ModifiedStats>();
             baseStats.USER = this;
             modifiedStats.USER = this;
-            baseStats.HEALTH = this.baseStats.MAX_HEALTH;
+            modifiedStats.HEALTH = this.baseStats.MAX_HEALTH;
             modifiedStats.Reset(true);
             modifiedStats.type = 1;
 
@@ -606,42 +623,36 @@ public class LivingObject : GridObject
                 GetComponent<HazardSetup>().Setup();
 
             }
-            if (!gameObject.GetComponent<AnimationScript>())
+
+
+
+            if (BASE_STATS.STRENGTH > BASE_STATS.MAGIC && BASE_STATS.STRENGTH > BASE_STATS.DEX)
+                physLevel++;
+            else if (BASE_STATS.MAGIC > BASE_STATS.STRENGTH && BASE_STATS.MAGIC > BASE_STATS.DEX)
+                magLevel++;
+            else if (BASE_STATS.DEX > BASE_STATS.MAGIC && BASE_STATS.DEX > BASE_STATS.STRENGTH)
+                dexLevel++;
+            else
             {
-                gameObject.AddComponent<AnimationScript>();
+                dexLevel++;
             }
-            gameObject.GetComponent<AnimationScript>().Setup();
 
             if (SHADOW == null)
             {
-                shadow = new GameObject();
-                shadow.name = "Shadow";
-                shadow.transform.parent = this.transform;
-                shadow.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
-                shadow.transform.localPosition = new Vector3(0, 0, 0.1f);
-                shadow.AddComponent<SpriteRenderer>();
+                shadow = new GameObject().AddComponent<ShadowObject>();
+     
             }
-            if (!shadow.GetComponent<AnimationScript>())
-            {
-                shadow.AddComponent<AnimationScript>();
+            shadow.USER = this;
+            shadow.REALUSER = this;
+            shadow.Setup();
+       
+            shadow.ANIM.runtimeAnimatorController = ANIM.anim.runtimeAnimatorController;
 
-            }
-            AnimationScript ShadowAnimation = shadow.GetComponent<AnimationScript>();
-            ShadowAnimation.obj = this;
-            if (!shadow.GetComponent<Animator>())
-            {
-                shadow.gameObject.AddComponent<Animator>();
-            }
-            Animator shadowAnimator = shadow.gameObject.GetComponent<Animator>();
-            shadowAnimator.runtimeAnimatorController = GetComponent<AnimationScript>().anim.runtimeAnimatorController;
-            ShadowAnimation.render = shadow.GetComponent<SpriteRenderer>();
-            ShadowAnimation.me = this;
-            ShadowAnimation.Setup();
-            SpriteRenderer shadowRender = shadow.GetComponent<SpriteRenderer>();
+            SpriteRenderer shadowRender = shadow.SPRITE.sr;
             shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
             shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
             shadowRender.material = myManager.ShadowMaterial;
-            GetComponent<AnimationScript>().SHADOWANIM = shadow.GetComponent<Animator>();
+            ANIM.SHADOWANIM = shadow.ANIM;
 
             if (INVENTORY.WEAPONS.Count > 0)
             {
@@ -650,35 +661,70 @@ public class LivingObject : GridObject
 
             if (BARRIER == null)
             {
-                barrier = new GameObject();
+                barrier = new GameObject().AddComponent<SpriteObject>();
                 barrier.name = "Barrier";
                 barrier.transform.parent = this.transform;
                 barrier.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
                 barrier.transform.localPosition = new Vector3(0.25f, 0.25f, 0.1f);
-                barrier.AddComponent<SpriteRenderer>();
+                barrier.gameObject.AddComponent<SpriteRenderer>();
             }
-
+            barrier.Setup();
             if (WEAKNESS == null)
             {
-                worstWeakness = new GameObject();
+                worstWeakness = new GameObject().AddComponent<SpriteObject>();
                 worstWeakness.name = "Weakness Icon";
                 worstWeakness.transform.parent = this.transform;
                 worstWeakness.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
-                worstWeakness.transform.localPosition = new Vector3(-0.35f, 0.35f, 0.5f);
-             SpriteRenderer worstSprite =  worstWeakness.AddComponent<SpriteRenderer>();
-                worstSprite.color = new Color(1, 1, 1, 0.4f);
+                worstWeakness.transform.localPosition = new Vector3(-0.35f, 0.35f, -0.1f);
+                SpriteRenderer worstSprite = worstWeakness.gameObject.AddComponent<SpriteRenderer>();
+                worstSprite.color = new Color(1, 1, 1, 0.6f);
+                worstWeakness.Setup();
                 updateWeaknessIcon();
             }
-
-            if (DMGICON == null)
+            if (AILMENTS == null)
             {
-                highestDamage = new GameObject();
-                highestDamage.name = "Damage Icon";
-                highestDamage.transform.parent = this.transform;
-                highestDamage.transform.localScale = new Vector3(0.2f, 0.2f, 1.0f);
-                highestDamage.transform.localPosition = new Vector3(-0.35f, -0.15f, 0.1f);
-                highestDamage.AddComponent<SpriteRenderer>();
-                // updateDmgIcon();
+                AILMENTS = new List<SpriteObject>();
+                float startingX = -0.35f;
+                for (int i = 0; i < 6; i++)
+                {
+                    SpriteObject anAilment = new GameObject().AddComponent<SpriteObject>();
+                    anAilment.name = FullName + " Ailment " + i;
+                    anAilment.transform.parent = this.transform;
+                    anAilment.transform.localScale = new Vector3(0.2f, 0.2f, 1.0f);
+                    anAilment.transform.localPosition = new Vector3(startingX, 0.65f, -0.1f);
+                    SpriteRenderer ailmentSprite = anAilment.gameObject.AddComponent<SpriteRenderer>();
+                    anAilment.Setup();
+                    ailmentSprite.color = new Color(1, 1, 1, 0.8f);
+                    startingX += 0.15f;
+                    AILMENTS.Add(anAilment);
+                }
+            }
+            updateAilmentIcons();
+            //if (DMGICON == null)
+            //{
+            //    highestDamage = new GameObject();
+            //    highestDamage.name = "Damage Icon";
+            //    highestDamage.transform.parent = this.transform;
+            //    highestDamage.transform.localScale = new Vector3(0.2f, 0.2f, 1.0f);
+            //    highestDamage.transform.localPosition = new Vector3(-0.35f, -0.15f, 0.1f);
+            //    highestDamage.AddComponent<SpriteRenderer>();
+            //    // updateDmgIcon();
+            //}
+
+
+            if (!ARMOR.SCRIPT)
+            {
+
+                if (DEFAULT_ARMOR)
+                {
+                    ARMOR.Equip(DEFAULT_ARMOR);
+
+                }
+                else
+                {
+                    ARMOR.Equip(new ArmorScript());
+
+                }
             }
 
             if (ARMOR.HITLIST != Common.noHitList)
@@ -691,17 +737,6 @@ public class LivingObject : GridObject
                 else
                 {
 
-                }
-            }
-            if (!ARMOR.SCRIPT)
-            {
-                if (DEFAULT_ARMOR)
-                {
-                    ARMOR.Equip(DEFAULT_ARMOR);
-                }
-                else
-                {
-                    ARMOR.Equip(new ArmorScript());
                 }
             }
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
@@ -739,10 +774,71 @@ public class LivingObject : GridObject
                             worstIndex = i;
                         }
                     }
-                    WEAKNESS.GetComponent<SpriteRenderer>().sprite = invmger.ELEMENTS[worstIndex];
+                    WEAKNESS.sr.sprite = invmger.ELEMENTS[worstIndex];
+                    WEAKNESS.sr.color = new Color(1, 1, 1, 0.6f);
                 }
             }
         }
+    }
+
+    public void updateAilmentIcons()
+    {
+
+        ManagerScript manager = Common.GetManager();
+        if (manager)
+        {
+            StatusIconManager iconManager = manager.iconManager;
+
+            if (iconManager)
+            {
+
+                int almentIndex = 0;
+                if (PSTATUS == PrimaryStatus.crippled)
+                {
+                    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Crippled];
+                    almentIndex++;
+                }
+                if (PSTATUS == PrimaryStatus.guarding)
+                {
+                    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
+                    almentIndex++;
+                }
+                for (int i = 0; i < INVENTORY.EFFECTS.Count; i++)
+                {
+                    if (almentIndex < 6)
+                    {
+                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.EffectToIcon(INVENTORY.EFFECTS[i].EFFECT)];
+                        almentIndex++;
+                    }
+                }
+
+                for (int i = 0; i < INVENTORY.BUFFS.Count; i++)
+                {
+                    if (almentIndex < 6)
+                    {
+                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.BUFFS[i].BUFF)];
+                        almentIndex++;
+                    }
+                }
+
+                for (int i = 0; i < INVENTORY.DEBUFFS.Count; i++)
+                {
+                    if (almentIndex < 6)
+                    {
+                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
+                        almentIndex++;
+                    }
+                }
+                if (almentIndex < 6)
+                {
+                    for (int i = almentIndex; i < 6; i++)
+                    {
+                        AILMENTS[almentIndex].sr.sprite = null;
+                    }
+                }
+            }
+        }
+
     }
 
     public void updateDmgIcon()
@@ -853,6 +949,7 @@ public class LivingObject : GridObject
     {
         TakeRealAction();
         myManager.myCamera.UpdateCamera();
+
         myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
         return true;
     }
@@ -872,6 +969,13 @@ public class LivingObject : GridObject
         TakeRealAction();
         return true;
     }
+    public void Refresh()
+    {
+        tookAction = false;
+        PSTATUS = PrimaryStatus.normal;
+        refreshState = 0;
+        updateAilmentIcons();
+    }
     public void Wait()
     {
         GridAnimationObj gao = null;
@@ -883,7 +987,7 @@ public class LivingObject : GridObject
         myManager.menuManager.ShowNone();
         myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
-        myManager.CreateTextEvent(this, NAME + " decided to wait", "wait event", myManager.CheckText, myManager.TextStart);
+        myManager.CreateTextEvent(this, "Wait & Heal", "wait event", myManager.CheckText, myManager.TextStart);
         if (myManager.log)
         {
             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
@@ -898,14 +1002,14 @@ public class LivingObject : GridObject
     {
         GridAnimationObj gao = null;
         gao = myManager.PrepareGridAnimation(null, this);
-        gao.type = -3;
+        gao.type = -4;
         gao.magnitute = 0;
         gao.LoadGridAnimation();
 
         myManager.menuManager.ShowNone();
         myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
-        myManager.CreateTextEvent(this, NAME + " decided to guard", "guard event", myManager.CheckText, myManager.TextStart);
+        myManager.CreateTextEvent(this, "Guard Charge", "guard event", myManager.CheckText, myManager.TextStart);
         if (myManager.log)
         {
             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
@@ -921,15 +1025,15 @@ public class LivingObject : GridObject
         ChangeHealth((int)(0.25f * MAX_HEALTH) * (actions + 1));
         ChangeMana((int)(0.25f * MAX_MANA) * (actions + 1));
         ChangeFatigue((int)(0.25f * MAX_FATIGUE) * (actions + 1));
-     //   Debug.Log(NAME + " pre: " + modifiedStats.MANA);
-       // float t1 = ((int)(0.15 * MAX_MANA) * (actions + 1));
-       // Debug.Log(NAME + " test: " + t1 + " actions:" + actions);
+        //   Debug.Log(NAME + " pre: " + modifiedStats.MANA);
+        // float t1 = ((int)(0.15 * MAX_MANA) * (actions + 1));
+        // Debug.Log(NAME + " test: " + t1 + " actions:" + actions);
 
-       // modifiedStats.HEALTH += (int)(0.25f * MAX_HEALTH) * (actions + 1);
-       // modifiedStats.MANA += ((int)(0.25f * MAX_MANA) * (actions + 1));
-       // modifiedStats.FATIGUE -= ((int)(0.25f * MAX_FATIGUE) * (actions + 1));
-    //    Debug.Log(NAME + " post: " + modifiedStats.MANA);
-  
+        // modifiedStats.HEALTH += (int)(0.25f * MAX_HEALTH) * (actions + 1);
+        // modifiedStats.MANA += ((int)(0.25f * MAX_MANA) * (actions + 1));
+        // modifiedStats.FATIGUE -= ((int)(0.25f * MAX_FATIGUE) * (actions + 1));
+        //    Debug.Log(NAME + " post: " + modifiedStats.MANA);
+
 
 
         float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
@@ -946,6 +1050,13 @@ public class LivingObject : GridObject
         ACTIONS = 0;
         tookAction = false;
 
+    }
+
+    public void turnUpdate(int bonus = 0)
+    {
+        ChangeHealth(2 + bonus);
+        ChangeMana(2 + bonus);
+        ChangeFatigue(2 + bonus);
     }
 
     public void TrueCharge()
@@ -972,16 +1083,17 @@ public class LivingObject : GridObject
 
         PSTATUS = PrimaryStatus.guarding;
         ACTIONS = 0;
+        updateAilmentIcons();
         tookAction = false;
 
     }
     public void LevelUp()
     {
-        if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
+        if (false)// (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
         {
             BASE_STATS.LEVEL++;
             BASE_STATS.MAX_HEALTH += dexLevel;
-            BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
             BASE_STATS.MAX_MANA += magLevel;
             BASE_STATS.MAX_MANA = BASE_STATS.MAX_MANA;
             BASE_STATS.MAX_FATIGUE += physLevel;
@@ -1002,7 +1114,7 @@ public class LivingObject : GridObject
         BASE_STATS.EXP += val;
 
     }
-    public void GainPhysExp(int val)
+    public void GainPhysExp(int val, bool show = true)
     {
         BASE_STATS.PHYSEXP += val;
         if (BASE_STATS.PHYSEXP > 100)
@@ -1015,14 +1127,36 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-            BASE_STATS.STRENGTH++;
-            BASE_STATS.DEFENSE++;
+            BASE_STATS.STRENGTH+= 2 + physLevel;
+            BASE_STATS.DEFENSE+= 2 + physLevel;
+            BASE_STATS.MAGIC+= 1 + magLevel;
+            BASE_STATS.RESIESTANCE+= 1 + magLevel;
+            BASE_STATS.SPEED+= 1 + dexLevel;
+            BASE_STATS.DEX+= 1 + dexLevel;
+
             BASE_STATS.PHYSEXP = 0;
             physLevel++;
-            BASE_STATS.FTCOSTCHANGE -= 0.05f;
+            BASE_STATS.FTCOSTCHANGE += 1;
+
+
+            //BASE_STATS.MAX_FATIGUE += 5 + physLevel;
+
+           // BASE_STATS.MAX_MANA += 2 + magLevel;
+            //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            if (show)
+            {
+               // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
+                myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+                //myManager.CreateDmgTextEvent("<sprite=0>  + " + (5 + physLevel), Color.yellow, this);
+                //myManager.CreateDmgTextEvent("DEF + " + 2, Color.yellow, this);
+                //myManager.CreateDmgTextEvent("STR + " + 2, Color.yellow, this);
+                myManager.CreateDmgTextEvent("PHYS LV + " + 1, Color.yellow, this, 1.2f);
+            }
+
+
         }
     }
-    public void GainMagExp(int val)
+    public void GainMagExp(int val, bool show = true)
     {
         BASE_STATS.MAGEXP += val;
         if (BASE_STATS.MAGEXP > 100)
@@ -1035,33 +1169,68 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-            BASE_STATS.MAGIC++;
-            BASE_STATS.RESIESTANCE++;
+            BASE_STATS.STRENGTH += 1 + physLevel;
+            BASE_STATS.DEFENSE += 1 + physLevel;
+            BASE_STATS.MAGIC+= 2 + magLevel;
+            BASE_STATS.RESIESTANCE+= 2 + magLevel;
+            BASE_STATS.SPEED+= 1 + dexLevel;
+            BASE_STATS.DEX+= 1 + dexLevel;
+
             BASE_STATS.MAGEXP = 0;
             magLevel++;
-            BASE_STATS.SPCHANGE -= 0.05f;
+            BASE_STATS.MANACHANGE += 1;
+
+            //BASE_STATS.MAX_MANA += 5 + magLevel;
+            STATS.MANA = BASE_STATS.MAX_MANA;
+
+            //BASE_STATS.MAX_FATIGUE += 2 + physLevel;
+            //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            if (show)
+            {
+               // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
+                myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+              //  myManager.CreateDmgTextEvent("<sprite=1>  + " + (5 +magLevel), Color.magenta, this);
+                //myManager.CreateDmgTextEvent("RES + " + 2, Color.magenta, this);
+                //myManager.CreateDmgTextEvent("MAG + " + 2, Color.magenta, this);
+                myManager.CreateDmgTextEvent("MYST LV + " + 1, Color.magenta, this, 1.2f);
+            }
         }
     }
-    public void GainDexExp(int val)
+    public void GainDexExp(int val, bool show = true)
     {
         BASE_STATS.SKILLEXP += val;
         if (BASE_STATS.SKILLEXP > 100)
         {
-            //float chance = Random.Range(0, 2);
-            //if (chance > 0)
-            {
-                BASE_STATS.SPEED++;
-                BASE_STATS.DEX++;
 
-            }
-            //else
-            {
-            }
+            BASE_STATS.STRENGTH += 1 + physLevel;
+            BASE_STATS.DEFENSE += 1 + physLevel;
+            BASE_STATS.MAGIC+= 2 + magLevel;
+            BASE_STATS.RESIESTANCE+= 2 + magLevel;
+            BASE_STATS.SPEED+= 1 + dexLevel;
+            BASE_STATS.DEX+= 1 + dexLevel;
+
             BASE_STATS.SKILLEXP = 0;
             dexLevel++;
-            BASE_STATS.HPCOSTCHANGE -= 0.05f;
+            BASE_STATS.HPCOSTCHANGE += 1;
+
+           // BASE_STATS.MAX_HEALTH += 5 + dexLevel;
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
+           // BASE_STATS.MAX_FATIGUE += 2 + physLevel;
+           // BASE_STATS.MAX_MANA += 2 + magLevel;
+            if (show)
+            {
+             //   myManager.CreateDmgTextEvent("<sprite=0>  + " + (2+physLevel), Color.yellow, this);
+             //   myManager.CreateDmgTextEvent("<sprite=1>  + " + (2+magLevel), Color.magenta, this);
+                myManager.CreateDmgTextEvent("<sprite=2> + " + ( 5+ dexLevel), Color.green, this);
+                //myManager.CreateDmgTextEvent("Spd + " + 2, Color.green, this);
+                //myManager.CreateDmgTextEvent("Dex + " + 2, Color.green, this);
+                myManager.CreateDmgTextEvent("SPRT LV + " + 1, Color.green, this, 1.2f);
+            }
         }
     }
+
+
     public override void Die()
     {
         //  Debug.Log("liv die");
@@ -1073,6 +1242,11 @@ public class LivingObject : GridObject
         // Debug.Log("Live death event starting");
         INVENTORY.BUFFS.Clear();
         INVENTORY.DEBUFFS.Clear();
+        for (int i = 0; i < INVENTORY.EFFECTS.Count; i++)
+        {
+            EffectScript anEffect = INVENTORY.EFFECTS[i];
+          PoolManager.GetManager().ReleaseEffect(anEffect);
+        }
         INVENTORY.EFFECTS.Clear();
         base.DeathStart();
 
@@ -1141,7 +1315,7 @@ public class LivingObject : GridObject
         myManager.menuManager.ShowNone();
         myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
-        myManager.CreateTextEvent(this, NAME + " summoned a a " + newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+        myManager.CreateTextEvent(this, newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
         if (myManager.log)
         {
             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
@@ -1279,7 +1453,7 @@ public class LivingObject : GridObject
                         }
                         if (overFlow == false)
                         {
-                            database.LearnSkill(useable.INDEX, attackingObject);
+                            database.GetWeapon(useable.INDEX, attackingObject);
                         }
                     }
                     else if (useable.GetType() == typeof(ArmorScript))
@@ -1295,7 +1469,7 @@ public class LivingObject : GridObject
                         }
                         if (overFlow == false)
                         {
-                            database.LearnSkill(useable.INDEX, attackingObject);
+                            database.GetArmor(useable.INDEX, attackingObject);
                         }
                     }
                     if (attackingObject.FACTION == Faction.ally && useable != null)
@@ -1315,13 +1489,30 @@ public class LivingObject : GridObject
         }
         return usable;
     }
+
+    public void snapToCurrentTile()
+    {
+        if (currentTile)
+            transform.position = currentTile.transform.position + new Vector3(0, 0.5f, 0);
+        else
+            Debug.Log("ive lost my tile");
+    }
+
+    public void snapTotTile(TileScript tileScript)
+    {
+        if (tileScript)
+            transform.position = tileScript.transform.position + new Vector3(0, 0.5f, 0);
+        else
+            Debug.Log("ive lost my tile");
+    }
+
     public void LivingUnset()
     {
         isSetup = false;
         DEAD = false;
         STATS.Reset(true);
         BASE_STATS.Reset();
-        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        STATS.HEALTH = BASE_STATS.MAX_HEALTH;
         INVENTORY.Clear();
         PHYSICAL_SLOTS.SKILLS.Clear();
         PASSIVE_SLOTS.SKILLS.Clear();
@@ -1331,16 +1522,14 @@ public class LivingObject : GridObject
         DEFAULT_ARMOR = null;
         ARMOR.unEquip();
         PSTATUS = PrimaryStatus.normal;
+        if (WEAKNESS)
+            WEAKNESS.GetComponent<SpriteRenderer>().color = Common.trans;
+        shadow.SCRIPT.Unset();
+        if (ANIM)
+        {
+            ANIM.Unset();
+        }
 
-        shadow.GetComponent<AnimationScript>().Unset();
-        if (GetComponent<AnimationScript>())
-        {
-            GetComponent<AnimationScript>().Unset();
-        }
-        if (GetComponent<EffectScript>())
-        {
-            Destroy(GetComponent<EffectScript>());
-        }
         if (GetComponent<BuffScript>())
         {
             Destroy(GetComponent<BuffScript>());
@@ -1349,5 +1538,35 @@ public class LivingObject : GridObject
         {
             Destroy(GetComponent<DebuffScript>());
         }
+    }
+    public virtual bool CheckIfDead()
+    {
+        if (HEALTH <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    public virtual string GetClassType()
+    {
+        string defaultString = "unknown";
+        if (BASE_STATS.STRENGTH > BASE_STATS.MAGIC && BASE_STATS.STRENGTH > BASE_STATS.DEX)
+        {
+            return "Fighter";
+        }
+        if (BASE_STATS.MAGIC > BASE_STATS.STRENGTH && BASE_STATS.MAGIC > BASE_STATS.DEX)
+        {
+            return "Mage";
+        }
+        if (BASE_STATS.DEX > BASE_STATS.MAGIC && BASE_STATS.DEX > BASE_STATS.STRENGTH)
+        {
+            return "Shaman";
+        }
+        if(BASE_STATS.STRENGTH == BASE_STATS.MAGIC && BASE_STATS.STRENGTH == BASE_STATS.DEX)
+        {
+            return "Balanced";
+        }
+
+        return defaultString;
     }
 }

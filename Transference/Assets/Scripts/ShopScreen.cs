@@ -93,6 +93,13 @@ public class ShopScreen : MonoBehaviour
 
     [SerializeField]
     Text currentTypeText;
+
+    [SerializeField]
+    GameObject leftPanel;
+
+    [SerializeField]
+    GameObject rightPanel;
+
     public List<UsableScript> SHOPITEMS
     {
         get { return usables; }
@@ -218,7 +225,7 @@ public class ShopScreen : MonoBehaviour
                                 {
                                     if (SELECTED.refItem.GetType() == typeof(WeaponScript))
                                     {
-                                        loadBuyerList(2); 
+                                        loadBuyerList(2);
                                     }
                                     else if (SELECTED.refItem.GetType() == typeof(ArmorScript))
                                     {
@@ -300,6 +307,11 @@ public class ShopScreen : MonoBehaviour
                                     {
                                         skillBtn.UpdateInactivity(true);
                                     }
+                                }
+
+                                if (SELECTED)
+                                {
+                                    SELECTED.UpdateInactivity(true);
                                 }
 
                             }
@@ -394,7 +406,10 @@ public class ShopScreen : MonoBehaviour
             buyerlist.SetActive(false);
         if (currentDetails)
             currentDetails.SetActive(false);
-
+        if (leftPanel)
+        {
+            leftPanel.SetActive(true);
+        }
         AUGMENT = Augment.none;
         selectedType = 0;
         selectedContent = 0;
@@ -438,11 +453,17 @@ public class ShopScreen : MonoBehaviour
         topicText.text = "Oh? Looking for something new?";
         updateDesc("");
 
-
-
+        if (leftPanel)
+        {
+            leftPanel.SetActive(true);
+        }
+        if (rightPanel)
+        {
+            buyerlist.transform.parent = rightPanel.transform;
+        }
         if (buyerImage)
         {
-            buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
+            // buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
         }
 
         loadShopList();
@@ -472,7 +493,7 @@ public class ShopScreen : MonoBehaviour
 
         if (buyerImage)
         {
-            buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
+            // buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
         }
 
 
@@ -484,6 +505,11 @@ public class ShopScreen : MonoBehaviour
             }
             selectedType = 0;
             selectedContent = 0;
+            if (leftPanel)
+            {
+                leftPanel.SetActive(true);
+                buyerlist.transform.parent = leftPanel.transform;
+            }
             loadBuyerList(0);
             if (currentDetails)
                 currentDetails.SetActive(true);
@@ -514,11 +540,20 @@ public class ShopScreen : MonoBehaviour
 
         if (buyerImage)
         {
-            buyerImage.transform.localScale = new Vector3(0.25f, 0.5f, 1);
+            // buyerImage.transform.localScale = new Vector3(0.25f, 0.5f, 1);
         }
 
         if (buyer)
         {
+            if (leftPanel)
+            {
+                leftPanel.SetActive(false);
+            }
+            if (rightPanel)
+            {
+                buyerlist.transform.parent = rightPanel.transform;
+            }
+
             selectedType = 0;
             selectedContent = 0;
             loadBuyerList(0);
@@ -550,6 +585,7 @@ public class ShopScreen : MonoBehaviour
                         {
                             shopSkills[i].transform.parent.GetComponent<shopBtn>().refItem = usables[i];
                             UpdateIcon(shopSkills[i]);
+
                         }
 
                     }
@@ -574,20 +610,36 @@ public class ShopScreen : MonoBehaviour
     {
         if (icons != null)
         {
-            if (mesh.transform.parent.GetComponentInChildren<IconImage>())
+            if (mesh)
             {
-                if (turnOff == true)
-                {
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().LoadImage();
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.color = Common.trans;
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.sprite = null;
 
-                }
-                else
+                if (mesh.transform.parent)
                 {
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().LoadImage();
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.color = Color.white;
-                    mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.sprite = icons[Common.GetIconType(mesh.transform.parent.GetComponent<shopBtn>().refItem)];
+
+                    if (mesh.transform.parent.GetComponentInChildren<IconImage>())
+                    {
+                        if (turnOff == true)
+                        {
+                            mesh.transform.parent.GetComponentInChildren<IconImage>().LoadImage();
+                            mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.color = Common.trans;
+                            mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.sprite = null;
+
+                        }
+                        else
+                        {
+                            mesh.transform.parent.GetComponentInChildren<IconImage>().LoadImage();
+                            mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.color = Color.white;
+                            int num = Common.GetIconType(mesh.transform.parent.GetComponent<shopBtn>().refItem);
+                            if (num == -1)
+                            {
+                                Debug.Log("Lost an icon");
+                            }
+                            else
+                            {
+                                mesh.transform.parent.GetComponentInChildren<IconImage>().ICON.sprite = icons[num];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -840,7 +892,7 @@ public class ShopScreen : MonoBehaviour
                                 augBtn.GetComponent<shopBtn>().refItem = null;
                                 augBtn.AUGMENT = useableAugments[i];
                                 if (augBtn.GetComponentInChildren<TextMeshProUGUI>())
-                                    augBtn.GetComponentInChildren<TextMeshProUGUI>().text = augBtn.AUGMENT.ToString();
+                                    augBtn.GetComponentInChildren<TextMeshProUGUI>().text = Common.GetAugmentNameText(augBtn.AUGMENT);
                                 augBtn.GetComponent<shopBtn>().desc = Common.GetAugmentEffectText(augBtn.AUGMENT, usingSkill);
                             }
                             else
@@ -927,7 +979,7 @@ public class ShopScreen : MonoBehaviour
                             topicText.text = "Are you buying something or just browsing?";
                             if (buyerImage)
                             {
-                                buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
+                                // buyerImage.transform.localScale = new Vector3(0.5f, 1, 1);
                             }
                             if (secondDescriptionText)
                             {
@@ -960,7 +1012,7 @@ public class ShopScreen : MonoBehaviour
                         currentWindow = ShopWindow.buying;
                         topicText.text = "Will you make up your mind?";
                         REMOVING = null;
-
+                        SELECTED.UpdateInactivity(false);
                         if (descriptionText)
                         {
                             if (descriptionText.transform.parent)

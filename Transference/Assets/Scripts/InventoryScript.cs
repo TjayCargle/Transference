@@ -68,11 +68,11 @@ public class InventoryScript : MonoBehaviour
         get { return commandSkills; }
         set { commandSkills = value; }
     }
-    //public List<CommandSkill> CSPELLS
-    //{
-    //    get { return commandSkills; }
-    //    set { commandSkills = value; }
-    //}
+    public List<CommandSkill> CSPELLS
+    {
+        get { return commandSkills; }
+        set { commandSkills = value; }
+    }
     public List<AutoSkill> AUTOS
     {
         get { return autoSkills; }
@@ -174,10 +174,10 @@ public class InventoryScript : MonoBehaviour
     }
     public bool ContainsUsableIndex(UsableScript useable)
     {
-  
+
         if (useable.GetType() == typeof(CommandSkill))
         {
-            if(ContainsCommandIndex(useable.INDEX) != null)
+            if (ContainsCommandIndex(useable.INDEX) != null)
             {
                 return true;
             }
@@ -207,21 +207,7 @@ public class InventoryScript : MonoBehaviour
             }
         }
 
-        if (useable.GetType() == typeof(OppSkill))
-        {
-            if (ContainsOppIndex(useable.INDEX) != null)
-            {
-                return true;
-            }
-        }
 
-        if (useable.GetType() == typeof(OppSkill))
-        {
-            if (ContainsOppIndex(useable.INDEX) != null)
-            {
-                return true;
-            }
-        }
 
 
         if (useable.GetType() == typeof(WeaponScript))
@@ -327,6 +313,11 @@ public class InventoryScript : MonoBehaviour
         this.DEBUFFS.Clear();
         this.CSKILLS.Clear();
         //this.CSPELLS.Clear();
+        for (int i = 0; i < effects.Count; i++)
+        {
+            EffectScript anEffect = effects[i];
+            PoolManager.GetManager().ReleaseEffect(anEffect);
+        }
         this.EFFECTS.Clear();
         this.ITEMS.Clear();
         this.OPPS.Clear();
@@ -334,6 +325,6 @@ public class InventoryScript : MonoBehaviour
         this.SKILLS.Clear();
         this.WEAPONS.Clear();
         this.USEABLES.Clear();
-      
+
     }
 }

@@ -14,13 +14,19 @@
 -num of shops/shop index = s [location], [location] 
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
+r,1,6,7,10,11,14,15,18,19,28,29,30
 i,11
 t,0
 w,8
 h,5
-d,6,33
-m,Western Hallway,Solarium
-l,6,13
-x,28,2
-g,34
+d,4,33,23
+m,Lower Passage,Solarium,Western Hallway
+l,19,13,6
+x,44,2,28
+g,17
 gi,1
+stt,reposition,help
+sti,20,3
+ex,21
+o,27
+oi,0

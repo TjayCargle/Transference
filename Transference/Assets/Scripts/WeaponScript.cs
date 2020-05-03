@@ -103,7 +103,7 @@ public class WeaponScript : UsableScript
     {
         bool can = false;
         int amt = 0;
-        amt = (int)((((float)(COST) / 100.0f) * USER.MAX_HEALTH) * USER.STATS.HPCOSTCHANGE);
+        amt = GetCost(USER, modification);
 
 
         //  if (amt <= owner.FATIGUE)

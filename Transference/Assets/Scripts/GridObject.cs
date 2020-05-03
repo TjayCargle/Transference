@@ -21,7 +21,9 @@ public class GridObject : MonoBehaviour
    protected Sprite faceSprite = null;
     public int MapIndex = -1;
     public int id = -1;
-    protected SpriteRenderer mySR; 
+    protected SpriteRenderer mySR;
+    protected AnimationScript animationScript;
+
     public virtual string NAME
     {
         get { return FullName; }
@@ -61,6 +63,18 @@ public class GridObject : MonoBehaviour
         get { return modifiedStats; }
         set { modifiedStats = value; }
     }
+
+    public AnimationScript ANIM
+    {
+        get { return animationScript; }
+        set { animationScript = value; }
+    }
+
+    public SpriteRenderer RENDERER
+    {
+        get { return mySR; }
+        set { mySR = value; }
+    }
     // Use this for initialization
 
     public virtual void Setup()
@@ -96,6 +110,12 @@ public class GridObject : MonoBehaviour
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 transform.Rotate(new Vector3(90, 0, 0));
             }
+            ANIM = GetComponent<AnimationScript>();
+            if (ANIM == null)
+            {
+                ANIM = gameObject.AddComponent<AnimationScript>();
+            }
+            ANIM.Setup();
         }
         isSetup = true;
     }
@@ -167,7 +187,7 @@ public class GridObject : MonoBehaviour
         DEAD = false;
         STATS.Reset(true);
         BASE_STATS.Reset();
-        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+        STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 
         if (GetComponent<AnimationScript>())
         {

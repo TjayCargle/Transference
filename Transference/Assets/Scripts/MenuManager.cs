@@ -73,11 +73,30 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    public void ShowEventCanvas()
+    public void ShowEventCanvas(int type = -1)
     {
         if (eventCanvas)
         {
             eventCanvas.gameObject.SetActive(true);
+            MenuItem[] items = eventCanvas.GetComponentsInChildren<MenuItem>(true);
+            for (int i = 0; i < items.Length; i++)
+            {
+                items[i].gameObject.SetActive(true);
+                if (type == 1)
+                {
+                    if (i != 2)
+                    {
+                        items[i].gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if (i >= 2)
+                    {
+                        items[i].gameObject.SetActive(false);
+                    }
+                }
+            }
             inManager.setContentAndScroll(eventCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, eventCanvas.GetComponentInChildren<ScrollRect>(), 0, null);
             inManager.ForceSelect();
         }
@@ -92,7 +111,7 @@ public class MenuManager : MonoBehaviour
 
     public void ShowNewSkillPrompt()
     {
-        if(newSkillCanvas)
+        if (newSkillCanvas)
         {
             newSkillCanvas.gameObject.SetActive(true);
         }
@@ -131,6 +150,14 @@ public class MenuManager : MonoBehaviour
             gameOverCanvas.gameObject.SetActive(true);
         }
     }
+    public bool isGameOverShowing()
+    {
+        if (gameOverCanvas)
+        {
+            return gameOverCanvas.isActiveAndEnabled;
+        }
+        return false;
+    }
     public void DontShowGameOver()
     {
         if (gameOverCanvas)
@@ -144,7 +171,7 @@ public class MenuManager : MonoBehaviour
         {
             commandCanvas.gameObject.SetActive(false);
         }
-        if(hackingCanvas)
+        if (hackingCanvas)
         {
             hackingCanvas.gameObject.SetActive(false);
         }
@@ -195,7 +222,7 @@ public class MenuManager : MonoBehaviour
         {
             newSkillCanvas.gameObject.SetActive(false);
         }
-        if(eventCanvas)
+        if (eventCanvas)
         {
             DontEventCanvas();
         }
@@ -253,8 +280,8 @@ public class MenuManager : MonoBehaviour
         {
             ShowNone();
             myCamera.showActions = false;
-       //     prevObj = myCamera.infoObject;
-        //    myCamera.infoObject = null;
+            //     prevObj = myCamera.infoObject;
+            //    myCamera.infoObject = null;
             myCamera.UpdateCamera();
         }
 
@@ -265,16 +292,16 @@ public class MenuManager : MonoBehaviour
     }
     public void dontShowDetails()
     {
-       
+
         if (myCamera)
         {
             myCamera.showActions = true;
-        //    myCamera.infoObject = prevObj;
+            //    myCamera.infoObject = prevObj;
             myCamera.UpdateCamera();
 
         }
 
-        
+
         if (detailCanvas)
         {
             detailCanvas.gameObject.SetActive(false);
@@ -509,7 +536,7 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
-         
+
         }
         if (skillCanvas)
         {
@@ -743,7 +770,7 @@ public class MenuManager : MonoBehaviour
         if (descCanvas)
         {
             descCanvas.gameObject.SetActive(true);
-     
+
         }
     }
 }

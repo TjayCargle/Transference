@@ -15,8 +15,10 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_enableKerning: 1
   m_enableExtraPadding: 0
-  m_enableTintAllSprites: 0
+  m_enableTintAllSprites: 1
   m_enableParseEscapeCharacters: 1
+  m_EnableRaycastTarget: 1
+  m_GetFontFeaturesAtRuntime: 1
   m_missingGlyphCharacter: 0
   m_warningsDisabled: 0
   m_defaultFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -26,10 +28,10 @@ MonoBehaviour:
   m_defaultAutoSizeMaxRatio: 2
   m_defaultTextMeshProTextContainerSize: {x: 20, y: 5}
   m_defaultTextMeshProUITextContainerSize: {x: 200, y: 50}
-  m_autoSizeTextContainer: 0
+  m_autoSizeTextContainer: 1
   m_fallbackFontAssets: []
   m_matchMaterialPreset: 1
-  m_defaultSpriteAsset: {fileID: 11400000, guid: 7fc5076e3de2e5a419836ec6145977d4,
+  m_defaultSpriteAsset: {fileID: 11400000, guid: ccaa1c9a6500a52468bd109e542d048f,
     type: 2}
   m_defaultSpriteAssetPath: Sprite Assets/
   m_defaultColorGradientPresetsPath: Color Gradient Presets/

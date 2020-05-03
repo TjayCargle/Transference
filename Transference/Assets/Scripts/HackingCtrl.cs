@@ -30,6 +30,12 @@ public class HackingCtrl : MonoBehaviour
     Image currentTarget;
 
     [SerializeField]
+    Image nextTarget;
+
+    [SerializeField]
+    Image thirdTarget;
+
+    [SerializeField]
     TextMeshProUGUI strikeText;
 
     public int strikeCount = 3;
@@ -104,6 +110,14 @@ public class HackingCtrl : MonoBehaviour
 
     private void updateTarget()
     {
+        SubSkillType secondChip = SubSkillType.Heal;
+        SubSkillType thirdChip = SubSkillType.Heal;
+        if ((currentChip + 1) < currentSequence.Count)
+            secondChip = currentSequence[(currentChip + 1)];
+
+        if ((currentChip + 2) < currentSequence.Count)
+            thirdChip = currentSequence[(currentChip + 2)];
+
         switch (currentChipType)
         {
             case SubSkillType.Strike:
@@ -131,9 +145,106 @@ public class HackingCtrl : MonoBehaviour
                     currentTarget.sprite = targetSprites[4];
                 }
                 break;
-            case SubSkillType.None:
+            case SubSkillType.Ailment:
                 {
                     currentTarget.sprite = targetSprites[5];
+                }
+                break;
+            case SubSkillType.None:
+                {
+                    currentTarget.sprite = targetSprites[6];
+                }
+                break;
+
+        }
+        nextTarget.color = Common.semi;
+        switch (secondChip)
+        {
+            case SubSkillType.Strike:
+                {
+                    nextTarget.sprite = targetSprites[0];
+                }
+                break;
+            case SubSkillType.Skill:
+                {
+                    nextTarget.sprite = targetSprites[1];
+                }
+                break;
+            case SubSkillType.Spell:
+                {
+                    nextTarget.sprite = targetSprites[2];
+                }
+                break;
+            case SubSkillType.Item:
+                {
+                    nextTarget.sprite = targetSprites[3];
+                }
+                break;
+            case SubSkillType.Movement:
+                {
+                    nextTarget.sprite = targetSprites[4];
+                }
+                break;
+            case SubSkillType.Ailment:
+                {
+                    nextTarget.sprite = targetSprites[5];
+                }
+                break;
+            case SubSkillType.None:
+                {
+                    nextTarget.sprite = targetSprites[6];
+                }
+                break;
+            default:
+                {
+                    nextTarget.color = Common.trans;
+                    nextTarget.sprite = null;
+                }
+                break;
+
+        }
+        thirdTarget.color = Common.moresemi;
+        switch (thirdChip)
+        {
+            case SubSkillType.Strike:
+                {
+                    thirdTarget.sprite = targetSprites[0];
+                }
+                break;
+            case SubSkillType.Skill:
+                {
+                    thirdTarget.sprite = targetSprites[1];
+                }
+                break;
+            case SubSkillType.Spell:
+                {
+                    thirdTarget.sprite = targetSprites[2];
+                }
+                break;
+            case SubSkillType.Item:
+                {
+                    thirdTarget.sprite = targetSprites[3];
+                }
+                break;
+            case SubSkillType.Movement:
+                {
+                    thirdTarget.sprite = targetSprites[4];
+                }
+                break;
+            case SubSkillType.Ailment:
+                {
+                    thirdTarget.sprite = targetSprites[5];
+                }
+                break;
+            case SubSkillType.None:
+                {
+                    thirdTarget.sprite = targetSprites[6];
+                }
+                break;
+            default:
+                {
+                    thirdTarget.color = Common.trans;
+                    thirdTarget.sprite = null;
                 }
                 break;
 
@@ -185,7 +296,7 @@ public class HackingCtrl : MonoBehaviour
         {
             strikeCount--;
 
-            if (currentChipType == SubSkillType.Strike || currentChipType == SubSkillType.None || currentChipType == SubSkillType.Item)
+            if (currentChipType == SubSkillType.Strike || currentChipType == SubSkillType.None || currentChipType == SubSkillType.Movement || currentChipType == SubSkillType.Ailment)
             {
                 accessChips[currentChip].color = Common.granted;
                 currentChip++;
@@ -233,7 +344,7 @@ public class HackingCtrl : MonoBehaviour
         if (skillCount > 0)
         {
             skillCount--;
-            if (currentChipType != SubSkillType.Strike && currentChipType != SubSkillType.Spell)
+            if (currentChipType != SubSkillType.Strike && currentChipType != SubSkillType.Spell && currentChipType != SubSkillType.Ailment)
             {
                 accessChips[currentChip].color = Common.granted;
                 currentChip++;
@@ -281,7 +392,7 @@ public class HackingCtrl : MonoBehaviour
         {
             spellCount--;
 
-            if (currentChipType == SubSkillType.Spell || currentChipType == SubSkillType.None || currentChipType == SubSkillType.Movement)
+            if (currentChipType == SubSkillType.Spell || currentChipType == SubSkillType.None || currentChipType == SubSkillType.Item || currentChipType == SubSkillType.Ailment)
             {
                 accessChips[currentChip].color = Common.granted;
                 currentChip++;

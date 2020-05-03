@@ -8,7 +8,7 @@ public class EnemyScript : LivingObject
     GridObject atkTarget = null;
     //public Queue<TileScript> currentPath;
     public bool isPerforming = false;
-    public LivingObject currentEnemy;
+    public GridObject currentEnemy;
     public int headCount = 0;
     public int psudeoActions = 0;
 
@@ -154,7 +154,7 @@ public class EnemyScript : LivingObject
         bool isDone = true;
 
         Wait();
-       // TakeRealAction();
+        // TakeRealAction();
 
         return isDone;
     }
@@ -172,6 +172,12 @@ public class EnemyScript : LivingObject
     }
     public bool EAtkEvent(Object target)
     {
+        if(atkTarget == null)
+        {
+            Debug.Log("what the hell " + NAME);
+            TakeRealAction();
+            return true;
+        }
         if (lastReaction.usedSkill == null)
         {
             if (lastAttack != null)
@@ -191,8 +197,8 @@ public class EnemyScript : LivingObject
         if (lastReaction.usedStrike)
         {
             WEAPON.Equip(lastReaction.usedStrike);
-            myManager.attackableTiles = myManager.GetWeaponAttackableTiles(this);
             //GridObject possibleObject = null;
+            myManager.attackableTiles = myManager.GetWeaponAttackableTiles(this);
             myManager.currentAttackList.Clear();
             possibleIndexs.Clear();
             personalAttackList.Clear();
@@ -214,7 +220,7 @@ public class EnemyScript : LivingObject
         {
             WEAPON.Equip(lastReaction.usedStrike);
             myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, lastReaction.usedSkill);
-           // GridObject possibleObject = null;
+            // GridObject possibleObject = null;
             myManager.currentAttackList.Clear();
             personalAttackList.Clear();
             if (lastAttack.dmgObject)
@@ -242,7 +248,7 @@ public class EnemyScript : LivingObject
 
                 if (chance <= 2)
                 {
-                    Debug.Log("They hit themselves");
+
                     if (manager.log)
                     {
                         manager.log.Log(FullName + " hit themselves ");
@@ -325,7 +331,7 @@ public class EnemyScript : LivingObject
                 //myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
                 //bestReaction.usedStrike.GrantXP(1);
                 myManager.AttackTargets(this, WEAPON, true);
-                Debug.Log("a strike");
+
                 //myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement);
             }
             else
@@ -472,7 +478,7 @@ public class EnemyScript : LivingObject
     {
         bool foundEnemy = false;
 
-        LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
+        GridObject[] objects = GameObject.FindObjectsOfType<GridObject>();
         int skip = -1;
         int consider = -1;
         if (personality == EPType.support)
@@ -480,6 +486,11 @@ public class EnemyScript : LivingObject
             for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
             {
                 CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                if (!possibleSkill.USER)
+                {
+                    Debug.Log("got no user");
+                    possibleSkill.USER = this;
+                }
                 if (possibleSkill.SUBTYPE == SubSkillType.Buff && possibleSkill.CanUse())
                 {
                     if (!INVENTORY.BUFFS.Contains(possibleSkill))
@@ -503,6 +514,10 @@ public class EnemyScript : LivingObject
         }
         for (int i = 0; i < objects.Length; i++)
         {
+            if(objects[i].GetComponent<TempObject>())
+            {
+                continue;
+            }
             if (personality == EPType.finisher)
             {
                 if (atkTarget)
@@ -540,6 +555,11 @@ public class EnemyScript : LivingObject
                         for (int j = 0; j < INVENTORY.WEAPONS.Count; j++)
                         {
                             WeaponScript possibleSkill = INVENTORY.WEAPONS[j];
+                            if (!possibleSkill.USER)
+                            {
+                                Debug.Log("got no user");
+                                possibleSkill.USER = this;
+                            }
                             if (possibleSkill.CanUse())
                             {
                                 bool reflected = false;
@@ -586,20 +606,29 @@ public class EnemyScript : LivingObject
                     for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
                     {
                         CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                        if (!possibleSkill.USER)
+                        {
+                            Debug.Log("got no user");
+                            possibleSkill.USER = this;
+                        }
                         if (possibleSkill.CanUse())
                         {
-                            //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
-                            if (objects[i].INVENTORY.BUFFS.Contains(possibleSkill))
+                            if (objects[i].GetComponent<LivingObject>())
                             {
-                                continue;
-                            }
-                            if (objects[i].INVENTORY.DEBUFFS.Contains(possibleSkill))
-                            {
-                                continue;
-                            }
-                            if (reflectedSkills.Contains(possibleSkill))
-                            {
-                                continue;
+                                LivingObject livvyo = objects[i].GetComponent<LivingObject>();
+                                //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
+                                if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                {
+                                    continue;
+                                }
+                                if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                {
+                                    continue;
+                                }
+                                if (reflectedSkills.Contains(possibleSkill))
+                                {
+                                    continue;
+                                }
                             }
 
                             if (objects[i].GetComponent<HazardScript>())
@@ -627,13 +656,18 @@ public class EnemyScript : LivingObject
                                 }
                                 else
                                 {
-                                    if (objects[i].INVENTORY.BUFFS.Contains(possibleSkill))
+                                    if (objects[i].GetComponent<LivingObject>())
                                     {
-                                        continue;
-                                    }
-                                    if (objects[i].INVENTORY.DEBUFFS.Contains(possibleSkill))
-                                    {
-                                        continue;
+                                        LivingObject livvyo = objects[i].GetComponent<LivingObject>();
+
+                                        if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                        {
+                                            continue;
+                                        }
+                                        if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                        {
+                                            continue;
+                                        }
                                     }
 
                                 }
@@ -714,7 +748,10 @@ public class EnemyScript : LivingObject
     public bool FoundItemsCanUse()
     {
         bool found = false;
-
+        if(LEVEL < 7)
+        {
+            return false;
+        }
         for (int i = 0; i < INVENTORY.ITEMS.Count; i++)
         {
 
@@ -934,7 +971,11 @@ public class EnemyScript : LivingObject
                     float dist2 = Vector3.Distance(tiles[i].transform.position, transform.position);
                     if (dist2 < dist1)
                     {
+                        GridObject griddy = myManager.GetObjectAtTile(tiles[i]);
+                        if(griddy == null)
+                        {
                         returnTile = tiles[i];
+                        }
                     }
                 }
             }
@@ -942,16 +983,16 @@ public class EnemyScript : LivingObject
 
         return returnTile;
     }
-    public LivingObject FindNearestEnemy()
+    public GridObject FindNearestEnemy()
     {
         // Debug.Log(FullName + " is finding near enemies");
-        LivingObject newTarget = null;
-        LivingObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
+        GridObject newTarget = null;
+        GridObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = 0; i < objects.Length; i++)
         {
             //if(objects[i].GetComponent<LivingObject>())
             {
-                LivingObject living = objects[i];//.GetComponent<LivingObject>();
+                GridObject living = objects[i];//.GetComponent<LivingObject>();
                 if (living.FACTION != this.FACTION)
                 {
                     if (!living.DEAD)
@@ -988,7 +1029,7 @@ public class EnemyScript : LivingObject
             if (possibleAttacks[i].strike != null)
             {
                 WEAPON.Equip(possibleAttacks[i].strike);
-                if(possibleAttacks[i].strike.CanUse() == false)
+                if (possibleAttacks[i].strike.CanUse() == false)
                 {
                     Debug.Log("problemo");
                     continue;
@@ -1046,24 +1087,30 @@ public class EnemyScript : LivingObject
 
             chosen = Random.Range(0, attackOptions.Count);
             AtkContainer chosenContainer = possibleAttacks[attackOptions[chosen]];
+
+            if(chosenContainer.strike)
+            {
+                WEAPON.Equip(chosenContainer.strike);
+            }
             bestReaction = myManager.CalcDamage(chosenContainer);
             chosen = attackOptions[chosen];
             atkTarget = chosenContainer.dmgObject;
+         
             if (chosenContainer.command)
             {
                 bestReaction.atkName = chosenContainer.command.NAME;
                 bestReaction.usedSkill = chosenContainer.command;
-                
-                chosenContainer.command.UseSkill(this);
+
+                //chosenContainer.command.UseSkill(this);
                 bestReaction.dmgElement = chosenContainer.command.ELEMENT;
 
             }
             else
             {
-                WEAPON.Equip(chosenContainer.strike);
+              
                 if (WEAPON.EQUIPPED)
                 {
-                    WEAPON.Use();
+                    //   WEAPON.Use();
                 }
                 bestReaction.usedSkill = null;
                 bestReaction.atkName = WEAPON.NAME;
@@ -1157,7 +1204,7 @@ public class EnemyScript : LivingObject
             possibleAttacks.Clear();
             atkNames.Clear();
         }
-        LivingObject liveObj = null;
+        GridObject liveObj = null;
         LoadAdjacentObjects();
         liveObj = FindNearestEnemy();
         //if enemies don't exist
@@ -1273,6 +1320,7 @@ public class EnemyScript : LivingObject
             }
             else
             {
+
                 switch (personality)
                 {
                     case EPType.aggro:
@@ -1464,7 +1512,7 @@ public class EnemyScript : LivingObject
 
         if (psudeoActions == 0)
         {
-            //   TakeAction();
+            TakeAction();
         }
         //  List<EActType> etypes = new List<EActType>();
         //  List<path> possiblePaths = new List<path>();
@@ -1585,17 +1633,18 @@ public class EnemyScript : LivingObject
         startedDeathAnimation = true;
         myManager.gridObjects.Remove(this);
         gameObject.SetActive(false);
+        myManager.NextTurn(FullName);
         //Debug.Log("enemy fade out end");
         // Destroy(gameObject);
 
     }
     public void CheckAttackRequirements(Element atk, LivingObject player)
     {
-        if(player.GetComponent<ActorScript>())
+        if (player.GetComponent<ActorScript>())
         {
-            if(talk == TalkStage.Attack)
+            if (talk == TalkStage.Attack)
             {
-                if(atk == talkElement)
+                if (atk == talkElement)
                 {
                     enemyHitMyResist = true;
                     talk = TalkStage.learn;
@@ -1615,7 +1664,7 @@ public class EnemyScript : LivingObject
                     {
                         case EPCluster.physical:
                             {
-                                if(FACTION == Faction.enemy)
+                                if (FACTION == Faction.enemy)
                                     returnedString = "Listen hybrid, talk to me again when i'm at half FATIGUE.";
                                 else
                                 {
@@ -1649,9 +1698,9 @@ public class EnemyScript : LivingObject
                             break;
                         case EPCluster.natural:
                             {
-                               
-                                        returnedString = "I'm going to leave for the DOOR now, bye.";
-                         
+
+                                returnedString = "I'm going to leave for the DOOR now, bye.";
+
 
                             }
                             break;
@@ -1743,7 +1792,7 @@ public class EnemyScript : LivingObject
                             }
                         }
                         talkElement = bestElement;
-                        returnedString = "If you want to talk, hit me with a " + bestElement.ToString() + "attack";
+                        returnedString = "If you want to talk, hit me with a " + bestElement.ToString() + " attack";
                     }
                     else
                     {
@@ -1755,13 +1804,13 @@ public class EnemyScript : LivingObject
                 {
                     returnedString = "Alright, I'll help you out. Take this summon scroll";
                     DatabaseManager database = Common.GetDatabase();
-                    if(database)
+                    if (database)
                     {
-                    database.GenerateScroll(this, invokingObject);
+                        database.GenerateScroll(this, invokingObject);
 
                     }
                     STATS.HEALTH = 0;
-                    BASE_STATS.HEALTH = 0;
+                    //BASE_STATS.HEALTH = 0;
                     Die();
                 }
                 break;
@@ -1783,37 +1832,47 @@ public class EnemyScript : LivingObject
     }
     public void Unset()
     {
-        isSetup = false;
-        DEAD = false;
-        STATS.Reset(true);
-        BASE_STATS.Reset();
-        BASE_STATS.HEALTH = BASE_STATS.MAX_HEALTH;
-        INVENTORY.Clear();
-        PHYSICAL_SLOTS.SKILLS.Clear();
-        PASSIVE_SLOTS.SKILLS.Clear();
-        MAGICAL_SLOTS.SKILLS.Clear();
-        OPP_SLOTS.SKILLS.Clear();
-        AUTO_SLOTS.SKILLS.Clear();
-        ARMOR.unEquip();
-        DEFAULT_ARMOR = null;
-        PSTATUS = PrimaryStatus.normal;
-        reflectedSkills.Clear();
-        shadow.GetComponent<AnimationScript>().Unset();
-        if (GetComponent<AnimationScript>())
+        if (isSetup == true)
         {
-            GetComponent<AnimationScript>().Unset();
-        }
-        if (GetComponent<EffectScript>())
-        {
-            Destroy(GetComponent<EffectScript>());
-        }
-        if (GetComponent<BuffScript>())
-        {
-            Destroy(GetComponent<BuffScript>());
-        }
-        if (GetComponent<DebuffScript>())
-        {
-            Destroy(GetComponent<DebuffScript>());
+
+            isSetup = false;
+            DEAD = false;
+            STATS.Reset(true);
+            BASE_STATS.Reset();
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+            INVENTORY.Clear();
+            dexLevel = 1;
+            magLevel = 1;
+            physLevel = 1;
+            
+            PHYSICAL_SLOTS.SKILLS.Clear();
+            PASSIVE_SLOTS.SKILLS.Clear();
+            MAGICAL_SLOTS.SKILLS.Clear();
+            OPP_SLOTS.SKILLS.Clear();
+            AUTO_SLOTS.SKILLS.Clear();
+            if (DEFAULT_ARMOR)
+            {
+                ARMOR.unEquip();
+                DEFAULT_ARMOR = null;
+
+            }
+            refreshState = 0;
+            PSTATUS = PrimaryStatus.normal;
+            reflectedSkills.Clear();
+            shadow.GetComponent<AnimationScript>().Unset();
+            if (GetComponent<AnimationScript>())
+            {
+                GetComponent<AnimationScript>().Unset();
+            }
+          
+            if (GetComponent<BuffScript>())
+            {
+                Destroy(GetComponent<BuffScript>());
+            }
+            if (GetComponent<DebuffScript>())
+            {
+                Destroy(GetComponent<DebuffScript>());
+            }
         }
     }
 

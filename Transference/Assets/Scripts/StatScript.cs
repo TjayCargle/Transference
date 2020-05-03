@@ -7,8 +7,7 @@ public class StatScript : MonoBehaviour
 
     [SerializeField]
     private int myMaxHealth = 100;
-    [SerializeField]
-    private int myHealth;
+   
     [SerializeField]
     private int myMaxMana = 100;
 
@@ -134,19 +133,7 @@ public class StatScript : MonoBehaviour
         get { return myMaxHealth; }
         set { myMaxHealth = value; }
     }
-    public int HEALTH
-    {
-        get { return myHealth; }
-        set
-        {
-            myHealth = value;
-            if (myHealth > MAX_HEALTH)
-            {
-                myHealth = MAX_HEALTH;
-            }
 
-        }
-    }
     public int MAX_MANA
     {
         get { return myMaxMana; }
@@ -160,7 +147,7 @@ public class StatScript : MonoBehaviour
     }
 
 
-    public float SPCHANGE
+    public float MANACHANGE
     {
         get { return manaCostChange; }
         set { manaCostChange = value; }
@@ -194,10 +181,7 @@ public class StatScript : MonoBehaviour
         {
             case ModifiedStat.Health:
                 MAX_HEALTH += val;
-                if (HEALTH == MAX_HEALTH - val)
-                {
-                    HEALTH = MAX_HEALTH;
-                }
+   
                 break;
             case ModifiedStat.ElementDmg:
                 break;
@@ -259,9 +243,9 @@ public class StatScript : MonoBehaviour
                 break;
             case ModifiedStat.SPCost:
                 modification = ((float)val / 100.0f);
-                SPCHANGE= 1.0f -modification;
-                if (SPCHANGE < 0.1)
-                    SPCHANGE = 0.1f;
+                MANACHANGE= 1.0f -modification;
+                if (MANACHANGE < 0.1)
+                    MANACHANGE = 0.1f;
                 break;
             case ModifiedStat.dmg:
                 break;
@@ -282,7 +266,7 @@ public class StatScript : MonoBehaviour
     public virtual void SetZero(bool hard = false)
     {
         Atk_DIST = 0;
-        HEALTH = 0;
+       
 
         STRENGTH = 0;
         MAGIC = 0;
@@ -293,7 +277,7 @@ public class StatScript : MonoBehaviour
 
         FTCOSTCHANGE = 1.0f;
         FTCHARGECHANGE = 1.0f;
-        SPCHANGE = 1.0f;
+        MANACHANGE = 1.0f;
 
         if (hard == true)
         {
@@ -314,14 +298,14 @@ public class StatScript : MonoBehaviour
         SPEED = 0;
         DEX = 0;
         FTCOSTCHANGE = 1.0f;
-        SPCHANGE = 1.0f;
+        MANACHANGE = 1.0f;
         FTCHARGECHANGE = 1.0f;
         if (hard == true)
         {
             MAX_HEALTH = 0;
             MAX_MANA = 0;
             MAX_FATIGUE = 0;
-            HEALTH = 0;
+        
        
           
         }

@@ -55,22 +55,22 @@ public class ArmorEquip : Equipable
 
     public List<EHitType> HITLIST
     {
-        get { return equipped.HITLIST; }
+        get { return equipped ? equipped.HITLIST : Common.noHitList; }
 
     }
     public int ARMORID
     {
-        get { return equipped.INDEX; }
+        get { return equipped ? equipped.INDEX : -1; }
 
     }
     public int TURNCOUNT
     {
-        get { return equipped.TURNCOUNT; }
+        get { return equipped ? equipped.TURNCOUNT : -1; }
     }
 
     public int USECOUNT
     {
-        get { return equipped.USECOUNT; }
+        get { return equipped ? equipped.USECOUNT: -1; }
     }
 
     public void Use()
@@ -133,6 +133,10 @@ public class ArmorEquip : Equipable
             }
         }
         return false;
+    }
+    public void EquipNull()
+    {
+        equipped = null;
     }
     public void Equip(ArmorScript armor)
     {

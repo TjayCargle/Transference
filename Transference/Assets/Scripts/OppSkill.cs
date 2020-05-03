@@ -71,7 +71,7 @@ public class OppSkill : SkillScript
     public override void UpdateDesc()
     {
         base.UpdateDesc();
-        DESC = "Grants access to a free " + REACTION.ToString() + " " + SUBTYPE.ToString() + " after an ally hits with a ";
+        DESC = "Grants access to a free " + REACTION.ToString() + " " + SUBTYPE.ToString() + " after an adjacent ally hits with a ";
         if (triggers.Count > 1)
         {
 
@@ -79,11 +79,11 @@ public class OppSkill : SkillScript
             {
                 DESC += TRIGGERS[i] + ", ";                
             }
-            DESC += "or "+TRIGGERS[TRIGGERS.Count -1]+ " attack 1-2 spaces away.";
+            DESC += "or "+TRIGGERS[TRIGGERS.Count -1]+ " attack.";
         }
         else
         {
-            DESC += TRIGGERS[0] + " attack 1-2 spaces away.";
+            DESC += TRIGGERS[0] + " attack.";
         }
 
 

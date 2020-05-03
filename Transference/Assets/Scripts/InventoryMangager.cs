@@ -370,7 +370,7 @@ public class InventoryMangager : MonoBehaviour
                     }
                     break;
             }
-
+            manager.currentMenuitem = selectedMenuItem;
         }
 
     }
@@ -851,6 +851,7 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
                 }
+                manager.currentMenuitem = selectedMenuItem;
             }
             else
             {
@@ -873,6 +874,7 @@ public class InventoryMangager : MonoBehaviour
             return;
         }
         selectedMenuItem = hoveritem;
+
         return;
         if (selectedMenuItem)
         {
@@ -1734,7 +1736,7 @@ public class InventoryMangager : MonoBehaviour
                                     else
                                     {
                                         //extraText = " SP";
-                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.MANACHANGE);
 
                                         proText.text += " <color=#a770ef>" + cost.ToString() + "</color><size=32><sprite=1></size><color=#4ba0bc><size=28>";
 
@@ -1765,7 +1767,7 @@ public class InventoryMangager : MonoBehaviour
                                         else
                                         {
                                             extraText = " SP";
-                                            int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                            int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.MANACHANGE);
 
                                             selectedText.text += " <color=#a770ef>" + cost.ToString() + extraText + "</color>";
 
@@ -2121,7 +2123,7 @@ public class InventoryMangager : MonoBehaviour
                                     else
                                     {
                                         //extraText = " SP";
-                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                        int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.MANACHANGE);
 
                                         proText.text += " <color=#a770ef>" + cost.ToString() + "</color><size=32><sprite=1></size><color=#4ba0bc><size=28>";
 
@@ -2152,7 +2154,7 @@ public class InventoryMangager : MonoBehaviour
                                         else
                                         {
                                             extraText = " SP";
-                                            int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.SPCHANGE);
+                                            int cost = ((CommandSkill)item).GetCost(lastObject, lastObject.STATS.MANACHANGE);
 
                                             selectedText.text += " <color=#a770ef>" + cost.ToString() + extraText + "</color>";
 

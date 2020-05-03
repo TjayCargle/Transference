@@ -18,8 +18,10 @@ i,7
 t,2
 w,5
 h,8
-d,0,37,14,4
-m,Western Hallway,Art Gallery,Private study,Gift Shop
-l,6,8,0,3
-x,34,5,1,23
+d,0,37,4
+m,Western Hallway,Art Gallery,Gift Shop
+l,6,8,3
+x,34,5,23
 e,17,18
+stt,reposition
+sti,12

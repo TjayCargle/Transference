@@ -25,6 +25,16 @@ public class OptionsManager : MonoBehaviour
     public Toggle dmgAnimToggle;
     public Toggle displayToggle;
     public Toggle dispalyExp;
+
+
+
+    public bool hoverSelect = false;
+    public bool fixedCamera = true;
+
+
+
+
+
     public bool isSetup = false;
     public void Setup()
     {

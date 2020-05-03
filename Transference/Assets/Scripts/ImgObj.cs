@@ -11,9 +11,18 @@ public class ImgObj : MonoBehaviour {
     public bool isSetup = false;
     public ManagerScript manager;
     public int index = 0;
+
+    public void Setup()
+    {
+        if(!isSetup)
+        {
+            myImage = GetComponent<Image>();
+            isSetup = true;
+        }
+    }
     private void Start()
     {
-        myImage = GetComponent<Image>();
+        Setup();
     }
     public virtual void StartCountDown(float t = 0.50f)
     {

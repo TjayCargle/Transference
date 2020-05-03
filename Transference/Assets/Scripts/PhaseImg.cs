@@ -33,7 +33,7 @@ public class PhaseImg : ImgObj
         }
         else
         {
-            Debug.Log("lost manager");
+
             manager = GameObject.FindObjectOfType<ManagerScript>();
             if (manager)
             {

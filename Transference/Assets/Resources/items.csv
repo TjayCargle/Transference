@@ -1,29 +1,38 @@
--id, name, description, item Type, target Type, value, element, stat, effect
-0, Dragonfruit (Small), Restores 25% of HP to ally or self., healthPotion,ally,0.25,none,none,none
-1, Dragonfruit (medium), Restores 50% of HP to ally or self., healthPotion,ally,0.50,none,none,none
-2, Dragonfruit (large), Restores 75% of HP to ally or self., healthPotion,ally,0.75,none,none,none
-3, Starfruit (Small), Increases FT by 20% to ally or self., fatiguePotion,ally,-0.20,none, none,none
-4, Starfruit (medium), Increases FT by 40% to ally or self., fatiguePotion,ally,-0.40,none,none,none
-5, Starfruit (large), Increases FT by 60% to ally or self., fatiguePotion,ally,-0.60,none, none, none
-6, Snakefruit (Small), Restores 25% of FT to ally or self., fatiguePotion,ally,0.25,none, none, none
-7, Snakefruit (medium), Restores 50% of FT to ally or self., fatiguePotion,ally,0.50,none, none, none
-8, Snakefruit (large), Restores 75% of FT to ally or self., fatiguePotion,ally,0.75,none, none, none
-9, Passionfruit (Small), Restores 25% of MP to ally or self., manaPotion,ally,0.25,none, none, none
-10, Passionfruit (medium), Restores 50% of MP to ally or self., manaPotion,ally,0.50,none, none, none
-11, Passionfruit (large), Restores 75% of MP to ally or self., manaPotion,ally,0.75,none, none, none
-12, Grapefruit (Small), 25% chance to grant 2 additional action points to ally or self., actionBoost,ally,0.25,none, none, none
-13, Grapefruit (medium), 50% chance to grant 2 additional action points to ally or self., actionBoost,ally,0.50,none, none, none
-14, Grapefruit (large), 75% chance to grant 2 additional action points to ally or self., actionBoost,ally,0.75,none, none, none
-15, Miraclefruit (Small), Grants 1 random effect to ally or self., random,ally,1,none, none, none
-16, Miraclefruit (medium), Grants 2 random effects to ally or self., random,ally,2,none, none, none
-17, Miraclefruit (large), Grants 3 random effects to ally or self., random,ally,3,none, none, none
-18, Aquabolt (Heavy), Deals heavy magical Water Damage to target.,dmg,enemy,10,Water,none,none,heavy 
-19, Pyrbolt (Heavy), Deals heavy magical Pyro Damage to target.,dmg,enemy,10,Pyro,none,none,heavy 
-20, Frostbolt (Heavy), Deals heavy magical Ice Damage to target.,dmg,enemy,10,Ice,none,none,heavy 
-21, Staticbolt (Heavy), Deals heavy magical Elec Damage to target.,dmg,enemy,10,Electric,none,none,heavy 
-22, Slashbolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Slash,none,none,heavy 
-23, Piercebolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Pierce,none,none,heavy 
-24, Bluntbolt (Heavy), Deals heavy magical  Damage to target.,dmg,enemy,10,Blunt,none,none,heavy 
-99, Glyph Core, Grant 3 additional action points to ally or self., actionBoost,ally,1.0,none, none, none
-101, Fairy Scroll, Summons a fairy as an ally., summon,adjecent,2,none,none,none
-100, Scorpiee Scroll, Summons a scorpiee pawn as an ally., summon,adjecent,0,none,none,none
+-id, name, range type, item Type, target Type, value, element, stat, effect
+0, Dragonfruit (Small), adjacent, healthPotion,ally,0.25,none,none,none
+1, Dragonfruit (medium), adjacent, healthPotion,ally,0.50,none,none,none
+2, Dragonfruit (large), adjacent, healthPotion,ally,0.75,none,none,none
+3, Starfruit (Small), adjacent, fatiguePotion,ally,-0.20,none, none,none
+4, Starfruit (medium), adjacent, fatiguePotion,ally,-0.40,none,none,none
+5, Starfruit (large), adjacent, fatiguePotion,ally,-0.60,none, none, none
+6, Snakefruit (Small),adjacent, fatiguePotion,ally,0.25,none, none, none
+7, Snakefruit (medium),adjacent, fatiguePotion,ally,0.50,none, none, none
+8, Snakefruit (large),adjacent, fatiguePotion,ally,0.75,none, none, none
+9, Passionfruit (Small),adjacent, manaPotion,ally,0.25,none, none, none
+10, Passionfruit (medium), adjacent, manaPotion,ally,0.50,none, none, none
+11, Passionfruit (large), adjacent, manaPotion,ally,0.75,none, none, none
+12, Grapefruit (Small), adjacent, actionBoost,ally,0.25,none, none, none
+13, Grapefruit (medium),adjacent, actionBoost,ally,0.50,none, none, none
+14, Grapefruit (large), adjacent, actionBoost,ally,0.75,none, none, none
+15, Miraclefruit (Small), adjacent, random,ally,1,none, none, none
+16, Miraclefruit (medium), adjacent, random,ally,2,none, none, none
+17, Miraclefruit (large), adjacent, random,ally,3,none, none, none
+18, Aquabolt (Heavy), adjacent,dmg,enemy,10,Water,none,none,heavy 
+19, Pyrbolt (Heavy), adjacent,dmg,enemy,10,Pyro,none,none,heavy 
+20, Frostbolt (Heavy), adjacent,dmg,enemy,10,Ice,none,none,heavy 
+21, Staticbolt (Heavy),adjacent,dmg,enemy,10,Electric,none,none,heavy 
+22, Slashbolt (Heavy), adjacent,dmg,enemy,10,Slash,none,none,heavy 
+23, Piercebolt (Heavy), adjacent,dmg,enemy,10,Pierce,none,none,heavy 
+24, Bluntbolt (Heavy), adjacent,dmg,enemy,10,Blunt,none,none,heavy
+90, Crippling Dart, pinWheel,dart,enemy,10,Ailment,none,cripple,tiny 
+91, Poison Dart, pinWheel,dart,enemy,10,Ailment,none,poison,tiny 
+92, Sleepy Dart, pinWheel,dart,enemy,10,Ailment,none,sleep,tiny 
+93, Confusing Dart, pinWheel,dart,enemy,10,Ailment,none,confusion,tiny 
+94, Paralyzing Dart, pinWheel,dart,enemy,10,Ailment,none,paralyze,tiny 
+95, Freezing Dart, pinWheel,dart,enemy,10,Ailment,none,freeze,tiny 
+96, Knockback Dart, pinWheel,dart,enemy,10,Ailment,none,knockback,tiny 
+97, Pulling Dart, pinWheel,dart,enemy,10,Ailment,none,pullin,tiny 
+98, Healing Dart, pinWheel,dart,ally,10,Ailment,none,heal,tiny  
+99, Glyph Core, adjacent, actionBoost,ally,1.0,none, none, none
+101, Fairy Scroll, adjacent, summon,adjecent,2,none,none,none
+100, Scorpiee Scroll, adjacent, summon,adjecent,0,none,none,none

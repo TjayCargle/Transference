@@ -45,11 +45,13 @@ public class CommandSkill : SkillScript
     protected Reaction reaction;
 
 
-
     [SerializeField]
     protected int minHit = -1;
     [SerializeField]
     protected int maxHit = -1;
+
+    [SerializeField]
+    public string extra;
 
     public int COST
     {
@@ -150,7 +152,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Charge:
                     {
                         if (OWNER)
-                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE * user.STATS.FTCHARGECHANGE);
+                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE);
                         else
                             return (int)(cost * modification);
                     }
@@ -158,7 +160,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Cost:
                     {
                         if (OWNER)
-                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE * user.STATS.FTCOSTCHANGE);
+                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE);
                         else
                             return (int)(cost * modification);
                     }
@@ -168,7 +170,7 @@ public class CommandSkill : SkillScript
                         if (cost < 0)
                         {
                             if (OWNER)
-                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE * user.STATS.FTCOSTCHANGE);
+                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE);
 
                             else
                                 return (int)(cost * modification);
@@ -176,7 +178,7 @@ public class CommandSkill : SkillScript
                         else
                         {
                             if (OWNER)
-                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE * user.BASE_STATS.FTCOSTCHANGE);
+                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE);
                             else
                                 return (int)(cost * modification);
                         }
@@ -189,7 +191,7 @@ public class CommandSkill : SkillScript
         else
         {
             if (OWNER)
-                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_MANA) * user.BASE_STATS.SPCHANGE * user.STATS.SPCHANGE);
+                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_MANA) * user.BASE_STATS.MANACHANGE);
             else
                 return (int)(cost * modification);
         }
@@ -200,7 +202,7 @@ public class CommandSkill : SkillScript
         {
             if (ETYPE == EType.magical)
             {
-                OWNER.STATS.MANA -= GetCost();
+                OWNER.STATS.MANA -= GetCost(user,modification);
                 useCount++;
             }
             else
@@ -210,7 +212,7 @@ public class CommandSkill : SkillScript
                 {
                     case SubSkillType.Charge:
                         {
-                            OWNER.STATS.FATIGUE += GetCost();
+                            OWNER.STATS.FATIGUE += GetCost(user, modification);
                         }
                         break;
                     case SubSkillType.Cost:
@@ -223,7 +225,7 @@ public class CommandSkill : SkillScript
                     case SubSkillType.RngAtk:
                         {
 
-                            int amt = GetCost();
+                            int amt = GetCost(user, modification);
                             if (cost < 0)
                             {
                                 //amt *= -1;
@@ -330,7 +332,20 @@ public class CommandSkill : SkillScript
     {
         this.DESC = PossibleDesc(RTYPE, DAMAGE, HITS, EFFECT);
     }
+    public string getEffectDesc()
+    {
+        string potentialDesc = "";
+        if (SUBTYPE == SubSkillType.Buff)
+        {
+            potentialDesc = "" + BUFF + " is increased by " + BUFFVAL + "% due to the effects of " + extra;
+        }
+        else if (SUBTYPE == SubSkillType.Debuff)
+        {
+            potentialDesc = "" + BUFF + " is decreased by " + BUFFVAL + "% due to the effects of " + extra;
+        }
 
+        return potentialDesc;
+    }
     public string PossibleDesc(RangeType pRtype, DMG pDMG, int pHits, SideEffect pEffect)
     {
         string potentialDesc;
@@ -340,7 +355,7 @@ public class CommandSkill : SkillScript
         }
         else if (SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy by " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
         }
         else if (SUBTYPE == SubSkillType.Ailment)
         {

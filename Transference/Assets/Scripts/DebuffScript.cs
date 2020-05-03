@@ -32,6 +32,13 @@ public class DebuffScript : MonoBehaviour {
 
     public void UpdateCount(LivingObject living)
     {
+        if (!living)
+        {
+            Debug.Log("no target for debuff :( ");
+            Destroy(this);
+            return;
+        }
+
         countDown--;
         if (countDown <= 0)
         {

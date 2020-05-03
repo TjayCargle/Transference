@@ -10,7 +10,7 @@ public class DmgTextObj : MonoBehaviour
     public TextMeshPro shadow;
     public bool isShowing = false;
     public bool loaded = false;
-    private float time = 2;
+    public float time = 2;
     public bool isSetup = false;
     public ManagerScript manager;
     public GridObject target;
@@ -37,6 +37,11 @@ public class DmgTextObj : MonoBehaviour
     }
     public void StartCountDown()
     {
+        if(time != 0)
+        {
+            StartCountDown(time);
+            return;
+        }
         if (isShowing == false)
         {
             if (target)
@@ -46,6 +51,23 @@ public class DmgTextObj : MonoBehaviour
             isShowing = true;
             time = 0.75f;
             if(manager)
+            {
+                manager.PlayHitSound();
+            }
+        }
+    }
+
+    public void StartCountDown(float atime)
+    {
+        if (isShowing == false)
+        {
+            if (target)
+                manager.MoveCameraAndShow(target);
+            manager.myCamera.SetCameraPosFar();
+            gameObject.SetActive(true);
+            isShowing = true;
+            time = atime;
+            if (manager)
             {
                 manager.PlayHitSound();
             }

@@ -297,7 +297,7 @@ public class PlayerController : MonoBehaviour
                                        
                                             UseItem(myManager.myCamera.infoObject.GetComponent<LivingObject>(), myManager.myCamera.currentTile);
                                         }
-                                        else if (currentItem.ITYPE == ItemType.dmg)
+                                        else if (currentItem.ITYPE == ItemType.dmg || currentItem.ITYPE == ItemType.dart)
                                         {
                                             UseItem(myManager.myCamera.infoObject, myManager.myCamera.currentTile);
                                         }
@@ -338,18 +338,18 @@ public class PlayerController : MonoBehaviour
     {
         if (TargetTile)
         {
-            Debug.Log("4 a");
+
             myManager.CreateEvent(this, TargetTile, "use item 1 event", UseItemEvent);
         }
         else if (target)
         {
-            Debug.Log("4 b");
+            
             myManager.CreateEvent(this, target.currentTile, "use item 1 event", UseItemEvent);
         }
     }
     public bool UseItemEvent(Object data)
     {
-        Debug.Log("5");
+
         TileScript TargetTile = data as TileScript;
         GridObject target = null;
         if (TargetTile)
@@ -384,7 +384,7 @@ public class PlayerController : MonoBehaviour
                         myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME);
                     }
 
-                    myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
+                    myManager.CreateTextEvent(this,currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
 
                     current.INVENTORY.ITEMS.Remove(currentItem);
 
@@ -419,20 +419,23 @@ public class PlayerController : MonoBehaviour
                     switch (currentItem.ITYPE)
                     {
                         case ItemType.healthPotion:
-                            myManager.CreateTextEvent(this, "Target health is full", "action item", myManager.CheckText, myManager.TextStart);
+                            myManager.CreateTextEvent(this, " Health Full", "action item", myManager.CheckText, myManager.TextStart);
                             break;
                         case ItemType.manaPotion:
-                            myManager.CreateTextEvent(this, "Target mana is full", "action item", myManager.CheckText, myManager.TextStart);
+                            myManager.CreateTextEvent(this, "Mana Full", "action item", myManager.CheckText, myManager.TextStart);
                             break;
                         case ItemType.fatiguePotion:
-                            myManager.CreateTextEvent(this, "Target FT couldn't change. ", "item invalid target", myManager.CheckText, myManager.TextStart);
+                            myManager.CreateTextEvent(this, "FT Maxxed. ", "item invalid target", myManager.CheckText, myManager.TextStart);
                             break;
                         case ItemType.cure:
-                            myManager.CreateTextEvent(this, "Target has no ailments. ", "item invalid target", myManager.CheckText, myManager.TextStart);
+                            myManager.CreateTextEvent(this, "No Ailments. ", "item invalid target", myManager.CheckText, myManager.TextStart);
                             break;
                         case ItemType.buff:
                             break;
                         case ItemType.dmg:
+                            break;
+                        case ItemType.dart:
+                            myManager.CreateTextEvent(this, "Ailment Exists. ", "item invalid target", myManager.CheckText, myManager.TextStart);
                             break;
                         case ItemType.actionBoost:
                             myManager.CreateTextEvent(this, "Chance of gaining action points failed", "action item", myManager.CheckText, myManager.TextStart);
@@ -444,7 +447,7 @@ public class PlayerController : MonoBehaviour
 
                 if (useditem == true || currentItem.ITYPE == ItemType.actionBoost)
                 {
-                    if (currentItem.ITYPE != ItemType.dmg)
+                    if (currentItem.ITYPE != ItemType.dmg && currentItem.ITYPE == ItemType.dart)
                     {
                         GridAnimationObj gao = null;
                         gao = myManager.PrepareGridAnimation(null, current);
@@ -464,7 +467,7 @@ public class PlayerController : MonoBehaviour
                         string coloroption2 = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(target.FACTION)) + ">";
                         myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME + " on " + coloroption2 + target.NAME + "</color>");
                     }
-                    myManager.CreateTextEvent(this, current.NAME + " used " + currentItem.NAME + " on " + target.NAME, "item used", myManager.CheckText, myManager.TextStart);
+                    myManager.CreateTextEvent(this,  currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
                     current.INVENTORY.USEABLES.Remove(currentItem);
                     //   myManager.menuManager.ShowItemCanvas(11, current);
@@ -544,7 +547,7 @@ public class PlayerController : MonoBehaviour
                                             myManager.menuManager.ShowNone();
                                             myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
-                                            myManager.CreateTextEvent(this, current.NAME + " summoned a a " + newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+                                            myManager.CreateTextEvent(this,  newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
                                             if (myManager.log)
                                             {
                                                 string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
@@ -641,7 +644,7 @@ public class PlayerController : MonoBehaviour
                                     }
                                     float modification = 1.0f;
                                     if (selectedSkil.ETYPE == EType.magical)
-                                        modification = current.STATS.SPCHANGE;
+                                        modification = current.STATS.MANACHANGE;
                                     if (selectedSkil.ETYPE == EType.physical)
                                     {
                                         if (selectedSkil.COST > 0)
@@ -750,7 +753,7 @@ public class PlayerController : MonoBehaviour
                                             current.INVENTORY.WEAPONS.Add(myManager.newSkillEvent.data as WeaponScript);
                                             (myManager.newSkillEvent.data as UsableScript).USER = current;
                                             myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                            myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                            myManager.CreateTextEvent(this,"Learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                             if (myManager.log)
                                             {
@@ -1372,7 +1375,7 @@ public class PlayerController : MonoBehaviour
         {
             float modification = 1.0f;
             if (currentSkill.ETYPE == EType.magical)
-                modification = current.STATS.SPCHANGE;
+                modification = current.STATS.MANACHANGE;
             if (currentSkill.ETYPE == EType.physical)
             {
                 if (currentSkill.COST > 0)
@@ -1568,12 +1571,12 @@ public class PlayerController : MonoBehaviour
                     }
                     if (currentSkill.SUBTYPE == SubSkillType.Buff)
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.lime;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.lime;
 
                     }
                     else
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.pink;// Color.red;
 
                     }
                 }
@@ -1600,12 +1603,12 @@ public class PlayerController : MonoBehaviour
             {
                 if (currentSkill.SUBTYPE == SubSkillType.Buff)
                 {
-                    myManager.currentAttackList[i].myColor = Common.green;
+                    myManager.currentAttackList[i].MYCOLOR = Common.green;
 
                 }
                 else
                 {
-                    myManager.currentAttackList[i].myColor = Common.red;
+                    myManager.currentAttackList[i].MYCOLOR = Common.red;
                 }
             }
 
@@ -1701,12 +1704,12 @@ public class PlayerController : MonoBehaviour
                     }
                     if (currentSkill.SUBTYPE == SubSkillType.Buff)
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.lime;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.lime;
 
                     }
                     else
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.pink;// Color.red;
 
                     }
                 }
@@ -1733,12 +1736,12 @@ public class PlayerController : MonoBehaviour
             {
                 if (currentSkill.SUBTYPE == SubSkillType.Buff)
                 {
-                    myManager.currentAttackList[i].myColor = Common.green;
+                    myManager.currentAttackList[i].MYCOLOR = Common.green;
 
                 }
                 else
                 {
-                    myManager.currentAttackList[i].myColor = Common.red;
+                    myManager.currentAttackList[i].MYCOLOR = Common.red;
                 }
             }
 
@@ -1803,7 +1806,7 @@ public class PlayerController : MonoBehaviour
 
     public void prepareAttack(WeaponScript attack)
     {
-        Debug.Log("prepare ");
+
         if (!current)
         {
             return;
@@ -1835,7 +1838,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
 
-                    myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+                    myManager.attackableTiles[i][j].MYCOLOR = Common.pink;// Color.red;
 
 
                 }
@@ -1861,7 +1864,7 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < myManager.currentAttackList.Count; i++)
             {
 
-                myManager.currentAttackList[i].myColor = Common.red;
+                myManager.currentAttackList[i].MYCOLOR = Common.red;
 
             }
 
@@ -1950,14 +1953,14 @@ public class PlayerController : MonoBehaviour
                         }
                     }
 
-                    if (currentItem.ITYPE == ItemType.dmg)
+                    if (currentItem.ITYPE == ItemType.dmg || currentItem.ITYPE == ItemType.dart)
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.pink;// Color.red;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.pink;// Color.red;
 
                     }
                     else
                     {
-                        myManager.attackableTiles[i][j].myColor = Common.lime;
+                        myManager.attackableTiles[i][j].MYCOLOR = Common.lime;
 
                     }
 
@@ -1985,14 +1988,14 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < myManager.currentAttackList.Count; i++)
             {
 
-                if (currentItem.ITYPE == ItemType.dmg)
+                if (currentItem.ITYPE == ItemType.dmg || currentItem.ITYPE == ItemType.dart)
                 {
-                    myManager.currentAttackList[i].myColor = Common.red;
+                    myManager.currentAttackList[i].MYCOLOR = Common.red;
 
                 }
                 else
                 {
-                    myManager.currentAttackList[i].myColor = Common.green;
+                    myManager.currentAttackList[i].MYCOLOR = Common.green;
 
                 }
 
@@ -2060,6 +2063,7 @@ public class PlayerController : MonoBehaviour
 
     public bool ShowCmd(Object data)
     {
+
         if (myManager.oppEvent.caller == null)
         {
             if (current)

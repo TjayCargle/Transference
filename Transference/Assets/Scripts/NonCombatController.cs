@@ -11,8 +11,8 @@ public class NonCombatController : MonoBehaviour
 
     public Image currControl;
     //   public Sprite[] silouetes;
-    public GameObject[] targets;
-    public GameObject currTarget;
+    public Image[] targets;
+    public Image currTarget;
     // [SerializeField]
     // Image siloute;
     public int buttonIndex = 0;
@@ -136,18 +136,7 @@ public class NonCombatController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 targetLocation = Vector3.zero;
-        if (currTarget)
-        {
-            targetLocation = currTarget.transform.position;
-        }
-        targetLocation.z -= 90;
-        targetLocation.x -= 15;
-        targetLocation.y += 15;
-        if (Vector3.Distance(transform.position, targetLocation) > 2f)
-        {
-            transform.Translate((targetLocation - transform.position) * 0.5f);
-        }
+     
         if (Input.GetKeyDown(KeyCode.S))
         {
             if (buttons.Length > 0)
@@ -162,7 +151,9 @@ public class NonCombatController : MonoBehaviour
                     buttonIndex = 0;
                 }
 
+                currTarget.color = Common.blackened;
                 currTarget = targets[buttonIndex];
+                currTarget.color = Color.white;
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
@@ -182,7 +173,10 @@ public class NonCombatController : MonoBehaviour
                 {
                     buttonIndex = buttons.Length - 1;
                 }
+
+                currTarget.color = Common.blackened;
                 currTarget = targets[buttonIndex];
+                currTarget.color = Color.white;
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;

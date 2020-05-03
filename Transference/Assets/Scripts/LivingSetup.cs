@@ -21,7 +21,7 @@ public class LivingSetup : MonoBehaviour
     public GridObject otherMe;
     public DatabaseManager dm;
     public ManagerScript manager;
-    public Faction DataFaction;
+
     public virtual void Setup()
     {
         if (!isSetup)

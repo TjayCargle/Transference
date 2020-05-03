@@ -61,56 +61,39 @@ public class AutoSkill : SkillScript
 
     public Reaction Activate(float amount, GridObject target)
     {
-        if (NEXT > 0)
-        {
-            if (NEXTCOUNT > 0)
-            {
-                NEXTCOUNT--;
-                if (NEXTCOUNT <= 0)
-                {
 
-                    DatabaseManager database = Common.GetDatabase();
-                    if (database != null)
-                    {
-                        database.LearnSkill(NEXT, OWNER);
-
-                    }
-                }
-            }
-        }
         switch (REACT)
         {
             case AutoReact.healByDmg:
                 OWNER.ChangeHealth((int)amount);
                 return Reaction.none;
-                break;
             case AutoReact.healAmount:
                 OWNER.ChangeHealth(VAL);
                 return Reaction.none;
-                break;
+           
             case AutoReact.extraAction:
                 OWNER.ACTIONS++;
                 return Reaction.none;
-                break;
+           
             case AutoReact.GainManaAmount:
                 OWNER.ChangeMana(VAL);
                 return Reaction.none;
-                break;
+          
             case AutoReact.HealFTByAmount:
                 OWNER.ChangeFatigue(VAL);
                 return Reaction.none;
-                break;
+          
             case AutoReact.reduceStr:
                 return Reaction.ApplyEffect;
-                break;
+            
             case AutoReact.ChargeFTByAmount:
                 OWNER.ChangeFatigue(-VAL);
                 return Reaction.none;
-                break;
+             
             case AutoReact.discoverItem:
                 OWNER.GetComponent<LivingSetup>().dm.GetItem(UnityEngine.Random.Range(0, 11), OWNER);
                 return Reaction.none;
-                break;
+           
             case AutoReact.GainManaByDmg:
                 OWNER.ChangeMana((int)amount);
                 break;
@@ -143,13 +126,19 @@ public class AutoSkill : SkillScript
                             randomDeBuff.BUFFVAL = Random.Range(-10, -100);
                             randomDeBuff.ELEMENT = Element.Buff;
                             randomDeBuff.SUBTYPE = SubSkillType.Debuff;
-
-                            liveTarget.INVENTORY.BUFFS.Add(randomDeBuff);
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
                             DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+                            
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                        
                             liveTarget.ApplyPassives();
+                            liveTarget.updateAilmentIcons();
                         }
                     }
                 }

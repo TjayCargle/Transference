@@ -32,6 +32,13 @@ public class BuffScript : MonoBehaviour
 
     public void UpdateCount(LivingObject living)
     {
+        if (!living)
+        {
+            Debug.Log("no target for buff :( ");
+            Destroy(this);
+        }
+
+
         countDown--;
         if(countDown <= 0)
         {

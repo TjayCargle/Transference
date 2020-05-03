@@ -51,7 +51,7 @@ public class Expbar : MonoBehaviour
                         if (currentUser.BASE_STATS.EXP >= 100)
                         {
                             int leftover = currentUser.BASE_STATS.EXP - 100;
-                            currentUser.LevelUp();
+                           // currentUser.LevelUp();
                             currentUser.BASE_STATS.EXP += leftover;
 
                             if(leftover > 0)

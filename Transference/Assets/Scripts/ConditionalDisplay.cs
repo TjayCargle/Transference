@@ -17,6 +17,13 @@ public class ConditionalDisplay : MonoBehaviour
     public bool debugging = false;
     public bool checksForGlyph = false;
     public bool checksForEnemy = false;
+    public bool checkForHelpTile = false;
+
+    public bool playerHasSkills = false;
+    public bool playerHasSpells = false;
+    public bool playerHasStrikes = false;
+    public bool playerHasBarriers = false;
+    public bool playerHasItems = false;
     // Use this for initialization
     void Start()
     {
@@ -61,7 +68,7 @@ public class ConditionalDisplay : MonoBehaviour
                     LivingObject livvy = manager.myCamera.infoObject.GetComponent<LivingObject>();
                     if (livvy)
                     {
-                        if (livvy.INVENTORY.DEBUFFS.Count > 0 || livvy.INVENTORY.BUFFS.Count > 0 || livvy.GetComponent<EffectScript>() || livvy.GetComponent<SecondStatusScript>())
+                        if (livvy.INVENTORY.DEBUFFS.Count > 0 || livvy.INVENTORY.BUFFS.Count > 0 || livvy.INVENTORY.EFFECTS.Count > 0|| livvy.GetComponent<SecondStatusScript>())
                         {
                             gameObject.SetActive(true);
                         }
@@ -93,6 +100,63 @@ public class ConditionalDisplay : MonoBehaviour
 
         if (manager)
         {
+            if (manager.menuManager.isGameOverShowing() == true) 
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            if(manager.player)
+            {
+                if(manager.player.current)
+                {
+                    if(playerHasSkills == true)
+                    {
+                        if(manager.player.current.PHYSICAL_SLOTS.SKILLS.Count == 0)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                    if (playerHasSpells == true)
+                    {
+                        if (manager.player.current.MAGICAL_SLOTS.SKILLS.Count == 0)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                    if (playerHasStrikes == true)
+                    {
+                        if (manager.player.current.INVENTORY.WEAPONS.Count == 0)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                    if (playerHasBarriers == true)
+                    {
+                        if (manager.player.current.INVENTORY.ARMOR.Count == 0)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                    if (playerHasItems == true)
+                    {
+                        if (manager.player.current.INVENTORY.ITEMS.Count == 0)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
 
             if (requiresDoorTile == true)
             {
@@ -108,10 +172,10 @@ public class ConditionalDisplay : MonoBehaviour
             }
             if (requiresSelectedorSpecialTile == true)
             {
-                if (manager.myCamera.currentTile)
+                if (manager.myCamera.selectedTile)
                 {
 
-                    if (manager.myCamera.infoObject == null && manager.myCamera.currentTile.TTYPE == TileType.regular)
+                    if (manager.myCamera.infoObject == null && manager.myCamera.selectedTile.TTYPE == TileType.regular)
                     {
 
                         gameObject.SetActive(false);
@@ -138,8 +202,33 @@ public class ConditionalDisplay : MonoBehaviour
                     return;
                 }
             }
+            if(checkForHelpTile == true)
+            {
+                if(!manager.myCamera)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if(!manager.myCamera.currentTile)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if(manager.myCamera.currentTile.TTYPE != TileType.help)
+                {
+                    if(Common.isOverrideTile(manager.myCamera.currentTile) == false)
+                    {
+                
+                            gameObject.SetActive(false);
+                            return;                      
+                
+                    }
+                }
+            }
             if (checksForEnemy == true)
             {
+                gameObject.SetActive(false);
+                return;
                 if (manager.myCamera.infoObject == null)
                 {
                     gameObject.SetActive(false);
@@ -152,8 +241,7 @@ public class ConditionalDisplay : MonoBehaviour
                 }
                 if (!manager.CheckAdjecentTilesEnemy(manager.player.current))
                 {
-                    gameObject.SetActive(false);
-                    return;
+       
                 }
             }
             if (checksForEvent == true)

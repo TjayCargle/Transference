@@ -19,6 +19,7 @@ public class AnimationScript : MonoBehaviour
     public string idlePath;
     public string movePath;
     public bool hasMove = false;
+    public bool runAnyway = false;
     public Animator SHADOWANIM
     {
         get { return shadowAnimator; }
@@ -136,7 +137,7 @@ public class AnimationScript : MonoBehaviour
             {
                 if (cam)
                 {
-                    if (cam.infoObject == me)
+                    if (cam.infoObject == me || runAnyway == true)
                     {
                         index++;
                         if (index >= currentList.Length)
@@ -211,7 +212,14 @@ public class AnimationScript : MonoBehaviour
                     }
                 }
             }
-
+            if (runAnyway == true)
+            {
+                anim.speed = 1;
+                if (SHADOWANIM)
+                {
+                        SHADOWANIM.speed = 1;          
+                }
+            }
         }
     }
 

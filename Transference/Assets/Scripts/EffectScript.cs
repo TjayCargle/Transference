@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectScript : MonoBehaviour
+public class EffectScript : ScriptableObject
 {
     [SerializeField]
     SideEffect effect;
@@ -12,15 +12,39 @@ public class EffectScript : MonoBehaviour
         get { return effect; }
         set { effect = value; }
     }
+    private LivingObject owner;
 
     public void ApplyReaction(ManagerScript manager, LivingObject living)
     {
-        int chance = Random.Range(-5, 5);
-        Debug.Log("Status Effect Chance = " + chance);
+        owner = living;
+        if(!living)
+        {
+            Debug.Log("no target for ailment :( ");
+          PoolManager.GetManager().ReleaseEffect(this);
+        }
+
+        int chance = Random.Range(-8, 3);
+       // Debug.Log("Status Effect Chance = " + chance);
         switch (effect)
         {
+            case SideEffect.confusion:
+                {
+                    if(living.SSTATUS != SecondaryStatus.confusion)
+                    {
+                        manager.CreateDmgTextEvent("Normal", Color.magenta, living);
+                        living.INVENTORY.EFFECTS.Remove(this);
+                        living.updateAilmentIcons();
+                      PoolManager.GetManager().ReleaseEffect(this);
+                    }
+                    else
+                    {
+                        manager.CreateDmgTextEvent("Confused", Color.magenta, living);
+
+                    }
+                }
+                break;
             case SideEffect.paralyze:
-                Debug.Log(living.FullName + " is paralyzed");
+              //  Debug.Log(living.FullName + " is paralyzed");
                 if (manager.log)
                 {
                     string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
@@ -29,9 +53,13 @@ public class EffectScript : MonoBehaviour
                 if (chance <= 0)
                 {
                     //Debug.Log("Player is stunned");
-                    int dmg = (int)(living.HEALTH * 0.1);
+
+                    int dmg = (int)(living.MAX_HEALTH * 0.1);
                     manager.DamageGridObject(living, dmg);
-                    manager.CreateDmgTextEvent(dmg.ToString(), Color.yellow, living);
+                    manager.CreateDmgTextEvent("-1 Action", Color.yellow, living);
+                    manager.CreateDmgTextEvent("- " + dmg.ToString() + "<sprite=2> ", Color.yellow, living);
+                    manager.CreateDmgTextEvent("Paralysis", Color.yellow, living);
+
                     living.ACTIONS--;
                     // manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is stunned", "stun effect", manager.CheckText, manager.TextStart);
@@ -42,6 +70,7 @@ public class EffectScript : MonoBehaviour
                         manager.log.Log(coloroption + living.NAME + "</color> was stunned. " + dmg.ToString() + " health");
                         manager.log.Log(coloroption + living.NAME + "</color> lost " + dmg.ToString() + " health and 1 action from being <color=#9B870C>paralyzed</color>");
                     }
+                    living.updateAilmentIcons();
                     return;
                 }
                 manager.CreateTextEvent(this, "" + living.FullName + " is no longer paralyzed", "no longer paralyzed effect", manager.CheckText, manager.TextStart);
@@ -50,53 +79,65 @@ public class EffectScript : MonoBehaviour
                     string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
                     manager.log.Log(coloroption + living.NAME + "</color> is no longer <color=#9B870C>paralyzed</color>");
                 }
-                Destroy(this);
+                living.INVENTORY.EFFECTS.Remove(this);
+                living.updateAilmentIcons();
+              PoolManager.GetManager().ReleaseEffect(this);
                 break;
             case SideEffect.sleep:
-                Debug.Log(living.FullName + " is sleep");
+               // Debug.Log(living.FullName + " is sleep");
                 if (chance <= 0)
                 {
                     //   Debug.Log(living.FullName + " is sleeping");
-                    int dmg = -(int)(living.HEALTH * 0.1);
+                    int dmg = -(int)(living.MAX_HEALTH * 0.1);
                     manager.DamageGridObject(living, dmg);
-                    manager.CreateDmgTextEvent(dmg.ToString(), Color.blue, living);
+                    manager.CreateDmgTextEvent("+ " + (-1*dmg).ToString() + "<sprite=2> ", Color.blue, living);
+                    manager.CreateDmgTextEvent("Sleep", Color.blue, living);
                     living.ACTIONS = 0;
-                    manager.NextTurn("effectScript");
+                    //manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is sleeping", "sleep effect", manager.CheckText, manager.TextStart);
                     return;
                 }
+                manager.CreateDmgTextEvent("Woke Up", Color.blue, living);
                 manager.CreateTextEvent(this, "" + living.FullName + " woke up", "no longer sleep effect", manager.CheckText, manager.TextStart);
-                Destroy(this);
+                living.INVENTORY.EFFECTS.Remove(this);
+                living.updateAilmentIcons();
+              PoolManager.GetManager().ReleaseEffect(this);
                 break;
             case SideEffect.freeze:
-                Debug.Log(living.FullName + " is frozen");
+                //Debug.Log(living.FullName + " is frozen");
                 if (chance <= 0)
                 {
-                    Debug.Log(living.FullName + " is frozen solid");
                     manager.CreateDmgTextEvent("Frozen", Color.cyan, living);
                     living.ACTIONS = 0;
-                    manager.NextTurn("effectScript");
+                  //  manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is frozen", "frozen effect", manager.CheckText, manager.TextStart);
                     return;
                 }
+                manager.CreateDmgTextEvent("Thawed", Color.cyan, living);
                 manager.CreateTextEvent(this, "" + living.FullName + " thawed out", "no longer frozen effect", manager.CheckText, manager.TextStart);
-                Destroy(this);
+                living.INVENTORY.EFFECTS.Remove(this);
+                living.updateAilmentIcons();
+              PoolManager.GetManager().ReleaseEffect(this);
                 break;
             case SideEffect.burn:
                 {
 
-                    Debug.Log(living.FullName + " is burned");
-                    int dmg = (int)(living.HEALTH * 0.2);
+
+                    int dmg = (int)(living.MAX_HEALTH * 0.2);
                     living.ACTIONS++;
                     manager.DamageGridObject(living, dmg);
-                    manager.CreateDmgTextEvent(dmg.ToString(), Color.red, living);
+                    manager.CreateDmgTextEvent("- " + dmg.ToString() + "<sprite=2> ", Color.red, living);
+                    manager.CreateDmgTextEvent("Burn", Color.red, living);
                     manager.CreateTextEvent(this, "" + living.FullName + " took damage from their burn", "burned effect", manager.CheckText, manager.TextStart);
 
                     if (chance > 0)
                     {
+                        manager.CreateDmgTextEvent("Burn Healed", Color.red, living);
                         manager.CreateTextEvent(this, "" + living.FullName + " is no longer burned", "no longer burned effect", manager.CheckText, manager.TextStart);
-                        Destroy(this);
+                        living.INVENTORY.EFFECTS.Remove(this);
+                      PoolManager.GetManager().ReleaseEffect(this);
                     }
+                        living.updateAilmentIcons();
                 }
                 break;
             case SideEffect.poison:
@@ -107,42 +148,65 @@ public class EffectScript : MonoBehaviour
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
                         manager.log.Log(coloroption + living.NAME + "</color> is <color=#8A2BE2>poisoned</color>");
                     }
-                    Debug.Log(living.FullName + " is poisoned");
 
-                    int dmg = (int)(living.HEALTH * 0.1);
+                    int dmg = (int)(living.MAX_HEALTH * 0.1);
                     manager.DamageGridObject(living, dmg);
+                    manager.CreateDmgTextEvent("-" + dmg.ToString() + "<sprite=2> ", Color.magenta, living);
+                    manager.CreateDmgTextEvent("Poison", Color.magenta, living);
+
                     if (manager.log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
                         manager.log.Log(coloroption + living.NAME + "</color> lost " + dmg.ToString() + " health and had STRENGTH debuffed from being <color=#8A2BE2>poisoned</color>");
                     }
 
-                    if (!living.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
-                    {
-                        Common.CommonDebuffStr.EFFECT = SideEffect.debuff;
-                        Common.CommonDebuffStr.BUFF = BuffType.Str;
-                        Common.CommonDebuffStr.BUFFVAL = -10f;
-                        Common.CommonDebuffStr.ELEMENT = Element.Buff;
-                        Common.CommonDebuffStr.SUBTYPE = SubSkillType.Debuff;
-
-                        living.INVENTORY.DEBUFFS.Add(Common.CommonDebuffStr);
-                        DebuffScript buff = living.gameObject.AddComponent<DebuffScript>();
-                        buff.SKILL = Common.CommonDebuffStr;
-                        buff.BUFF = Common.CommonDebuffStr.BUFF;
-                        buff.COUNT = 1;
-                        living.ApplyPassives();
-
-                    }
+             
                     if (chance > 0)
                     {
-                        Debug.Log(living.FullName + " is no longer poisoned");
+                        manager.CreateDmgTextEvent("Poison Healed", Color.magenta, living);
+
+                        manager.CreateTextEvent(this, living.FullName + " is no longer poisoned", "auto atk", manager.CheckText, manager.TextStart);
                         if (manager.log)
                         {
                             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
                             manager.log.Log(coloroption + living.NAME + "</color> is no longer <color=#8A2BE2>poisoned</color>");
                         }
-                        Destroy(this);
+                        living.INVENTORY.EFFECTS.Remove(this);
+                        living.updateAilmentIcons();
+                      PoolManager.GetManager().ReleaseEffect(this);
                     }
+                    else if (!living.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
+                        {
+                            CommandSkill strDebuff = Common.CommonDebuffStr;
+                            strDebuff.EFFECT = SideEffect.debuff;
+                            strDebuff.BUFF = BuffType.Str;
+                            strDebuff.BUFFVAL = -10f;
+                            strDebuff.ELEMENT = Element.Buff;
+                            strDebuff.SUBTYPE = SubSkillType.Debuff;
+                            strDebuff.OWNER = living;
+                        strDebuff.NAME = "Str Poison";
+                        living.INVENTORY.DEBUFFS.Add(strDebuff);
+
+
+                            DebuffScript buff = living.gameObject.AddComponent<DebuffScript>();
+                            buff.SKILL = strDebuff;
+                            buff.BUFF = strDebuff.BUFF;
+                            buff.COUNT = 2;
+                        living.ApplyPassives();
+
+                        }
+                    else if(living.GetComponent<DebuffScript>())
+                    {
+                        DebuffScript[] debuffs = living.GetComponents<DebuffScript>();
+                        for (int i = 0; i < debuffs.Length; i++)
+                        {
+                            if(debuffs[i].SKILL == Common.CommonDebuffStr)
+                            {
+                                debuffs[i].COUNT++;
+                            }
+                        }
+                    }
+                    living.updateAilmentIcons();
                     break;
 
                 }
@@ -159,7 +223,7 @@ public class EffectScript : MonoBehaviour
                     }
                     Debug.Log(living.FullName + " is bleeding");
 
-                    int dmg = (int)(living.HEALTH * 0.1);
+                    int dmg = (int)(living.MAX_HEALTH * 0.1);
                     manager.DamageGridObject(living, dmg);
                     if (manager.log)
                     {
@@ -191,8 +255,10 @@ public class EffectScript : MonoBehaviour
                             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(living.FACTION)) + ">";
                             manager.log.Log(coloroption + living.NAME + "</color> is no longer <color=#FF2BE2>bleeding</color>");
                         }
-                        Destroy(this);
+                        living.INVENTORY.EFFECTS.Remove(this);
+                      PoolManager.GetManager().ReleaseEffect(this);
                     }
+                        living.updateAilmentIcons();
                     break;
 
                 }
@@ -200,5 +266,7 @@ public class EffectScript : MonoBehaviour
             default:
                 break;
         }
+       
     }
+
 }

@@ -86,79 +86,79 @@ public class ItemScript : UsableScript
                 break;
             case ItemType.cure:
                 {
-                    switch (effect)
-                    {
-                        case SideEffect.slow:
-                            if (target.SSTATUS == SecondaryStatus.slow)
-                            {
-                                target.SSTATUS = SecondaryStatus.normal;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.rage:
-                            if (target.SSTATUS == SecondaryStatus.rage)
-                            {
-                                target.SSTATUS = SecondaryStatus.normal;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.charm:
-                            if (target.SSTATUS == SecondaryStatus.charm)
-                            {
-                                target.SSTATUS = SecondaryStatus.normal;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.seal:
-                            if (target.SSTATUS == SecondaryStatus.seal)
-                            {
-                                target.SSTATUS = SecondaryStatus.normal;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.poison:
-                            if (target.ESTATUS == StatusEffect.poisoned)
-                            {
-                                target.ESTATUS = StatusEffect.none;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.confusion:
-                            if (target.SSTATUS == SecondaryStatus.confusion)
-                            {
-                                target.SSTATUS = SecondaryStatus.normal;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.paralyze:
-                            if (target.ESTATUS == StatusEffect.paralyzed)
-                            {
-                                target.ESTATUS = StatusEffect.none;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.sleep:
-                            if (target.ESTATUS == StatusEffect.sleep)
-                            {
-                                target.ESTATUS = StatusEffect.none;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.freeze:
-                            if (target.ESTATUS == StatusEffect.frozen)
-                            {
-                                target.ESTATUS = StatusEffect.none;
-                                usedEffect = true;
-                            }
-                            break;
-                        case SideEffect.burn:
-                            if (target.ESTATUS == StatusEffect.burned)
-                            {
-                                target.ESTATUS = StatusEffect.none;
-                                usedEffect = true;
-                            }
-                            break;
-                    }
+                    //switch (effect)
+                    //{
+                    //    case SideEffect.slow:
+                    //        if (target.SSTATUS == SecondaryStatus.slow)
+                    //        {
+                    //            target.SSTATUS = SecondaryStatus.normal;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.rage:
+                    //        if (target.SSTATUS == SecondaryStatus.rage)
+                    //        {
+                    //            target.SSTATUS = SecondaryStatus.normal;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.charm:
+                    //        if (target.SSTATUS == SecondaryStatus.charm)
+                    //        {
+                    //            target.SSTATUS = SecondaryStatus.normal;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.seal:
+                    //        if (target.SSTATUS == SecondaryStatus.seal)
+                    //        {
+                    //            target.SSTATUS = SecondaryStatus.normal;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.poison:
+                    //        if (target.ESTATUS == StatusEffect.poisoned)
+                    //        {
+                    //            target.ESTATUS = StatusEffect.none;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.confusion:
+                    //        if (target.SSTATUS == SecondaryStatus.confusion)
+                    //        {
+                    //            target.SSTATUS = SecondaryStatus.normal;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.paralyze:
+                    //        if (target.ESTATUS == StatusEffect.paralyzed)
+                    //        {
+                    //            target.ESTATUS = StatusEffect.none;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.sleep:
+                    //        if (target.ESTATUS == StatusEffect.sleep)
+                    //        {
+                    //            target.ESTATUS = StatusEffect.none;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.freeze:
+                    //        if (target.ESTATUS == StatusEffect.frozen)
+                    //        {
+                    //            target.ESTATUS = StatusEffect.none;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //    case SideEffect.burn:
+                    //        if (target.ESTATUS == StatusEffect.burned)
+                    //        {
+                    //            target.ESTATUS = StatusEffect.none;
+                    //            usedEffect = true;
+                    //        }
+                    //        break;
+                    //}
                 }
                 break;
             case ItemType.buff:
@@ -384,7 +384,7 @@ public class ItemScript : UsableScript
                             actor.BASE_STATS.MAX_HEALTH = MAX_HEALTH;
                             actor.BASE_STATS.MAX_MANA = MAX_MANA;
                             actor.BASE_STATS.MAX_FATIGUE = MAX_FATIGUE;
-                            actor.BASE_STATS.HEALTH = MAX_HEALTH;
+                            actor.STATS.HEALTH = MAX_HEALTH;
                             actor.STATS.MANA = MAX_MANA;
                             actor.BASE_STATS.STRENGTH = STRENGTH;
                             actor.BASE_STATS.MAGIC = MAGIC;
@@ -404,7 +404,7 @@ public class ItemScript : UsableScript
                                     deatindex++;
                                     int weapLevel = System.Int32.Parse(additionals[deatindex]);
                                     deatindex++;
-                                    if (i < actor.INVENTORY.WEAPONS.Count )
+                                    if (i < actor.INVENTORY.WEAPONS.Count)
                                     {
                                         WeaponScript wep = actor.INVENTORY.WEAPONS[i];
                                         if (wep.INDEX == weapNum)
@@ -418,21 +418,21 @@ public class ItemScript : UsableScript
                                             }
                                         }
                                     }
-                                        else
+                                    else
+                                    {
+                                        WeaponScript wep2 = dm.GetWeapon(weapNum, actor);
+                                        if (wep2)
                                         {
-                                            WeaponScript wep2 = dm.GetWeapon(weapNum, actor);
-                                            if(wep2)
+                                            if (wep2.LEVEL < weapLevel)
                                             {
-                                                if (wep2.LEVEL < weapLevel)
+                                                while (wep2.LEVEL < weapLevel)
                                                 {
-                                                    while (wep2.LEVEL < weapLevel)
-                                                    {
-                                                        wep2.LevelUP();
-                                                    }
+                                                    wep2.LevelUP();
                                                 }
                                             }
                                         }
-                                   
+                                    }
+
                                 }
 
                                 int armorCount = System.Int32.Parse(additionals[deatindex]);
@@ -457,22 +457,22 @@ public class ItemScript : UsableScript
                                             }
                                         }
                                     }
-                                        else
+                                    else
+                                    {
+                                        ArmorScript arm2 = dm.GetArmor(armNum, actor);
+                                        if (arm2)
                                         {
-                                            ArmorScript arm2 = dm.GetArmor(armNum, actor);
-                                            if (arm2)
+                                            if (arm2.LEVEL < armLevel)
                                             {
-                                                if (arm2.LEVEL < armLevel)
+                                                while (arm2.LEVEL < armLevel)
                                                 {
-                                                    while (arm2.LEVEL < armLevel)
-                                                    {
-                                                        arm2.LevelUP();
-                                                    }
+                                                    arm2.LevelUP();
                                                 }
                                             }
                                         }
+                                    }
 
-                             
+
                                 }
 
 
@@ -513,7 +513,7 @@ public class ItemScript : UsableScript
                                             }
                                         }
                                     }
-                                    
+
 
 
                                 }
@@ -542,20 +542,20 @@ public class ItemScript : UsableScript
                                             }
                                         }
                                     }
-                                        else
+                                    else
+                                    {
+                                        PassiveSkill pass2 = dm.LearnSkill(passNum, actor) as PassiveSkill;
+                                        if (pass2)
                                         {
-                                            PassiveSkill pass2 = dm.LearnSkill(passNum, actor) as PassiveSkill;
-                                            if (pass2)
+                                            if (pass2.LEVEL < passLevel)
                                             {
-                                                if (pass2.LEVEL < passLevel)
+                                                while (pass2.LEVEL < passLevel)
                                                 {
-                                                    while (pass2.LEVEL < passLevel)
-                                                    {
-                                                        pass2.LevelUP();
-                                                    }
+                                                    pass2.LevelUP();
                                                 }
                                             }
                                         }
+                                    }
 
 
                                 }
@@ -693,6 +693,28 @@ public class ItemScript : UsableScript
                     }
                 }
                 break;
+
+            case ItemType.dart:
+                {
+                    if(!target.GetComponent<LivingObject>())
+                    {
+                        return false;
+                    }
+                    LivingObject liveTarget = target.GetComponent<LivingObject>();
+                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                    CommandSkill itemskill = Common.GenericSkill;
+                    itemskill.ACCURACY = 100;              
+                    itemskill.EFFECT = EFFECT;               
+                    itemskill.SUBTYPE = SubSkillType.Ailment;
+                    itemskill.OWNER = user;
+                    itemskill.NAME = NAME;
+                    if (manager)
+                    {
+                        manager.ApplyEffect(liveTarget, EFFECT, 100, itemskill);
+                        usedEffect = true;
+                    }
+                }
+                break;
             default:
                 if (target.GetComponent<LivingObject>())
                 {
@@ -732,6 +754,9 @@ public class ItemScript : UsableScript
                 break;
             case ItemType.dmg:
                 DESC = "Deals heavy magical " + ELEMENT + " Damage to target";
+                break;
+            case ItemType.dart:
+                DESC = "Throws a " + EFFECT + " dart at target. " + Common.GetSideEffectText(EFFECT);
                 break;
             case ItemType.actionBoost:
                 if (trueValue == 1.0f)

@@ -39,7 +39,7 @@ public class BattleLog : MonoBehaviour
                 //{
                 //    trueSize = rect.sizeDelta;
                 //}
-
+               // Debug.Log(text);
                 rect.sizeDelta = rect.sizeDelta + new Vector2(0,proText.fontSize + text.Length);
             }
         }

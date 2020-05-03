@@ -135,7 +135,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             {
                                 for (int j = 0; j < myManager.attackableTiles[i].Count; j++)
                                 {
-                                    myManager.attackableTiles[i][j].myColor = Common.pink;
+                                    myManager.attackableTiles[i][j].MYCOLOR = Common.pink;
                                 }
                             }
                             myManager.currentAttackList = myManager.attackableTiles[0];
@@ -183,7 +183,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                     }
 
                                 }
-                                myManager.currentAttackList[i].myColor = Common.red;
+                                myManager.currentAttackList[i].MYCOLOR = Common.red;
                             }
                             if (foundSomething == false)
                             {
@@ -211,7 +211,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         }
                         else
                         {
-                            //  Debug.Log("Couldnt find tiles");
+                              Debug.Log("Looking for weapons?");
                             myManager.CreateTextEvent(this, "No weapon equipped for " + invokingObject.NAME, "no weapon", myManager.CheckText, myManager.TextStart);
                         }
 
@@ -252,7 +252,6 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 {
                     invokingObject.GetComponent<LivingObject>().Wait();
                 }
-                myManager.NextTurn(invokingObject.FullName);
 
                 break;
             case MenuItemType.Look:
@@ -388,7 +387,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     }
                 }
                 break;
-            case MenuItemType.selectBS:
+            case MenuItemType.Skills:
                 {
 
                     myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
@@ -497,7 +496,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                 break;
 
-            case MenuItemType.selectItem:
+            case MenuItemType.Items:
                 {
                     //Debug.Log("select item");
                     //menuStackEntry entry = new menuStackEntry();
@@ -528,25 +527,38 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 }
                 break;
 
-            case MenuItemType.selectAct:
+            case MenuItemType.Battle:
                 {
                     //myManager.menuManager.ShowActCanvas();
 
                     myManager.StackActSelection();
                 }
                 break;
-            case MenuItemType.selectDetails:
+            case MenuItemType.Details:
                 {
-                    myManager.StackDetails();
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        myManager.detailsScreen.anotherObj = null;
+                        myManager.detailsScreen.currentObj = invokingObject.GetComponent<LivingObject>();
+                        myManager.StackDetails();
+                    }
+                    else
+                    {
+                        myManager.detailsScreen.currentObj = null;
+                        myManager.detailsScreen.anotherObj = invokingObject.GetComponent<GridObject>();
+                        myManager.StackDetails();
+                    }
+                   
                 }
                 break;
-            case MenuItemType.shop:
+            case MenuItemType.Shop:
                 {
                     myManager.StackShop();
                 }
                 break;
-            case MenuItemType.door:
+            case MenuItemType.Door:
                 {
+                    Debug.Log("so....");
                     myManager.GotoNewRoom();
                     // myManager.CheckDoorPrompt();
                 }
@@ -556,7 +568,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     myManager.CheckEventPrompt();
                 }
                 break;
-            case MenuItemType.selectSpells:
+            case MenuItemType.Spells:
                 {
 
                     myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
@@ -574,7 +586,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     }
                 }
                 break;
-            case MenuItemType.selectStrikes:
+            case MenuItemType.Strikes:
                 {
 
                     myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
@@ -606,7 +618,12 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.trade:
                 break;
-            case MenuItemType.hack:
+            case MenuItemType.Tip:
+                {
+                    myManager.CheckHelpPrompt();
+                }
+                break;
+            case MenuItemType.Hack:
                 {
                     if (myManager)
                     {
@@ -615,7 +632,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     }
                 }
                 break;
-            case MenuItemType.guard:
+            case MenuItemType.Guard:
                 {
                     if (myManager)
                     {
@@ -625,12 +642,11 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     {
                         invokingObject.GetComponent<LivingObject>().GuardCharge();
                     }
-                    myManager.NextTurn(invokingObject.FullName);
 
                 }
                 break;
 
-            case MenuItemType.talk:
+            case MenuItemType.Talk:
                 {
                     if (invokingObject.GetComponent<LivingObject>())
                     {

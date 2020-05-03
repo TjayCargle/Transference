@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CameraScript : MonoBehaviour
 {
     public TileScript currentTile;
+    public TileScript selectedTile;
     public Canvas infoCanvas;
     public Text infoText;
     public Slider healthSlider;
@@ -44,8 +45,15 @@ public class CameraScript : MonoBehaviour
     AudioSource audio;
     public AudioClip previousClip;
     bool isSetup = false;
-
     int soundTrack = 1;
+
+    private int fadeMode = 0;
+    private float currentVolume = 0.0f;
+    private AudioClip nextClip;
+
+    public TextObj confirmButton;
+    public TextObj cancelButton;
+
     void Start()
     {
         Setup();
@@ -72,6 +80,28 @@ public class CameraScript : MonoBehaviour
     }
 
     void LateUpdate()
+    {
+        if (manager)
+        {
+            if (manager.options)
+            {
+                if (manager.options.fixedCamera == true)
+                {
+                    UpdatePosition();
+                }
+            }
+            else
+            {
+                UpdatePosition();
+            }
+        }
+        else
+        {
+            UpdatePosition();
+        }
+    }
+
+    public void UpdatePosition()
     {
 
         if (currentTile)
@@ -100,14 +130,14 @@ public class CameraScript : MonoBehaviour
     public void SetCameraPosDefault()
     {
         x = 0;
-        y = 6;
+        y = 8;
         z = 0;
     }
 
     public void SetCameraPosSlightZoom()
     {
         x = 0;
-        y = 5;
+        y = 6;
         z = 0;
     }
 
@@ -121,7 +151,7 @@ public class CameraScript : MonoBehaviour
     public void SetCameraPosFar()
     {
         x = 0;
-        y = 8;
+        y = 9;
         z = -1;
     }
 
@@ -163,6 +193,7 @@ public class CameraScript : MonoBehaviour
                 previousClip = musicClips[soundTrack - 1];
                 soundTrack = 3;
                 audio.clip = musicClips[2];
+
                 audio.Play();
             }
         }
@@ -176,10 +207,20 @@ public class CameraScript : MonoBehaviour
             {
                 if (soundTrack != num)
                 {
-                    previousClip = musicClips[soundTrack - 1];
-                    soundTrack = num;
-                    audio.clip = musicClips[num - 1];
-                    audio.Play();
+                    currentVolume = audio.volume;
+                    if (currentVolume <= 0)
+                    {
+                        previousClip = musicClips[soundTrack - 1];
+                        soundTrack = num;
+                        audio.clip = musicClips[num - 1];
+                        audio.Play();
+                    }
+                    else
+                    {
+                        soundTrack = num;
+                        fadeMode = -1;
+                        nextClip = musicClips[num - 1];
+                    }
                 }
             }
         }
@@ -191,24 +232,95 @@ public class CameraScript : MonoBehaviour
         {
             if (previousClip != null)
             {
-                audio.clip = previousClip;
-                for (int i = 0; i < musicClips.Length; i++)
+                currentVolume = audio.volume;
+                if (currentVolume <= 0)
                 {
-                    if(previousClip == musicClips[i])
+                    audio.clip = previousClip;
+                    for (int i = 0; i < musicClips.Length; i++)
                     {
-                        soundTrack = i + 1;
-                        break;
+                        if (previousClip == musicClips[i])
+                        {
+                            soundTrack = i + 1;
+                            break;
+                        }
                     }
+                    audio.Play();
                 }
-                audio.Play();
+                else
+                {
+                    for (int i = 0; i < musicClips.Length; i++)
+                    {
+                        if (previousClip == musicClips[i])
+                        {
+                            soundTrack = i + 1;
+                            break;
+                        }
+                    }
+                    fadeMode = -1;
+                    nextClip = previousClip;
+                }
             }
         }
     }
+    private void Update()
+    {
+        if (fadeMode != 0)
+        {
+            //fade out
+            if (fadeMode == -1)
+            {
+                if (audio.volume > 0)
+                {
+                    audio.volume = Mathf.Lerp(audio.volume, 0.0f, 0.1f);
+                    if (audio.volume - 0.1f <= 0.1f)
+                    {
+                        audio.volume = 0.0f;
 
+                        fadeMode = 1;
+                        audio.clip = nextClip;
+                        audio.Play();
+                    }
+                }
+                else
+                {
+
+                    fadeMode = 1;
+                    audio.clip = nextClip;
+                    audio.Play();
+                }
+            }
+            else
+            {
+                //fade in
+                if (audio.volume < currentVolume)
+                {
+                    audio.volume = Mathf.Lerp(audio.volume, currentVolume, 0.1f);
+
+                    if (audio.volume + 0.1f >= currentVolume)
+                    {
+
+                        audio.volume = currentVolume;
+                        fadeMode = 0;
+                    }
+                }
+                else
+                {
+                    fadeMode = 0;
+
+
+
+                }
+            }
+        }
+    }
     public void UpdateCamera()
     {
-
-        if (currentTile)
+        TileScript updateTile = selectedTile;
+        if (updateTile == null)
+        {
+            updateTile = currentTile;
+        }
+        if (updateTile)
         {
             if (infoCanvas)
             {
@@ -217,7 +329,7 @@ public class CameraScript : MonoBehaviour
                 if (infoText)
                 {
 
-                    if (currentTile.isOccupied)
+                    if (updateTile.isOccupied)
                     {
 
                         // infoCanvas.gameObject.SetActive(true);
@@ -268,7 +380,7 @@ public class CameraScript : MonoBehaviour
                                         armorSet.updateDetails();
                                     }
 
-                                    infoText.text = infoObject.FullName + " LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
+                                    infoText.text = liver.FullName + " - " + liver.GetClassType();//LEVEL.ToString();
                                     if (!actionText.IsActive())
                                     {
                                         //  actionText.transform.parent.gameObject.SetActive(true);
@@ -313,12 +425,18 @@ public class CameraScript : MonoBehaviour
                                     }
                                     if (mansSlider)
                                     {
-                                        mansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
+                                        if (liver.MAX_MANA > 0)
+                                            mansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
+                                        else
+                                            mansSlider.value = 0;
                                         manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
                                     }
                                     if (fatigueSlider)
                                     {
-                                        fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
+                                        if (liver.MAX_FATIGUE > 0)
+                                            fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
+                                        else
+                                            fatigueSlider.value = 0;
                                         fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
                                     }
 
@@ -367,21 +485,30 @@ public class CameraScript : MonoBehaviour
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
-                                        healthText.text = infoObject.BASE_STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+                                        healthText.text = infoObject.STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
 
                                         if (attackingCheck == false)
                                         {
-                                            healthSlider.value = (float)infoObject.BASE_STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
-                                            healthText.text = (infoObject.BASE_STATS.HEALTH).ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+                                            healthSlider.value = (float)infoObject.STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            healthText.text = (infoObject.STATS.HEALTH).ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
 
                                         }
                                         else
                                         {
-                                            healthSlider.value = (float)(infoObject.BASE_STATS.HEALTH - potentialDamage) / (float)infoObject.BASE_STATS.MAX_HEALTH;
-                                            healthText.text = infoObject.BASE_STATS.HEALTH + " - " + potentialDamage;
+                                            healthSlider.value = (float)(infoObject.STATS.HEALTH - potentialDamage) / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            healthText.text = infoObject.STATS.HEALTH + " - " + potentialDamage;
                                         }
                                     }
-
+                                    if (mansSlider)
+                                    {
+                                        mansSlider.value = 0;
+                                        manaText.text = "0/0";
+                                    }
+                                    if (fatigueSlider)
+                                    {
+                                        fatigueSlider.value = 0;
+                                        fatigueText.text = "0/0";
+                                    }
                                     infoText.text = infoObject.FullName + " LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
 
 
@@ -434,18 +561,74 @@ public class CameraScript : MonoBehaviour
 
                         }
                     }
-                    else if (currentTile.TTYPE == TileType.door)
+                    else
                     {
+                        switch (updateTile.TTYPE)
+                        {
+                            case TileType.regular:
+                                break;
+                            case TileType.door:
+                                {
 
-                        infoText.text = "Door to " + currentTile.MAP;
-                        actionText.text = "";
-                    }
-                    else if (currentTile.TTYPE == TileType.shop)
-                    {
+                                    infoText.text = "Door to " + updateTile.MAP;
+                                    actionText.text = "";
+                                }
+                                break;
+                            case TileType.shop:
+                                {
 
-                        infoText.text = "Shop Tile ";
-                        actionText.text = "";
+                                    infoText.text = "Shop Tile ";
+                                    actionText.text = "";
+                                }
+                                break;
+                            case TileType.help:
+                                {
+                                    infoText.text = "Tip";
+                                    string[] extraParse = updateTile.EXTRA.Split(';');
+                                    if (extraParse.Length > 0)
+                                    {
+                                        infoText.text += ": " + extraParse[1];
+                                    }
+
+
+                                    actionText.text = "";
+
+                                }
+                                break;
+                            case TileType.tevent:
+                                {
+                                    infoText.text = "Event Tile ";
+                                    actionText.text = "";
+                                }
+                                break;
+                            case TileType.knockback:
+                                {
+                                    infoText.text = "Knockback Tile ";
+                                    actionText.text = "Push target 1 tile";
+                                }
+                                break;
+                            case TileType.pullin:
+                                {
+                                    infoText.text = "Pullback Tile ";
+                                    actionText.text = "Pull target 1 tile";
+                                }
+                                break;
+                            case TileType.swap:
+                                {
+                                    infoText.text = "Swap Tile ";
+                                    actionText.text = "Swaps target and attacker";
+                                }
+                                break;
+                            case TileType.reposition:
+                                {
+                                    infoText.text = "Reposition Tile ";
+                                    actionText.text = "Attacker jumps to opposite side of target";
+                                }
+                                break;
+                        }
                     }
+
+
 
 
 
@@ -471,6 +654,111 @@ public class CameraScript : MonoBehaviour
             {
                 //    infoCanvas.gameObject.SetActive(false);
             }
+        }
+        updateConfirmCancel();
+    }
+
+    public void updateConfirmCancel()
+    {
+        if (selectedTile)
+        {
+            if (confirmButton && cancelButton)
+            {
+                if (infoObject)
+                {
+                    confirmButton.transform.parent.gameObject.SetActive(true);
+                    cancelButton.transform.parent.gameObject.SetActive(true);
+                    switch (manager.currentState)
+                    {
+                        case State.PlayerInput:
+                            {
+                                if (manager.currentMenuitem)
+                                {
+
+                                    MenuItemType menuItem = (MenuItemType)manager.currentMenuitem.itemType;
+                                    confirmButton.textmeshpro.text = menuItem.ToString();
+                                    cancelButton.textmeshpro.text = "Cancel";
+                                   
+                                }
+                            }
+                            break;
+                        case State.PlayerMove:
+                            break;
+                        case State.PlayerAttacking:
+                            break;
+                        case State.PlayerEquippingMenu:
+                            break;
+                        case State.PlayerEquipping:
+                            break;
+                        case State.playerUsingSkills:
+                            break;
+                        case State.PlayerEquippingSkills:
+                            break;
+                        case State.PlayerSkillsMenu:
+                            break;
+
+                        case State.FreeCamera:
+                            {
+                                if (selectedTile.isOccupied)
+                                {
+                                    if (infoObject.currentTile == selectedTile)
+                                    {
+                                        if (infoObject.FACTION == Faction.ally)
+                                        {
+                                            confirmButton.textmeshpro.text = "Commands";
+                                            cancelButton.textmeshpro.text = "Status";
+                                        }
+                                        else if (infoObject.FACTION == Faction.enemy || infoObject.FACTION == Faction.hazard || infoObject.FACTION == Faction.fairy)
+                                        {
+                                            confirmButton.textmeshpro.text = "Mark";
+                                            cancelButton.textmeshpro.text = "Status";
+                                        }
+                                        else
+                                        {
+                                            confirmButton.textmeshpro.text = "Pause";
+                                            cancelButton.textmeshpro.text = "Status";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    confirmButton.textmeshpro.text = "Pause";
+                                    cancelButton.textmeshpro.text = "Options";
+                                }
+                            }
+                            break;
+                        case State.PlayerSelectItem:
+                            break;
+                        case State.PlayerOppSelecting:
+                            break;
+                        case State.PlayerOppOptions:
+                            break;
+
+                        case State.ChangeOptions:
+                            break;
+
+                        case State.PlayerUsingItems:
+                            break;
+
+                        case State.PlayerAct:
+                            break;
+                        case State.PlayerDead:
+                            break;
+                        default:
+                            {
+                                confirmButton.transform.parent.gameObject.SetActive(false);
+                                cancelButton.transform.parent.gameObject.SetActive(false);
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    confirmButton.textmeshpro.text = "Pause";
+                    cancelButton.textmeshpro.text = "Options";
+                }
+            }
+
         }
     }
 }

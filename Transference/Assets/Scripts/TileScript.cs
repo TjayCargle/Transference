@@ -6,6 +6,7 @@ using UnityEngine;
 public class TileScript : MonoBehaviour, IComparable
 {
     public Color myColor;
+    private Color previousColor;
     public bool isOccupied;
     public bool canBeOccupied = true;
     MeshRenderer myRender;
@@ -33,11 +34,42 @@ public class TileScript : MonoBehaviour, IComparable
     // Use this for initialization
     float lastU = -1f;
     float lastV = -1f;
+    public bool isMarked = false;
 
     public TileType TTYPE
     {
         get { return myType; }
         set { myType = value; }
+    }
+
+    public Color MYCOLOR
+    {
+        get { return myColor; }
+        set
+        {
+            if (value == Color.white)
+            {
+                if (isMarked == true)
+                {
+                    myColor = previousColor;
+                }
+                else
+                {
+                    previousColor = myColor;
+                    myColor = value;
+                }
+            }
+            else
+            {
+                previousColor = myColor;
+                myColor = value;
+            }
+        }
+    }
+
+    public Color PREVCOLOR
+    {
+        get { return previousColor; }
     }
 
     public void Setup()
@@ -48,7 +80,7 @@ public class TileScript : MonoBehaviour, IComparable
             mat = myRender.material;
             texture = mat.mainTexture;
         }
-        myColor = Color.black;
+        MYCOLOR = Color.black;
 
         if (GetComponent<MeshFilter>())
         {
@@ -56,6 +88,7 @@ public class TileScript : MonoBehaviour, IComparable
             filter = GetComponent<MeshFilter>();
             mesh = filter.mesh;
             uvs = mesh.uv;
+
         }
 
     }
@@ -66,7 +99,7 @@ public class TileScript : MonoBehaviour, IComparable
 
         if (myRender)
         {
-            myRender.material.color = myColor;
+            myRender.material.color = MYCOLOR;
         }
 
         if (Input.GetKeyDown(KeyCode.J))
@@ -84,6 +117,9 @@ public class TileScript : MonoBehaviour, IComparable
     private int roomIndex;
     [SerializeField]
     private int startIndex;
+    [SerializeField]
+    private string extraInfo;
+
     public string MAP
     {
         get { return mapNmae; }
@@ -100,6 +136,11 @@ public class TileScript : MonoBehaviour, IComparable
     {
         get { return startIndex; }
         set { startIndex = value; }
+    }
+    public string EXTRA
+    {
+        get { return extraInfo; }
+        set { extraInfo = value; }
     }
     public Material MAT
     {
@@ -125,21 +166,23 @@ public class TileScript : MonoBehaviour, IComparable
     }
     public void setUVs(float startX, float finaleX, float startY, float finaleY)
     {
+
         if (uvs.Length != 4)
         {
             uvs = new Vector2[4];
         }
-        uvs[0].x = startX;
-        uvs[0].y = startY;
+        uvs[0].x = startX;//0
+        uvs[0].y = startY;//0
 
-        uvs[1].x = finaleX;
-        uvs[1].y = finaleY;
+        uvs[1].x = finaleX;//1
+        uvs[1].y = startY;//0
 
-        uvs[2].x = finaleX;
-        uvs[2].y = startY;
+        uvs[2].x = startX;//0
+        uvs[2].y = finaleY;//1
 
-        uvs[3].x = startX;
-        uvs[3].y = finaleY;
+
+        uvs[3].x = finaleX;//1
+        uvs[3].y = finaleY;//1
 
         mesh.uv = uvs;
     }

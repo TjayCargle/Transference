@@ -14,6 +14,7 @@
 -num of shops/shop index = s [location], [location] 
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
+r,0,1,6,7,8,9,14,15,27,30,34,35,38,39,42,47,50,55
 n,false
 i,12
 t,1
@@ -21,6 +22,10 @@ w,8
 h,7
 d,4,52
 m,Bridge,Upper Passage
+o,48,31
+oi,8,6
 l,9,10
 x,48,3
 e,25,28,37,40
+g,23
+gi,0

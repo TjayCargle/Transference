@@ -96,7 +96,8 @@ public enum ModifiedStat
     ElementBody,
     deathAct,
     oppAct,
-    moveAct
+    moveAct,
+    pushBonus
 
 
 }
@@ -270,6 +271,7 @@ public enum Reaction
     jumpback,
     reposition,
     Swap,
+    Slamback,
     ApplyEffect,
     leathal,
     cripple,
@@ -302,7 +304,8 @@ public enum ItemType
     dmg,
     actionBoost,
     random,
-    summon
+    summon,
+    dart
 }
 public enum AtkType
 {
@@ -360,29 +363,30 @@ public enum MenuItemType
     InventoryArmor,
     InventoryAcc,
     equipBS,
-    selectBS,
+    Skills,
     equipAS,
     equipPS,
     chooseOptions,
     equipOS,
     generated,
-    selectItem,
+    Items,
     trade,
     prevMenu,
-    selectAct,
-    selectDetails,
-    shop,
-    door,
+    Battle,
+    Details,
+    Shop,
+    Door,
     anEvent,
-    selectSpells,
-    selectStrikes,
+    Spells,
+    Strikes,
     openBattleLog,
     forceEnd,
     yesPrompt,
     noPrompt,
-    hack,
-    guard,
-    talk
+    Hack,
+    Guard,
+    Talk,
+    Tip
 
 }
 public enum AutoAct
@@ -491,7 +495,9 @@ public enum SideEffect
     pullback,
     jumpback,
     reposition,
+    slamback,
     swap,
+    cripple
 
 
 }
@@ -520,7 +526,8 @@ public enum StatusIcon
     Bleed,
     Confuse,
 
-    Crippled
+    Crippled,
+    Guard
 }
 
 public enum TileType
@@ -528,17 +535,24 @@ public enum TileType
     regular = 0,
     door,
     shop,
-    unit,
-    special
+    tevent,
+    help,
+    knockback,
+    pullin,
+    swap,
+    reposition
 }
 
 public enum HazardType
 {
     attacker,
-    zeroExp,
     lockDoor,
+    redirect,
     controller,
-    redirect
+    movement,
+    zeroExp,
+    protection,
+    time
 
 }
 public enum TalkStage
@@ -561,8 +575,15 @@ public enum EPType
     biologist,//attempts to use status effect before anything else
     support,//will attempt to buff/debuff before anything else
     scared,//runs away to nearest door
-    patrol,//moves back and forth between 2 tiles, upon seeing enemy switch personality types
     custom
+}
+public enum EPState
+{
+    patrol,//moves back and forth between 2 tiles, upon seeing enemy switch personality states
+    scared, // runs away
+    aggro, // only attack with no option to talk
+    neutral // still attacks but open to talking
+
 }
 public enum EPCluster
 {
@@ -576,6 +597,11 @@ public class MassAtkConatiner : ScriptableObject
     public List<AtkContainer> atkConatiners;
 }
 
+public struct ScriptableContainer
+{
+    public bool inUse;
+    public ScriptableObject scriptable;
+}
 
 public class AtkContainer : ScriptableObject
 {
@@ -691,12 +717,20 @@ public struct menuStackEntry
     public currentMenu menu;
 }
 
+public struct FullMap
+{
+    List<int> roomstypes;
+    List<MapDetail> actualRooms;
+}
 public struct MapDetail
 {
     public string mapName;
     public int width;
     public int height;
     public int mapIndex;
+    public int roomType;
+    public int StartingPosition;
+    public Texture texture;
     public List<int> doorIndexes;
     public List<string> roomNames;
     public List<int> roomIndexes;
@@ -708,22 +742,41 @@ public struct MapDetail
     public List<int> objMapIndexes;
     public List<int> objIds;
     public List<int> enemyIds;
-    public Texture texture;
-    public int StartingPosition;
+    public List<int> specialExtra;
+    public List<int> tileIndexes;
     public List<int> unOccupiedIndexes;
-}
+    public List<TileType> specialiles;
 
+}
+public enum SceneEvent
+{
+    move,
+    showimage,
+    hideimage,
+    scaleimage,
+    shake
+}
+public struct SceneEventContainer
+{
+    public int intercept;
+    public SceneEvent scene;
+    public int data;
+}
 public struct SceneContainer
 {
     public bool isRunning;
     public int index;
+    public int soundTrack;
     public List<string> speakerNames;
     public List<string> speakertext;
     public List<Sprite> speakerFace;
+    public List<int> eventIndexs;
+    public List<SceneEventContainer> sceneEvents;
 
 }
 public struct EventDetails
 {
+    public string eventTitle;
     public string eventText;
     public string choice1;
     public string choice2;
@@ -746,6 +799,17 @@ public struct MapData
     public int width;
     public int height;
     public int mapIndex;
+    public int StartingPosition;
+    public int yMinRestriction;
+    public int yMaxRestriction;
+    public int xMinRestriction;
+    public int xMaxRestriction;
+    public int revealCount;
+
+    public float yElevation;
+    public float xElevation;
+
+    public Texture texture;
     public List<int> doorIndexes;
     public List<string> roomNames;
     public List<int> roomIndexes;
@@ -756,20 +820,10 @@ public struct MapData
     public List<int> shopIndexes;
     public List<int> objMapIndexes;
     public List<int> objIds;
-    public Texture texture;
-    public int StartingPosition;
+    public List<int> specialTileIndexes;
     public List<int> EnemyIds;
-
-
-    public float yElevation;
-    public float xElevation;
-    public int yMinRestriction;
-    public int yMaxRestriction;
-    public int xMinRestriction;
-    public int xMaxRestriction;
-
-    public int revealCount;
-
+    public List<TileType> specialiles;
+    public List<int> specialExtra;
 }
 public enum descState
 {
@@ -861,6 +915,7 @@ public enum EActType
 
 public class Common : ScriptableObject
 {
+    public static Color gold = new Color(0.8f, 0.569f, 0.2f);
     public static Color orange = new Color(1.0f, 0.369f, 0.0f);
     public static Color pink = new Color(1, 0.678f, 0.925f);
     public static Color lime = new Color(0.802f, 1, 0.825f);
@@ -868,7 +923,11 @@ public class Common : ScriptableObject
     public static Color cyan = new Color(0.1647f, 0.8215f, 1f);
     public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
+    public static Color moresemi = new Color(1.0f, 1.0f, 1.0f, 0.083f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+    public static Color selcted = new Color(0.4f, 0.6f, 0.4f);
+    public static Color blackened = new Color(0.02f, 0.0f, 0.0f);
+
 
     public static Color errored = new Color(0.81569f, 0.25f, 0.00784f);
     public static Color denied = new Color(0.21569f, 0.0f, 0.00784f);
@@ -885,6 +944,11 @@ public class Common : ScriptableObject
 
     private static ManagerScript manager = null;
     private static DatabaseManager database = null;
+    private static Texture swapTexture = null;
+    private static Texture knockbackTexture = null;
+    private static Texture repositionTexture = null;
+    private static Texture pullinTexture = null;
+    private static Texture helpTexture = null;
 
     public static BoolConatainer container = new BoolConatainer();
 
@@ -897,7 +961,7 @@ public class Common : ScriptableObject
 
     public static ManagerScript GetManager()
     {
-        if(manager == null)
+        if (manager == null)
         {
             manager = GameObject.FindObjectOfType<ManagerScript>();
         }
@@ -915,6 +979,74 @@ public class Common : ScriptableObject
         return database;
     }
 
+    public static Texture GetSpecialTexture(TileType type)
+    {
+        Texture returnedTexture = null;
+
+        switch (type)
+        {
+            case TileType.regular:
+                break;
+            case TileType.door:
+                break;
+            case TileType.shop:
+                break;
+            case TileType.tevent:
+                break;
+            case TileType.help:
+                {
+                    if (helpTexture != null)
+                    {
+                        return helpTexture;
+                    }
+                    helpTexture = Resources.Load<Texture>("Tiles/Help");
+                    return helpTexture;
+                }
+                break;
+            case TileType.knockback:
+                {
+                    if (knockbackTexture != null)
+                    {
+                        return knockbackTexture;
+                    }
+                    knockbackTexture = Resources.Load<Texture>("Tiles/Knockback");
+                    return knockbackTexture;
+                }
+                break;
+            case TileType.pullin:
+                {
+                    if (pullinTexture != null)
+                    {
+                        return pullinTexture;
+                    }
+                    pullinTexture = Resources.Load<Texture>("Tiles/Pullin");
+                    return pullinTexture;
+                }
+                break;
+            case TileType.swap:
+                {
+                    if (swapTexture != null)
+                    {
+                        return swapTexture;
+                    }
+                    swapTexture = Resources.Load<Texture>("Tiles/Swap");
+                    return swapTexture;
+                }
+                break;
+            case TileType.reposition:
+                {
+                    if (repositionTexture != null)
+                    {
+                        return repositionTexture;
+                    }
+                    repositionTexture = Resources.Load<Texture>("Tiles/Reposition");
+                    return repositionTexture;
+                }
+                break;
+        }
+
+        return returnedTexture;
+    }
 
 
     public static List<EHitType> noHitList = new List<EHitType>()
@@ -956,6 +1088,7 @@ public class Common : ScriptableObject
         }
         return Color.magenta;
     }
+
     public static string GetSideEffectText(SideEffect effect)
     {
         string text = "";
@@ -980,30 +1113,102 @@ public class Common : ScriptableObject
             case SideEffect.none:
                 break;
             case SideEffect.paralyze:
-                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase. Also makes target resist elec but weak to water.";
+                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase. ";
                 break;
             case SideEffect.sleep:
-                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
+                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  ";
                 break;
             case SideEffect.freeze:
-                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to pyro.";
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  ";
                 break;
             case SideEffect.burn:
-                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist pyro but weak to ice. ";
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. ";
                 break;
             case SideEffect.poison:
-                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
+                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%. ";
                 break;
             case SideEffect.bleed:
-                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%.  Also makes target resist pierce but weak to blunt.";
+                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%. ";
                 break;
             case SideEffect.confusion:
-                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies.  Also makes target resist blunt but weak to pierce.";
+                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies. ";
                 break;
         }
         return text;
     }
 
+    public static bool LogicCheckStatus(StatusEffect effect, LivingObject living)
+    {
+        bool canUse = true;
+        for (int i = 0; i < living.INVENTORY.EFFECTS.Count; i++)
+        {
+            SideEffect liveAffect = living.INVENTORY.EFFECTS[i].EFFECT;
+            switch (effect)
+            {
+                case StatusEffect.none:
+                    break;
+                case StatusEffect.paralyzed:
+                    {
+                        if (liveAffect == SideEffect.freeze )
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.sleep:
+                    {
+                        if ( liveAffect == SideEffect.freeze)
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.frozen:
+                    {
+                        if (liveAffect != SideEffect.none )
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.burned:
+                    {
+                        if (liveAffect == SideEffect.freeze)
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.poisoned:
+                    {
+                        if (liveAffect == SideEffect.freeze )
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.bleeding:
+                    {
+                        if (liveAffect == SideEffect.freeze )
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                case StatusEffect.confused:
+                    {
+                        if (liveAffect == SideEffect.freeze )
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+
+            }
+        }
+
+        return canUse;
+    }
 
     public static string GetStatusffectText(StatusEffect effect)
     {
@@ -1013,25 +1218,25 @@ public class Common : ScriptableObject
             case StatusEffect.none:
                 break;
             case StatusEffect.paralyzed:
-                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase. Also makes target resist elec but weak to water.";
+                text = "Paralyzed characters take 10% of their max health as damage and lose 1 action point at the start of the phase.";
                 break;
             case StatusEffect.sleep:
-                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.  Also makes target resist water but weak to elec.";
+                text = "Sleeping characters heal 10% of their max health but lose all action point at the start of the phase. 50% chance to wake up.";
                 break;
             case StatusEffect.frozen:
-                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.  Also makes target resist ice but weak to pyro.";
+                text = "Frozen charachters gain a 10% defense buff but lose all action point at the start of the phase.";
                 break;
             case StatusEffect.burned:
-                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. Also makes target resist pyro but weak to ice. ";
+                text = "Burning characters take  20% of their max health as damage but gain 1 action point at the start of the phase. ";
                 break;
             case StatusEffect.poisoned:
-                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.  Also makes target resist blunt but weak to slash.";
+                text = "Poisoned characters take 10% of their max health as damage and debuffs str by 10%.";
                 break;
             case StatusEffect.bleeding:
-                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%.  Also makes target resist pierce but weak to blunt.";
+                text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%.";
                 break;
             case StatusEffect.confused:
-                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies.  Also makes target resist blunt but weak to pierce.";
+                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies.";
                 break;
         }
         return text;
@@ -1179,7 +1384,76 @@ public class Common : ScriptableObject
         augs.Add(Augment.effectAugment3);
         return augs;
     }
+    public static string GetAugmentNameText(Augment aug)
+    {
+        string text = "";
 
+        switch (aug)
+        {
+            case Augment.none:
+                text = "Purchased";
+                break;
+            case Augment.levelAugment:
+                text = "Increase Level";
+                break;
+            case Augment.accurracyAugment:
+                text = "Increase Accurracy";
+                break;
+            case Augment.sideEffectAugment:
+                text = "Add Effect";
+                break;
+            case Augment.rangeAugment:
+                text = "Change Range";
+                break;
+            case Augment.attackCountAugment:
+                text = "Increase Hit Count";
+                break;
+            case Augment.costAugment:
+                text = "Reduce Cost";
+                break;
+            case Augment.chargeIncreaseAugment:
+                text = "Increase Charge Amount";
+                break;
+            case Augment.chargeDecreaseAugment:
+                text = "Decrease Charge Amount";
+                break;
+            case Augment.elementAugment:
+                text = "Change Element";
+                break;
+            case Augment.effectAugment1:
+                text = "Upgrade Effects";
+                break;
+            case Augment.effectAugment2:
+                text = "Upgrade More";
+                break;
+            case Augment.effectAugment3:
+                text = "Upgrade Even More";
+                break;
+            case Augment.strAugment:
+                text = "Increase Strength";
+                break;
+            case Augment.magAugment:
+                text = "Increase Magic";
+                break;
+            case Augment.dexAugment:
+                text = "Increase Dexterity";
+                break;
+            case Augment.defAugment:
+                text = "Increase Defense";
+                break;
+            case Augment.resAugment:
+                text = "Increase Resistance";
+                break;
+            case Augment.spdAugment:
+                text = "Increase Speed";
+                break;
+            case Augment.end:
+                text = "If you see this, contact Jtrev";
+                break;
+        }
+
+        return text;
+    }
     public static string GetAugmentText(Augment aug)
     {
         string returnText = "";
@@ -1682,9 +1956,136 @@ public class Common : ScriptableObject
         }
         return 0;
     }
+    public static string  GetHelpText(int helpnum)
+    {
+        string returnedString = "";
 
+        switch (helpnum)
+        {
+            case 0:
+                {
+                    returnedString = "Coffins; Coffins contain random skills or items for a character to use. The character that destroys the coffin will then gain that skill or item.";
+                }
+                break;
+            case 1:
+                {
+                    returnedString = "Attacking; There are 3 ways of attacking: Physical Skills, Magical Spells, and Spiritual Strikes. Each use different resources and are the primary way to deal damage to enemies and objects.";
+                }
+                break;
+            case 2:
+                {
+                    returnedString = "Crippling; The 'Crippled' status is applied for 1 turn when a character takes 'Crippling' or 'Leathal' damage (As noted by the character's weakness chart in the bottom left). While crippled the character deals half damage and takes double the damage they would take in addtion to only being able to move 1 tile.";
+                }
+                break;
+            case 3:
+                {
+                    returnedString = "Guarding; Choosing to 'Guard Charge' will use up all remaining actions for a character and put them in a Guard state. While guarding: all damage is halved and that character cannot be crippled. Also using 'Guard Charge' will increase the Fatigue meter based on how many actions the character had left before using.";
+                }
+                break;
+            case 4:
+                {
+                    returnedString = "Movement Tiles; While standing on a movement tile, all attacks effects will be overwritten with that movement effect. A swap tile for example will prevent a fire move from burning but will exchange places with target regardless of range. Standing on a movement tile will give the option for a pro tip with more details.";
+                }
+                break;
+            case 5:
+                {
+                    returnedString = "Glyphs; Glyph technology is the latest advancemenet in home security. Though Glyphs cannot move, they have many features that will be a hindrance to intruders. Movement Glyphs for example restrict movement, preventing intruders from getting in or out too quickly. ";
+                }
+                break;
+            case 6:
+                {
+                    returnedString = "Control Glyphs; Control Glyphs are a standard for keeping intruders from accessing your valuables. Unless hacked or destroyed, Control Glyphs are able to remove entire parts of your home from being accessible to malicious attackers.";
+                }
+                break;
+            case 13:
+                {
+                    returnedString = "Movement Glyphs; Movement Glyphs can slow intruders down and cause them to move only 1 tile at a time! However if someone destroys it or hacks it by matching its genetic code sequence, then it will cease to function.";
+                }
+                break;
+            case 14:
+                {
+                    returnedString = "Swap Tiles; Swap Tiles are a type of movement tile that causes the attacker to echange places with the target of their attack. The swap does not occur if the attack misses or an item is used.";
+                }
+                break;
+            case 18:
+                {
+                    returnedString = "Knockback Tiles; Knockback Tiles are a type of movement tile that causes the attacker to push the target back 1 tile  away from them regardless of range. The knockback does not occur if the attack misses or an item is used.";
+                }
+                break;
+            case 19:
+                {
+                    returnedString = "Pullback Tiles; Pullin Tiles are a type of movement tile that causes the attacker pull their target 1 tile closer to them. The pull does not occur if the attack misses or an item is used.";
+                }
+                break;
+            case 20:
+                {
+                    returnedString = "Reposition Tiles; Reposition Tiles are a type of movement tile that causes the attacker to vault over a target in front of them. The vault  does not occur if the attack misses or an item is used.";
+                }
+                break;
+            case 7:
+                {
+                    returnedString = "Scorpiees; Thanks to the Great Cataclysm, Bees and Scorpions have now fused into the Scorpiee: a tough inscect that now have a 50% chance to resist fire or be weak to it! To think back in the day people thought roaches would be the bugs to survive anything!";
+                }
+                break;
+            case 8:
+                {
+                    returnedString = "Ankhs; Ankhs are ancient artifacts based on the Egyptian word for 'life'. At the price of their own destruction, they hold the power to change someone's expertise. Usually this is done in an even exchange but if there is nothing to lose, the Ankh will grant power to those in need anyway.";
+                }
+                break;
+            case 9:
+                {
+                    returnedString = "Exp Glyphs; Despite their name, Exp Glyphs don't give out any exp. In Fact they have the uncanny ability to prevent exp growth of any kind while active.";
+                }
+                break;
+            case 10:
+                {
+                    returnedString = "Hacking; Glyph Technology is relatively new and while they are hard to destroy by attacking, they are highly subseptible to hacking if you can get close enough. By putting in the self destruct sequence you may even be able to find a Glyph Core which some may find useful. ";
+                }
+                break;
+            case 11:
+                {
+                    returnedString = "Movement; Characters can move freely while there are no enemies in the room, otherwise their movement space is reduced based on the character.";
+                }
+                break;
+            case 12:
+                {
+                    returnedString = "Action Points; At the begining of the phase 2 Action Points are distributed to each of the characters. Attacking, Moving, using items, and other things take 1 action point. Additional action points are given for every 10 speed a character has. If there are no enemies in the room however, no action points are used. ";
+                }
+                break;
+            case 15:
+                {
+                    returnedString = "Extra Action Points; Choosing either Wait or Guard as the only action for a character's turn will grant that character +2 action points for the next phase. Since action points are distributed at the begining of the phase, this will not stack with itself. ";
+                }
+                break;
+            case 16:
+                {
+                    returnedString = "Barriers; Summoning a Barrier will change the resistances of the character that summonned it for a set period of time. They also give bonus Def/Res/Spd stats while active. However, a barrier can only take damage up to 40% of the user's max Health which is showcased by the barrier's 'Strength'. ";
+                }
+                break;
+            case 17:
+                {
+                    returnedString = "Weaknesses and Resistances; There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Cripling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                }
+                break;
+            case 21:
+                {
+                    returnedString = "Lock Glyphs; Lock Glyphs are an anomaly. Instead of keeping someone out, they are designed to lock intruders in, that way authorities have long enough to come and arrest them. Or you can just never let them out. Its your choice.";
+                }
+                break;
+            case 22:
+                {
+                    returnedString = "Wait & Heal; Choosing to Wait & Heal will recover Health, Mana, and lower Fatigue. It is reccommended to wait and heal before moving on to new rooms.";
+                }
+                break;
+            default:
+                break;
+        }
+
+        return returnedString;
+    }
     public static EventDetails GetEventText(int eventnum, LivingObject living)
     {
+        eventdetail.eventTitle = "";
         eventdetail.eventText = "";
         eventdetail.choice1 = "";
         eventdetail.choice2 = "";
@@ -1692,8 +2093,19 @@ public class Common : ScriptableObject
         eventdetail.eventNum = -1;
         switch (eventnum)
         {
+            case -1:
+                {
+                    eventdetail.eventTitle = "Help Event";
+                    eventdetail.eventText = "You shoul not see this text";
+                    eventdetail.choice1 = "Ok";
+                    eventdetail.choice2 = "Who Cares";
+                    eventdetail.affectedObject = living;
+                    eventdetail.eventNum = 1;
+                }
+                break;
             case 1:
                 {
+                    eventdetail.eventTitle = "Exchange Event";
                     eventdetail.eventText = "Will you give up Strength in return for magic?";
                     eventdetail.choice1 = "Yes";
                     eventdetail.choice2 = "No";
@@ -1704,6 +2116,7 @@ public class Common : ScriptableObject
 
             case 2:
                 {
+                    eventdetail.eventTitle = "Exchange Event";
                     eventdetail.eventText = "Will you give up magic in return for strength?";
                     eventdetail.choice1 = "Yes";
                     eventdetail.choice2 = "No";
@@ -1713,6 +2126,7 @@ public class Common : ScriptableObject
                 break;
             case 3:
                 {
+                    eventdetail.eventTitle = "Reset Event";
                     eventdetail.eventText = "Do you want to reset the maps?";
                     eventdetail.choice1 = "Yes";
                     eventdetail.choice2 = "No";
@@ -1720,10 +2134,62 @@ public class Common : ScriptableObject
                     eventdetail.eventNum = 3;
                 }
                 break;
+
+            default:
+                {
+                    eventdetail.eventTitle = "Random Event";
+                    eventdetail.eventText = "????";
+                    eventdetail.choice1 = "Yes";
+                    eventdetail.choice2 = "No";
+                    eventdetail.affectedObject = living;
+                    eventdetail.eventNum = Random.Range(1, 3);
+                }
+                break;
         }
 
         return eventdetail;
     }
+
+    public static ModifiedStat BuffToModStat(BuffType buff)
+    {
+        ModifiedStat mod = ModifiedStat.none;
+
+        switch (buff)
+        {
+   
+            case BuffType.Str:
+                mod = ModifiedStat.Str;
+                break;
+            case BuffType.Mag:
+                mod = ModifiedStat.Mag;
+                break;
+            case BuffType.Def:
+                mod = ModifiedStat.Def;
+                break;
+            case BuffType.Res:
+                mod = ModifiedStat.Res;
+                break;
+            case BuffType.Spd:
+                mod = ModifiedStat.Str;
+                break;
+            case BuffType.Dex:
+                mod = ModifiedStat.Dex;
+                break;
+            case BuffType.attack:
+                mod = ModifiedStat.Atk;
+                break;
+            case BuffType.guard:
+                mod = ModifiedStat.Guard;
+                break;
+
+            case BuffType.all:
+                mod = ModifiedStat.all;
+                break;
+        }
+
+        return mod;
+    }
+
 
     public static string GetShortName(string name)
     {
@@ -1791,7 +2257,7 @@ public class Common : ScriptableObject
                     {
                         case 0:
                             {
-                                return EPType.forceful;
+                                return EPType.tactical;
                             }
                             break;
                         case 1:
@@ -1843,7 +2309,7 @@ public class Common : ScriptableObject
                     {
                         case 0:
                             {
-                                return EPType.tactical;
+                                return EPType.forceful;
                             }
                             break;
                         case 1:
@@ -1857,7 +2323,7 @@ public class Common : ScriptableObject
                             }
                             break;
                         default:
-                            return EPType.tactical;
+                            return EPType.forceful;
                             break;
                     }
                 }
@@ -1871,6 +2337,95 @@ public class Common : ScriptableObject
                 return EPType.scared;
                 break;
         }
+    }
+    public static StatusIcon EffectToIcon(SideEffect effect)
+    {
+        switch (effect)
+        {
+
+            case SideEffect.poison:
+                return StatusIcon.Poison;
+                break;
+            case SideEffect.confusion:
+                return StatusIcon.Confuse;
+                break;
+            case SideEffect.paralyze:
+                return StatusIcon.Paralyze;
+                break;
+            case SideEffect.sleep:
+                return StatusIcon.Sleep;
+                break;
+            case SideEffect.freeze:
+                return StatusIcon.Freeze;
+                break;
+            case SideEffect.burn:
+                return StatusIcon.Burn;
+                break;
+            case SideEffect.bleed:
+                return StatusIcon.Bleed;
+                break;
+
+            case SideEffect.cripple:
+                return StatusIcon.Crippled;
+                break;
+        }
+        return StatusIcon.Bleed;
+    }
+    public static StatusIcon BuffToIcon(BuffType effect, bool debuff = false)
+    {
+        if (debuff == true)
+        {
+            switch (effect)
+            {
+                case BuffType.Str:
+                    return StatusIcon.AtkDown;
+                    break;
+                case BuffType.Mag:
+                    return StatusIcon.MagDown;
+                    break;
+                case BuffType.Def:
+                    return StatusIcon.DefDown;
+                    break;
+                case BuffType.Res:
+                    return StatusIcon.ResDown;
+                    break;
+                case BuffType.Spd:
+                    return StatusIcon.SpdDown;
+                    break;
+                case BuffType.Dex:
+                    return StatusIcon.SklDown;
+                    break;
+
+            }
+
+        }
+        else
+        {
+
+            switch (effect)
+            {
+                case BuffType.Str:
+                    return StatusIcon.AtkUP;
+                    break;
+                case BuffType.Mag:
+                    return StatusIcon.MagUp;
+                    break;
+                case BuffType.Def:
+                    return StatusIcon.DefUP;
+                    break;
+                case BuffType.Res:
+                    return StatusIcon.ResUp;
+                    break;
+                case BuffType.Spd:
+                    return StatusIcon.SpdUp;
+                    break;
+                case BuffType.Dex:
+                    return StatusIcon.SklUp;
+                    break;
+
+            }
+        }
+        return StatusIcon.Bleed;
     }
     public static Reaction EffectToReaction(SideEffect effect)
     {
@@ -1905,6 +2460,51 @@ public class Common : ScriptableObject
         return Reaction.none;
     }
 
+
+    public static Reaction SpecialTileToReaction(TileScript tile)
+    {
+
+        switch (tile.TTYPE)
+        {
+            case TileType.knockback:
+                return Reaction.knockback;
+                break;
+            case TileType.pullin:
+                return Reaction.pullin;
+                break;
+            case TileType.swap:
+                return Reaction.Swap;
+                break;
+            case TileType.reposition:
+                return Reaction.reposition;
+                break;
+
+        }
+
+        return Reaction.none;
+    }
+    public static bool isOverrideTile(TileScript tile)
+    {
+        bool overrider = false;
+
+        switch (tile.TTYPE)
+        {
+            case TileType.knockback:
+                overrider = true;
+                break;
+            case TileType.pullin:
+                overrider = true;
+                break;
+            case TileType.swap:
+                overrider = true;
+                break;
+            case TileType.reposition:
+                overrider = true;
+                break;
+        }
+
+        return overrider;
+    }
     public static MapDetail ConvertMapData2Detail(MapData data, MapDetail detail)
     {
 
@@ -1927,6 +2527,10 @@ public class Common : ScriptableObject
         detail.hazardIds.Clear();
 
         detail.unOccupiedIndexes.Clear();
+        detail.specialiles.Clear();
+        detail.specialExtra.Clear();
+        detail.tileIndexes.Clear();
+
         detail.unOccupiedIndexes.AddRange(data.unOccupiedIndexes);
 
         detail.doorIndexes.AddRange(data.doorIndexes);
@@ -1944,6 +2548,10 @@ public class Common : ScriptableObject
         detail.StartingPosition = data.StartingPosition;
 
         detail.hazardIds.AddRange(data.glyphIds);
+
+        detail.specialiles.AddRange(data.specialiles);
+        detail.specialExtra.AddRange(data.specialExtra);
+        detail.tileIndexes.AddRange(data.specialTileIndexes);
 
         return detail;
     }
@@ -1968,12 +2576,16 @@ public class Common : ScriptableObject
         detail.startIndexes.Clear();
         detail.objMapIndexes.Clear();
         detail.objIds.Clear();
-        if (data.hazardIds.Count > 0)
+        detail.specialiles.Clear();
+        detail.specialExtra.Clear();
+        detail.specialTileIndexes.Clear();
+
+        //    if (data.hazardIds.Count > 0)
         {
             detail.glyphIds.Clear();
             detail.glyphIds.AddRange(data.hazardIds);
         }
-        if (data.unOccupiedIndexes.Count > 0)
+        //  if (data.unOccupiedIndexes.Count > 0)
         {
             detail.unOccupiedIndexes.Clear();
             detail.unOccupiedIndexes.AddRange(data.unOccupiedIndexes);
@@ -1991,6 +2603,11 @@ public class Common : ScriptableObject
         detail.objMapIndexes.AddRange(data.objMapIndexes);
         detail.EnemyIds.AddRange(data.enemyIds);
         detail.objIds.AddRange(data.objIds);
+
+        detail.specialiles.AddRange(data.specialiles);
+        detail.specialExtra.AddRange(data.specialExtra);
+        detail.specialTileIndexes.AddRange(data.tileIndexes);
+
         detail.StartingPosition = data.StartingPosition;
 
         return detail;

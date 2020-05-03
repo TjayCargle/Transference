@@ -56,7 +56,7 @@ public class EventManager : EventRunner
                         currentEvent.START();
                     if (currentEvent.STARTW != null)
                         currentEvent.STARTW(currentEvent.data);
-                  // Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
+                   //Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 
                 }
             }
@@ -67,7 +67,7 @@ public class EventManager : EventRunner
             if (currentEvent.RUNABLE(currentEvent.data) == true)
             {
                 // completed.Add(eve.name);
-              //  Debug.Log("Finished event: " + currentEvent.name + " from " + currentEvent.caller);
+                //Debug.Log("Finished event: " + currentEvent.name + " from " + currentEvent.caller);
                 currentEvent.isRunning = false;
                 currentEvent.caller = null;
                 currentEvent.isRunning = false;

@@ -37,10 +37,14 @@ public class ArmorSet : MonoBehaviour
     {
         if (!currentObj)
             return;
-        
+        if (currentObj.DEAD)
+            return;
+        if (currentObj.CheckIfDead())
+            return;
 
         if (selectedArmor == null)
             selectedArmor = currentObj.ARMOR.SCRIPT;
+        if(selectedArmor != null)
         selectedHitlist = selectedArmor.HITLIST;
 
         if (selectedHitlist != null)
@@ -89,6 +93,13 @@ public class ArmorSet : MonoBehaviour
             {
                 Barrierslider.gameObject.SetActive(false);
             }
+        }
+
+        if(selectedArmor == null)
+        {
+            Debug.Log("no armor problem");
+            Debug.Log( currentObj.NAME);
+            return;
         }
 
         int val = currentObj.STATS.STRENGTH;

@@ -7,7 +7,7 @@ public class StatusIconManager : MonoBehaviour
 {
 
     [SerializeField]
-    Sprite[] statusIconImages;
+    public Sprite[] statusIconImages;
     List<StatIcon> totalTstatusIcons;
     List<StatIcon> panelIcons;
     public Font usedFont;
@@ -60,10 +60,8 @@ public class StatusIconManager : MonoBehaviour
         int panelAmount = 0;
         panelAmount = living.INVENTORY.DEBUFFS.Count;
         panelAmount += living.INVENTORY.BUFFS.Count;
-        if (living.GetComponent<EffectScript>())
-        {
-            panelAmount += 1;
-        }
+        panelAmount += living.INVENTORY.EFFECTS.Count;
+      
         if (living.SSTATUS == SecondaryStatus.confusion)
         {
             panelAmount += 1;
@@ -72,7 +70,11 @@ public class StatusIconManager : MonoBehaviour
         {
             panelAmount += 1;
         }
-        if(totalTstatusIcons.Count < panelAmount)
+        if (living.PSTATUS == PrimaryStatus.guarding)
+        {
+            panelAmount += 1;
+        }
+        if (totalTstatusIcons.Count < panelAmount)
         {
             int times = panelAmount - totalTstatusIcons.Count;
             for (int i = 0; i < times; i++)
@@ -94,22 +96,31 @@ public class StatusIconManager : MonoBehaviour
             panelIcons.Add(statcon);
             realCount++;
         }
-
-        if (living.SSTATUS == SecondaryStatus.confusion)
+        if (living.PSTATUS == PrimaryStatus.guarding)
         {
             StatIcon statcon = totalTstatusIcons[realCount];
-            statcon.myImage.sprite = statusIconImages[(int)StatusIcon.Confuse];
-            statcon.myText.text = "Confused!";
+            statcon.myImage.sprite = statusIconImages[(int)StatusIcon.Guard];
+            statcon.myText.text = "Guarding!";
             statcon.gameObject.SetActive(true);
             panelIcons.Add(statcon);
             realCount++;
         }
 
-        if (living.GetComponent<EffectScript>())
+        //if (living.SSTATUS == SecondaryStatus.confusion)
+        //{
+        //    StatIcon statcon = totalTstatusIcons[realCount];
+        //    statcon.myImage.sprite = statusIconImages[(int)StatusIcon.Confuse];
+        //    statcon.myText.text = "Confused!";
+        //    statcon.gameObject.SetActive(true);
+        //    panelIcons.Add(statcon);
+        //    realCount++;
+        //}
+
+        for (int i = 0; i < living.INVENTORY.EFFECTS.Count; i++)
         {
             StatIcon statcon = totalTstatusIcons[realCount];
 
-            switch (living.GetComponent<EffectScript>().EFFECT)
+            switch (living.INVENTORY.EFFECTS[i].EFFECT)
             {
                 case SideEffect.none:
                     Debug.Log("I am shocked and amazed");
@@ -137,6 +148,10 @@ public class StatusIconManager : MonoBehaviour
                 case SideEffect.bleed:
                     statcon.myImage.sprite = statusIconImages[(int)StatusIcon.Bleed];
                     statcon.myText.text = "Bleeding";
+                    break;
+                case SideEffect.confusion:
+                    statcon.myImage.sprite = statusIconImages[(int)StatusIcon.Confuse];
+                    statcon.myText.text = "Confused";
                     break;
                 default:
                     Debug.Log("If you see this.... bad");

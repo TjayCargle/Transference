@@ -1,22 +1,23 @@
 id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ice Affect, Electric Affect, Slash Affect, Pierce Affect, Blunt Affect, Force Affect
-0,Dragon Barrier,Hardened skinned, 4, 3, 3, weak, nulls, cripples, normal, resists, resists, normal,resists
-1,Witch Barrier,Hardened skinned, 2, 4, 4, nulls, resists, normal, resists, resists, cripples, weak,normal
-2,Bumblebee Barrier,Hardened skinned, 2, 5, 3, weak, nulls, nulls, normal, cripples, nulls, normal,resists
-3,Scorpion Barrier,Hardened skinned, 5, 3, 2, normal, resists, resists, nulls, normal, weak, cripples,normal
-4,Fairy Barrier,Fire, 1, 3, 5, resists, weak, resists, reflects, normal, normal, normal,cripples
-5,Ghost Barrier,ghost,1,2,7,normal,cripples,resists,weak,nulls,nulls,nulls,weak
-6,Phoenix Barrier,Fire, 3, 2, 5, normal, absorbs, cripples, normal, normal, weak, normal,weak
-7,Pixie Barrier,Fire, 5, 3, 2, normal, normal, reflects, normal, resists, cripples, normal,resists
-8,Gorgan Barrier,Fire, 8, 2, 0, weak, nulls, normal, cripples, nulls, nulls, nulls,weak
-9,Arachnid Barrier,Fire, 0, 2, 8, weak, cripples, nulls, resists, reflects, normal, weak,normal
-10,Wolf Barrier,Fire, 5, 4, 1, normal, weak, normal, resists, nulls, cripples, normal,resists
+0,Dragon Barrier,Hardened skinned, 4, 3, 3, lethal, nulls, savage, normal, resists, resists, normal,resists
+1,Witch Barrier,Hardened skinned, 2, 4, 4, nulls, resists, normal, resists, resists, savage, lethal,normal
+2,Bumblebee Barrier,Hardened skinned, 2, 5, 3, weak, nulls, nulls, normal, savage, nulls, normal,lethal
+3,Scorpion Barrier,Hardened skinned, 4, 3, 3, normal, resists, resists, nulls, normal, lethal, savage,normal
+4,Fairy Barrier,Fire, 2, 3, 4, resists, lethal, resists, reflects, normal, normal, normal,savage
+5,Ghost Barrier,ghost,4,2,4,normal,savage,resists,lethal,nulls,nulls,nulls,weak
+6,Phoenix Barrier,Fire, 3, 3, 4, normal, absorbs, savage, normal, normal, weak, normal,weak
+7,Pixie Barrier,Fire, 4, 3, 3, lethal, normal, reflects, normal, resists, savage, normal,resists
+8,Gorgan Barrier,Fire, 6, 2, 2, weak, nulls, normal, savage, nulls, nulls, nulls,lethal
+9,Arachnid Barrier,Fire, 2, 2, 6, lethal, savage, nulls, resists, reflects, normal, weak,normal
+10,Wolf Barrier,Fire, 4, 4, 2, normal, lethal, normal, resists, nulls, savage, normal,resists
 11,Neutral Barrier,Purely Neutral, 3, 3, 4, normal,normal,normal,normal,normal,normal, normal,normal
-12,Speed Barrier,Purely Neutral, 0, 0, 10, cripples,normal,normal,nulls,normal,weak, resists,resists
-200,Glyph Barrier,Purely Neutral, 5, 5, 0, resists,resists,resists,resists,resists,resists, resists,resists
-201,Black Wings,Purely Neutral, 0, 0, 0, resists,normal,weak,normal,normal,lethal, resists,savage
-202,Green Wings,Purely Neutral, 0, 0, 0, lethal,resists,normal,savage,resists,weak,normal ,normal
-203,Rough Hide,Purely Neutral, 0, 0, 0, resists,weak,savage,normal,resists,normal, normal,lethal
-204,Soft Fuzz,Purely Neutral, 0, 0, 0, normal,lethal,normal,savage,normal,resists, normal,weak
-205,Dust,Purely Neutral, 0, 0, 0, normal,resists,resists,resists,normal,lethal, savage,weak
+12,Speed Barrier,Purely Neutral, 0, 0, 10, cripples,normal,normal,nulls,normal,savage, resists,resists
+200,Glyph Barrier,Purely Neutral, 2, 2, 0, resists,resists,resists,resists,resists,resists, resists,resists
+201,Black Wings,Purely Neutral, 0, 0, 0, resists,normal,normal,normal,normal,cripples, resists,weak
+202,Green Wings,Purely Neutral, 0, 0, 0, cripples,resists,normal,weak,resists,normal,normal ,normal
+203,Rough Hide,Purely Neutral, 0, 0, 0, normal,weak,cripples,normal,resists,normal, normal,resists
+204,Soft Fuzz,Purely Neutral, 0, 0, 0, weak,cripples,normal,resists,normal,resists, normal,normal
+205,Dust,Purely Neutral, 0, 0, 0, normal,resists,weak,resists,normal,normal, cripples,normal
+206,Ice,Purely Neutral, 0, 0, 0, normal,normal,resists,normal,cripples,weak, resists,normal
 -204,Royal Barrier,Purely Neutral, 0, 0, 0, absorbs,resists,resists,resists,resists,resists, cripples,normal
 -204,Queen Barrier,Purely Neutral, 0, 0, 0, cripples,nulls,reflects,nulls,resists,weak, reflects,resists

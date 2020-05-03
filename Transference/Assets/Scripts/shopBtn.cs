@@ -22,6 +22,13 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (GetComponent<Button>())
+        {
+            if (GetComponent<Button>().interactable == false)
+            {
+                return;
+            }
+        }
         if (eventData.button == PointerEventData.InputButton.Left)
         {
 
@@ -44,10 +51,18 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                         shop.loadForget();
                         break;
                     case 3:
-                        if (refItem)
+                        if (shop.currentWindow == ShopWindow.buying)
                         {
-                            shop.SELECTED = this;
-                            shop.ChangeTopicAndWindow("I need something of equivalent value.", ShopWindow.buying);
+                            shop.PreviousMenu();
+                        }
+                        else
+                        {
+
+                            if (refItem)
+                            {
+                                shop.SELECTED = this;
+                                shop.ChangeTopicAndWindow("I need something of equivalent value.", ShopWindow.buying);
+                            }
                         }
                         break;
                     case 4:
@@ -56,37 +71,58 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                         {
 
                             case ShopWindow.learn:
-
+                                shop.PreviousMenu();
                                 break;
                             case ShopWindow.alter:
                                 {
+
                                     if (refItem)
                                     {
 
                                         shop.SELECTED = this;
                                         shop.ChangeTopicAndWindow("So how do you want to change it?", ShopWindow.augmenting);
                                     }
+
                                 }
                                 break;
                             case ShopWindow.forget:
-                                if (refItem)
                                 {
 
-                                    shop.REMOVING = this;
-                                    shop.ChangeTopicAndWindow("Gambling with fate?", ShopWindow.confirm);
+
+                                    if (refItem)
+                                    {
+
+                                        shop.REMOVING = this;
+                                        shop.ChangeTopicAndWindow("Gambling with fate?", ShopWindow.confirm);
+                                    }
+
                                 }
                                 break;
                             case ShopWindow.buying:
                                 {
+
+
                                     if (refItem)
                                     {
 
                                         shop.REMOVING = this;
                                         shop.ChangeTopicAndWindow("Last chance to turn back.", ShopWindow.confirm);
                                     }
+
                                 }
                                 break;
                             case ShopWindow.confirm:
+                                shop.PreviousMenu();
+                                break;
+                            case ShopWindow.none:
+                                break;
+                            case ShopWindow.main:
+                                break;
+                            case ShopWindow.augmenting:
+                                shop.PreviousMenu();
+                                break;
+                            case ShopWindow.removingItem:
+                                shop.PreviousMenu();
                                 break;
                         }
 
@@ -121,21 +157,37 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
                         {
                             if (GetComponent<AugBtn>())
                             {
-                                AugBtn aug = GetComponent<AugBtn>();
-                                if (aug.AUGMENT < Augment.end && aug.AUGMENT != Augment.none)
+                                if (shop.currentWindow == ShopWindow.removingItem)
                                 {
-                                    shop.AUGMENT = aug.AUGMENT;
-                                    shop.ChangeTopicAndWindow("You must give up an item for this.", ShopWindow.removingItem);
+                                    shop.PreviousMenu();
+                                }
+                                else
+                                {
+
+                                    AugBtn aug = GetComponent<AugBtn>();
+                                    if (aug.AUGMENT < Augment.end && aug.AUGMENT != Augment.none)
+                                    {
+                                        shop.AUGMENT = aug.AUGMENT;
+                                        shop.ChangeTopicAndWindow("You must give up an item for this.", ShopWindow.removingItem);
+                                    }
                                 }
                             }
                         }
                         break;
                     case 8:
                         {
-                            if (refItem)
+                            if (shop.currentWindow == ShopWindow.confirm)
                             {
-                                shop.REMOVING = this;
-                                shop.ChangeTopicAndWindow("Last chance to turn back.", ShopWindow.confirm);
+                                shop.PreviousMenu();
+                            }
+                            else
+                            {
+
+                                if (refItem)
+                                {
+                                    shop.REMOVING = this;
+                                    shop.ChangeTopicAndWindow("Last chance to turn back.", ShopWindow.confirm);
+                                }
                             }
                         }
                         break;
@@ -147,6 +199,13 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (GetComponent<Button>())
+        {
+            if (GetComponent<Button>().interactable == false)
+            {
+                return;
+            }
+        }
         if (!shop)
         {
             shop = GameObject.FindObjectOfType<ShopScreen>();
@@ -214,7 +273,7 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
             if (change == true)
             {
 
-              
+
 
                 if (refItem)
                 {
@@ -245,7 +304,13 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
 
     public void OnPointerExit(PointerEventData eventData)
     {
-
+        if (GetComponent<Button>())
+        {
+            if (GetComponent<Button>().interactable == false)
+            {
+                return;
+            }
+        }
         if (!shop)
         {
             shop = GameObject.FindObjectOfType<ShopScreen>();
@@ -307,9 +372,22 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
             {
                 if (myImage)
                 {
-                    myImage.color = Color.white;
+                    if (myImage.color == Color.yellow)
+                        myImage.color = Color.white;
                 }
             }
+        }
+
+        if (shop)
+        {
+
+           
+                if (myImage)
+                {
+                    if (myImage.color == Color.yellow)
+                        myImage.color = Color.white;
+                }
+            
         }
 
     }
@@ -322,6 +400,16 @@ public class shopBtn : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler,
             if (inactive == true)
             {
                 myButton.interactable = false;
+                if(shop)
+                {
+                    if(shop.SELECTED == this)
+                    {
+                        if(myImage)
+                        {
+                            myImage.color = Color.yellow;
+                        }
+                    }
+                }
             }
             else
             {

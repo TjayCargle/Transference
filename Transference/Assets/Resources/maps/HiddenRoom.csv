@@ -17,12 +17,15 @@
 i,4
 r,8,11,12,15,16,19
 n,false
-t,2
+t,6
 w,4
 h,7
 d,26
 m,Western Hallway
 l,6
 x,0
-o,17
-oi,7,8
+o,17,18
+oi,0,5
+stt,help
+sti,3
+ex,1

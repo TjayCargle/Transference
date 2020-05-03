@@ -3,11 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ModifiedStats : StatScript {
+
+    [SerializeField]
+    private int myHealth;
+
     [SerializeField]
     private int myFatigue;
 
     [SerializeField]
     private int myMana;
+
+    public int HEALTH
+    {
+        get { return myHealth; }
+        set
+        {
+            myHealth = value;
+            if (myHealth < 0)
+            {
+                myHealth = 0;
+            }
+
+        }
+    }
 
     public int FATIGUE
     {
@@ -58,7 +76,7 @@ public class ModifiedStats : StatScript {
     public override void SetZero(bool hard = false)
     {
         base.SetZero();
-
+        HEALTH = 0;
         MANA = 0;
         FATIGUE = 0;
     }
@@ -70,6 +88,7 @@ public class ModifiedStats : StatScript {
 
             MANA = 0;
             FATIGUE = 0;
+            HEALTH = 0;
         }
 
     }

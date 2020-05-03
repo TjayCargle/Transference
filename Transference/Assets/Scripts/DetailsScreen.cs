@@ -186,6 +186,16 @@ public class DetailsScreen : MonoBehaviour
     {
         if (!currentObj)
             return;
+        if(!currentObj.ARMOR)
+        {
+            Debug.Log("No armor found or details");
+            return;
+        }
+        if (null == currentObj.ARMOR.HITLIST)
+        {
+            Debug.Log("No hitlist found or details");
+            return;
+        }
         selectedHitlist = currentObj.ARMOR.HITLIST;
         selectedArmor = currentObj.ARMOR.SCRIPT;
         if (descriptionText)
@@ -333,16 +343,16 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Spiritual levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
-                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
+                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up reduces the cost of <color=yellow>Skills</color> and increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
                 break;
             case 31:
-                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases <color=#b400e9>Magic</color> and <color=#ce0e96>Resistance</color>.";
+                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up reduces the cost of <color=#bd1d85>Spells</color> and increases Max Mana, <color=#b400e9>Magic</color> and <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
+                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of <color=red>Strikes</color> and increases Max Health, <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
                 break;
             case 34:
                 finalText = "Force Element. Force based moves generally pull targets in!";
@@ -711,7 +721,7 @@ public class DetailsScreen : MonoBehaviour
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                     {
                                         currentObj.INVENTORY.BUFFS[i].UpdateDesc();
-                                        finalText = currentObj.INVENTORY.BUFFS[i].DESC;
+                                        finalText = currentObj.INVENTORY.BUFFS[i].getEffectDesc();
                                     }
                                 }
                             }
@@ -725,12 +735,16 @@ public class DetailsScreen : MonoBehaviour
                             if (currentObj.INVENTORY.DEBUFFS.Count > i)
                             {
                                 skills[i].text = currentObj.INVENTORY.DEBUFFS[i].NAME;
+                                if(skills[i].text == "")
+                                {
+                                    skills[i].text = "Debuff";
+                                }
                                 if (selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                     {
                                         currentObj.INVENTORY.DEBUFFS[i].UpdateDesc();
-                                        finalText = currentObj.INVENTORY.DEBUFFS[i].DESC;
+                                        finalText = currentObj.INVENTORY.DEBUFFS[i].getEffectDesc();
                                     }
                                 }
                             }
@@ -1164,21 +1178,21 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Blunt Element. Blunt based moves generally hit 1 tile away.";
                 break;
 
-            case 28:
+            case 37:
                 finalText = "Barriers have strength. Once a Barrier's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Spiritual levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
-                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
+                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
                 break;
             case 31:
-                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases <color=#ce0e96>Magic</color> and <color=#b400e9>Resistance</color>.";
+                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases Max Mana, <color=#ce0e96>Magic</color> and <color=#b400e9>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
+                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up increases Max Health,  reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
                 break;
             case 34:
                 finalText = "Force Element. Force based moves generally pull targets in!";

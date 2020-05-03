@@ -7,6 +7,7 @@ public class TileManager : MonoBehaviour
     public List<TileScript> tiles;
     private List<TileScript> skillTiles = new List<TileScript>();
     private List<TileScript> askTiles = new List<TileScript>();
+    public List<TileScript> currentMoveableTiles = new List<TileScript>();
     public Texture defaultTexture;
 
     public GameObject Tile;
@@ -66,6 +67,119 @@ public class TileManager : MonoBehaviour
         }
         return subTiles;
     }
+
+
+
+    public List<List<TileScript>> GetLeftTileList(TileScript origin)
+    {
+        List<List<TileScript>> returntiles = new List<List<TileScript>>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+
+        //v1.z += 1;
+
+        //v2.x += 1;
+
+        //v3.z -= 1;
+
+        //v1.x -= 1;
+        possiblePossitions.Add(v1);
+
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
+            {
+                List<TileScript> tiles = new List<TileScript>();
+                TileScript newTile = myManager.GetTileAtIndex(index);
+                tiles.Add(newTile);
+                returntiles.Add(tiles);
+            }
+        }
+
+        return returntiles;
+    }
+
+
+    public List<List<TileScript>> GetUpTileList(TileScript origin)
+    {
+        List<List<TileScript>> returntiles = new List<List<TileScript>>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+   
+        v1.z += 1;
+
+        possiblePossitions.Add(v1);
+
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
+            {
+                List<TileScript> tiles = new List<TileScript>();
+                TileScript newTile = myManager.GetTileAtIndex(index);
+                tiles.Add(newTile);
+                returntiles.Add(tiles);
+            }
+        }
+
+        return returntiles;
+    }
+
+    public List<List<TileScript>> GetRightTileList(TileScript origin)
+    {
+        List<List<TileScript>> returntiles = new List<List<TileScript>>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+
+        v1.x += 1;
+        
+        possiblePossitions.Add(v1);
+
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
+            {
+                List<TileScript> tiles = new List<TileScript>();
+                TileScript newTile = myManager.GetTileAtIndex(index);
+                tiles.Add(newTile);
+                returntiles.Add(tiles);
+            }
+        }
+
+        return returntiles;
+    }
+
+    public List<List<TileScript>> GetDownTileList(TileScript origin)
+    {
+        List<List<TileScript>> returntiles = new List<List<TileScript>>();
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+
+        v1.z -= 1;
+     
+        possiblePossitions.Add(v1);
+
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
+            {
+                List<TileScript> tiles = new List<TileScript>();
+                TileScript newTile = myManager.GetTileAtIndex(index);
+                tiles.Add(newTile);
+                returntiles.Add(tiles);
+            }
+        }
+
+        return returntiles;
+    }
+
     public List<List<TileScript>> GetAdjecentTilesList(TileScript origin)
     {
         List<List<TileScript>> returntiles = new List<List<TileScript>>();

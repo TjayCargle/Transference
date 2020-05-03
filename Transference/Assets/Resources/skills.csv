@@ -25,10 +25,10 @@
 -Slash
 10,Slice,Slash,Charge,none,1,physical,adjacent,0,0,70,tiny,2,0,1,0,1
 11,Alt Slice,Slash,Charge,none,2,physical,spear,0,0,70,tiny,2,0,1,0,2
-12,Mega Slice,Slash,Cost,none,-3,physical,rotator,5,0,75,small,3,0,1,0,1
+12,Mega Slice,Slash,Cost,none,-3,physical,rotator,5,0,75,small,2,0,1,0,1
 13,Ultra Slice,Slash,Cost,none,-5,physical,line,5,0,75,small,2,0,3,-1,1,0,1,1,1
 14,Arcane Slice,Slash,Magic,none,2,magical,spear,0,0,80,tiny,2,0,1,0,1
-15,Etherial Slice,Slash,Magic,none,4,magical,line,5,0,80,small,3,0,3,-1,1,0,1,1,1
+15,Etherial Slice,Slash,Magic,none,3,magical,line,5,0,80,small,2,0,3,-1,1,0,1,1,1
 16,Mystic Slice,Slash,Magic,jumpback,3,magical,adjacent,0,0,80,tiny,1,0,1,0,1
 17,Hidden Slice,Slash,Charge,reposition,3,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
@@ -38,9 +38,9 @@
 22,Mega Sting,Pierce,Cost,none,-4,physical,spear,2,0,85,small,1,0,3,0,1,0,2,0,3
 23,Ultra Sting,Pierce,Cost,none,-6,physical,lance,2,0,85,small,2,0,2,0,1,0,2
 24,Arcane Sting,Pierce,Magic,none,2,magical,detached,0,0,80,tiny,1,0,1,0,1
-25,Etherial Sting,Pierce,Magic,none,4,magical,spear,2,0,80,small,1,0,6,0,1,0,2,1,1,1,2,-1,1,-1,2
+25,Etherial Sting,Pierce,Magic,none,3,magical,spear,2,0,80,small,1,0,6,0,1,0,2,1,1,1,2,-1,1,-1,2
 26,Mystic Sting,Pierce,Magic,pushforward,3,magical,adjacent,0,0,80,tiny,1,0,1,0,1
-27,Hidden Sting,Pierce,Charge,pullback,5,physical,detached,0,0,80,tiny,1,0,1,0,1
+27,Hidden Sting,Pierce,Charge,pullback,4,physical,detached,0,0,80,tiny,1,0,1,0,1
 -
 -Blunt
 30,Smash,Blunt,Charge,none,1,physical,adjacent,0,0,70,tiny,1,10,1,0,1
@@ -48,9 +48,9 @@
 32,Mega Smash,Blunt,Cost,none,-3,physical,adjacent,10,0,75,small,2,10,1,0,1
 33,Ultra Smash,Blunt,Cost,none,-4,physical,square,20,0,75,small,1,10,2,0,1,1,1
 34,Arcane Smash,Blunt,Magic,none,2,magical,adjacent,0,0,80,tiny,1,10,1,0,1
-35,Etherial Smash,Blunt,Magic,none,3,magical,rotator,10,0,80,small,2,10,1,0,1
-36,Mystic Smash,Blunt,Magic,knockback,4,magical,adjacent,0,0,80,tiny,1,0,1,0,1
-37,Hidden Smash,Blunt,Charge,reposition,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
+35,Etherial Smash,Blunt,Magic,none,3,magical,rotator,10,0,80,small,1,10,1,0,1
+36,Mystic Smash,Blunt,Magic,knockback,3,magical,adjacent,0,0,80,tiny,1,0,1,0,1
+37,Hidden Smash,Blunt,Charge,reposition,4,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Water
 40,Splash,Water,Charge,none,2,physical,adjacent,0,0,70,tiny,1,0,3,-1,1,0,1,1,1
@@ -58,9 +58,9 @@
 42,Mega Splash,Water,Cost,none,-4,physical,cross,0,0,75,small,2,0,6,-1,1,0,1,1,1,-1,2,0,2,1,2
 43,Ultra Splash,Water,RngAtk,none,-6,physical,square,5,0,75,small,1,0,3,-1,1,0,1,1,1,2,5
 44,Arcane Splash,Water,Magic,none,3,magical,cone,0,0,80,tiny,1,0,1,0,1
-45,Etherial Splash,Water,Magic,none,4,magical,square,0,0,80,small,2,0,3,-1,2,0,1,-1,1
-46,Mystic Splash,Water,Magic,jumpback,5,magical,adjacent,0,0,80,tiny,1,0,1,0,1
-47,Hidden Splash,Water,Charge,pullback,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
+45,Etherial Splash,Water,Magic,none,3,magical,square,0,0,80,small,1,0,3,-1,2,0,1,-1,1
+46,Mystic Splash,Water,Magic,jumpback,2,magical,adjacent,0,0,80,tiny,1,0,1,0,1
+47,Hidden Splash,Water,Charge,pullback,4,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Pyro
 50,Blaze,Pyro,Charge,none,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1
@@ -70,26 +70,26 @@
 54,Arcane Blaze,Pyro,Magic,burn,3,magical,line,0,0,80,tiny,1,0,1,0,1
 55,Etherial Blaze,Pyro,Magic,none,2,magical,rotator,0,0,80,small,2,0,4,-1,1,0,1,1,1,0,2
 56,Mystic Blaze,Pyro,Magic,pushforward,4,magical,adjacent,0,0,80,tiny,1,0,1,0,1
-57,Hidden Blaze,Pyro,Charge,knockback,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
+57,Hidden Blaze,Pyro,Charge,knockback,4,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Ice
 60,Frost,Ice,Charge,none,1,physical,adjacent,0,0,70,tiny,1,0,1,1,2
 61,Alt Frost,Ice,Charge,none,1,physical,detached,0,0,70,tiny,1,0,1,1,1
 62,Mega Frost,Ice,Cost,none,-6,physical,cone,0,0,75,small,2,0,1,0,2
 63,Ultra Frost,Ice,Cost,none,-4,physical,lance,5,0,75,small,1,0,2,0,2,1,1
-64,Arcane Frost,Ice,Magic,none,4,magical,cone,0,0,80,tiny,1,0,1,1,1
+64,Arcane Frost,Ice,Magic,none,3,magical,cone,0,0,80,tiny,1,0,1,1,1
 65,Etherial Frost,Ice,Magic,none,3,magical,lance,0,0,80,small,2,0,1,0,2
 66,Mystic Frost,Ice,Magic,pullin,2,magical,detached,0,0,80,tiny,1,0,1,0,1
-67,Hidden Frost,Ice,Charge,reposition,5,physical,adjacent,0,0,80,tiny,1,0,1,0,1
+67,Hidden Frost,Ice,Charge,reposition,2,physical,adjacent,0,0,80,tiny,1,0,1,0,1
 -
 -Elec
 70,Zap,Electric,RngAtk,none,1,physical,adjacent,0,0,70,tiny,1,0,1,0,1,1,2
 71,Alt Zap,Electric,RngAtk,none,2,physical,rotator,0,0,70,tiny,1,0,1,0,2,1,2
 72,Mega Zap,Electric,RngAtk,none,-4,physical,clover,0,0,65,small,1,0,2,0,1,0,2,1,4
-73,Utra Zap,Electric,RngAtk,none,-6,physical,cone,2,0,65,small,1,0,1,0,1,2,3
+73,Ultra Zap,Electric,RngAtk,none,-6,physical,cone,2,0,65,small,1,0,1,0,1,2,3
 74,Arcane Zap,Electric,RngAtk,none,2,magical,rotator,0,0,65,tiny,1,0,1,0,1,1,2
 75,Etherial Zap,Electric,RngAtk,none,3,magical,detached,0,0,65,tiny,2,0,3,-1,1,0,1,1,1,1,3
-76,Mystic Zap,Electric,RngAtk,pullin,4,magical,detached,0,0,65,tiny,2,0,3,-1,1,0,1,1,1,1,3
+76,Mystic Zap,Electric,RngAtk,pullin,3,magical,detached,0,0,65,tiny,2,0,3,-1,1,0,1,1,1,1,3
 77,Hidden Zap,Electric,RngAtk,pushforward,3,physical,adjacent,0,0,70,tiny,1,0,1,0,1,1,2
 -
 -Buffs
@@ -109,13 +109,13 @@
 95,Regress Dex,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Dex,1,0,1
 -
 -Aliments
-100,Poison Dust,Ailment,Ailment,poison,4,magical,adjacent,1,30,1,poison,1,0,1
-101,Burning Dust,Ailment,Ailment,burn,4,magical,adjacent,1,30,1,burn,1,0,1
-102,Sleepy Dust,Ailment,Ailment,sleep,4,magical,adjacent,1,30,1,sleep,1,0,1
-103,Stunning Dust,Ailment,Ailment,paralyze,4,magical,adjacent,1,30,1,paralyze,1,0,1
-104,Freezing Dust,Ailment,Ailment,freeze,4,magical,adjacent,1,30,1,freeze,1,0,1
-105,Bloody Dust,Ailment,Ailment,bleed,4,magical,adjacent,1,30,1,bleed,1,0,1
-106,Confusing Dust,Ailment,Ailment,confusion,4,magical,adjacent,1,30,1,confusion,1,0,1
+100,Poison Dust,Ailment,Ailment,poison,2,magical,adjacent,1,30,1,poison,1,0,1
+101,Burning Dust,Ailment,Ailment,burn,2,magical,adjacent,1,30,1,burn,1,0,1
+102,Sleepy Dust,Ailment,Ailment,sleep,2,magical,adjacent,1,30,1,sleep,1,0,1
+103,Stunning Dust,Ailment,Ailment,paralyze,2,magical,adjacent,1,30,1,paralyze,1,0,1
+104,Freezing Dust,Ailment,Ailment,freeze,2,magical,adjacent,1,30,1,freeze,1,0,1
+105,Bloody Dust,Ailment,Ailment,bleed,2,magical,adjacent,1,30,1,bleed,1,0,1
+106,Confusing Dust,Ailment,Ailment,confusion,2,magical,adjacent,1,30,1,confusion,1,0,1
 -
 -Opportunity
 -1,Slash Opportunity,Opp,None,Slash,1.0
@@ -128,20 +128,32 @@
 -
 1,Slashing Hydro,Opp,Strike,Slash,Water
 2,Piercing Pulse,Opp,Strike,Pierce,Force
-3,Crushing Pyre,Opp,Strike,Blunt,Pyro
-4,Splashing Static,Opp,Strike,Water,Electric
-5,Blazing Frost,Opp,Strike,Pyro,Ice
+3,Crushing Frost,Opp,Strike,Blunt,Ice
+4,Splashing Slap,Opp,Strike,Water,Blunt
+5,Blazing Static,Opp,Strike,Pyro,Electric
 6,Freezing Stab,Opp,Strike,Ice,Pierce
-7,Shocking Slap,Opp,Strike,Electric,Blunt
+7,Shocking Pyre,Opp,Strike,Electric,Pyro,
 8,Pulsing Blade,Opp,Strike,Force,Slash
+-301,
 -
--1,Slash Skill Opportunity,Opp,Skill,Slash,1.0
--2,Pierce Skill Opportunity,Opp,Skill,Pierce,1.0
--3,Forgotten Smash,Opp,Skill,Blunt,Blunt
--4,Water Skill Opportunity,Opp,Skill,Water,1.0
--5,Pyro Skill Opportunity,Opp,Skill,Pyro,1.0
--6,Forgotten Blaze,Opp,Skill,Ice,Pyro
--7,Forgotten Slice,Opp,Skill,Electric,Slash
+-301,Slashing Hydro,Opp,Strike,Slash,Water
+-302,Slashing Blaze,Opp,Strike,Slash,Pyro
+-303,Slashing Frost,Opp,Strike,Slash,Ice
+-304,Slashing Static,Opp,Strike,Slash,Electric
+-305,Slashing Slice,Opp,Strike,Slash,Slash
+-306,Slashing Stab,Opp,Strike,Slash,Pierce
+-307,Slashing Bash,Opp,Strike,Slash,Blunt
+-308,Slashing Pulse,Opp,Strike,Slash,Force
+-
+-
+-311,Slashing Hydro,Opp,Strike,Slash,Water
+-312,Slashing Blaze,Opp,Strike,Slash,Pyro
+-313,Slashing Frost,Opp,Strike,Slash,Ice
+-314,Slashing Static,Opp,Strike,Slash,Electric
+-315,Slashing Slice,Opp,Strike,Slash,Slash
+-316,Slashing Stab,Opp,Strike,Slash,Pierce
+-317,Slashing Bash,Opp,Strike,Slash,Blunt
+-318,Slashing Pulse,Opp,Strike,Slash,Force
 -
 -1,Slash Spell Opportunity,Opp,Spell,Slash,1.0
 -2,Pierce Spell Opportunity,Opp,Spell,Pierce,1.0
@@ -182,14 +194,14 @@
 161,Alt Pulse,Force,Charge,pullin,3,physical,detached,0,0,70,tiny,1,0,1,1,1
 162,Mega Pulse,Force,Cost,pullin,-6,physical,lance,0,0,75,small,2,0,1,0,2
 163,Ultra Pulse,Force,Cost,pullin,-8,physical,line,5,0,75,small,1,0,2,0,2,1,1
-164,Arcane Pulse,Force,Magic,pullin,5,magical,cone,0,0,80,tiny,1,0,1,1,1
-165,Etherial Pulse,Force,Magic,pullin,8,magical,detached,0,0,80,small,2,0,1,0,2
+164,Arcane Pulse,Force,Magic,pullin,4,magical,cone,0,0,80,tiny,1,0,1,1,1
+165,Etherial Pulse,Force,Magic,pullin,2,magical,detached,0,0,80,small,2,0,1,0,2
 -
 -Passives
 200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
 201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
 202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
-203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,150,0,FTCharge,0
+203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,-50,0,FTCharge,0
 204,DragonStone,Passive,None,Pyro and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Slash
 205,WitchStone,Passive,None,Pyro and Water attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Water
 206,PhoenixStone,Passive,None,Pyro and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Pierce
@@ -209,4 +221,5 @@
 220,Death Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,deathAct,0  
 221,Opportunity Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,oppAct,0  
 222,Movement Pearl,Passive,None,No action points used for moving,1,0,0,moveAct,0
+223,Knockback Bonus,Passive,None,All attacks will knockback the target 1 tile.,1,0,0,pushBonus,0
 -212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage

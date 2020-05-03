@@ -18,7 +18,7 @@ public class UsableScript : ScriptableObject
     protected int level = 1;
 
     [SerializeField]
-    protected float exp = 2;
+    protected float exp = 10;
 
     protected int refType;
 
@@ -96,7 +96,7 @@ public class UsableScript : ScriptableObject
         if (exp <= 0)
         {
             LevelUP();
-            exp = 1 + (level * 2);
+            exp = 5 + (level * 3);
 
             if (USER)
             {
