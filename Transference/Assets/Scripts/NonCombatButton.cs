@@ -11,11 +11,6 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public int type;
     public NonCombatController controller;
 
-    private void Awake()
-    {
-        Application.targetFrameRate = 60;
-    }
-
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -25,27 +20,31 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
         controller.selectedButton = this;
         controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
-        if(type < 3)
+       // if(type < 3)
         {
             controller.buttonIndex = type;
-           // controller.currTarget = controller.targets[type];
+            controller.currTarget = controller.targets[type];
         }
 
-        if (type == 4)
+        if (type == 4 || type == 5)
         {
-            controller.buttonIndex = type;
-            controller.currTarget.color = Common.blackened;
-            controller.currTarget = controller.targets[3];
-            controller.currTarget.color = Color.white;
+            if(controller.currNeoTarget)
+            controller.currNeoTarget.color = Common.blackened;
+            controller.currNeoTarget = controller.neotargets[type - 4];
+            controller.currNeoTarget.color = Color.white;
+        }
+        else
+        {
+            if (controller.currNeoTarget)
+                controller.currNeoTarget.color = Common.blackened;
         }
 
-        if (type > 4)
-        {
-            controller.buttonIndex = type;
-            controller.currTarget.color = Common.blackened;
-            controller.currTarget = controller.targets[type - 1];
-            controller.currTarget.color = Color.white;
-        }
+
+        //if (type > 4)
+        //{
+        //    controller.buttonIndex = type;
+        //    controller.currTarget = controller.targets[type - 1];
+        //}
     }
   //  public void OnPointerDown(PointerEventData eventData)
   //  {

@@ -926,7 +926,7 @@ public class Common : ScriptableObject
     public static Color moresemi = new Color(1.0f, 1.0f, 1.0f, 0.083f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     public static Color selcted = new Color(0.4f, 0.6f, 0.4f);
-    public static Color blackened = new Color(0.02f, 0.0f, 0.0f);
+    public static Color blackened = new Color(0.117f, 0.0f, 0.0f);
 
 
     public static Color errored = new Color(0.81569f, 0.25f, 0.00784f);

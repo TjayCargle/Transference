@@ -3744,7 +3744,7 @@ public class ManagerScript : EventRunner
         //    }
         //}
         //tileMap.Sort();
-        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         //for (int i = livingObjects.Length - 1; i >= 0; i--)
         //{
 
@@ -3758,7 +3758,7 @@ public class ManagerScript : EventRunner
         //    currentObject = turnOrder[0];
 
         //tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
-        //GridObject[] objs = GameObject.FindObjectsOfType<GridObject>(true);
+        //GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
         //attackableTiles = new List<List<TileScript>>();
         //ShowWhite();
         //for (int i = 0; i < objs.Length; i++)
@@ -3859,7 +3859,7 @@ public class ManagerScript : EventRunner
         {
             return;
         }
-        LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>();
         int tileIndex = 0;
         float tileHeight = 0;
         float xoffset = 1 / (float)MapWidth;
@@ -4178,7 +4178,7 @@ public class ManagerScript : EventRunner
         if (turnOrder.Count > 0)
             currentObject = turnOrder[0];
 
-        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         //for (int i = livingObjects.Length - 1; i >= 0; i--)
         //{
 
@@ -4193,7 +4193,7 @@ public class ManagerScript : EventRunner
         tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
         attackableTiles = new List<List<TileScript>>();
         ShowWhite();
-        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>(true);
+        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
         gridObjects.Clear();
         for (int i = 0; i < objs.Length; i++)
         {
@@ -4301,7 +4301,7 @@ public class ManagerScript : EventRunner
         {
             return;
         }
-        LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>();
         int tileIndex = 0;
         float tileHeight = 0;
         float xoffset = 1 / (float)MapWidth;
@@ -4825,7 +4825,7 @@ public class ManagerScript : EventRunner
         tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
         attackableTiles = new List<List<TileScript>>();
         ShowWhite();
-        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>(true);
+        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
         gridObjects.Clear();
         for (int i = 0; i < objs.Length; i++)
         {
@@ -4986,7 +4986,7 @@ public class ManagerScript : EventRunner
         }
 
 
-        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>(true);
+        GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
 
         for (int i = 0; i < objs.Length; i++)
         {
@@ -5026,7 +5026,7 @@ public class ManagerScript : EventRunner
         doubleAdjOppTiles.Clear();
         menuManager.ShowNone();
         // eventManager.gridEvents.Clear();
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         switch (currentState)
         {
             case State.HazardTurn:
@@ -5236,7 +5236,7 @@ public class ManagerScript : EventRunner
     public void ReviveFull()
     {
         nextRoundCalled = false;
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
             if (livingObjects[i].FACTION == Faction.ally)
@@ -5314,7 +5314,7 @@ public class ManagerScript : EventRunner
     public void ReviveMedium()
     {
         nextRoundCalled = false;
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
             if (livingObjects[i].FACTION == Faction.ally)
@@ -5381,7 +5381,7 @@ public class ManagerScript : EventRunner
     {
         nextRoundCalled = false;
         //Revive each character with 1 hp, but halves all stats and halves Max HP, MP, and FT.
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
             if (livingObjects[i].FACTION == Faction.ally)
@@ -5456,7 +5456,7 @@ public class ManagerScript : EventRunner
         }
         turnOrder.Clear();
 
-        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>(true);
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
             if (!turnOrder.Contains(livingObjects[i]))

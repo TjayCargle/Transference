@@ -11,8 +11,10 @@ public class NonCombatController : MonoBehaviour
 
     public Image currControl;
     //   public Sprite[] silouetes;
-    public Image[] targets;
-    public Image currTarget;
+    public GameObject[] targets;
+    public Image[] neotargets;
+    public GameObject currTarget;
+    public Image currNeoTarget;
     // [SerializeField]
     // Image siloute;
     public int buttonIndex = 0;
@@ -25,9 +27,13 @@ public class NonCombatController : MonoBehaviour
     public Canvas patchCnvs;
     public Canvas mainCanvas;
     public Canvas playCanvas;
+    public Animator[] animators;
+    private AudioSource source;
+    public AudioClip[] clips;
     // Use this for initialization
     void Start()
     {
+        source = GetComponent<AudioSource>();
         selectedButton = buttons[0];
         selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
         if (targets != null)
@@ -51,9 +57,22 @@ public class NonCombatController : MonoBehaviour
     }
     public void SetPlay()
     {
+      if(source)
+        {
+            if(clips.Length > 1)
+            {
+                source.clip = clips[1];
+                source.Play();
+            }
+        }
         if (playCanvas)
         {
             playCanvas.gameObject.SetActive(true);
+        }
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animator = animators[i];
+            animator.SetBool("Pressed Start", true);
         }
         if (mainCanvas)
         {
@@ -63,6 +82,19 @@ public class NonCombatController : MonoBehaviour
 
     public void SetUnPlay()
     {
+        if (source)
+        {
+            if (clips.Length > 0)
+            {
+                source.clip = clips[0];
+                source.Play();
+            }
+        }
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animator = animators[i];
+            animator.SetBool("Pressed Start", false);
+        }
         if (playCanvas)
         {
             playCanvas.gameObject.SetActive(false);
@@ -71,6 +103,8 @@ public class NonCombatController : MonoBehaviour
         {
             mainCanvas.gameObject.SetActive(true);
         }
+
+      
     }
     public void HitButton()
     {
@@ -104,30 +138,35 @@ public class NonCombatController : MonoBehaviour
                         selectedCtrlButton.ForceSelect();
                     }
                     break;
-
                 case 2:
+                    {
+                        for (int i = 0; i < animators.Length; i++)
+                        {
+                            Animator animator = animators[i];
+                            animator.SetBool("Patched", true);
+                        }
+                        patchCnvs.gameObject.SetActive(true);
+
+                    }
+                    break;
+                case 3:
                     selectedButton.PressQuit();
                     break;
 
-                case 3:
-                    selectedButton.pressMain();
-                    break;
+                //case 3:
+                 //   selectedButton.pressMain();
+                //    break;
+
+         
 
                 case 4:
-                    {
-                        patchCnvs.gameObject.SetActive(true);
-          
-                    }
-                    break;
-
-                case 5:
                     selectedButton.playJax();
                     break;
 
-                case 6:
+                case 5:
                     selectedButton.playZeffron();
                     break;
-                case 7:
+                case 6:
                     SetUnPlay();
                     break;
             }
@@ -136,7 +175,18 @@ public class NonCombatController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+        Vector3 targetLocation = Vector3.zero;
+        if (currTarget)
+        {
+            targetLocation = currTarget.transform.position;
+        }
+        targetLocation.z -= 90;
+        targetLocation.x -= 15;
+        targetLocation.y += 15;
+        if (Vector3.Distance(transform.position, targetLocation) > 2f)
+        {
+            transform.Translate((targetLocation - transform.position) * 0.5f);
+        }
         if (Input.GetKeyDown(KeyCode.S))
         {
             if (buttons.Length > 0)
@@ -151,9 +201,7 @@ public class NonCombatController : MonoBehaviour
                     buttonIndex = 0;
                 }
 
-                currTarget.color = Common.blackened;
                 currTarget = targets[buttonIndex];
-                currTarget.color = Color.white;
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
@@ -173,10 +221,7 @@ public class NonCombatController : MonoBehaviour
                 {
                     buttonIndex = buttons.Length - 1;
                 }
-
-                currTarget.color = Common.blackened;
                 currTarget = targets[buttonIndex];
-                currTarget.color = Color.white;
 
                 selectedButton = buttons[buttonIndex];
                 selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
@@ -238,6 +283,11 @@ public class NonCombatController : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButton(1))
                 {
+                    for (int i = 0; i < animators.Length; i++)
+                    {
+                        Animator animator = animators[i];
+                        animator.SetBool("Patched", false);
+                    }
                     patchCnvs.gameObject.SetActive(false);
                 }
 

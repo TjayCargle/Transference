@@ -1,45 +1,21 @@
 fileFormatVersion: 2
 guid: bda07a4032213c24780d238c74ba8cd2
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 21300000
-    second: JaxDrixIdle_strip12_0
-  - first:
-      213: 21300002
-    second: JaxDrixIdle_strip12_1
-  - first:
-      213: 21300004
-    second: JaxDrixIdle_strip12_2
-  - first:
-      213: 21300006
-    second: JaxDrixIdle_strip12_3
-  - first:
-      213: 21300008
-    second: JaxDrixIdle_strip12_4
-  - first:
-      213: 21300010
-    second: JaxDrixIdle_strip12_5
-  - first:
-      213: 21300012
-    second: JaxDrixIdle_strip12_6
-  - first:
-      213: 21300014
-    second: JaxDrixIdle_strip12_7
-  - first:
-      213: 21300016
-    second: JaxDrixIdle_strip12_8
-  - first:
-      213: 21300018
-    second: JaxDrixIdle_strip12_9
-  - first:
-      213: 21300020
-    second: JaxDrixIdle_strip12_10
-  - first:
-      213: 21300022
-    second: JaxDrixIdle_strip12_11
+  fileIDToRecycleName:
+    21300000: JaxDrixIdle_strip12_0
+    21300002: JaxDrixIdle_strip12_1
+    21300004: JaxDrixIdle_strip12_2
+    21300006: JaxDrixIdle_strip12_3
+    21300008: JaxDrixIdle_strip12_4
+    21300010: JaxDrixIdle_strip12_5
+    21300012: JaxDrixIdle_strip12_6
+    21300014: JaxDrixIdle_strip12_7
+    21300016: JaxDrixIdle_strip12_8
+    21300018: JaxDrixIdle_strip12_9
+    21300020: JaxDrixIdle_strip12_10
+    21300022: JaxDrixIdle_strip12_11
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 9
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -94,7 +70,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -105,8 +81,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -117,8 +92,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -129,7 +103,6 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -149,7 +122,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 0055e31f4718c8f4ca2fb0b00e2ef4a1
-      internalID: 21300000
       vertices: []
       indices: 
       edges: []
@@ -170,7 +142,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 54665777880301a47bbff213e6f6658f
-      internalID: 21300002
       vertices: []
       indices: 
       edges: []
@@ -191,7 +162,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 4af878570c398fd44b991266da6e5975
-      internalID: 21300004
       vertices: []
       indices: 
       edges: []
@@ -212,7 +182,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: bed8df2a61e6a2042b51fbfcb5f56126
-      internalID: 21300006
       vertices: []
       indices: 
       edges: []
@@ -233,7 +202,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: f6f31c6883b742945a44ddc8f5e0fc14
-      internalID: 21300008
       vertices: []
       indices: 
       edges: []
@@ -254,7 +222,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 8a2715ed57a03af4da0ac745cd0d6d51
-      internalID: 21300010
       vertices: []
       indices: 
       edges: []
@@ -275,7 +242,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 2094778dae539b2408d1358f52a4d5d7
-      internalID: 21300012
       vertices: []
       indices: 
       edges: []
@@ -296,7 +262,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 70503e84a7388e643b5234c4982c6044
-      internalID: 21300014
       vertices: []
       indices: 
       edges: []
@@ -317,7 +282,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: e8398609b6426e5429ef151571fb29e0
-      internalID: 21300016
       vertices: []
       indices: 
       edges: []
@@ -338,7 +302,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 797ce5dacb5f68a45a85cfde213635f6
-      internalID: 21300018
       vertices: []
       indices: 
       edges: []
@@ -359,7 +322,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 0c8e34b9081be7d41a600e995f7688d7
-      internalID: 21300020
       vertices: []
       indices: 
       edges: []
@@ -380,7 +342,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 4551f4b11beed264585d454147be9084
-      internalID: 21300022
       vertices: []
       indices: 
       edges: []
@@ -389,12 +350,10 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 8b3922f92fc60404b956dee9b9c8e9eb
-    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

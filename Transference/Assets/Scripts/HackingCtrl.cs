@@ -110,6 +110,7 @@ public class HackingCtrl : MonoBehaviour
 
     private void updateTarget()
     {
+        return;
         SubSkillType secondChip = SubSkillType.Heal;
         SubSkillType thirdChip = SubSkillType.Heal;
         if ((currentChip + 1) < currentSequence.Count)

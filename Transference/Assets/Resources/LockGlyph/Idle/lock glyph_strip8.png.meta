@@ -1,33 +1,17 @@
 fileFormatVersion: 2
 guid: ee8d5c04734a8d846ba9b3bbe055e199
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 21300000
-    second: lock glyph_strip8_0
-  - first:
-      213: 21300002
-    second: lock glyph_strip8_1
-  - first:
-      213: 21300004
-    second: lock glyph_strip8_2
-  - first:
-      213: 21300006
-    second: lock glyph_strip8_3
-  - first:
-      213: 21300008
-    second: lock glyph_strip8_4
-  - first:
-      213: 21300010
-    second: lock glyph_strip8_5
-  - first:
-      213: 21300012
-    second: lock glyph_strip8_6
-  - first:
-      213: 21300014
-    second: lock glyph_strip8_7
+  fileIDToRecycleName:
+    21300000: lock glyph_strip8_0
+    21300002: lock glyph_strip8_1
+    21300004: lock glyph_strip8_2
+    21300006: lock glyph_strip8_3
+    21300008: lock glyph_strip8_4
+    21300010: lock glyph_strip8_5
+    21300012: lock glyph_strip8_6
+    21300014: lock glyph_strip8_7
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 9
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -82,7 +66,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -93,8 +77,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -105,8 +88,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
-  - serializedVersion: 3
+  - serializedVersion: 2
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -117,7 +99,6 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -137,7 +118,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: fc8ba7d89df045e45bfd607209178cb5
-      internalID: 21300000
       vertices: []
       indices: 
       edges: []
@@ -158,7 +138,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 994f91d7c8fe4c04a9e6f4ffdb7f428d
-      internalID: 21300002
       vertices: []
       indices: 
       edges: []
@@ -179,7 +158,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 29a4f3578627a224bbe6a028d699e71a
-      internalID: 21300004
       vertices: []
       indices: 
       edges: []
@@ -200,7 +178,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 96b14cb906ffd6b4b98a31275774c1c6
-      internalID: 21300006
       vertices: []
       indices: 
       edges: []
@@ -221,7 +198,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: e9659e6487d49194f9b00ca0b6ce7ddd
-      internalID: 21300008
       vertices: []
       indices: 
       edges: []
@@ -242,7 +218,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 15b1135806d04d642814b5ec716e5b0d
-      internalID: 21300010
       vertices: []
       indices: 
       edges: []
@@ -263,7 +238,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: fa0bbfc6d4ecd924fa7ca955b56d24d9
-      internalID: 21300012
       vertices: []
       indices: 
       edges: []
@@ -284,7 +258,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: ec0f524ff38246f46bd59ac06f92183d
-      internalID: 21300014
       vertices: []
       indices: 
       edges: []
@@ -293,12 +266,10 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: e82989bfd10ad7042bb3b9efe540791c
-    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
