@@ -54,6 +54,7 @@ public class CameraScript : MonoBehaviour
     public TextObj confirmButton;
     public TextObj cancelButton;
 
+
     void Start()
     {
         Setup();

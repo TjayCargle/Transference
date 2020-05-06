@@ -99,6 +99,7 @@ public class ManagerScript : EventRunner
     ImgObj eventImage;
     public bool showEnemyRanges = false;
     RaycastHit hit = new RaycastHit();
+    public TextObjHolder textHolder;
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -120,7 +121,11 @@ public class ManagerScript : EventRunner
                 Application.targetFrameRate = 60;
             }
             database = GameObject.FindObjectOfType<DatabaseManager>();
-
+            textHolder = GetComponent<TextObjHolder>();
+            if (textHolder == null)
+            {
+                textHolder = gameObject.AddComponent<TextObjHolder>();
+            }
             menuManager = GetComponent<MenuManager>();
             invManager = GetComponent<InventoryMangager>();
             eventManager = GetComponent<EventManager>();
@@ -2383,6 +2388,10 @@ public class ManagerScript : EventRunner
         prevState = currentState;
         currentState = entry.state;
 
+
+        TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
+        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
+
         menuStack.Add(entry);
         invManager.currentIndex = 0;
         if (GetState() == State.PlayerMove)
@@ -2515,6 +2524,10 @@ public class ManagerScript : EventRunner
         {
             currentState = State.PlayerTransition;
             updateConditionals();
+
+            TextObjectHandler.UpdateText(textHolder.subphaseTracker, "Resulting");
+            TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "Resulting");
+
             myCamera.UpdateCamera();
             myCamera.SetCameraPosFar();
         }
@@ -2772,6 +2785,8 @@ public class ManagerScript : EventRunner
         newSkillEvent.caller = null;
 
 
+        TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
+        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
 
     }
 
@@ -3787,7 +3802,7 @@ public class ManagerScript : EventRunner
 
     public void LoadDScene(int amapIndex, int startindex = -1)
     {
-        Debug.Log("kaaaa....");
+
         if (log)
         {
             log.Clear();
@@ -3848,9 +3863,7 @@ public class ManagerScript : EventRunner
     {
         MapWidth = map.width;
         MapHeight = map.height;
-        Debug.Log("toooee");
         Clear();
-        Debug.Log("aashhhshhs");
         if (null == tileMap || tileMap.Count == 0)
         {
             tileMap = tileManager.getTiles(map.width * map.height); // * MapHeight);
@@ -4951,7 +4964,12 @@ public class ManagerScript : EventRunner
         for (int i = 0; i < gridObjects.Count; i++)
         {
             gridObjects[i].currentTile = null;
-           // gridObjects[i].gameObject.SetActive(false);
+            if (gridObjects[i].GetComponent<EnemyScript>())
+                gridObjects[i].gameObject.SetActive(false);
+            else if (gridObjects[i].GetComponent<HazardScript>())
+                gridObjects[i].gameObject.SetActive(false);
+            else if (!gridObjects[i].GetComponent<LivingObject>())
+                gridObjects[i].gameObject.SetActive(false);
 
             //   if (gridObjects[i].GetComponent<SpriteRenderer>())
             // gridObjects[i].GetComponent<SpriteRenderer>().color = Common.trans;

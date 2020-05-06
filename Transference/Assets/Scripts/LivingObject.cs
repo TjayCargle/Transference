@@ -624,6 +624,14 @@ public class LivingObject : GridObject
 
             }
 
+            if(animationScript == null)
+            {
+                animationScript = GetComponent<AnimationScript>();
+            }
+            if(animationScript != null)
+            {
+                animationScript.Setup();
+            }
 
 
             if (BASE_STATS.STRENGTH > BASE_STATS.MAGIC && BASE_STATS.STRENGTH > BASE_STATS.DEX)
@@ -649,7 +657,7 @@ public class LivingObject : GridObject
             shadow.ANIM.runtimeAnimatorController = ANIM.anim.runtimeAnimatorController;
 
             SpriteRenderer shadowRender = shadow.SPRITE.sr;
-            shadowRender.sprite = GetComponent<SpriteRenderer>().sprite;
+            shadowRender.sprite = mySR.sprite;
             shadowRender.color = Common.GetFactionColor(FACTION) - new Color(0, 0, 0, 0.3f);
             shadowRender.material = myManager.ShadowMaterial;
             ANIM.SHADOWANIM = shadow.ANIM;
@@ -669,18 +677,19 @@ public class LivingObject : GridObject
                 barrier.gameObject.AddComponent<SpriteRenderer>();
             }
             barrier.Setup();
-            if (WEAKNESS == null)
-            {
-                worstWeakness = new GameObject().AddComponent<SpriteObject>();
-                worstWeakness.name = "Weakness Icon";
-                worstWeakness.transform.parent = this.transform;
-                worstWeakness.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
-                worstWeakness.transform.localPosition = new Vector3(-0.35f, 0.35f, -0.1f);
-                SpriteRenderer worstSprite = worstWeakness.gameObject.AddComponent<SpriteRenderer>();
-                worstSprite.color = new Color(1, 1, 1, 0.6f);
-                worstWeakness.Setup();
-                updateWeaknessIcon();
-            }
+            //if (WEAKNESS == null)
+            //{
+            //    worstWeakness = new GameObject().AddComponent<SpriteObject>();
+            //    worstWeakness.name = "Weakness Icon";
+            //    worstWeakness.transform.parent = this.transform;
+            //    worstWeakness.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
+            //    worstWeakness.transform.localPosition = new Vector3(-0.35f, 0.35f, -0.1f);
+            //    SpriteRenderer worstSprite = worstWeakness.gameObject.AddComponent<SpriteRenderer>();
+            //    worstSprite.color = new Color(1, 1, 1, 0.6f);
+            //    worstWeakness.Setup();
+            //    updateWeaknessIcon();
+            //}
+
             if (AILMENTS == null)
             {
                 AILMENTS = new List<SpriteObject>();
@@ -756,6 +765,7 @@ public class LivingObject : GridObject
 
     public void updateWeaknessIcon()
     {
+        return;
         if (WEAKNESS != null)
         {
             InventoryMangager invmger = GameObject.FindObjectOfType<InventoryMangager>();

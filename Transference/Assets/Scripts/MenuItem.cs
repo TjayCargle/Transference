@@ -558,7 +558,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
             case MenuItemType.Door:
                 {
-                    Debug.Log("so....");
+
                     myManager.GotoNewRoom();
                     // myManager.CheckDoorPrompt();
                 }

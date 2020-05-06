@@ -110,9 +110,5 @@ public class ShadowObject : MonoBehaviour
         Setup();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    
 }

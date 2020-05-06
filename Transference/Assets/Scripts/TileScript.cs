@@ -171,18 +171,17 @@ public class TileScript : MonoBehaviour, IComparable
         {
             uvs = new Vector2[4];
         }
-        uvs[0].x = startX;//0
-        uvs[0].y = startY;//0
+        uvs[0].x = startX;
+        uvs[0].y = startY;
 
-        uvs[1].x = finaleX;//1
-        uvs[1].y = startY;//0
+        uvs[1].x = finaleX;
+        uvs[1].y = finaleY;
 
-        uvs[2].x = startX;//0
-        uvs[2].y = finaleY;//1
+        uvs[2].x = finaleX;
+        uvs[2].y = startY;
 
-
-        uvs[3].x = finaleX;//1
-        uvs[3].y = finaleY;//1
+        uvs[3].x = startX;
+        uvs[3].y = finaleY;
 
         mesh.uv = uvs;
     }

@@ -46,7 +46,18 @@ public class TextObj : MonoBehaviour {
 
 
     }
+    public void SetText(string sometext)
+    {
+        if(text)
+        {
+            text.text = sometext;
+        }
 
+        if(textmeshpro)
+        {
+            textmeshpro.text = sometext;
+        }
+    }
     private void Update()
     {
         if (isShowing)
