@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class LivingObject : GridObject
 {
 
@@ -677,6 +677,16 @@ public class LivingObject : GridObject
                 barrier.gameObject.AddComponent<SpriteRenderer>();
             }
             barrier.Setup();
+            //MeshRenderer meshy = new GameObject().AddComponent<MeshRenderer>();
+            
+           
+            TextMeshPro tmp = new GameObject().AddComponent<TextMeshPro>();
+            tmp.name = "Action Counter";
+            tmp.transform.parent = this.transform;
+            tmp.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
+            tmp.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
+            tmp.text = "10";
+            tmp.rectTransform.sizeDelta = new Vector2(4.2f, 4.2f);
             //if (WEAKNESS == null)
             //{
             //    worstWeakness = new GameObject().AddComponent<SpriteObject>();

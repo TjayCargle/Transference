@@ -1675,6 +1675,8 @@ public class DatabaseManager : MonoBehaviour
                 newObject.id = id;
                 int fileIndex = 1;
                 newObject.FullName = parsed[fileIndex];
+                newObject.name = newObject.FullName;
+
                 fileIndex++;
                 baseStats.MAX_HEALTH = Int32.Parse(parsed[fileIndex]);
                 modStats.HEALTH = baseStats.MAX_HEALTH;

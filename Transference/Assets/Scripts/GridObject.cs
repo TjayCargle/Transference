@@ -23,6 +23,8 @@ public class GridObject : MonoBehaviour
     public int id = -1;
     protected SpriteRenderer mySR;
     protected AnimationScript animationScript;
+    public int currentTileIndex;
+
 
     public virtual string NAME
     {

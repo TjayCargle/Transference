@@ -76,7 +76,7 @@ public class ManagerScript : EventRunner
     public StatusIconManager iconManager;
     public Material ShadowMaterial;
     private List<UsableScript> shopItems = new List<UsableScript>();
-    private MapDetail currentMap;
+    public MapDetail currentMap;
     private List<MapDetail> visitedMaps = new List<MapDetail>();
     private float timer = 0.0f;
     [SerializeField]
@@ -605,9 +605,11 @@ public class ManagerScript : EventRunner
                                                 w.y = Mathf.Round(w.y);
                                                 w.z = Mathf.Round(w.z);
 
-                                                if (GetTileIndex(w) >= 0)
+                                                GameObject hitObj = hit.transform.gameObject;
+
+                                                if (hitObj.GetComponent<TileScript>())
                                                 {
-                                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                                    TileScript hitTile = hitObj.GetComponent<TileScript>();
 
                                                     bool alreadySelected = false;
 
@@ -706,9 +708,11 @@ public class ManagerScript : EventRunner
                                 w.y = Mathf.Round(w.y);
                                 w.z = Mathf.Round(w.z);
 
-                                if (GetTileIndex(w) >= 0)
+                                GameObject hitObj = hit.transform.gameObject;
+
+                                if (hitObj.GetComponent<TileScript>())
                                 {
-                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                    TileScript hitTile = hitObj.GetComponent<TileScript>();
                                     bool alreadySelected = false;
                                     int outer = -1;
                                     int innner = -1;
@@ -932,10 +936,11 @@ public class ManagerScript : EventRunner
                                 w.x = Mathf.Round(w.x);
                                 w.y = Mathf.Round(w.y);
                                 w.z = Mathf.Round(w.z);
+                                GameObject hitObj = hit.transform.gameObject;
 
-                                if (GetTileIndex(w) >= 0)
+                                if (hitObj.GetComponent<TileScript>())
                                 {
-                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                    TileScript hitTile = hitObj.GetComponent<TileScript>();
                                     bool alreadySelected = false;
                                     int inex = -1;
 
@@ -1179,9 +1184,11 @@ public class ManagerScript : EventRunner
                                 w.y = Mathf.Round(w.y);
                                 w.z = Mathf.Round(w.z);
 
-                                if (GetTileIndex(w) >= 0)
+                                GameObject hitObj = hit.transform.gameObject;
+
+                                if (hitObj.GetComponent<TileScript>())
                                 {
-                                    TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                    TileScript hitTile = hitObj.GetComponent<TileScript>();
                                     bool alreadySelected = false;
                                     int outer = -1;
                                     int innner = -1;
@@ -1381,10 +1388,11 @@ public class ManagerScript : EventRunner
                                     w.x = Mathf.Round(w.x);
                                     w.y = Mathf.Round(w.y);
                                     w.z = Mathf.Round(w.z);
+                                    GameObject hitObj = hit.transform.gameObject;
 
-                                    if (GetTileIndex(w) >= 0)
+                                    if (hitObj.GetComponent<TileScript>())
                                     {
-                                        TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                        TileScript hitTile = hitObj.GetComponent<TileScript>();
                                         bool alreadySelected = false;
 
                                         if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
@@ -1478,10 +1486,11 @@ public class ManagerScript : EventRunner
                             w.x = Mathf.Round(w.x);
                             w.y = Mathf.Round(w.y);
                             w.z = Mathf.Round(w.z);
+                            GameObject hitObj = hit.transform.gameObject;
 
-                            if (GetTileIndex(w) >= 0)
+                            if (hitObj.GetComponent<TileScript>())
                             {
-                                TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                                TileScript hitTile = hitObj.GetComponent<TileScript>(); //GetTileAtIndex(GetTileIndex(w));
                                 bool alreadySelected = false;
 
                                 if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
@@ -3169,10 +3178,11 @@ public class ManagerScript : EventRunner
             w.x = Mathf.Round(w.x);
             w.y = Mathf.Round(w.y);
             w.z = Mathf.Round(w.z);
-
-            if (GetTileIndex(w) >= 0)
+            GameObject hitoobject = hit.transform.gameObject;
+         //   int hitindex = GetTileIndex(w);
+            if (hitoobject.GetComponent<TileScript>())
             {
-                TileScript hitTile = GetTileAtIndex(GetTileIndex(w));
+                TileScript hitTile = hitoobject.GetComponent<TileScript>();
                 bool alreadySelected = false;
                 if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
                 {
@@ -3185,7 +3195,7 @@ public class ManagerScript : EventRunner
 
                     if (alreadySelected)
                     {
-                        if (hitTile == GetTile(movedObj.transform.position))
+                        if (hitTile != null)
                         {
 
                             if (ComfirmMenuAction(movedObj))
@@ -3272,6 +3282,9 @@ public class ManagerScript : EventRunner
 
                         xDist = Mathf.Abs(tempX - objX);
                         yDist = Mathf.Abs(tempY - objY);
+                        xDist /= 2;
+                        yDist /= 2;
+
                         if (xDist + yDist <= player.current.MOVE_DIST && StartCanMoveCheck(player.current, player.current.currentTile, hitTile))
                         {
 
@@ -3689,13 +3702,15 @@ public class ManagerScript : EventRunner
             {
                 GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 jax.SetActive(true);
-                jax.transform.position = new Vector3(1.0f, 0.5f, 0.0f);
+                jax.transform.position = tileMap[1].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
                 ActorSetup asetup = jax.GetComponent<ActorSetup>();
                 asetup.characterId = 0;
                 LivingObject liveJax = jax.GetComponent<LivingObject>();
                 liveJax.Setup();
                 gridObjects.Add(liveJax);
                 turnOrder.Add(liveJax);
+                ComfirmMoveGridObject(liveJax, 1);
+                
 
             }
             else if (defaultSceneEntry == 4)
@@ -3838,6 +3853,7 @@ public class ManagerScript : EventRunner
         }
 
         currentMap = map;
+
         if (currentRoomName)
         {
             if (!currentRoomName.isSetup)
@@ -4300,7 +4316,7 @@ public class ManagerScript : EventRunner
     public void LoadDScene(MapData data, int startindex = -1)
     {
 
-
+ //       Debug.Log("data");
 
         MapWidth = data.width;
         MapHeight = data.height;
@@ -4331,9 +4347,9 @@ public class ManagerScript : EventRunner
                 TileScript tile = tileMap[tileIndex];
                 tile.listindex = mapIndex;
                 if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
-                    tile.transform.position = new Vector3(i, (j * tileHeight) + yElevation, j);
+                    tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight) + yElevation, j * 2);
                 else
-                    tile.transform.position = new Vector3(i, (j * tileHeight), j);
+                    tile.transform.position = new Vector3(i*2, (j * 2* tileHeight), j * 2);
                 tile.transform.parent = tileParent.transform;
                 tile.name = "Tile " + mapIndex;
                 tile.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -4464,6 +4480,7 @@ public class ManagerScript : EventRunner
                                 {
                                     foundtile = true;
                                     livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
+                                    livingobjs[i].currentTileIndex = tileIndex;
                                     playerIndexes.Add(tileIndex);
                                     break;
                                 }
@@ -4551,8 +4568,15 @@ public class ManagerScript : EventRunner
         {
             EnemyScript anEnemy = enemies[i];
             liveEnemies.Add(anEnemy);
+
+       
+
             anEnemy.transform.position = tileMap[data.enemyIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
             anEnemy.gameObject.SetActive(true);
+
+            anEnemy.currentTileIndex = data.enemyIndexes[i];
+
+
             if (largestLevel > 1)
             {
                 if (largestLevel + lvtimes < Common.MaxLevel)
@@ -4789,9 +4813,10 @@ public class ManagerScript : EventRunner
         List<GridObject> gridobjs = objManager.getObjects(data);
         for (int i = 0; i < gridobjs.Count; i++)
         {
+          
             gridobjs[i].transform.position = tileMap[data.objMapIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
             gridobjs[i].gameObject.SetActive(true);
-
+            gridobjs[i].currentTileIndex = data.objMapIndexes[i];
 
             gridobjs[i].STATS.HEALTH = gridobjs[i].BASE_STATS.MAX_HEALTH;
             gridobjs[i].STATS.MANA = 0;
@@ -4817,6 +4842,9 @@ public class ManagerScript : EventRunner
             hazards[i].gameObject.SetActive(true);
             hazards[i].BASE_STATS.LEVEL = Random.Range(largestLevel, largestLevel + 2);
             hazards[i].MapIndex = data.glyphIndexes[i];
+
+            hazards[i].currentTileIndex = data.glyphIndexes[i];
+
             if (data.revealCount > 0)
             {
                 if (revealIndex < data.unOccupiedIndexes.Count)
@@ -4964,12 +4992,16 @@ public class ManagerScript : EventRunner
         for (int i = 0; i < gridObjects.Count; i++)
         {
             gridObjects[i].currentTile = null;
-            if (gridObjects[i].GetComponent<EnemyScript>())
+            if(gridObjects[i].FACTION != Faction.ally)
+            {
                 gridObjects[i].gameObject.SetActive(false);
-            else if (gridObjects[i].GetComponent<HazardScript>())
-                gridObjects[i].gameObject.SetActive(false);
-            else if (!gridObjects[i].GetComponent<LivingObject>())
-                gridObjects[i].gameObject.SetActive(false);
+            }
+            //if (gridObjects[i].GetComponent<EnemyScript>())
+            //    gridObjects[i].gameObject.SetActive(false);
+            //else if (gridObjects[i].GetComponent<HazardScript>())
+            //    gridObjects[i].gameObject.SetActive(false);
+            //else if (!gridObjects[i].GetComponent<LivingObject>())
+            //    gridObjects[i].gameObject.SetActive(false);
 
             //   if (gridObjects[i].GetComponent<SpriteRenderer>())
             // gridObjects[i].GetComponent<SpriteRenderer>().color = Common.trans;
@@ -5027,6 +5059,7 @@ public class ManagerScript : EventRunner
             }
             if (!gridObjects.Contains(griddy))
                 gridObjects.Add(griddy);
+        //    Debug.Log(griddy.NAME);
             griddy.currentTile = GetTile(griddy);
             griddy.currentTile.isOccupied = true;
 
@@ -5842,6 +5875,8 @@ public class ManagerScript : EventRunner
             }
             xDist = Mathf.Abs(tempX - objX);
             yDist = Mathf.Abs(tempY - objY);
+            xDist /= 2;
+            yDist /= 2;
             if (xDist == 0 && yDist == 0)
             {
                 if (cameraLock)
@@ -5963,6 +5998,7 @@ public class ManagerScript : EventRunner
     }
     public void ShowSelectedTile(GridObject obj)
     {
+     
         if (obj)
         {
             TileScript theTile = GetTile(obj);
@@ -6325,6 +6361,10 @@ public class ManagerScript : EventRunner
 
                     xDist = Mathf.Abs(tempX - objX);
                     yDist = Mathf.Abs(tempY - objY);
+
+                    xDist /= 2;
+                    yDist /= 2;
+
                     if (temp.GetComponent<TileScript>())
                     {
 
@@ -6370,6 +6410,7 @@ public class ManagerScript : EventRunner
         for (int i = 0; i < tileMap.Count; i++)
         {
             TileScript temp = tileMap[i];
+
             float tempX = temp.transform.position.x;
             float tempY = temp.transform.position.z;
 
@@ -6381,6 +6422,8 @@ public class ManagerScript : EventRunner
 
             xDist = Mathf.Abs(tempX - objX);
             yDist = Mathf.Abs(tempY - objY);
+            xDist = xDist / 2;
+            yDist = yDist / 2;
             if (xDist == 0 && yDist == 0)
             {
                 // myCamera.currentTile = temp;
@@ -6389,6 +6432,7 @@ public class ManagerScript : EventRunner
             }
             else if (xDist + yDist <= MoveDist)
             {
+
                 if (StartCanMoveCheck(obj, obj.currentTile, temp))
                 {
                     temp.MYCOLOR = Color.cyan;
@@ -6449,6 +6493,10 @@ public class ManagerScript : EventRunner
 
                 xDist = Mathf.Abs(tempX - objX);
                 yDist = Mathf.Abs(tempY - objY);
+
+                xDist /= 2;
+                yDist /= 2;
+
                 if (xDist == 0 && yDist == 0)
                 {
                     myCamera.currentTile = temp.GetComponent<TileScript>();
@@ -6580,6 +6628,10 @@ public class ManagerScript : EventRunner
 
         xDist = Mathf.Abs(tempX - objX);
         yDist = Mathf.Abs(tempY - objY);
+
+        xDist /= 2;
+        yDist /= 2;
+
         if (xDist + yDist <= obj.MOVE_DIST && ignoreDist == false)
         {
             obj.transform.position = tileMap[TileIndex].transform.position + new Vector3(0, 0.5f, 0.12f);
@@ -6699,13 +6751,14 @@ public class ManagerScript : EventRunner
             obj.currentTile.isOccupied = false;
             obj.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
             obj.currentTile.isOccupied = true;
+            obj.currentTileIndex = tileIndex;
 
         }
         else
         {
-            obj.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
+            obj.currentTile = tileMap[tileIndex];
         }
-        myCamera.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
+        myCamera.currentTile = tileMap[tileIndex];
         myCamera.selectedTile = myCamera.currentTile;
         myCamera.infoObject = GetObjectAtTile(tileMap[tileIndex].GetComponent<TileScript>());
         myCamera.UpdateCamera();
@@ -6775,11 +6828,14 @@ public class ManagerScript : EventRunner
             obj.currentTile.isOccupied = false;
             obj.currentTile = tile;
             obj.currentTile.isOccupied = true;
+            obj.currentTileIndex = tile.listindex;
 
         }
         else
         {
             obj.currentTile = tile;
+            obj.currentTileIndex = tile.listindex;
+
         }
         if (hover == false)
         {
@@ -6824,7 +6880,10 @@ public class ManagerScript : EventRunner
         {
             return -1;
         }
-        int TileIndex = TwoToOneD(Mathf.RoundToInt(checkTile.transform.position.z), MapWidth, Mathf.RoundToInt(checkTile.transform.position.x));
+        Vector3 interceptIndex = checkTile.transform.position / 2;
+        //int TileIndex = checkTile.currentTileIndex; //TwoToOneD(Mathf.RoundToInt(checkTile.transform.position.z), MapWidth, Mathf.RoundToInt(checkTile.transform.position.x));
+        int TileIndex = TwoToOneD(Mathf.RoundToInt(interceptIndex.z), MapWidth, Mathf.RoundToInt(interceptIndex.x));
+//        Debug.Log("resulting index:" + TileIndex);
         if (TileIndex >= MapHeight * MapWidth)
             return -1;
         if (TileIndex < 0)
@@ -6833,15 +6892,21 @@ public class ManagerScript : EventRunner
     }
     public int GetTileIndex(Vector3 checkPosition)
     {
-        if ((int)checkPosition.z >= MapHeight)
+//        Debug.Log("og: " + checkPosition);
+
+        Vector3 interceptIndex = checkPosition / 2;
+ //       Debug.Log("intercept:" + interceptIndex);
+
+        if ((int)interceptIndex.z >= MapHeight)
             return -1;
-        if ((int)checkPosition.x >= MapWidth)
+        if ((int)interceptIndex.x >= MapWidth)
             return -1;
-        if ((int)checkPosition.z < 0)
+        if ((int)interceptIndex.z < 0)
             return -1;
-        if ((int)checkPosition.x < 0)
+        if ((int)interceptIndex.x < 0)
             return -1;
-        int TileIndex = TwoToOneD((int)checkPosition.z, MapWidth, (int)checkPosition.x);
+        int TileIndex = TwoToOneD((int)interceptIndex.z, MapWidth, (int)interceptIndex.x);
+
         if (TileIndex >= MapHeight * MapWidth)
             return -1;
         if (TileIndex < 0)
@@ -6852,10 +6917,12 @@ public class ManagerScript : EventRunner
     }
     public TileScript GetTile(GridObject checkTile)
     {
-        int index = GetTileIndex(checkTile);
+        int index = checkTile.currentTileIndex; // GetTileIndex(checkTile);
+       // index = index / 2;
+     //   Debug.Log("new index:" + index);
         if (index < 0)
             return null;
-        return tileMap[index].GetComponent<TileScript>();
+        return tileMap[index];
     }
     public TileScript GetTile(Vector3 checkPosition)
     {
@@ -6940,29 +7007,40 @@ public class ManagerScript : EventRunner
     public List<TileScript> GetAdjecentTiles(TileScript origin)
     {
         List<TileScript> tiles = new List<TileScript>();
-        List<Vector3> possiblePossitions = new List<Vector3>();
-        Vector3 v1 = origin.transform.position;
-        Vector3 v2 = origin.transform.position;
-        Vector3 v3 = origin.transform.position;
-        Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        int originindex = origin.listindex;
+        int possIndexLeft = originindex - 1;
+        int possIndexRight = originindex + 1;
+        int possIndexUp = originindex + currentMap.width;
+        int possIndexDown = originindex - currentMap.width;
+      
 
-        v2.x += 1;
+        List<int> possibleTiles = new List<int>();
+        possibleTiles.Add(possIndexLeft);
+        possibleTiles.Add(possIndexRight);
+        possibleTiles.Add(possIndexUp);
+        possibleTiles.Add(possIndexDown);
+        //List<Vector3> possiblePossitions = new List<Vector3>();
+        //Vector3 v1 = origin.transform.position;
+        //Vector3 v2 = origin.transform.position;
+        //Vector3 v3 = origin.transform.position;
+        //Vector3 v4 = origin.transform.position;
+        //v1.z += 1;
 
-        v3.z -= 1;
+        //v2.x += 1;
 
-        v4.x -= 1;
-        possiblePossitions.Add(v1);
-        possiblePossitions.Add(v2);
-        possiblePossitions.Add(v3);
-        possiblePossitions.Add(v4);
+        //v3.z -= 1;
 
-        for (int i = 0; i < possiblePossitions.Count; i++)
+        //v4.x -= 1;
+        //possiblePossitions.Add(v1);
+        //possiblePossitions.Add(v2);
+        //possiblePossitions.Add(v3);
+        //possiblePossitions.Add(v4);
+
+        for (int i = 0; i < possibleTiles.Count; i++)
         {
-            int index = GetTileIndex(possiblePossitions[i]);
-            if (index >= 0)
+            if (possibleTiles[i] >= 0 && possibleTiles[i] < currentMap.width * currentMap.height)
             {
-                TileScript newTile = GetTileAtIndex(index);
+                TileScript newTile = tileMap[possibleTiles[i]];
                 tiles.Add(newTile);
             }
         }

@@ -188,13 +188,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -202,6 +202,7 @@ public class TileManager : MonoBehaviour
 
         for (int i = 0; i < possiblePossitions.Count; i++)
         {
+
             int index = myManager.GetTileIndex(possiblePossitions[i]);
             if (index >= 0)
             {
@@ -236,27 +237,27 @@ public class TileManager : MonoBehaviour
         Vector3 v11 = origin.transform.position;
         Vector3 v12 = origin.transform.position;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x += 2;
-        v6.z += 2;
-        v7.z -= 2;
-        v8.x -= 2;
+        v5.x += 4;
+        v6.z += 4;
+        v7.z -= 4;
+        v8.x -= 4;
 
-        v9.x -= 1;
-        v9.z += 1;
+        v9.x -= 2;
+        v9.z += 2;
 
-        v10.x += 1;
-        v10.z += 1;
+        v10.x += 2;
+        v10.z += 2;
 
-        v11.x -= 1;
-        v11.z -= 1;
+        v11.x -= 2;
+        v11.z -= 2;
 
-        v12.x += 1;
-        v12.z -= 1;
+        v12.x += 2;
+        v12.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -299,27 +300,27 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
 
 
 
-        v5.x += 1;
-        v5.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v6.x += -1;
-        v6.z += 1;
+        v6.x += -2;
+        v6.z += 2;
 
-        v7.x += -1;
-        v7.z += -1;
+        v7.x += -2;
+        v7.z += -2;
 
-        v8.x += 1;
-        v8.z += -1;
+        v8.x += 2;
+        v8.z += -2;
 
 
         possiblePossitions.Add(v1);
@@ -379,70 +380,70 @@ public class TileManager : MonoBehaviour
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
-
-
-
-        v5.x += 1;
-        v5.z += 1;
-
-        v6.x += -1;
-        v6.z += 1;
-
-        v7.x += -1;
-        v7.z += -1;
-
-        v8.x += 1;
-        v8.z += -1;
+        v4.x -= 4;
 
 
+
+        v5.x += 2;
+        v5.z += 2;
+
+        v6.x += -2;
+        v6.z += 2;
+
+        v7.x += -2;
+        v7.z += -2;
+
+        v8.x += 2;
+        v8.z += -2;
 
 
 
 
 
-        v9.z += 3;
-
-        v10.x += 1;
-        v10.z += 2;
-
-        v11.x += 2;
-        v11.z += 1;
-
-        v12.x += 3;
 
 
+        v9.z += 6;
 
-        v13.x += 2;
-        v13.z += -1;
+        v10.x += 2;
+        v10.z += 4;
 
-        v14.x += 1;
-        v14.z += -2;
+        v11.x += 4;
+        v11.z += 2;
 
-        v15.z += -3;
-
-
-        v16.x += -1;
-        v16.z += -2;
+        v12.x += 6;
 
 
-        v17.x += -2;
-        v17.z += -1;
 
-        v18.x += -3;
+        v13.x += 4;
+        v13.z += -2;
+
+        v14.x += 2;
+        v14.z += -4;
+
+        v15.z += -6;
 
 
-        v19.x += -2;
-        v19.z += 1;
+        v16.x += -2;
+        v16.z += -4;
 
-        v20.x += -1;
-        v20.z += 2;
+
+        v17.x += -4;
+        v17.z += -2;
+
+        v18.x += -6;
+
+
+        v19.x += -4;
+        v19.z += 2;
+
+        v20.x += -2;
+        v20.z += 4;
 
 
         possiblePossitions.Add(v1);
@@ -507,22 +508,22 @@ public class TileManager : MonoBehaviour
         Vector3 v8 = origin.transform.position;
 
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
-
-        v5.x -= 1;
-        v5.z += 1;
-
-        v6.x += 1;
-        v6.z += 1;
-
-        v7.x -= 1;
-        v7.z -= 1;
-
-        v8.x += 1;
-        v8.z -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
+                
+        v5.x -= 2;
+        v5.z += 2;
+                
+        v6.x += 2;
+        v6.z += 2;
+                
+        v7.x -= 2;
+        v7.z -= 2;
+                
+        v8.x += 2;
+        v8.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -580,60 +581,60 @@ public class TileManager : MonoBehaviour
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v8.x += 1;
-        v8.z -= 1;
-
-
-
-        v9.x += -1;
-        v9.z += 2;
-
-        v10.z += 2;
-
-        v11.x += 1;
-        v11.z += 2;
+        v8.x += 2;
+        v8.z -= 2;
 
 
-        v12.x += 2;
-        v12.z += 1;
 
-        v13.x += 2;
+        v9.x += -2;
+        v9.z += 4;
 
-        v14.x += 2;
-        v14.z += -1;
+        v10.z += 4;
 
-
-        v15.x += 1;
-        v15.z += -2;
-
-        v16.z += -2;
-
-        v17.x += -1;
-        v17.z += -2;
+        v11.x += 2;
+        v11.z += 4;
 
 
-        v18.x += -2;
-        v18.z += -1;
+        v12.x += 4;
+        v12.z += 2;
 
-        v19.x += -2;
+        v13.x += 4;
+
+        v14.x += 4;
+        v14.z += -2;
 
 
-        v20.x += -2;
-        v20.z += 1;
+        v15.x += 2;
+        v15.z += -4;
+
+        v16.z += -4;
+
+        v17.x += -2;
+        v17.z += -4;
+
+
+        v18.x += -4;
+        v18.z += -2;
+
+        v19.x += -4;
+
+
+        v20.x += -4;
+        v20.z += 2;
 
 
 
@@ -695,20 +696,20 @@ public class TileManager : MonoBehaviour
 
 
 
-        v1.z += 1;
-        v2.z += 2;
+        v1.z += 2;
+        v2.z += 4;
 
 
-        v3.x += 1;
-        v4.x += 2;
+        v3.x += 2;
+        v4.x += 4;
 
 
-        v5.z += -1;
-        v6.z += -2;
+        v5.z += -2;
+        v6.z += -4;
 
 
-        v7.x += -1;
-        v8.x += -2;
+        v7.x += -2;
+        v8.x += -4;
 
 
 
@@ -774,28 +775,28 @@ public class TileManager : MonoBehaviour
 
 
 
-        v1.z += 1;
-        v2.z += 2;
-        v3.z += 3;
-        v4.x += 4;
+        v1.z += 2;
+        v2.z += 4;
+        v3.z += 6;
+        v4.z += 8;
 
 
-        v5.x += 1;
-        v6.x += 2;
-        v7.x += 3;
-        v8.x += 4;
+        v5.x += 2;
+        v6.x += 4;
+        v7.x += 6;
+        v8.x += 8;
 
 
-        v9.z += -1;
-        v10.z += -2;
-        v11.z += -3;
-        v12.z += -4;
+        v9.z += -2;
+        v10.z += -4;
+        v11.z += -6;
+        v12.z += -8;
 
 
-        v13.x += -1;
-        v14.x += -2;
-        v15.x += -3;
-        v16.z += -4;
+        v13.x += -2;
+        v14.x += -4;
+        v15.x += -6;
+        v16.z += -8;
 
 
 
@@ -863,38 +864,38 @@ public class TileManager : MonoBehaviour
         Vector3 v12 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
+        v1.x += -2;
+        v1.z += 2;
 
-        v2.z += 1;
+        v2.z += 2;
 
-        v3.x += 1;
-        v3.z += 1;
+        v3.x += 2;
+        v3.z += 2;
 
-        v4.x += 1;
-        v4.z += 1;
+        v4.x += 2;
+        v4.z += 2;
 
-        v5.x += 1;
+        v5.x += 2;
 
-        v6.x += 1;
-        v6.z += -1;
+        v6.x += 2;
+        v6.z += -2;
 
 
-        v7.x += 1;
-        v7.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v8.z += -1;
+        v8.z += -2;
 
-        v9.x += -1;
-        v9.z += -1;
+        v9.x += -2;
+        v9.z += -2;
 
-        v10.x += -1;
-        v10.z += -1;
+        v10.x += -2;
+        v10.z += -2;
 
-        v11.x += -1;
+        v11.x += -2;
 
-        v12.x += -1;
-        v12.z += 1;
+        v12.x += -2;
+        v12.z += 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -967,50 +968,50 @@ public class TileManager : MonoBehaviour
         Vector3 v24 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
-        v2.z += 1;
-        v3.x += 1;
-        v3.z += 1;
-        v4.x += -1;
-        v4.z += 2;
-        v5.z += 2;
-        v6.x += 1;
-        v6.z += 2;
+        v1.x +=-2;
+        v1.z += 2;
+        v2.z += 2;
+        v3.x += 2;
+        v3.z += 2;
+        v4.x +=-2;
+        v4.z += 4;
+        v5.z += 4;
+        v6.x += 2;
+        v6.z += 4;
 
-        v7.x += 1;
-        v7.z += 1;
-        v8.x += 1;
-        v9.x += 1;
-        v9.z += -1;
-        v10.x += 2;
-        v10.z += 1;
-        v11.x += 2;
-        v12.x += 2;
-        v12.z += -1;
+        v7.x += 2;
+        v7.z += 2;
+        v8.x += 2;
+        v9.x += 2;
+        v9.z +=-2;
+        v10.x += 4;
+        v10.z += 2;
+        v11.x += 4;
+        v12.x += 4;
+        v12.z += -2;
 
 
-        v13.x += 1;
-        v13.z += -1;
-        v14.z += -1;
-        v15.x += -1;
-        v15.z += -1;
-        v16.x += 1;
-        v16.z += -2;
-        v17.z += -2;
-        v18.x += -1;
-        v18.z += -2;
+        v13.x +=  2;
+        v13.z += -2;
+        v14.z += -2;
+        v15.x += -2;
+        v15.z += -2;
+        v16.x +=  2;
+        v16.z += -4;
+        v17.z += -4;
+        v18.x += -2;
+        v18.z += -4;
 
-        v19.x += -1;
-        v19.z += -1;
-        v20.x += -1;
-        v21.x += -1;
-        v21.z += 1;
-        v22.x += -2;
-        v22.z += -1;
-        v23.x += -2;
-        v24.x += -2;
-        v24.z += 1;
+        v19.x += -2;
+        v19.z += -2;
+        v20.x += -2;
+        v21.x += -2;
+        v21.z +=  2;
+        v22.x += -4;
+        v22.z += -2;
+        v23.x += -4;
+        v24.x += -4;
+        v24.z += 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1088,53 +1089,53 @@ public class TileManager : MonoBehaviour
         Vector3 v16 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
+        v1.x += -2;
+        v1.z += 2;
 
-        v2.z += 1;
+        v2.z += 2;
 
-        v3.x += 1;
-        v3.z += 1;
+        v3.x += 2;
+        v3.z += 2;
 
-        v4.z += 2;
-
-
-
-
-        v5.x += 1;
-        v5.z += 1;
-
-        v6.x += 1;
-
-        v7.x += 1;
-        v7.z += -1;
-
-        v8.x += 2;
-
-
-
-        v9.x += 1;
-        v9.z += -1;
-
-        v10.z += -1;
-
-        v11.x += -1;
-        v11.z += -1;
-
-        v12.z += -2;
+        v4.z += 4;
 
 
 
 
-        v13.x += -1;
-        v13.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v14.x += -1;
+        v6.x += 2;
 
-        v15.x += -1;
-        v15.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v16.x += -2;
+        v8.x += 4;
+
+
+
+        v9.x += 2;
+        v9.z += -2;
+
+        v10.z += -2;
+
+        v11.x += -2;
+        v11.z += -2;
+
+        v12.z += -4;
+
+
+
+
+        v13.x += -2;
+        v13.z += 2;
+
+        v14.x += -2;
+
+        v15.x += -2;
+        v15.z += -2;
+
+        v16.x += -4;
 
 
 
@@ -1217,57 +1218,57 @@ public class TileManager : MonoBehaviour
         Vector3 v28 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
-        v2.z += 1;
-        v3.x += 1;
-        v3.z += 1;
-        v4.z += 2;
-        v5.x += -2;
-        v5.z += 1;
-        v6.z += 3;
-        v7.x += 2;
-        v7.z += 1;
+        v1.x += -2;
+        v1.z += 2;
+        v2.z += 2;
+        v3.x += 2;
+        v3.z += 2;
+        v4.z += 4;
+        v5.x += -4;
+        v5.z += 2;
+        v6.z += 6;
+        v7.x += 4;
+        v7.z += 2;
 
 
 
-        v8.x += 1;
-        v8.z += 1;
-        v9.x += 1;
-        v10.x += 1;
-        v10.z += -1;
-        v11.x += 2;
-        v12.x += 1;
-        v12.z += 2;
-        v13.x += 3;
-        v14.x += 1;
-        v14.z += -2;
+        v8.x += 2;
+        v8.z += 2;
+        v9.x += 2;
+        v10.x += 2;
+        v10.z += -2;
+        v11.x += 4;
+        v12.x += 2;
+        v12.z += 4;
+        v13.x += 6;
+        v14.x += 2;
+        v14.z += -4;
 
 
-        v15.x += 1;
-        v15.z += -1;
-        v16.z += -1;
-        v17.x += -1;
-        v17.z += -1;
-        v18.z += -2;
-        v19.x += 2;
-        v19.z += -1;
-        v20.z += -3;
-        v21.x += -2;
-        v21.z += -1;
+        v15.x += 2;
+        v15.z += -2;
+        v16.z += -2;
+        v17.x += -2;
+        v17.z += -2;
+        v18.z += -4;
+        v19.x += 4;
+        v19.z += -2;
+        v20.z += -6;
+        v21.x += -4;
+        v21.z += -2;
 
 
-        v22.x += -1;
-        v22.z += 1;
-        v23.x += -1;
-        v24.x += -1;
-        v24.z += -1;
-        v25.x += -2;
-        v26.x += -1;
-        v26.z += 2;
-        v27.x += -3;
-        v28.x += -1;
-        v28.z += -2;
+        v22.x += -2;
+        v22.z += 2;
+        v23.x += -2;
+        v24.x += -2;
+        v24.z += -2;
+        v25.x += -4;
+        v26.x += -2;
+        v26.z += 4;
+        v27.x += -6;
+        v28.x += -2;
+        v28.z += -4;
 
 
         possiblePossitions.Add(v1);
@@ -1330,13 +1331,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -1370,22 +1371,22 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
 
 
-        v5.z += 2;
+        v5.z += 4;
 
-        v6.x += 2;
+        v6.x += 4;
 
-        v7.z -= 2;
+        v7.z -= 4;
 
-        v8.x -= 2;
+        v8.x -= 4;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1429,22 +1430,22 @@ public class TileManager : MonoBehaviour
         Vector3 v8 = origin.transform.position;
 
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
-
-        v5.x -= 1;
-        v5.z += 1;
-
-        v6.x += 1;
-        v6.z += 1;
-
-        v7.x -= 1;
-        v7.z -= 1;
-
-        v8.x += 1;
-        v8.z -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
+                
+        v5.x -= 2;
+        v5.z += 2;
+                
+        v6.x += 2;
+        v6.z += 2;
+                
+        v7.x -= 2;
+        v7.z -= 2;
+                
+        v8.x += 2;
+        v8.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1503,58 +1504,58 @@ public class TileManager : MonoBehaviour
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v8.x += 1;
-        v8.z -= 1;
-
-
-        v9.x += -1;
-        v9.z += 2;
-
-        v10.z += 2;
-
-        v11.x += 1;
-        v11.z += 2;
+        v8.x += 2;
+        v8.z -= 2;
 
 
-        v12.x += 2;
-        v12.z += 1;
+        v9.x += -2;
+        v9.z += 4;
 
-        v13.x += 2;
+        v10.z += 4;
 
-        v14.x += 2;
-        v14.z += -1;
-
-
-        v15.x += 1;
-        v15.z += -2;
-
-        v16.z += -2;
-
-        v17.x += -1;
-        v17.z += -2;
+        v11.x += 2;
+        v11.z += 4;
 
 
-        v18.x += -2;
-        v18.z += 1;
+        v12.x += 4;
+        v12.z += 2;
 
-        v19.x += -2;
+        v13.x += 4;
 
-        v20.x += -2;
-        v20.z += -1;
+        v14.x += 4;
+        v14.z += -2;
+
+
+        v15.x += 2;
+        v15.z += -4;
+
+        v16.z += -4;
+
+        v17.x += -2;
+        v17.z += -4;
+
+
+        v18.x += -4;
+        v18.z += 2;
+
+        v19.x += -4;
+
+        v20.x += -4;
+        v20.z += -2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1601,13 +1602,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -1642,25 +1643,25 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
 
-        v5.x += 1;
-        v5.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v6.x += -1;
-        v6.z += 1;
+        v6.x += -2;
+        v6.z += 2;
 
-        v7.x += 1;
-        v7.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v8.x += -1;
-        v8.z += -1;
+        v8.x += -2;
+        v8.z += -2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1698,13 +1699,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -1747,27 +1748,27 @@ public class TileManager : MonoBehaviour
         Vector3 v11 = origin.transform.position;
         Vector3 v12 = origin.transform.position;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x += 2;
-        v6.z += 2;
-        v7.z -= 2;
-        v8.x -= 2;
+        v5.x += 4;
+        v6.z += 4;
+        v7.z -= 4;
+        v8.x -= 4;
 
-        v9.x -= 1;
-        v9.z += 1;
+        v9.x -= 2;
+        v9.z += 2;
 
-        v10.x += 1;
-        v10.z += 1;
+        v10.x += 2;
+        v10.z += 2;
 
-        v11.x -= 1;
-        v11.z -= 1;
+        v11.x -= 2;
+        v11.z -= 2;
 
-        v12.x += 1;
-        v12.z -= 1;
+        v12.x += 2;
+        v12.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -1810,27 +1811,27 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
 
 
 
-        v5.x += 1;
-        v5.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v6.x += -1;
-        v6.z += 1;
+        v6.x += -2;
+        v6.z += 2;
 
-        v7.x += -1;
-        v7.z += -1;
+        v7.x += -2;
+        v7.z += -2;
 
-        v8.x += 1;
-        v8.z += -1;
+        v8.x += 2;
+        v8.z += -2;
 
 
         possiblePossitions.Add(v1);
@@ -1890,70 +1891,70 @@ public class TileManager : MonoBehaviour
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
-
-
-
-        v5.x += 1;
-        v5.z += 1;
-
-        v6.x += -1;
-        v6.z += 1;
-
-        v7.x += -1;
-        v7.z += -1;
-
-        v8.x += 1;
-        v8.z += -1;
+        v4.x -= 4;
 
 
+
+        v5.x += 2;
+        v5.z += 2;
+
+        v6.x += -2;
+        v6.z += 2;
+
+        v7.x += -2;
+        v7.z += -2;
+
+        v8.x += 2;
+        v8.z += -2;
 
 
 
 
 
-        v9.z += 3;
-
-        v10.x += 1;
-        v10.z += 2;
-
-        v11.x += 2;
-        v11.z += 1;
-
-        v12.x += 3;
 
 
+        v9.z += 6;
 
-        v13.x += 2;
-        v13.z += -1;
+        v10.x += 2;
+        v10.z += 4;
 
-        v14.x += 1;
-        v14.z += -2;
+        v11.x += 4;
+        v11.z += 2;
 
-        v15.z += -3;
-
-
-        v16.x += -1;
-        v16.z += -2;
+        v12.x += 6;
 
 
-        v17.x += -2;
-        v17.z += -1;
 
-        v18.x += -3;
+        v13.x += 4;
+        v13.z += -2;
+
+        v14.x += 2;
+        v14.z += -4;
+
+        v15.z += -6;
 
 
-        v19.x += -2;
-        v19.z += 1;
+        v16.x += -2;
+        v16.z += -4;
 
-        v20.x += -1;
-        v20.z += 2;
+
+        v17.x += -4;
+        v17.z += -2;
+
+        v18.x += -6;
+
+
+        v19.x += -4;
+        v19.z += 2;
+
+        v20.x += -2;
+        v20.z += 4;
 
 
         possiblePossitions.Add(v1);
@@ -2018,22 +2019,22 @@ public class TileManager : MonoBehaviour
         Vector3 v8 = origin.transform.position;
 
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v8.x += 1;
-        v8.z -= 1;
+        v8.x += 2;
+        v8.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -2090,61 +2091,60 @@ public class TileManager : MonoBehaviour
         Vector3 v18 = origin.transform.position;
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
-
-        v8.x += 1;
-        v8.z -= 1;
-
+        v8.x += 2;
+        v8.z -= 2;
 
 
-        v9.x += -1;
-        v9.z += 2;
 
-        v10.z += 2;
+        v9.x += -2;
+        v9.z += 4;
 
-        v11.x += 1;
-        v11.z += 2;
+        v10.z += 4;
 
-
-        v12.x += 2;
-        v12.z += 1;
-
-        v13.x += 2;
-
-        v14.x += 2;
-        v14.z += -1;
+        v11.x += 2;
+        v11.z += 4;
 
 
-        v15.x += 1;
-        v15.z += -2;
+        v12.x += 4;
+        v12.z += 2;
 
-        v16.z += -2;
+        v13.x += 4;
 
-        v17.x += -1;
-        v17.z += -2;
-
-
-        v18.x += -2;
-        v18.z += -1;
-
-        v19.x += -2;
+        v14.x += 4;
+        v14.z += -2;
 
 
-        v20.x += -2;
-        v20.z += 1;
+        v15.x += 2;
+        v15.z += -4;
+
+        v16.z += -4;
+
+        v17.x += -2;
+        v17.z += -4;
+
+
+        v18.x += -4;
+        v18.z += -2;
+
+        v19.x += -4;
+
+
+        v20.x += -4;
+        v20.z += 2;
 
 
 
@@ -2206,20 +2206,20 @@ public class TileManager : MonoBehaviour
 
 
 
-        v1.z += 1;
-        v2.z += 2;
+        v1.z += 2;
+        v2.z += 4;
 
 
-        v3.x += 1;
-        v4.x += 2;
+        v3.x += 2;
+        v4.x += 4;
 
 
-        v5.z += -1;
-        v6.z += -2;
+        v5.z += -2;
+        v6.z += -4;
 
 
-        v7.x += -1;
-        v8.x += -2;
+        v7.x += -2;
+        v8.x += -4;
 
 
 
@@ -2283,29 +2283,28 @@ public class TileManager : MonoBehaviour
         Vector3 v16 = origin.transform.position;
 
 
-
-        v1.z += 1;
-        v2.z += 2;
-        v3.z += 3;
-        v4.x += 4;
-
-
-        v5.x += 1;
-        v6.x += 2;
-        v7.x += 3;
-        v8.x += 4;
+        v1.z += 2;
+        v2.z += 4;
+        v3.z += 6;
+        v4.z += 8;
 
 
-        v9.z += -1;
-        v10.z += -2;
-        v11.z += -3;
-        v12.z += -4;
+        v5.x += 2;
+        v6.x += 4;
+        v7.x += 6;
+        v8.x += 8;
 
 
-        v13.x += -1;
-        v14.x += -2;
-        v15.x += -3;
-        v16.z += -4;
+        v9.z += -2;
+        v10.z += -4;
+        v11.z += -6;
+        v12.z += -8;
+
+
+        v13.x += -2;
+        v14.x += -4;
+        v15.x += -6;
+        v16.z += -8;
 
 
 
@@ -2372,38 +2371,38 @@ public class TileManager : MonoBehaviour
         Vector3 v12 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
+        v1.x += -2;
+        v1.z += 2;
 
-        v2.z += 1;
+        v2.z += 2;
 
-        v3.x += 1;
-        v3.z += 1;
+        v3.x += 2;
+        v3.z += 2;
 
-        v4.x += 1;
-        v4.z += 1;
+        v4.x += 2;
+        v4.z += 2;
 
-        v5.x += 1;
+        v5.x += 2;
 
-        v6.x += 1;
-        v6.z += -1;
+        v6.x += 2;
+        v6.z += -2;
 
 
-        v7.x += 1;
-        v7.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v8.z += -1;
+        v8.z += -2;
 
-        v9.x += -1;
-        v9.z += -1;
+        v9.x += -2;
+        v9.z += -2;
 
-        v10.x += -1;
-        v10.z += -1;
+        v10.x += -2;
+        v10.z += -2;
 
-        v11.x += -1;
+        v11.x += -2;
 
-        v12.x += -1;
-        v12.z += 1;
+        v12.x += -2;
+        v12.z += 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -2475,50 +2474,50 @@ public class TileManager : MonoBehaviour
         Vector3 v24 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
-        v2.z += 1;
-        v3.x += 1;
-        v3.z += 1;
-        v4.x += -1;
-        v4.z += 2;
-        v5.z += 2;
-        v6.x += 1;
-        v6.z += 2;
+        v1.x += -2;
+        v1.z += 2;
+        v2.z += 2;
+        v3.x += 2;
+        v3.z += 2;
+        v4.x += -2;
+        v4.z += 4;
+        v5.z += 4;
+        v6.x += 2;
+        v6.z += 4;
 
-        v7.x += 1;
-        v7.z += 1;
-        v8.x += 1;
-        v9.x += 1;
-        v9.z += -1;
-        v10.x += 2;
-        v10.z += 1;
-        v11.x += 2;
-        v12.x += 2;
-        v12.z += -1;
+        v7.x += 2;
+        v7.z += 2;
+        v8.x += 2;
+        v9.x += 2;
+        v9.z += -2;
+        v10.x += 4;
+        v10.z += 2;
+        v11.x += 4;
+        v12.x += 4;
+        v12.z += -2;
 
 
-        v13.x += 1;
-        v13.z += -1;
-        v14.z += -1;
-        v15.x += -1;
-        v15.z += -1;
-        v16.x += 1;
-        v16.z += -2;
-        v17.z += -2;
-        v18.x += -1;
-        v18.z += -2;
+        v13.x += 2;
+        v13.z += -2;
+        v14.z += -2;
+        v15.x += -2;
+        v15.z += -2;
+        v16.x += 2;
+        v16.z += -4;
+        v17.z += -4;
+        v18.x += -2;
+        v18.z += -4;
 
-        v19.x += -1;
-        v19.z += -1;
-        v20.x += -1;
-        v21.x += -1;
-        v21.z += 1;
-        v22.x += -2;
-        v22.z += -1;
-        v23.x += -2;
-        v24.x += -2;
-        v24.z += 1;
+        v19.x += -2;
+        v19.z += -2;
+        v20.x += -2;
+        v21.x += -2;
+        v21.z += 2;
+        v22.x += -4;
+        v22.z += -2;
+        v23.x += -4;
+        v24.x += -4;
+        v24.z += 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -2595,53 +2594,53 @@ public class TileManager : MonoBehaviour
         Vector3 v16 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
+        v1.x += -2;
+        v1.z += 2;
 
-        v2.z += 1;
+        v2.z += 2;
 
-        v3.x += 1;
-        v3.z += 1;
+        v3.x += 2;
+        v3.z += 2;
 
-        v4.z += 2;
-
-
-
-
-        v5.x += 1;
-        v5.z += 1;
-
-        v6.x += 1;
-
-        v7.x += 1;
-        v7.z += -1;
-
-        v8.x += 2;
-
-
-
-        v9.x += 1;
-        v9.z += -1;
-
-        v10.z += -1;
-
-        v11.x += -1;
-        v11.z += -1;
-
-        v12.z += -2;
+        v4.z += 4;
 
 
 
 
-        v13.x += -1;
-        v13.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v14.x += -1;
+        v6.x += 2;
 
-        v15.x += -1;
-        v15.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v16.x += -2;
+        v8.x += 4;
+
+
+
+        v9.x += 2;
+        v9.z += -2;
+
+        v10.z += -2;
+
+        v11.x += -2;
+        v11.z += -2;
+
+        v12.z += -4;
+
+
+
+
+        v13.x += -2;
+        v13.z += 2;
+
+        v14.x += -2;
+
+        v15.x += -2;
+        v15.z += -2;
+
+        v16.x += -4;
 
 
 
@@ -2723,57 +2722,57 @@ public class TileManager : MonoBehaviour
         Vector3 v28 = origin.transform.position;
 
 
-        v1.x += -1;
-        v1.z += 1;
-        v2.z += 1;
-        v3.x += 1;
-        v3.z += 1;
-        v4.z += 2;
-        v5.x += -2;
-        v5.z += 1;
-        v6.z += 3;
-        v7.x += 2;
-        v7.z += 1;
+        v1.x += -2;
+        v1.z += 2;
+        v2.z += 2;
+        v3.x += 2;
+        v3.z += 2;
+        v4.z += 4;
+        v5.x += -4;
+        v5.z += 2;
+        v6.z += 6;
+        v7.x += 4;
+        v7.z += 2;
 
 
 
-        v8.x += 1;
-        v8.z += 1;
-        v9.x += 1;
-        v10.x += 1;
-        v10.z += -1;
-        v11.x += 2;
-        v12.x += 1;
-        v12.z += 2;
-        v13.x += 3;
-        v14.x += 1;
-        v14.z += -2;
+        v8.x += 2;
+        v8.z += 2;
+        v9.x += 2;
+        v10.x += 2;
+        v10.z += -2;
+        v11.x += 4;
+        v12.x += 2;
+        v12.z += 4;
+        v13.x += 6;
+        v14.x += 2;
+        v14.z += -4;
 
 
-        v15.x += 1;
-        v15.z += -1;
-        v16.z += -1;
-        v17.x += -1;
-        v17.z += -1;
-        v18.z += -2;
-        v19.x += 2;
-        v19.z += -1;
-        v20.z += -3;
-        v21.x += -2;
-        v21.z += -1;
+        v15.x += 2;
+        v15.z += -2;
+        v16.z += -2;
+        v17.x += -2;
+        v17.z += -2;
+        v18.z += -4;
+        v19.x += 4;
+        v19.z += -2;
+        v20.z += -6;
+        v21.x += -4;
+        v21.z += -2;
 
 
-        v22.x += -1;
-        v22.z += 1;
-        v23.x += -1;
-        v24.x += -1;
-        v24.z += -1;
-        v25.x += -2;
-        v26.x += -1;
-        v26.z += 2;
-        v27.x += -3;
-        v28.x += -1;
-        v28.z += -2;
+        v22.x += -2;
+        v22.z += 2;
+        v23.x += -2;
+        v24.x += -2;
+        v24.z += -2;
+        v25.x += -4;
+        v26.x += -2;
+        v26.z += 4;
+        v27.x += -6;
+        v28.x += -2;
+        v28.z += -4;
 
 
         possiblePossitions.Add(v1);
@@ -2835,13 +2834,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -2874,22 +2873,22 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
 
 
-        v5.z += 2;
+        v5.z += 4;
 
-        v6.x += 2;
+        v6.x += 4;
 
-        v7.z -= 2;
+        v7.z -= 4;
 
-        v8.x -= 2;
+        v8.x -= 4;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -2932,22 +2931,22 @@ public class TileManager : MonoBehaviour
         Vector3 v8 = origin.transform.position;
 
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v8.x += 1;
-        v8.z -= 1;
+        v8.x += 2;
+        v8.z -= 2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -3005,58 +3004,58 @@ public class TileManager : MonoBehaviour
         Vector3 v19 = origin.transform.position;
         Vector3 v20 = origin.transform.position;
 
-        v1.z += 1;
-        v2.x += 1;
-        v3.z -= 1;
-        v4.x -= 1;
+        v1.z += 2;
+        v2.x += 2;
+        v3.z -= 2;
+        v4.x -= 2;
 
-        v5.x -= 1;
-        v5.z += 1;
+        v5.x -= 2;
+        v5.z += 2;
 
-        v6.x += 1;
-        v6.z += 1;
+        v6.x += 2;
+        v6.z += 2;
 
-        v7.x -= 1;
-        v7.z -= 1;
+        v7.x -= 2;
+        v7.z -= 2;
 
-        v8.x += 1;
-        v8.z -= 1;
-
-
-        v9.x += -1;
-        v9.z += 2;
-
-        v10.z += 2;
-
-        v11.x += 1;
-        v11.z += 2;
+        v8.x += 2;
+        v8.z -= 2;
 
 
-        v12.x += 2;
-        v12.z += 1;
+        v9.x += -2;
+        v9.z += 4;
 
-        v13.x += 2;
+        v10.z += 4;
 
-        v14.x += 2;
-        v14.z += -1;
-
-
-        v15.x += 1;
-        v15.z += -2;
-
-        v16.z += -2;
-
-        v17.x += -1;
-        v17.z += -2;
+        v11.x += 2;
+        v11.z += 4;
 
 
-        v18.x += -2;
-        v18.z += 1;
+        v12.x += 4;
+        v12.z += 2;
 
-        v19.x += -2;
+        v13.x += 4;
 
-        v20.x += -2;
-        v20.z += -1;
+        v14.x += 4;
+        v14.z += -2;
+
+
+        v15.x += 2;
+        v15.z += -4;
+
+        v16.z += -4;
+
+        v17.x += -2;
+        v17.z += -4;
+
+
+        v18.x += -4;
+        v18.z += 2;
+
+        v19.x += -4;
+
+        v20.x += -4;
+        v20.z += -2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
@@ -3102,13 +3101,13 @@ public class TileManager : MonoBehaviour
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -3142,25 +3141,25 @@ public class TileManager : MonoBehaviour
         Vector3 v7 = origin.transform.position;
         Vector3 v8 = origin.transform.position;
 
-        v1.z += 2;
+        v1.z += 4;
 
-        v2.x += 2;
+        v2.x += 4;
 
-        v3.z -= 2;
+        v3.z -= 4;
 
-        v4.x -= 2;
+        v4.x -= 4;
 
-        v5.x += 1;
-        v5.z += 1;
+        v5.x += 2;
+        v5.z += 2;
 
-        v6.x += -1;
-        v6.z += 1;
+        v6.x += -2;
+        v6.z += 2;
 
-        v7.x += 1;
-        v7.z += -1;
+        v7.x += 2;
+        v7.z += -2;
 
-        v8.x += -1;
-        v8.z += -1;
+        v8.x += -2;
+        v8.z += -2;
 
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
