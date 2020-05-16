@@ -314,7 +314,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Spd = Speed. Speed affects your action count. Every 10 speed generates 1 additional action. This number your total speed from your base spd and Barrier's spd";
                 break;
             case 12:
-                finalText = "Dex = Dexterity. Dexterity determines how much damage is delt with a spiritual strike. It also increases your chances of auto skills activating.";
+                finalText = "Dex = Dexterity. Dexterity determines how much damage is delt with a mental strike. It also increases your chances of auto skills activating.";
                 break;
             case 14:
                 finalText = "Water Element. Water based moves generally hit all targets in the area.";
@@ -343,7 +343,7 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Spiritual levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Mental levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
                 finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up reduces the cost of <color=yellow>Skills</color> and increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
@@ -352,7 +352,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up reduces the cost of <color=#bd1d85>Spells</color> and increases Max Mana, <color=#b400e9>Magic</color> and <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of <color=red>Strikes</color> and increases Max Health, <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
+                finalText = "This is your Mental level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of <color=red>Strikes</color> and increases Max Health, <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
                 break;
             case 34:
                 finalText = "Force Element. Force based moves generally pull targets in!";
@@ -429,7 +429,7 @@ public class DetailsScreen : MonoBehaviour
                         }
                         break;
                     case DetailType.BasicAtk:
-                        sectionText.text = "Spiritual Strikes";
+                        sectionText.text = "Mental Strikes";
                         if (viewContent < 3)
                         {
                             finalText = "Strikes when equipped replace the default Attack option and doesn't require any cost to use.";
@@ -1154,7 +1154,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Spd = Speed. Speed affects your action count. Every 10 speed generates 1 action. This number your total speed from your base spd and Barrier's spd";
                 break;
             case 13:
-                finalText = "Dex = Dexterity. Dexterity determines how much damage is delt with a spiritual strike. It also increases your chances of auto skills activating.";
+                finalText = "Dex = Dexterity. Dexterity determines how much damage is delt with a Mental strike. It also increases your chances of auto skills activating.";
                 break;
             case 14:
                 finalText = "Water Element. Water based moves generally hit all targets in the area.";
@@ -1183,7 +1183,7 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
             case 29:
-                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Spiritual levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Mental levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
                 finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
@@ -1192,7 +1192,7 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases Max Mana, <color=#ce0e96>Magic</color> and <color=#b400e9>Resistance</color>.";
                 break;
             case 32:
-                finalText = "This is your Spiritual level. This is increased by using <color=red>Strikes</color>. Leveling this up increases Max Health,  reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
+                finalText = "This is your Mental level. This is increased by using <color=red>Strikes</color>. Leveling this up increases Max Health,  reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
                 break;
             case 34:
                 finalText = "Force Element. Force based moves generally pull targets in!";

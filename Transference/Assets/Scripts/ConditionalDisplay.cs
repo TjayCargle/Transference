@@ -58,6 +58,10 @@ public class ConditionalDisplay : MonoBehaviour
         {
             if (manager.myCamera.infoObject == null)
             {
+                if(debugging)
+                {
+                    Debug.Log("no info obj");
+                }
                 gameObject.SetActive(false);
                 return;
             }
@@ -151,11 +155,7 @@ public class ConditionalDisplay : MonoBehaviour
                         }
                     }
                 }
-                else
-                {
-                    gameObject.SetActive(false);
-                    return;
-                }
+            
             }
 
             if (requiresDoorTile == true)

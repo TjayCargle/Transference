@@ -796,6 +796,119 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
         }
     }
-
+    public string GetDescription()
+    {
+        string desc = "";
+        MenuItemType item = (MenuItemType)itemType;
+        // Debug.Log("Menu item :" + item);
+        switch (item)
+        {
+            case MenuItemType.Move:
+                {
+                    desc = "Move character within range";
+                }
+                break;
+            case MenuItemType.Attack:
+                break;
+            case MenuItemType.chooseSkill:
+                break;
+            case MenuItemType.Equip:
+                break;
+            case MenuItemType.Wait:
+                {
+                    desc = "Restores HP, MP, FT by remaining action points";
+                }
+                break;
+            case MenuItemType.Look:
+                break;
+            case MenuItemType.InventoryWeapon:
+                break;
+            case MenuItemType.InventoryArmor:
+                {
+                    desc = " Create a temporary barrier to increase defense and change resistances.";
+                }
+                break;
+            case MenuItemType.InventoryAcc:
+                break;
+            case MenuItemType.equipBS:
+                break;
+            case MenuItemType.Skills:
+                {
+                    desc = " Charge or Drain FT meter to use a physical skill.";
+                }
+                break;
+            case MenuItemType.equipAS:
+                break;
+            case MenuItemType.equipPS:
+                break;
+            case MenuItemType.chooseOptions:
+                break;
+            case MenuItemType.equipOS:
+                break;
+            case MenuItemType.generated:
+                break;
+            case MenuItemType.Items:
+                {
+                    desc = " Use an item.";
+                }
+                break;
+            case MenuItemType.trade:
+                break;
+            case MenuItemType.prevMenu:
+                break;
+            case MenuItemType.Battle:
+                {
+                    desc = " Prepare to use equiped skills or items";
+                }
+                break;
+            case MenuItemType.Details:
+                {
+                    desc = " See detailed information on character";
+                }
+                break;
+            case MenuItemType.Shop:
+                {
+                    desc = "Learn, Evolve, or Remove skills";
+                }
+                break;
+            case MenuItemType.Door:
+                {
+                    desc = " Go to another location";
+                }
+                break;
+            case MenuItemType.anEvent:
+                break;
+            case MenuItemType.Spells:
+                {
+                    desc = "Use some mana to execute a magical spell.";
+                }
+                break;
+            case MenuItemType.Strikes:
+                {
+                    desc = " Use some health to execute a mental strike";
+                }
+                break;
+            case MenuItemType.openBattleLog:
+                break;
+            case MenuItemType.forceEnd:
+                break;
+            case MenuItemType.yesPrompt:
+                break;
+            case MenuItemType.noPrompt:
+                break;
+            case MenuItemType.Hack:
+                break;
+            case MenuItemType.Guard:
+                {
+                    desc = "Reduces Damage, Protects actions when hit. \n Charge FT Meter by remaining actions.";
+                }
+                break;
+            case MenuItemType.Talk:
+                break;
+            case MenuItemType.Tip:
+                break;
+        }
+        return desc;
+    }
 
 }

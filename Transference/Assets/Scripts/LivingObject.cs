@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+
 public class LivingObject : GridObject
 {
 
@@ -49,6 +50,14 @@ public class LivingObject : GridObject
 
     private ArmorScript defaultArmor;
     public List<TileScript> moveableTiles = new List<TileScript>();
+
+    [SerializeField]
+    private TextMeshPro tmp;
+
+    public TextMeshPro TEXT
+    {
+        get { return tmp; }
+    }
     public ShadowObject SHADOW
     {
         get { return shadow; }
@@ -199,7 +208,16 @@ public class LivingObject : GridObject
         set
         {
             actions = value;
-            if (actions < 0) { actions = 0; }
+            //if (actions < 0)
+            //{
+            //    actions = 0;
+            //}
+
+            if (tmp)
+            {
+
+                tmp.text = actions.ToString();
+            }
         }
     }
     public int GENERATED
@@ -615,6 +633,7 @@ public class LivingObject : GridObject
             }
             if (GetComponent<ActorSetup>())
             {
+
                 GetComponent<ActorSetup>().Setup();
 
             }
@@ -624,11 +643,11 @@ public class LivingObject : GridObject
 
             }
 
-            if(animationScript == null)
+            if (animationScript == null)
             {
                 animationScript = GetComponent<AnimationScript>();
             }
-            if(animationScript != null)
+            if (animationScript != null)
             {
                 animationScript.Setup();
             }
@@ -648,12 +667,12 @@ public class LivingObject : GridObject
             if (SHADOW == null)
             {
                 shadow = new GameObject().AddComponent<ShadowObject>();
-     
+
             }
             shadow.USER = this;
             shadow.REALUSER = this;
             shadow.Setup();
-       
+
             shadow.ANIM.runtimeAnimatorController = ANIM.anim.runtimeAnimatorController;
 
             SpriteRenderer shadowRender = shadow.SPRITE.sr;
@@ -678,15 +697,20 @@ public class LivingObject : GridObject
             }
             barrier.Setup();
             //MeshRenderer meshy = new GameObject().AddComponent<MeshRenderer>();
-            
-           
-            TextMeshPro tmp = new GameObject().AddComponent<TextMeshPro>();
+
+            if (tmp == null)
+            {
+                tmp = new GameObject().AddComponent<TextMeshPro>();
+            }
+
             tmp.name = "Action Counter";
             tmp.transform.parent = this.transform;
             tmp.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
             tmp.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
-            tmp.text = "10";
-            tmp.rectTransform.sizeDelta = new Vector2(4.2f, 4.2f);
+            // tmp.text = "10";
+            tmp.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+            transform.hasChanged = false;
+            tmp.enableAutoSizing = true;
             //if (WEAKNESS == null)
             //{
             //    worstWeakness = new GameObject().AddComponent<SpriteObject>();
@@ -1074,9 +1098,17 @@ public class LivingObject : GridObject
 
     public void turnUpdate(int bonus = 0)
     {
-        ChangeHealth(2 + bonus);
-        ChangeMana(2 + bonus);
-        ChangeFatigue(2 + bonus);
+        //ChangeHealth(2 + bonus);
+        //ChangeMana(2 + bonus);
+        //ChangeFatigue(2 + bonus);
+
+        if (FACTION == Faction.ally)
+        {
+            if(bonus == 0)
+            {
+                tmp.text = "";
+            }
+        }
     }
 
     public void TrueCharge()
@@ -1147,12 +1179,12 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-            BASE_STATS.STRENGTH+= 2 + physLevel;
-            BASE_STATS.DEFENSE+= 2 + physLevel;
-            BASE_STATS.MAGIC+= 1 + magLevel;
-            BASE_STATS.RESIESTANCE+= 1 + magLevel;
-            BASE_STATS.SPEED+= 1 + dexLevel;
-            BASE_STATS.DEX+= 1 + dexLevel;
+            BASE_STATS.STRENGTH += 2 + physLevel;
+            BASE_STATS.DEFENSE += 2 + physLevel;
+            BASE_STATS.MAGIC += 1 + magLevel;
+            BASE_STATS.RESIESTANCE += 1 + magLevel;
+            BASE_STATS.SPEED += 1 + dexLevel;
+            BASE_STATS.DEX += 1 + dexLevel;
 
             BASE_STATS.PHYSEXP = 0;
             physLevel++;
@@ -1161,11 +1193,11 @@ public class LivingObject : GridObject
 
             //BASE_STATS.MAX_FATIGUE += 5 + physLevel;
 
-           // BASE_STATS.MAX_MANA += 2 + magLevel;
+            // BASE_STATS.MAX_MANA += 2 + magLevel;
             //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
             if (show)
             {
-               // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
+                // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
                 myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
                 //myManager.CreateDmgTextEvent("<sprite=0>  + " + (5 + physLevel), Color.yellow, this);
                 //myManager.CreateDmgTextEvent("DEF + " + 2, Color.yellow, this);
@@ -1191,10 +1223,10 @@ public class LivingObject : GridObject
             //}
             BASE_STATS.STRENGTH += 1 + physLevel;
             BASE_STATS.DEFENSE += 1 + physLevel;
-            BASE_STATS.MAGIC+= 2 + magLevel;
-            BASE_STATS.RESIESTANCE+= 2 + magLevel;
-            BASE_STATS.SPEED+= 1 + dexLevel;
-            BASE_STATS.DEX+= 1 + dexLevel;
+            BASE_STATS.MAGIC += 2 + magLevel;
+            BASE_STATS.RESIESTANCE += 2 + magLevel;
+            BASE_STATS.SPEED += 1 + dexLevel;
+            BASE_STATS.DEX += 1 + dexLevel;
 
             BASE_STATS.MAGEXP = 0;
             magLevel++;
@@ -1207,9 +1239,9 @@ public class LivingObject : GridObject
             //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
             if (show)
             {
-               // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
+                // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
                 myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
-              //  myManager.CreateDmgTextEvent("<sprite=1>  + " + (5 +magLevel), Color.magenta, this);
+                //  myManager.CreateDmgTextEvent("<sprite=1>  + " + (5 +magLevel), Color.magenta, this);
                 //myManager.CreateDmgTextEvent("RES + " + 2, Color.magenta, this);
                 //myManager.CreateDmgTextEvent("MAG + " + 2, Color.magenta, this);
                 myManager.CreateDmgTextEvent("MYST LV + " + 1, Color.magenta, this, 1.2f);
@@ -1224,25 +1256,25 @@ public class LivingObject : GridObject
 
             BASE_STATS.STRENGTH += 1 + physLevel;
             BASE_STATS.DEFENSE += 1 + physLevel;
-            BASE_STATS.MAGIC+= 2 + magLevel;
-            BASE_STATS.RESIESTANCE+= 2 + magLevel;
-            BASE_STATS.SPEED+= 1 + dexLevel;
-            BASE_STATS.DEX+= 1 + dexLevel;
+            BASE_STATS.MAGIC += 2 + magLevel;
+            BASE_STATS.RESIESTANCE += 2 + magLevel;
+            BASE_STATS.SPEED += 1 + dexLevel;
+            BASE_STATS.DEX += 1 + dexLevel;
 
             BASE_STATS.SKILLEXP = 0;
             dexLevel++;
             BASE_STATS.HPCOSTCHANGE += 1;
 
-           // BASE_STATS.MAX_HEALTH += 5 + dexLevel;
+            // BASE_STATS.MAX_HEALTH += 5 + dexLevel;
             STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 
-           // BASE_STATS.MAX_FATIGUE += 2 + physLevel;
-           // BASE_STATS.MAX_MANA += 2 + magLevel;
+            // BASE_STATS.MAX_FATIGUE += 2 + physLevel;
+            // BASE_STATS.MAX_MANA += 2 + magLevel;
             if (show)
             {
-             //   myManager.CreateDmgTextEvent("<sprite=0>  + " + (2+physLevel), Color.yellow, this);
-             //   myManager.CreateDmgTextEvent("<sprite=1>  + " + (2+magLevel), Color.magenta, this);
-                myManager.CreateDmgTextEvent("<sprite=2> + " + ( 5+ dexLevel), Color.green, this);
+                //   myManager.CreateDmgTextEvent("<sprite=0>  + " + (2+physLevel), Color.yellow, this);
+                //   myManager.CreateDmgTextEvent("<sprite=1>  + " + (2+magLevel), Color.magenta, this);
+                myManager.CreateDmgTextEvent("<sprite=2> + " + (5 + dexLevel), Color.green, this);
                 //myManager.CreateDmgTextEvent("Spd + " + 2, Color.green, this);
                 //myManager.CreateDmgTextEvent("Dex + " + 2, Color.green, this);
                 myManager.CreateDmgTextEvent("SPRT LV + " + 1, Color.green, this, 1.2f);
@@ -1265,7 +1297,7 @@ public class LivingObject : GridObject
         for (int i = 0; i < INVENTORY.EFFECTS.Count; i++)
         {
             EffectScript anEffect = INVENTORY.EFFECTS[i];
-          PoolManager.GetManager().ReleaseEffect(anEffect);
+            PoolManager.GetManager().ReleaseEffect(anEffect);
         }
         INVENTORY.EFFECTS.Clear();
         base.DeathStart();
@@ -1582,11 +1614,51 @@ public class LivingObject : GridObject
         {
             return "Shaman";
         }
-        if(BASE_STATS.STRENGTH == BASE_STATS.MAGIC && BASE_STATS.STRENGTH == BASE_STATS.DEX)
+        if (BASE_STATS.STRENGTH == BASE_STATS.MAGIC && BASE_STATS.STRENGTH == BASE_STATS.DEX)
         {
             return "Balanced";
         }
 
         return defaultString;
+    }
+
+    Vector2 prev = Vector2.zero;
+    private void Update()
+    {
+       
+        if (tmp)
+        {
+            if (tmp.rectTransform.hasChanged)
+            {
+
+                tmp.rectTransform.hasChanged = false;
+            }
+            if (prev != tmp.rectTransform.sizeDelta)
+            {
+                if (FACTION == Faction.ally)
+                { 
+
+                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                    if (manager)
+                    {
+                        Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
+                    }
+                    System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+
+                    // Get calling method name
+                    //Console.WriteLine(stackTrace.GetFrame(1).GetMethod().Name);
+                    if (prev == Vector2.zero)
+                    {
+
+                        prev = tmp.rectTransform.sizeDelta;
+                    }
+                    else
+                    {
+                        tmp.rectTransform.sizeDelta = prev;
+
+                    }
+                }
+            }
+        }
     }
 }

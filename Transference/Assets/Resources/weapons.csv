@@ -55,3 +55,5 @@ id, name, description,attack, attack_type,affinity, range, accurracy, crit,boost
 46, Energy Wheel,El:  2, 2, physical, Force, rotator, 100, 0, Str, 2
 47, Energy Lance,El:  2, 2, physical, Force, lance, 100, 0, Str, 2
 48, Energy Dance,El:  2, 2, physical, Force, line, 100, 0, Str, 2
+-
+49, Bubble Blast,El:  2, 2, magical, Water, adjacent, 100, 0, Str, 0

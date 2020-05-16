@@ -29,6 +29,8 @@ public class MenuManager : MonoBehaviour
 
     public Canvas hackingCanvas;
 
+ 
+
     public TextMeshProUGUI DESC
     {
         get { return descText; }
@@ -54,6 +56,22 @@ public class MenuManager : MonoBehaviour
             Setup();
         }
     }
+    public void openSettings(Image someImage)
+    {
+        if (someImage)
+        {
+            someImage.gameObject.SetActive(true);
+        }
+    }
+
+    public void closeSettings(Image someImage)
+    {
+        if (someImage)
+        {
+            someImage.gameObject.SetActive(false);
+        }
+    }
+
 
     public void ShowHiddenCanvas()
     {

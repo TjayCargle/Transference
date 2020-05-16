@@ -17,8 +17,8 @@ public class CommandSkill : SkillScript
     [SerializeField]
     protected DMG damage;
 
-    [SerializeField]
-    private List<Vector2> affecttedTiles;
+    //[SerializeField]
+    //private List<Vector2> affecttedTiles;
 
     [SerializeField]
     protected RangeType rType;
@@ -76,11 +76,11 @@ public class CommandSkill : SkillScript
         get { return damage; }
         set { damage = value; }
     }
-    public List<Vector2> TILES
-    {
-        get { return affecttedTiles; }
-        set { affecttedTiles = value; }
-    }
+    //public List<Vector2> TILES
+    //{
+    //    get { return affecttedTiles; }
+    //    set { affecttedTiles = value; }
+    //}
 
     public float CRIT_RATE
     {
@@ -141,6 +141,42 @@ public class CommandSkill : SkillScript
         get { return maxHit; }
         set { maxHit = value; }
     }
+
+    public override Reaction Activate(SkillReaction reaction, float amount, GridObject target)
+    {
+
+        switch (reaction)
+        {
+
+            case SkillReaction.increaseAccurracy:
+                {
+                    ACCURACY += LEVEL;
+                }
+                break;
+            case SkillReaction.resetAccurracy:
+                {
+                    ACCURACY = 1;
+                }
+                break;
+            case SkillReaction.increaseStr:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.STRENGTH++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        UpdateDesc();
+        return Reaction.none;
+    }
+
     public int GetCost(LivingObject user = null, float modification = 1.0f)
     {
         if (user == null)
@@ -202,7 +238,7 @@ public class CommandSkill : SkillScript
         {
             if (ETYPE == EType.magical)
             {
-                OWNER.STATS.MANA -= GetCost(user,modification);
+                OWNER.STATS.MANA -= GetCost(user, modification);
                 useCount++;
             }
             else
@@ -351,15 +387,15 @@ public class CommandSkill : SkillScript
         string potentialDesc;
         if (SUBTYPE == SubSkillType.Buff)
         {
-            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
+            potentialDesc = "Increases " + BUFFEDSTAT + " of yourself or ally by " + BUFFVAL + "% for 3 turns." + "";
         }
         else if (SUBTYPE == SubSkillType.Debuff)
         {
-            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy by " + BUFFVAL + "% for 3 turns. Costs " + ((cost * 10)) + "% Mana";
+            potentialDesc = "Decreases " + BUFFEDSTAT + " of target enemy by " + BUFFVAL + "% for 3 turns. Costs " + "";
         }
         else if (SUBTYPE == SubSkillType.Ailment)
         {
-            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + ". Costs " + ((cost * 10)) + "% Mana";
+            potentialDesc = ACCURACY + "% chance to inflict enemy with " + EFFECT + "";
         }
         else if (ELEMENT == Element.Support)
         {
@@ -458,17 +494,31 @@ public class CommandSkill : SkillScript
         {
             if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + "%";
+                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + "%.";
             }
             else
             {
-                potentialDesc += " Costs " + ((cost * 10)) + "% Fatigue";
+                potentialDesc += " Costs " + ((cost * 10)) + "% Fatigue.";
             }
         }
         else
         {
-            potentialDesc += "Costs " + ((cost * 10)) + "% Mana";
+            potentialDesc += "Costs " + ((cost * 10)) + "% Mana.";
         }
+
+        if (SPECIAL_EVENTS.Count > 0)
+        {
+
+            for (int i = 0; i < SPECIAL_EVENTS.Count; i++)
+            {
+                SkillEventContainer sec = SPECIAL_EVENTS[i];
+                potentialDesc += Common.GetSkillEventText(sec.theEvent, sec.theReaction) + " ";
+
+
+            }
+
+        }
+
         return potentialDesc;
     }
     public override void ApplyAugment(Augment augment)

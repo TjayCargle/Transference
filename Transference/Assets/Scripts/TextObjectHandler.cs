@@ -13,4 +13,13 @@ public class TextObjectHandler : MonoBehaviour
             obj.SetText(newText);
         }
     }
+
+
+    public static void UpdateColor(TextObj obj, Color color)
+    {
+        if (obj)
+        {
+            obj.SetColor(color);
+        }
+    }
 }

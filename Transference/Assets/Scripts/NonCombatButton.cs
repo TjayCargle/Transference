@@ -17,6 +17,9 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if(controller)
+        {
+
         controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
         controller.selectedButton = this;
         controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
@@ -40,6 +43,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
 
 
+        }
         //if (type > 4)
         //{
         //    controller.buttonIndex = type;

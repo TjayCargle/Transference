@@ -341,6 +341,8 @@ public class ItemScript : UsableScript
                             }
 
                             ActorScript actor = temp.gameObject.AddComponent<ActorScript>();
+                            Debug.Log("idk");
+
                             actor.FACTION = Faction.ally;
 
                             actor.Setup();
@@ -350,6 +352,7 @@ public class ItemScript : UsableScript
                             actor.transform.position = targetTile.transform.position + new Vector3(0, 0.5f, 0);
                             actor.currentTile = targetTile;
                             actor.currentTile.isOccupied = true;
+                            actor.currentTileIndex = actor.currentTile.listindex;
                             actor.gameObject.SetActive(true);
                             for (int i = 1; i < target.LEVEL; i++)
                             {

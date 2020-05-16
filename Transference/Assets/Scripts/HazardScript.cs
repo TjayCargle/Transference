@@ -161,7 +161,7 @@ public class HazardScript : LivingObject
             internalTimer -= 0.02f;
             return false;
         }
-        //  myManager.MoveCameraAndShow(this); 
+          myManager.MoveCameraAndShow(this); 
         //  Debug.Log(FullName + " atacking");
         bool isDone = true;
         {
@@ -309,76 +309,76 @@ public class HazardScript : LivingObject
         isPerforming = false;
     }
 
-    //private void IncreaseHacks(SubSkillType sub)
-    //{
-    //    switch (sub)
-    //    {
+private void IncreaseHacks(SubSkillType sub)
+{
+    switch (sub)
+    {
 
-    //        case SubSkillType.Movement:
-    //            {
-    //                //auto
-    //                int rng = Random.Range(0, 2);
-    //                if (rng == 0)
-    //                    hackStrikes++;
-    //                else
-    //                    hackSkills++;
+        case SubSkillType.Movement:
+            {
+                //auto
+                int rng = Random.Range(0, 2);
+                if (rng == 0)
+                    hackStrikes++;
+                else
+                    hackSkills++;
 
-    //            }
-    //            break;
-    //        case SubSkillType.Item:
-    //            {
-    //                //barrier
-    //                int rng = Random.Range(0, 2);
-    //                if (rng == 0)
-    //                    hackSkills++;
-    //                else
-    //                    hackSpells++;
+            }
+            break;
+        case SubSkillType.Item:
+            {
+                //barrier
+                int rng = Random.Range(0, 2);
+                if (rng == 0)
+                    hackSkills++;
+                else
+                    hackSpells++;
 
-    //            }
-    //            break;
-    //        case SubSkillType.Ailment:
-    //            {
-    //                //passive
-    //                int rng = Random.Range(0, 2);
-    //                if (rng == 0)
-    //                    hackStrikes++;
-    //                else
-    //                    hackSpells++;
+            }
+            break;
+        case SubSkillType.Ailment:
+            {
+                //passive
+                int rng = Random.Range(0, 2);
+                if (rng == 0)
+                    hackStrikes++;
+                else
+                    hackSpells++;
 
-    //            }
-    //            break;
-    //        case SubSkillType.Strike:
-    //            {
-    //                //strikes
-    //                hackStrikes++;
-    //            }
-    //            break;
-    //        case SubSkillType.Skill:
-    //            {
-    //                //skills
-    //                hackSkills++;
-    //            }
-    //            break;
-    //        case SubSkillType.Spell:
-    //            {
-    //                //spells
-    //                hackSpells++;
-    //            }
-    //            break;
-    //        case SubSkillType.None:
-    //            {
-    //                //anything
-    //                int rng = Random.Range(0, 3);
-    //                if (rng == 0)
-    //                    hackStrikes++;
-    //                else if (rng == 1)
-    //                    hackSkills++;
-    //                else
-    //                    hackSpells++;
-    //            }
-    //            break;
-    //    }
-    //}
+            }
+            break;
+        case SubSkillType.Strike:
+            {
+                //strikes
+                hackStrikes++;
+            }
+            break;
+        case SubSkillType.Skill:
+            {
+                //skills
+                hackSkills++;
+            }
+            break;
+        case SubSkillType.Spell:
+            {
+                //spells
+                hackSpells++;
+            }
+            break;
+        case SubSkillType.None:
+            {
+                //anything
+                int rng = Random.Range(0, 3);
+                if (rng == 0)
+                    hackStrikes++;
+                else if (rng == 1)
+                    hackSkills++;
+                else
+                    hackSpells++;
+            }
+            break;
+    }
+}
     public void generateSequence()
     {
         hackingSequence.Clear();

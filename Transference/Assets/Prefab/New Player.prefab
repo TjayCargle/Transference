@@ -133,6 +133,7 @@ MonoBehaviour:
   idlePath: 
   movePath: 
   hasMove: 0
+  runAnyway: 0
 --- !u!95 &165168708704459841
 Animator:
   serializedVersion: 3
@@ -186,7 +187,6 @@ MonoBehaviour:
   otherMe: {fileID: 0}
   dm: {fileID: 0}
   manager: {fileID: 0}
-  DataFaction: 0
   characterId: 1
 --- !u!114 &165168708704459843
 MonoBehaviour:
@@ -210,6 +210,7 @@ MonoBehaviour:
   faceSprite: {fileID: 0}
   MapIndex: -1
   id: -1
+  currentTileIndex: 0
   actions: 0
   generatedActions: 0
   pStatus: 0
@@ -222,4 +223,8 @@ MonoBehaviour:
   autoSlots: {fileID: 0}
   inventory: {fileID: 0}
   refreshState: 0
+  physLevel: 0
+  magLevel: 0
+  dexLevel: 0
   moveableTiles: []
+  tmp: {fileID: 0}

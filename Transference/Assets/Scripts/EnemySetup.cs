@@ -38,6 +38,7 @@ public class EnemySetup : LivingSetup
             {
                 manager.gridObjects.Add(myself);
                 myself.currentTile = manager.GetTile(myself);
+                myself.currentTileIndex = myself.currentTile.listindex;
                 if (myself.currentTile)
                     myself.currentTile.isOccupied = true;
             }

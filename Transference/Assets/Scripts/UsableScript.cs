@@ -33,6 +33,9 @@ public class UsableScript : ScriptableObject
     [SerializeField]
     protected string additionalDetails;
 
+    [SerializeField]
+    protected List<SkillEventContainer> specialEvents = new List<SkillEventContainer>();
+
     public LivingObject USER
     {
         get { return owner; }
@@ -42,6 +45,12 @@ public class UsableScript : ScriptableObject
     {
         get { return augments; }
         set { augments = value; }
+    }
+
+    public List<SkillEventContainer> SPECIAL_EVENTS
+    {
+        get { return specialEvents; }
+        set { specialEvents = value; }
     }
 
     public string DESC
@@ -120,7 +129,10 @@ public class UsableScript : ScriptableObject
         }
         return false;
     }
-
+    public virtual Reaction Activate(SkillReaction reaction, float amount, GridObject target)
+    {
+        return Reaction.none;
+    }
     public virtual void ApplyAugment(Augment aug)
     {
 

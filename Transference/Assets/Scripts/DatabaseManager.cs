@@ -37,6 +37,9 @@ public class DatabaseManager : MonoBehaviour
     TextAsset objectFile;
 
     [SerializeField]
+    TextAsset optionsFile;
+
+    [SerializeField]
     string[] skillLines;
 
     [SerializeField]
@@ -63,6 +66,10 @@ public class DatabaseManager : MonoBehaviour
     [SerializeField]
     string[] objLines;
 
+
+    [SerializeField]
+    string[] optionLines;
+
     private Dictionary<int, string> skillDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> weaponDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> armorDictionary = new Dictionary<int, string>();
@@ -72,6 +79,7 @@ public class DatabaseManager : MonoBehaviour
     private Dictionary<int, string> hazardDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> mapDictionary = new Dictionary<int, string>();
     private Dictionary<int, string> objDictionary = new Dictionary<int, string>();
+    private Dictionary<string, string> optionsDictionary = new Dictionary<string, string>();
     public bool isSetup = false;
     MapData data = new MapData();
     SceneContainer scene = new SceneContainer();
@@ -239,6 +247,27 @@ public class DatabaseManager : MonoBehaviour
             }
 
 
+            if (optionsDictionary.Count == 0)
+            {
+                if (optionsFile)
+                {
+
+                    file = optionsFile.text;
+                    optionLines = file.Split('\n');
+
+                    for (int i = 1; i < optionLines.Length; i++)
+                    {
+                        string line = optionLines[i];
+                        if (line[0] != '-')
+                        {
+                            string[] parsed = line.Split(',');
+                            optionsDictionary.Add(parsed[0], line);
+                        }
+                    }
+                }
+            }
+
+
             data.unOccupiedIndexes = new List<int>();
             data.events = new List<EventPair>();
 
@@ -256,13 +285,37 @@ public class DatabaseManager : MonoBehaviour
             data.specialiles = new List<TileType>();
             data.specialExtra = new List<int>();
             data.specialTileIndexes = new List<int>();
+
             scene.speakerNames = new List<string>();
             scene.speakertext = new List<string>();
             scene.speakerFace = new List<Sprite>();
             scene.eventIndexs = new List<int>();
             scene.sceneEvents = new List<SceneEventContainer>();
 
-            isSetup = true;
+            if (PlayerPrefs.HasKey("gameSettings") == false)
+            {
+                if (optionLines.Length > 0)
+                {
+                    string gs = "";
+                    for (int i = 0; i < optionLines.Length; i++)
+                    {
+                        string line = optionLines[i];
+                        if (line != String.Empty)
+                        {
+
+                            if (line[0] != '-')
+                            {
+                                // string[] parsed = line.Split(',');
+                                gs += line + "|";
+                            }
+                        }
+                    }
+                    // Debug.Log(gs);
+                    PlayerPrefs.SetString("gameSettings", gs);
+                }
+
+                isSetup = true;
+            }
         }
     }
     public void Start()
@@ -271,12 +324,12 @@ public class DatabaseManager : MonoBehaviour
     }
     static void WriteString()
     {
-        string path = "Assets/Resources/skills.csv";
+      //  string path = "Assets/Resources/skills.csv";
 
         //Write some text to the test.txt file
-        StreamWriter writer = new StreamWriter(path, true);
-        writer.WriteLine("Test");
-        writer.Close();
+       // StreamWriter writer = new StreamWriter(path, true);
+       // writer.WriteLine("Test");
+        //writer.Close();
 
     }
 
@@ -392,7 +445,7 @@ public class DatabaseManager : MonoBehaviour
                                     // buff.BUFFVAL = (float)Double.Parse(parsed[11]);
                                     buff.HITS = Int32.Parse(parsed[11]);
                                     buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
-                                    buff.TILES = new System.Collections.Generic.List<Vector2>();
+                                    //buff.TILES = new System.Collections.Generic.List<Vector2>();
 
                                     Modification mod = new Modification();
                                     switch (buff.BUFF)
@@ -429,15 +482,15 @@ public class DatabaseManager : MonoBehaviour
                                     buff.BUFFEDSTAT = mod.affectedStat;
                                     buff.BUFFVAL = mod.editValue;
 
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        Vector2 v = new Vector2();
-                                        v.x = Int32.Parse(parsed[index]);
-                                        index++;
-                                        v.y = Int32.Parse(parsed[index]);
-                                        index++;
-                                        buff.TILES.Add(v);
-                                    }
+                                    //for (int i = 0; i < count; i++)
+                                    //{
+                                    //    Vector2 v = new Vector2();
+                                    //    v.x = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    v.y = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    buff.TILES.Add(v);
+                                    //}
 
                                     livingObject.INVENTORY.CSKILLS.Add(buff);
                                     livingObject.INVENTORY.USEABLES.Add(buff);
@@ -479,18 +532,18 @@ public class DatabaseManager : MonoBehaviour
                                     support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                                     support.HITS = Int32.Parse(parsed[12]);
                                     support.CRIT_RATE = Int32.Parse(parsed[13]);
-                                    support.TILES = new System.Collections.Generic.List<Vector2>();
+                                    //support.TILES = new System.Collections.Generic.List<Vector2>();
 
 
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        Vector2 v = new Vector2();
-                                        v.x = Int32.Parse(parsed[index]);
-                                        index++;
-                                        v.y = Int32.Parse(parsed[index]);
-                                        index++;
-                                        support.TILES.Add(v);
-                                    }
+                                    //for (int i = 0; i < count; i++)
+                                    //{
+                                    //    Vector2 v = new Vector2();
+                                    //    v.x = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    v.y = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    support.TILES.Add(v);
+                                    //}
                                     switch (support.EFFECT)
                                     {
                                         case SideEffect.heal:
@@ -593,9 +646,8 @@ public class DatabaseManager : MonoBehaviour
                                 break;
                             case Element.Ailment:
                                 {
-
-                                    int index = 13;
-                                    int count = Int32.Parse(parsed[12]);
+                                   
+                                    int count = Int32.Parse(parsed[14]);
                                     CommandSkill ailment = ScriptableObject.CreateInstance<CommandSkill>();
                                     skill.Transfer(ailment);
 
@@ -604,23 +656,29 @@ public class DatabaseManager : MonoBehaviour
                                     ailment.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
                                     ailment.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
-                                    ailment.ACCURACY = 100;
+                                    ailment.ACCURACY = Int32.Parse(parsed[10]);
 
                                     ailment.HITS = 1;//Int32.Parse(parsed[11]);
 
-                                    ailment.TILES = new System.Collections.Generic.List<Vector2>();
-
-
-
-                                    for (int i = 0; i < count; i++)
+                                    if(count > 0)
                                     {
-                                        Vector2 v = new Vector2();
-                                        v.x = Int32.Parse(parsed[index]);
-                                        index++;
-                                        v.y = Int32.Parse(parsed[index]);
-                                        index++;
-                                        ailment.TILES.Add(v);
+
+                                        int index = 15;
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            SkillEventContainer cont = new SkillEventContainer();
+                                            SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
+                                            index++;
+                                            SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                            index++;
+
+                                            cont.theEvent = se;
+                                            cont.theReaction = sr;
+                                            ailment.SPECIAL_EVENTS.Add(cont);
+                                        }
                                     }
+
+                                  
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(ailment);
@@ -643,8 +701,8 @@ public class DatabaseManager : MonoBehaviour
                                     skill.Transfer(auto);
                                     auto.DESC = parsed[4];
                                     auto.CHANCE = (float)Double.Parse(parsed[5]);
-                                    auto.ACT = (AutoAct)Enum.Parse(typeof(AutoAct), parsed[6]);
-                                    auto.REACT = (AutoReact)Enum.Parse(typeof(AutoReact), parsed[7]);
+                                    auto.ACT = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[6]);
+                                    auto.REACT = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[7]);
 
                                     //     auto.NEXT = Int32.Parse(parsed[9]);
                                     //   auto.NEXTCOUNT = Int32.Parse(parsed[10]);
@@ -683,7 +741,6 @@ public class DatabaseManager : MonoBehaviour
                                         //    command.NEXTCOUNT = 2;
                                         //}
                                     }
-                                    int index = 15;
                                     int count = Int32.Parse(parsed[14]);
                                     CommandSkill command = ScriptableObject.CreateInstance<CommandSkill>();
                                     skill.Transfer(command);
@@ -696,23 +753,23 @@ public class DatabaseManager : MonoBehaviour
                                     command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                                     command.HITS = Int32.Parse(parsed[12]);
                                     command.CRIT_RATE = Int32.Parse(parsed[13]);
-                                    command.TILES = new System.Collections.Generic.List<Vector2>();
+                                  //  command.TILES = new System.Collections.Generic.List<Vector2>();
 
 
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        Vector2 v = new Vector2();
-                                        v.x = Int32.Parse(parsed[index]);
-                                        index++;
-                                        v.y = Int32.Parse(parsed[index]);
-                                        index++;
-                                        command.TILES.Add(v);
-                                    }
+                                    //for (int i = 0; i < count; i++)
+                                    //{
+                                    //    Vector2 v = new Vector2();
+                                    //    v.x = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    v.y = Int32.Parse(parsed[index]);
+                                    //    index++;
+                                    //    command.TILES.Add(v);
+                                    //}
                                     if (command.SUBTYPE == SubSkillType.RngAtk)
                                     {
-                                        command.MIN_HIT = Int32.Parse(parsed[index]);
-                                        index++;
-                                        command.MAX_HIT = Int32.Parse(parsed[index]);
+                                        command.MIN_HIT = Int32.Parse(parsed[8]);
+                                       // index++;
+                                        command.MAX_HIT = Int32.Parse(parsed[9]);
 
                                     }
                                     //if (command.RTYPE == RangeType.single)
@@ -767,6 +824,23 @@ public class DatabaseManager : MonoBehaviour
                                     //        command.EFFECT = SideEffect.debuff;
                                     //    }
                                     //}
+                                    if (count > 0)
+                                    {
+
+                                        int index = 15;
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            SkillEventContainer cont = new SkillEventContainer();
+                                            SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
+                                            index++;
+                                            SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                            index++;
+
+                                            cont.theEvent = se;
+                                            cont.theReaction = sr;
+                                            command.SPECIAL_EVENTS.Add(cont);
+                                        }
+                                    }
                                     command.UpdateDesc();
 
                                     livingObject.INVENTORY.CSKILLS.Add(command);
@@ -781,6 +855,11 @@ public class DatabaseManager : MonoBehaviour
 
                                         if (livingObject.PHYSICAL_SLOTS.CanAdd())
                                             livingObject.PHYSICAL_SLOTS.SKILLS.Add(command);
+                                    }
+                                    else if (command.ETYPE == EType.mental)
+                                    {
+                                        if (livingObject.MAGICAL_SLOTS.CanAdd())
+                                            livingObject.MAGICAL_SLOTS.SKILLS.Add(command);
                                     }
                                     else
                                     {
@@ -852,7 +931,7 @@ public class DatabaseManager : MonoBehaviour
 
                             buff.HITS = Int32.Parse(parsed[11]);
                             buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
-                            buff.TILES = new System.Collections.Generic.List<Vector2>();
+                          //  buff.TILES = new System.Collections.Generic.List<Vector2>();
 
                             Modification mod = new Modification();
                             switch (buff.BUFF)
@@ -889,15 +968,15 @@ public class DatabaseManager : MonoBehaviour
                             buff.BUFFEDSTAT = mod.affectedStat;
                             buff.BUFFVAL = mod.editValue;
 
-                            for (int i = 0; i < count; i++)
-                            {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                buff.TILES.Add(v);
-                            }
+                            //for (int i = 0; i < count; i++)
+                            //{
+                            //    Vector2 v = new Vector2();
+                            //    v.x = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    v.y = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    buff.TILES.Add(v);
+                            //}
 
                             buff.UpdateDesc();
                             return buff;
@@ -918,18 +997,18 @@ public class DatabaseManager : MonoBehaviour
                             support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                             support.HITS = Int32.Parse(parsed[12]);
                             support.CRIT_RATE = Int32.Parse(parsed[13]);
-                            support.TILES = new System.Collections.Generic.List<Vector2>();
+                            //support.TILES = new System.Collections.Generic.List<Vector2>();
 
 
-                            for (int i = 0; i < count; i++)
-                            {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                support.TILES.Add(v);
-                            }
+                            //for (int i = 0; i < count; i++)
+                            //{
+                            //    Vector2 v = new Vector2();
+                            //    v.x = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    v.y = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    support.TILES.Add(v);
+                            //}
 
                             support.UpdateDesc();
                         }
@@ -988,9 +1067,7 @@ public class DatabaseManager : MonoBehaviour
                         break;
                     case Element.Ailment:
                         {
-
-                            int index = 13;
-                            int count = Int32.Parse(parsed[12]);
+                            int count = Int32.Parse(parsed[14]);
                             CommandSkill ailment = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(ailment);
 
@@ -999,23 +1076,41 @@ public class DatabaseManager : MonoBehaviour
                             ailment.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
                             ailment.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
 
-                            ailment.ACCURACY = 100;
+                            ailment.ACCURACY = Int32.Parse(parsed[10]);
 
                             ailment.HITS = 1;//Int32.Parse(parsed[11]);
 
-                            ailment.TILES = new System.Collections.Generic.List<Vector2>();
 
-
-
-                            for (int i = 0; i < count; i++)
+                            if (count > 0)
                             {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                ailment.TILES.Add(v);
+
+                                int index = 15;
+                                for (int i = 0; i < count; i++)
+                                {
+                                    SkillEventContainer cont = new SkillEventContainer();
+                                    SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
+                                    index++;
+                                    SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                    index++;
+
+                                    cont.theEvent = se;
+                                    cont.theReaction = sr;
+                                    ailment.SPECIAL_EVENTS.Add(cont);
+                                }
                             }
+                            // ailment.TILES = new System.Collections.Generic.List<Vector2>();
+
+
+
+                            //for (int i = 0; i < count; i++)
+                            //{
+                            //    Vector2 v = new Vector2();
+                            //    v.x = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    v.y = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    ailment.TILES.Add(v);
+                            //}
 
 
                             ailment.UpdateDesc();
@@ -1029,8 +1124,8 @@ public class DatabaseManager : MonoBehaviour
                             skill.Transfer(auto);
                             auto.DESC = parsed[4];
                             auto.CHANCE = (float)Double.Parse(parsed[5]);
-                            auto.ACT = (AutoAct)Enum.Parse(typeof(AutoAct), parsed[6]);
-                            auto.REACT = (AutoReact)Enum.Parse(typeof(AutoReact), parsed[7]);
+                            auto.ACT = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[6]);
+                            auto.REACT = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[7]);
 
                             //     auto.NEXT = Int32.Parse(parsed[9]);
                             //   auto.NEXTCOUNT = Int32.Parse(parsed[10]);
@@ -1045,7 +1140,6 @@ public class DatabaseManager : MonoBehaviour
                         {
 
 
-                            int index = 15;
                             int count = Int32.Parse(parsed[14]);
                             CommandSkill command = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(command);
@@ -1058,26 +1152,43 @@ public class DatabaseManager : MonoBehaviour
                             command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                             command.HITS = Int32.Parse(parsed[12]);
                             command.CRIT_RATE = Int32.Parse(parsed[13]);
-                            command.TILES = new System.Collections.Generic.List<Vector2>();
+                          //  command.TILES = new System.Collections.Generic.List<Vector2>();
 
 
-                            for (int i = 0; i < count; i++)
-                            {
-                                Vector2 v = new Vector2();
-                                v.x = Int32.Parse(parsed[index]);
-                                index++;
-                                v.y = Int32.Parse(parsed[index]);
-                                index++;
-                                command.TILES.Add(v);
-                            }
+                            //for (int i = 0; i < count; i++)
+                            //{
+                            //    Vector2 v = new Vector2();
+                            //    v.x = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    v.y = Int32.Parse(parsed[index]);
+                            //    index++;
+                            //    command.TILES.Add(v);
+                            //}
                             if (command.SUBTYPE == SubSkillType.RngAtk)
                             {
-                                command.MIN_HIT = Int32.Parse(parsed[index]);
-                                index++;
-                                command.MAX_HIT = Int32.Parse(parsed[index]);
+                                command.MIN_HIT = Int32.Parse(parsed[8]);
+                              //  index++;
+                                command.MAX_HIT = Int32.Parse(parsed[9]);
 
                             }
 
+                            if (count > 0)
+                            {
+
+                                int index = 15;
+                                for (int i = 0; i < count; i++)
+                                {
+                                    SkillEventContainer cont = new SkillEventContainer();
+                                    SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
+                                    index++;
+                                    SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                    index++;
+
+                                    cont.theEvent = se;
+                                    cont.theReaction = sr;
+                                    command.SPECIAL_EVENTS.Add(cont);
+                                }
+                            }
                             command.UpdateDesc();
 
                             return command;
@@ -1117,7 +1228,7 @@ public class DatabaseManager : MonoBehaviour
                 //  weapon.DESC = parsed[2];
                 weapon.AUGMENTS = new List<Augment>();
                 weapon.ATTACK = DMG.tiny;//(DMG)Enum.Parse(typeof(DMG),parsed[3]);
-                weapon.ATTACK_TYPE = EType.natural;//(EType)Enum.Parse(typeof(EType), parsed[4]);
+                weapon.ATTACK_TYPE = EType.mental;//(EType)Enum.Parse(typeof(EType), parsed[4]);
                 weapon.ELEMENT = (Element)Enum.Parse(typeof(Element), parsed[5]);
                 weapon.ATKRANGE = (RangeType)Enum.Parse(typeof(RangeType), parsed[6]);
                 //weapon.DIST = Int32.Parse(parsed[6]);

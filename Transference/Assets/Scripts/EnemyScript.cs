@@ -130,6 +130,7 @@ public class EnemyScript : LivingObject
                 currentTile.isOccupied = false;
                 currentTile = pathTarget.currentPath.Dequeue();
                 currentTile.isOccupied = true;
+                currentTileIndex = currentTile.listindex;
 
 
             }
@@ -1633,7 +1634,7 @@ public class EnemyScript : LivingObject
         startedDeathAnimation = true;
         myManager.gridObjects.Remove(this);
         gameObject.SetActive(false);
-        myManager.NextTurn(FullName);
+        //myManager.NextTurn(FullName);
         //Debug.Log("enemy fade out end");
         // Destroy(gameObject);
 

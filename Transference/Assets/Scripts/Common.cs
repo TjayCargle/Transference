@@ -255,7 +255,7 @@ public enum EType
 {
     physical,
     magical,
-    natural
+    mental
 }
 public enum Reaction
 {
@@ -389,18 +389,26 @@ public enum MenuItemType
     Tip
 
 }
-public enum AutoAct
+
+
+
+public enum SkillEvent
 {
     beforeDmg,
     afterDmg,
     afterKilling,
     turnBegin,
-    afterSkill,
-    turnEnd
+    turnEnd,
+    onUse,
+    onHit,
+    onMiss,
+    onKill,
+    onLevelUp
 
 }
 
-public enum AutoReact
+
+public enum SkillReaction
 {
     healByDmg,
     healAmount,
@@ -424,7 +432,10 @@ public enum AutoReact
     poison,
     burn,
     freeze,
-    confuse
+    confuse,
+    increaseAccurracy,
+    resetAccurracy,
+    increaseStr
 
 
 
@@ -497,7 +508,8 @@ public enum SideEffect
     reposition,
     slamback,
     swap,
-    cripple
+    cripple,
+    death
 
 
 }
@@ -594,7 +606,7 @@ public enum EPCluster
 }
 public class MassAtkConatiner : ScriptableObject
 {
-    public List<AtkContainer> atkConatiners;
+    public List<AtkContainer> atkContainers;
 }
 
 public struct ScriptableContainer
@@ -633,6 +645,14 @@ public class ItemContainer : ScriptableObject
 
     public GridObject target;
     public ItemScript item;
+
+}
+
+public class SkillEventContainer : ScriptableObject
+{
+
+    public SkillEvent theEvent;
+    public SkillReaction theReaction;
 
 }
 
@@ -1087,6 +1107,94 @@ public class Common : ScriptableObject
                 break;
         }
         return Color.magenta;
+    }
+
+    public static string GetSkillEventText(SkillEvent se, SkillReaction sr)
+    {
+        string returnedString = "";
+
+        switch (sr)
+        {
+          
+            case SkillReaction.discoverItem:
+                break;
+            case SkillReaction.debuff:
+                break;
+            case SkillReaction.cripple:
+                break;
+            case SkillReaction.instaKill:
+                break;
+            case SkillReaction.poison:
+                break;
+            case SkillReaction.burn:
+                break;
+            case SkillReaction.freeze:
+                break;
+            case SkillReaction.confuse:
+                break;
+            case SkillReaction.increaseAccurracy:
+                {
+                    returnedString += " Accurracy Increases ";
+                }
+                break;
+                break;
+            case SkillReaction.resetAccurracy:
+                {
+                    returnedString += " Accurracy resets to 1 ";
+                }
+                break;
+            case SkillReaction.increaseStr:
+                {
+                    returnedString += " Character Str increases ";
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch (se)
+        {
+            case SkillEvent.beforeDmg:
+                break;
+            case SkillEvent.afterDmg:
+                break;
+            case SkillEvent.afterKilling:
+                break;
+            case SkillEvent.turnBegin:
+                break;
+            case SkillEvent.turnEnd:
+                break;
+            case SkillEvent.onUse:
+                {
+                    returnedString += "upon use.";
+                }
+                break;
+            case SkillEvent.onHit:
+                {
+                    returnedString += "upon hit.";
+                }
+                break;
+            case SkillEvent.onMiss:
+                {
+                    returnedString += "upon miss.";
+                }
+                break;
+            case SkillEvent.onKill:
+                {
+                    returnedString += "upon defeating enemy with this skill.";
+                }
+                break;
+            case SkillEvent.onLevelUp:
+                {
+                    returnedString += "upon leveling up.";
+                }
+                break;
+            default:
+                break;
+        }
+
+
+        return returnedString;
     }
 
     public static string GetSideEffectText(SideEffect effect)

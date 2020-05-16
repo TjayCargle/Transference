@@ -955,12 +955,17 @@ public class InventoryMangager : MonoBehaviour
             }
             if (cmd.MAX_HIT > 1)
             {
-                newdescs[4].text = "Hits \n " + cmd.MIN_HIT + "x to " + cmd.MAX_HIT + "x";
+                newdescs[4].text = "Hits " + cmd.MIN_HIT + " - " + cmd.MAX_HIT + " times.";
+            }
+            else if (cmd.HITS > 1)
+            {
+                newdescs[4].text = "Hits " + cmd.HITS.ToString() + " times.";
             }
             else
             {
-                newdescs[4].text = "Hits \n " + cmd.HITS.ToString();
+                newdescs[4].text = "";
             }
+
             if (cmd.EFFECT != SideEffect.none)
             {
                 switch (cmd.EFFECT)
@@ -972,51 +977,74 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     case SideEffect.knockback:
                         {
-                            newdescs[5].text = "Pushe target 1 tile";
+                            newdescs[4].text += " Pushes target 1 tile";
                         }
                         break;
                     case SideEffect.pullin:
                         {
-                            newdescs[5].text = "Pull target 1 tile";
+                            newdescs[4].text += " Pulls target 1 tile";
                         }
                         break;
                     case SideEffect.pushforward:
                         {
-                            newdescs[5].text = "Push self and target 1 tile";
+                            newdescs[4].text += " Push self and target 1 tile";
                         }
                         break;
                     case SideEffect.pullback:
                         {
-                            newdescs[5].text = "Pull self and target 1 tile";
+                            newdescs[4].text += " Pull self and target 1 tile";
                         }
                         break;
                     case SideEffect.jumpback:
-                        {
-                            newdescs[5].text = "Pull self away 1 tile";
+                        { 
+                            newdescs[4].text += " Pull self away 1 tile";
                         }
                         break;
                     case SideEffect.reposition:
                         {
-                            newdescs[5].text = "Jump past target";
+                            newdescs[4].text += " Jumps over target";
                         }
                         break;
                     case SideEffect.swap:
                         {
-                            newdescs[5].text = "Swap locations with target.";
+                            newdescs[4].text = "Swap locations with target.";
                         }
                         break;
                     default:
                         {
-                            newdescs[5].text = "" + ((cmd.OWNER.MAGIC * 0.5f) + cmd.LEVEL).ToString() + "% chance of " + cmd.EFFECT.ToString();
+                            if(cmd.SUBTYPE == SubSkillType.Ailment)
+                            {
+                            //newdescs[4].text += "" + cmd.ACCURACY + "% chance of " + cmd.EFFECT.ToString() + ".";
+
+                            }
+                            else
+                            {
+                            newdescs[4].text += "" + ((cmd.OWNER.MAGIC * 0.5f) + cmd.LEVEL).ToString() + "% chance of " + cmd.EFFECT.ToString() + ".";
+
+                            }
+                         
                         }
                         break;
                 }
 
             }
-            else
+            if (cmd.SPECIAL_EVENTS.Count > 0)
             {
-                newdescs[5].text = " ";
+                for (int i = 0; i < cmd.SPECIAL_EVENTS.Count; i++)
+                {
+                    SkillEventContainer sec = cmd.SPECIAL_EVENTS[i];
+                    newdescs[4].text += Common.GetSkillEventText(sec.theEvent, sec.theReaction);
+
+                    if (i + 1 < cmd.SPECIAL_EVENTS.Count)
+                    {
+                        newdescs[4].text += "\n";
+                    }
+                }
             }
+            //else
+            //{
+            //    newdescs[5].text = " ";
+            //}
         }
     }
     private void UpdateDescriptions(WeaponScript cmd)
@@ -1049,11 +1077,11 @@ public class InventoryMangager : MonoBehaviour
 
             }
 
-            newdescs[4].text = "Hits \n 1";
+            newdescs[4].text = " May trigger an Auto Skill.";
 
             // if(cmd.EFFECT != SideEffect.none)
             {
-                newdescs[5].text = "May trigger an Auto Skill";// + cmd.BOOST + " + " + cmd.BOOSTVAL + " when equipped";
+                newdescs[5].text = "";// + cmd.BOOST + " + " + cmd.BOOSTVAL + " when equipped";
             }
         }
     }

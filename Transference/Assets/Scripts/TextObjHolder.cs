@@ -8,4 +8,5 @@ public class TextObjHolder : MonoBehaviour
     public TextObj subphaseTracker;
     public TextObj shadowPhaseTracker;
     public TextObj shadowSubphaseTracker;
+    public TextObj menuDescription;
 }

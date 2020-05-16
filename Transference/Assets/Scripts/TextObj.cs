@@ -58,6 +58,19 @@ public class TextObj : MonoBehaviour {
             textmeshpro.text = sometext;
         }
     }
+
+    public void SetColor(Color someColor)
+    {
+        if (text)
+        {
+            text.color = someColor;
+        }
+
+        if (textmeshpro)
+        {
+            textmeshpro.color = someColor;
+        }
+    }
     private void Update()
     {
         if (isShowing)
