@@ -1716,8 +1716,8 @@ public class TileManager : MonoBehaviour
             int index = myManager.GetTileIndex(possiblePossitions[i]);
             if (index >= 0)
             {
-            
-                TileScript newTile = myManager.GetTileAtIndex(index);
+
+                TileScript newTile = myManager.tileMap[index];
              
                skillTiles.Add(newTile);
             }

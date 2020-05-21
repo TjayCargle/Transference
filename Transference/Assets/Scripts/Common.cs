@@ -277,6 +277,7 @@ public enum Reaction
     cripple,
     savage,
     weak,
+    resist,
     nulled,
     reflected,
     absorb,
@@ -403,7 +404,9 @@ public enum SkillEvent
     onHit,
     onMiss,
     onKill,
-    onLevelUp
+    onLevelUp,
+    onHitWeakness,
+    onHitResistance
 
 }
 
@@ -434,8 +437,33 @@ public enum SkillReaction
     freeze,
     confuse,
     increaseAccurracy,
+    decreaseAccurracy,
     resetAccurracy,
-    increaseStr
+    increaseStr,
+    increaseDef,
+    increaseMag,
+    increaseRes,
+    increaseSpd,
+    increaseDex,
+    maxMana,
+    maxHealth,
+    MaxFatigue,
+    FatigueZero,
+    enterGuardState,
+    increaseCrit,
+    decreaseCrit,
+    resetCrit,
+    becomeWater,
+    becomePyro,
+    becomeIce,
+    becomeElec,
+    becomeSlash,
+    becomePierce,
+    becomeBlunt,
+    becomeForce,
+    gainBecomeEvent,
+    removeEvent
+
 
 
 
@@ -653,6 +681,7 @@ public class SkillEventContainer : ScriptableObject
 
     public SkillEvent theEvent;
     public SkillReaction theReaction;
+    public CommandSkill theSkill;
 
 }
 
@@ -1115,7 +1144,7 @@ public class Common : ScriptableObject
 
         switch (sr)
         {
-          
+
             case SkillReaction.discoverItem:
                 break;
             case SkillReaction.debuff:
@@ -1146,6 +1175,153 @@ public class Common : ScriptableObject
             case SkillReaction.increaseStr:
                 {
                     returnedString += " Character Str increases ";
+                }
+                break;
+            case SkillReaction.healByDmg:
+                break;
+            case SkillReaction.healAmount:
+                break;
+            case SkillReaction.GainManaByDmg:
+                break;
+            case SkillReaction.GainManaAmount:
+                break;
+            case SkillReaction.ChargeFTByDmg:
+                break;
+            case SkillReaction.ChargeFTByAmount:
+                break;
+            case SkillReaction.HealFTByDmg:
+                break;
+            case SkillReaction.HealFTByAmount:
+                break;
+            case SkillReaction.extraAction:
+                break;
+            case SkillReaction.reduceStr:
+                break;
+            case SkillReaction.reduceDef:
+                break;
+            case SkillReaction.reduceMag:
+                break;
+            case SkillReaction.reduceRes:
+                break;
+            case SkillReaction.reduceSpd:
+                break;
+            case SkillReaction.reduceLuck:
+                break;
+            case SkillReaction.decreaseAccurracy:
+                {
+                    returnedString += " Accurracy decreases ";
+                }
+                break;
+            case SkillReaction.increaseDef:
+                {
+                    returnedString += " Character Def increases ";
+                }
+                break;
+            case SkillReaction.increaseMag:
+                {
+                    returnedString += " Character Mag increases ";
+                }
+                break;
+            case SkillReaction.increaseRes:
+                {
+                    returnedString += " Character Res increases ";
+                }
+                break;
+            case SkillReaction.increaseSpd:
+                {
+                    returnedString += " Character Spd increases ";
+                }
+                break;
+            case SkillReaction.increaseDex:
+                {
+                    returnedString += " Character Dex increases ";
+                }
+                break;
+            case SkillReaction.maxMana:
+                {
+                    returnedString += " Character Mana returns to full ";
+                }
+                break;
+            case SkillReaction.maxHealth:
+                {
+                    returnedString += " Character Health returns to full ";
+                }
+                break;
+            case SkillReaction.MaxFatigue:
+                {
+                    returnedString += " Character Fatigue returns to full ";
+                }
+                break;
+            case SkillReaction.FatigueZero:
+                {
+                    returnedString += " Character Fatigue becomes 0 ";
+                }
+                break;
+            case SkillReaction.enterGuardState:
+                {
+                    returnedString += " Character enters guard staate ";
+                }
+                break;
+            case SkillReaction.increaseCrit:
+                {
+                    returnedString += " Critical chance increases ";
+                }
+                break;
+            case SkillReaction.decreaseCrit:
+                {
+                    returnedString += " Critical chance decreases ";
+                }
+                break;
+            case SkillReaction.resetCrit:
+                {
+                    returnedString += " Critical chance resets to 0 ";
+                }
+                break;
+            case SkillReaction.becomeWater:
+                {
+                    returnedString += " Change element to Water ";
+                }
+                break;
+            case SkillReaction.becomePyro:
+                {
+                    returnedString += " Change element to Pyro ";
+                }
+                break;
+            case SkillReaction.becomeIce:
+                {
+                    returnedString += " Change element to Ice ";
+                }
+                break;
+            case SkillReaction.becomeElec:
+                {
+                    returnedString += " Change element to Elec ";
+                }
+                break;
+            case SkillReaction.becomeSlash:
+                {
+                    returnedString += " Change element to Slash ";
+                }
+                break;
+            case SkillReaction.becomePierce:
+                {
+                    returnedString += " Change element to Pierce ";
+                }
+                break;
+            case SkillReaction.becomeBlunt:
+                {
+                    returnedString += " Change element to Blunt ";
+                }
+                break;
+            case SkillReaction.becomeForce:
+                {
+                    returnedString += " Change element to Force ";
+                }
+                break;
+            case SkillReaction.gainBecomeEvent:
+                break;
+            case SkillReaction.removeEvent:
+                {
+                    returnedString += " Remove special ability ";
                 }
                 break;
             default:
@@ -1193,6 +1369,77 @@ public class Common : ScriptableObject
                 break;
         }
 
+
+        return returnedString;
+    }
+
+    public static string GetElementSpriteIndex(Element el)
+    {
+        string returnedString = "";
+
+        switch (el)
+        {
+            case Element.Water:
+                {
+                    returnedString = "<sprite=35>";
+                }
+                break;
+            case Element.Pyro:
+                {
+                    returnedString = "<sprite=34>";
+                }
+                break;
+            case Element.Ice:
+                {
+                    returnedString = "<sprite=36>";
+                }
+                break;
+            case Element.Electric:
+                {
+                    returnedString = "<sprite=37>";
+                }
+                break;
+            case Element.Slash:
+                {
+                    returnedString = "<sprite=38>";
+                }
+                break;
+            case Element.Pierce:
+                {
+                    returnedString = "<sprite=39>";
+                }
+                break;
+            case Element.Blunt:
+                {
+                    returnedString = "<sprite=40>";
+                }
+                break;
+            case Element.Force:
+                {
+                    returnedString = "<sprite=43>";
+                }
+                break;
+            case Element.Buff:
+                break;
+            case Element.Support:
+                {
+                    returnedString = "<sprite=41>";
+                }
+                break;
+            case Element.Ailment:
+                {
+                    returnedString = "<sprite=42>";
+                }
+                break;
+            case Element.Passive:
+                break;
+            case Element.Opp:
+                break;
+            case Element.Auto:
+                break;
+            case Element.none:
+                break;
+        }
 
         return returnedString;
     }

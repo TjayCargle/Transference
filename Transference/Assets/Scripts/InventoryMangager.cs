@@ -430,6 +430,8 @@ public class InventoryMangager : MonoBehaviour
                         currentIndex = currentContent.transform.childCount - 1;
                     }
 
+                    if(currentIndex < currentContent.transform.childCount)
+                    {
                     if (currentContent.transform.GetChild(currentIndex))
                     {
 
@@ -459,6 +461,7 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
 
+                    }
                     float index = currentIndex / (float)currentContent.transform.childCount;
                     newPos.y = 1.0f - index;
 

@@ -168,7 +168,7 @@ public class HazardScript : LivingObject
 
 
             DmgReaction bestReaction = DetermineBestDmgOutput(realTarget);
-            myManager.CreateTextEvent(this, bestReaction.atkName, "enemy atk", myManager.CheckText, myManager.TextStart);
+          //  myManager.CreateTextEvent(this, bestReaction.atkName, "enemy atk", myManager.CheckText, myManager.TextStart);
 
             //if (myManager.log)
             //{
@@ -303,6 +303,10 @@ public class HazardScript : LivingObject
         {
             myManager.CreateEvent(this, null, "" + FullName + "determine action event " + i, DetermineNextAction, null, 0);
 
+        }
+        if(ACTIONS == 0)
+        {
+            myManager.NextTurn(FullName);
         }
 
 
@@ -763,4 +767,11 @@ private void IncreaseHacks(SubSkillType sub)
         }
     }
 
+    private void Update()
+    {
+      if(Input.GetKeyDown(KeyCode.G))
+        {
+            generateSequence();
+        }
+    }
 }

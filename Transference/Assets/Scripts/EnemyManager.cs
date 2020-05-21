@@ -52,6 +52,7 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
+
                 enemySetup.enemyId = Random.Range(0, 4);
                 enemies[i].Setup();
                 if (enemySetup.enemyId == 2)
@@ -68,6 +69,8 @@ public class EnemyManager : MonoBehaviour {
             {
                 GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
                 EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
+                enemySetup.Unset();
+
                 enemySetup.enemyId = Random.Range(0, 6);
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
@@ -98,7 +101,9 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                if(i < data.EnemyIds.Count)
+                Debug.Log("4");
+
+                if (i < data.EnemyIds.Count)
                 {
                     enemySetup.enemyId = data.EnemyIds[i];
                 }
@@ -119,6 +124,8 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
+
+
                 if (i < data.EnemyIds.Count)
                 {
                     enemySetup.enemyId = data.EnemyIds[i];
@@ -137,6 +144,8 @@ public class EnemyManager : MonoBehaviour {
                 int indx = enemies.Count;
                 GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
                 EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
+                enemySetup.Unset();
+
                 if (indx < data.EnemyIds.Count)
                 {
                     enemySetup.enemyId = data.EnemyIds[indx];

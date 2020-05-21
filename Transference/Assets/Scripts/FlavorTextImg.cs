@@ -22,6 +22,7 @@ public class FlavorTextImg : MonoBehaviour
     {
         if(!isSetup)
         {
+
             myText = GetComponentInChildren<Text>();
             myOtherText = GetComponentInChildren<TextMeshProUGUI>();
             if (myText)
@@ -44,7 +45,8 @@ public class FlavorTextImg : MonoBehaviour
 
     public void SetText()
     {
-        if(myText)
+
+        if (myText)
         {
             myText.text = theText;
         }

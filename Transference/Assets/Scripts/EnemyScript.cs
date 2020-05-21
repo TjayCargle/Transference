@@ -261,7 +261,7 @@ public class EnemyScript : LivingObject
 
             DmgReaction bestReaction = lastReaction;//DetermineBestDmgOutput();
             lastReaction = bestReaction;
-            manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
+           // manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
             if (manager.log)
             {
                 manager.log.Log("<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">" + FullName + "</color> used " + bestReaction.atkName);
@@ -1860,9 +1860,15 @@ public class EnemyScript : LivingObject
             refreshState = 0;
             PSTATUS = PrimaryStatus.normal;
             reflectedSkills.Clear();
+            if(GetComponent<EnemySetup>())
+            {
+
+                GetComponent<EnemySetup>().Unset();
+            }
             shadow.GetComponent<AnimationScript>().Unset();
             if (GetComponent<AnimationScript>())
             {
+
                 GetComponent<AnimationScript>().Unset();
             }
           

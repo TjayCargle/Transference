@@ -30,6 +30,7 @@ public class AnimationScript : MonoBehaviour
     {
         if (!isSetup)
         {
+        
             if (!obj)
             {
                 obj = GetComponent<GridObject>();
@@ -99,7 +100,7 @@ public class AnimationScript : MonoBehaviour
     }
     public void Start()
     {
-        Setup();
+        //Setup();
 
     }
     public void LoadList(string path, bool repeation = true)

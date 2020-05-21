@@ -107,6 +107,7 @@ public class OptionsManager : MonoBehaviour
                 hoverToggle.isOn = hoverSelect;
                 hoverToggle.onValueChanged.AddListener(delegate { ChangeHoverSelect(hoverToggle); });
             }
+            loadSettings();
             isSetup = true;
         }
     }
@@ -353,6 +354,7 @@ public class OptionsManager : MonoBehaviour
                                         {
                                             myCamera.smoothSpd = cameraSpeed;
                                         }
+                                            cameraSlider.value = cameraSpeed;
                                     }
                                     else
                                     {
@@ -394,9 +396,6 @@ public class OptionsManager : MonoBehaviour
         ForceUpdate();
     }
 
-    private void OnEnable()
-    {
-        loadSettings();
-    }
+  
 
 }

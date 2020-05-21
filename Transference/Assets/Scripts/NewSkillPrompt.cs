@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class NewSkillPrompt : MonoBehaviour {
+public class NewSkillPrompt : MonoBehaviour
+{
 
-    public Text TitleText;
+    public TextMeshProUGUI TitleText;
     public TextMeshProUGUI BodyText;
 
     [SerializeField]
@@ -17,24 +18,31 @@ public class NewSkillPrompt : MonoBehaviour {
     public bool isSetup = false;
 
 
-    void Start () {
+    void Start()
+    {
         Setup();
     }
-	
+
     public void Setup()
     {
-        if(!isSetup)
+        if (!isSetup)
         {
-            if (GetComponentInChildren<Text>())
+            if (!TitleText)
             {
-                TitleText = GetComponentInChildren<Text>();
+                if (GetComponentInChildren<Text>())
+                {
+                    TitleText = GetComponentsInChildren<TextMeshProUGUI>()[0];
+                }
             }
 
-            if (GetComponentInChildren<TextMeshProUGUI>())
+            if (!BodyText)
             {
-                BodyText = GetComponentInChildren<TextMeshProUGUI>();
+                if (GetComponentInChildren<TextMeshProUGUI>())
+                {
+                    BodyText = GetComponentsInChildren<TextMeshProUGUI>()[1];
+                }
+                isSetup = true;
             }
-            isSetup = true;
         }
     }
 

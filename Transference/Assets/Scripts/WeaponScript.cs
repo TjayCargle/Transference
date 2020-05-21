@@ -94,7 +94,7 @@ public class WeaponScript : UsableScript
     public int GetCost(LivingObject user, float modification = 1.0f)
     {
         if (USER)
-            return (int)((((float)(cost) / 100.0f) * USER.MAX_HEALTH) * user.STATS.HPCOSTCHANGE);
+            return Mathf.Max(0, (int)((((float)(cost) / 100.0f) * USER.MAX_HEALTH) - user.DEXLEVEL));
         else
             return (int)(cost * modification);
     }

@@ -346,10 +346,10 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Mental levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
-                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up reduces the cost of <color=yellow>Skills</color> and increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
+                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up reduces the cost of <color=yellow>Skills</color> and increases <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
                 break;
             case 31:
-                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up reduces the cost of <color=#bd1d85>Spells</color> and increases Max Mana, <color=#b400e9>Magic</color> and <color=#ce0e96>Resistance</color>.";
+                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up reduces the cost of <color=#bd1d85>Spells</color> and increases <color=#b400e9>Magic</color> and <color=#ce0e96>Resistance</color>.";
                 break;
             case 32:
                 finalText = "This is your Mental level. This is increased by using <color=red>Strikes</color>. Leveling this up reduces the cost of <color=red>Strikes</color> and increases Max Health, <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
@@ -432,7 +432,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Mental Strikes";
                         if (viewContent < 3)
                         {
-                            finalText = "Strikes when equipped replace the default Attack option and doesn't require any cost to use.";
+                            finalText = "Mental Strikes are attacks with 100% accuracy but have no effects on their own.";
                         }
                         break;
                     case DetailType.Armor:
@@ -1186,10 +1186,10 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Mental levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
-                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases Max Fatigue, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
+                finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up increases Max Health, <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
                 break;
             case 31:
-                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases Max Mana, <color=#ce0e96>Magic</color> and <color=#b400e9>Resistance</color>.";
+                finalText = "This is your Mystical level. This is increased by using <color=#bd1d85>Spells</color>. Leveling this up increases Max Health, <color=#ce0e96>Magic</color> and <color=#b400e9>Resistance</color>.";
                 break;
             case 32:
                 finalText = "This is your Mental level. This is increased by using <color=red>Strikes</color>. Leveling this up increases Max Health,  reduces the cost of Strikes and increases both <color=#00FF00>Dexterity</color> and <color=#00FFFF>Speed</color>.";
@@ -1272,7 +1272,7 @@ public class DetailsScreen : MonoBehaviour
                         sectionText.text = "Strikes";
                         if (viewContent < 3)
                         {
-                            finalText = "Strikes when equipped replace the default Attack option and doesn't require any cost to use.";
+                            finalText = "Mental Strikes are attacks with 100% accuracy but have no effects on their own.";
                         }
                         break;
                     case DetailType.Armor:

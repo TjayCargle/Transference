@@ -1113,7 +1113,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: May 16th 2020 build
+  m_text: May 19th 2020 build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3530,7 +3530,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: May 16th 2020 build
+  m_text: May 19th 2020 build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4354,6 +4354,7 @@ MonoBehaviour:
   clips:
   - {fileID: 8300000, guid: af4f8746b08c3784abd0fe10ad28ab56, type: 3}
   - {fileID: 8300000, guid: b4316eafd62096848b555bdd8a73445e, type: 3}
+  loading: 0
 --- !u!1 &807665096
 GameObject:
   m_ObjectHideFlags: 0
@@ -8229,7 +8230,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: May 16th 2020 build
+  m_text: May 19th 2020 build
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10423,7 +10424,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "-------------------------------------May 16th 2020------------\r\n*please
+  m_text: "-------------------------------------May 19th patch--------------------------\nFixed
+    issues loading with all rooms\r\nFixed camera speed default setting itself to
+    lowest speed when opening options\r\nadded more tooltips\r\nfixed issue with position
+    altering tiles\r\nfixed issue with enemies loading wrong sprites\r\nre-added attack
+    display message (now includes pictures)\r\nfixed (at least worked in testing)
+    issue with enemies jumping over tiles\r\nreplaced burning hydro with impalement
+    for jax \n-------------------------------------May 18th patch------------\n\rNote
+    to Ash, please read the descriptions of the new skills \n(Killing Blow - Zeffron)\n(Chance
+    of Fate - Jax)\n-Zoomed camera out slightly\n-changed action loss to apply only
+    on weaknesses\n-absorbing damage now gives character +1 action\nFixed bug with
+    theatre, also changed theatre\n-------------------------------------May 16th 2020------------\r\n*please
     note there are many changes still in progress so build may be buggy*\r\n                                        MAJOR
     CHANGES\r\n-Actions are now displayed above character heads\r\n-Dealing unguarded
     damage will reduce target's action points by 1\r\n-Actions Can go negative\r\nstarting
@@ -10479,7 +10490,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 514
+  m_textAlignment: 513
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0

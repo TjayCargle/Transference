@@ -107,17 +107,20 @@ public class GridObject : MonoBehaviour
 
                 if (GetComponent<AnimationScript>())
                 {
+
                     GetComponent<AnimationScript>().Setup();
                 }
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 transform.Rotate(new Vector3(90, 0, 0));
-            }
             ANIM = GetComponent<AnimationScript>();
             if (ANIM == null)
             {
+
                 ANIM = gameObject.AddComponent<AnimationScript>();
             }
+
             ANIM.Setup();
+            }
         }
         isSetup = true;
     }

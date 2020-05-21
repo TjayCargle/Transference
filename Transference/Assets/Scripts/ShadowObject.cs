@@ -90,6 +90,7 @@ public class ShadowObject : MonoBehaviour
 
             script.render = mySprite.sr;
             script.me = realOwner;
+
             script.Setup();
             isSetup = true;
         }

@@ -25,7 +25,7 @@ public class EnemySetup : LivingSetup
                 myself = gameObject.AddComponent<EnemyScript>();
             }
             isSetup = true;
-            myself.Setup();
+            //myself.Setup();
             myself.FACTION = Faction.enemy;
             // Debug.Log(me.FullName + " is setting up");
             if (dm != null)
@@ -38,12 +38,17 @@ public class EnemySetup : LivingSetup
             {
                 manager.gridObjects.Add(myself);
                 myself.currentTile = manager.GetTile(myself);
+                if(myself.currentTile)
+                {
+
                 myself.currentTileIndex = myself.currentTile.listindex;
                 if (myself.currentTile)
                     myself.currentTile.isOccupied = true;
+                }
             }
             isSetup = true;
         }
+  
     }
 
 

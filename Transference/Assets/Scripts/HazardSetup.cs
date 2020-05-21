@@ -42,9 +42,12 @@ public class HazardSetup : LivingSetup
             {
                 manager.gridObjects.Add(myself);
                 myself.currentTile = manager.GetTile(myself);
-                myself.currentTileIndex = myself.currentTile.listindex;
                 if (myself.currentTile)
+                {
+                    myself.currentTileIndex = myself.currentTile.listindex;
+
                     myself.currentTile.isOccupied = true;
+                }
             }
             myself.BASE_STATS.MAX_HEALTH = 20 + (int)(myself.BASE_STATS.LEVEL * 12f);
             myself.STATS.HEALTH = myself.BASE_STATS.MAX_HEALTH;
@@ -57,35 +60,35 @@ public class HazardSetup : LivingSetup
             myself.BASE_STATS.DEX = 2;
             CommandSkill mySkill = myself.INVENTORY.CSKILLS[0] as CommandSkill;
             int reflectnum = (int)mySkill.ELEMENT;
-           int weaknum = 7 - reflectnum;
-           for (int i = 0; i < myself.ARMOR.HITLIST.Count; i++)
-           {
-               if (i == reflectnum)
-               {
-                   myself.ARMOR.HITLIST[i] = EHitType.reflects;
-               }
-               else if (i == weaknum)
-               {
-                   myself.ARMOR.HITLIST[i] = EHitType.weak;
-               }
-               else
-               {
-                   int choice = Random.Range(0, 3);
-                   if(choice == 0)
-                   {
-                       myself.ARMOR.HITLIST[i] = EHitType.resists;
-                   }
-                   else if(choice == 1)
-                   {
-                       myself.ARMOR.HITLIST[i] = EHitType.normal;
-                   }
-                   else
-                   {
+            int weaknum = 7 - reflectnum;
+            for (int i = 0; i < myself.ARMOR.HITLIST.Count; i++)
+            {
+                if (i == reflectnum)
+                {
+                    myself.ARMOR.HITLIST[i] = EHitType.reflects;
+                }
+                else if (i == weaknum)
+                {
+                    myself.ARMOR.HITLIST[i] = EHitType.weak;
+                }
+                else
+                {
+                    int choice = Random.Range(0, 3);
+                    if (choice == 0)
+                    {
+                        myself.ARMOR.HITLIST[i] = EHitType.resists;
+                    }
+                    else if (choice == 1)
+                    {
+                        myself.ARMOR.HITLIST[i] = EHitType.normal;
+                    }
+                    else
+                    {
 
-                       myself.ARMOR.HITLIST[i] = EHitType.nulls;
-                   }
-               }
-           }
+                        myself.ARMOR.HITLIST[i] = EHitType.nulls;
+                    }
+                }
+            }
             //if (myself.INVENTORY.CSKILLS.Count > 0)
             //{
             //    CommandSkill mySkill = myself.INVENTORY.CSKILLS[0] as CommandSkill;

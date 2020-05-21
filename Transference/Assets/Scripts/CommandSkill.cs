@@ -153,6 +153,11 @@ public class CommandSkill : SkillScript
                     ACCURACY += LEVEL;
                 }
                 break;
+            case SkillReaction.decreaseAccurracy:
+                {
+                    ACCURACY -= LEVEL;
+                }
+                break;
             case SkillReaction.resetAccurracy:
                 {
                     ACCURACY = 1;
@@ -167,6 +172,241 @@ public class CommandSkill : SkillScript
                     else
                     {
                         Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.healByDmg:
+                break;
+            case SkillReaction.healAmount:
+                break;
+            case SkillReaction.GainManaByDmg:
+                break;
+            case SkillReaction.GainManaAmount:
+                break;
+            case SkillReaction.ChargeFTByDmg:
+                break;
+            case SkillReaction.ChargeFTByAmount:
+                break;
+            case SkillReaction.HealFTByDmg:
+                break;
+            case SkillReaction.HealFTByAmount:
+                break;
+            case SkillReaction.extraAction:
+                break;
+            case SkillReaction.reduceStr:
+                break;
+            case SkillReaction.reduceDef:
+                break;
+            case SkillReaction.reduceMag:
+                break;
+            case SkillReaction.reduceRes:
+                break;
+            case SkillReaction.reduceSpd:
+                break;
+            case SkillReaction.reduceLuck:
+                break;
+            case SkillReaction.discoverItem:
+                break;
+            case SkillReaction.debuff:
+                break;
+            case SkillReaction.cripple:
+                break;
+            case SkillReaction.instaKill:
+                break;
+            case SkillReaction.poison:
+                break;
+            case SkillReaction.burn:
+                break;
+            case SkillReaction.freeze:
+                break;
+            case SkillReaction.confuse:
+                break;
+            case SkillReaction.increaseDef:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.DEFENSE++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.increaseMag:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.MAGIC++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.increaseRes:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.RESIESTANCE++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.increaseSpd:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.SPEED++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.increaseDex:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.BASE_STATS.DEX++;
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.maxMana:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.ChangeMana(OWNER.MAX_MANA);
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.maxHealth:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.ChangeHealth(OWNER.MAX_HEALTH);
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.MaxFatigue:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.ChangeFatigue(OWNER.MAX_FATIGUE * -1);
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.FatigueZero:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.ChangeFatigue(OWNER.MAX_FATIGUE);
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.enterGuardState:
+                {
+                    if (OWNER)
+                    {
+                        OWNER.PSTATUS = PrimaryStatus.guarding;
+                        OWNER.updateAilmentIcons();
+                    }
+                    else
+                    {
+                        Debug.Log("no owner");
+                    }
+                }
+                break;
+            case SkillReaction.increaseCrit:
+                {
+                    CRIT_RATE += LEVEL;
+                }
+                break;
+            case SkillReaction.decreaseCrit:
+                {
+                    CRIT_RATE -= LEVEL;
+                }
+                break;
+            case SkillReaction.resetCrit:
+                {
+                    CRIT_RATE = 0;
+                }
+                break;
+            case SkillReaction.becomeWater:
+                {
+                    ELEMENT = Element.Water;
+                }
+                break;
+            case SkillReaction.becomePyro:
+                {
+                    ELEMENT = Element.Pyro;
+                }
+                break;
+            case SkillReaction.becomeIce:
+                {
+                    ELEMENT = Element.Ice;
+                }
+                break;
+            case SkillReaction.becomeElec:
+                {
+                    ELEMENT = Element.Electric;
+                }
+                break;
+            case SkillReaction.becomeSlash:
+                {
+                    ELEMENT = Element.Slash;
+                }
+                break;
+            case SkillReaction.becomePierce:
+                {
+                    ELEMENT = Element.Pierce;
+                }
+                break;
+            case SkillReaction.becomeBlunt:
+                {
+                    ELEMENT = Element.Blunt;
+                }
+                break;
+            case SkillReaction.becomeForce:
+                {
+                    ELEMENT = Element.Force;
+                }
+                break;
+            case SkillReaction.gainBecomeEvent:
+                {
+
+                }
+                break;
+            case SkillReaction.removeEvent:
+                {
+                    if(SPECIAL_EVENTS.Count > 0)
+                    {
+                        SPECIAL_EVENTS.Remove(SPECIAL_EVENTS[0]);
                     }
                 }
                 break;
@@ -188,7 +428,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Charge:
                     {
                         if (OWNER)
-                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE);
+                            return Mathf.Max(0,(cost - OWNER.PHYSLEVEL));
                         else
                             return (int)(cost * modification);
                     }
@@ -196,7 +436,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Cost:
                     {
                         if (OWNER)
-                            return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE);
+                            return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
                         else
                             return (int)(cost * modification);
                     }
@@ -206,7 +446,7 @@ public class CommandSkill : SkillScript
                         if (cost < 0)
                         {
                             if (OWNER)
-                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCOSTCHANGE);
+                                return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
 
                             else
                                 return (int)(cost * modification);
@@ -214,7 +454,7 @@ public class CommandSkill : SkillScript
                         else
                         {
                             if (OWNER)
-                                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_FATIGUE) * user.BASE_STATS.FTCHARGECHANGE);
+                                return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
                             else
                                 return (int)(cost * modification);
                         }
@@ -227,7 +467,7 @@ public class CommandSkill : SkillScript
         else
         {
             if (OWNER)
-                return (int)((((float)(cost * 10) / 100.0f) * OWNER.MAX_MANA) * user.BASE_STATS.MANACHANGE);
+                return Mathf.Max(0, (cost - OWNER.MAGLEVEL)); 
             else
                 return (int)(cost * modification);
         }
@@ -494,16 +734,16 @@ public class CommandSkill : SkillScript
         {
             if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + "%.";
+                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + ".";
             }
             else
             {
-                potentialDesc += " Costs " + ((cost * 10)) + "% Fatigue.";
+                potentialDesc += " Costs " + ((cost * 10)) + " Fatigue.";
             }
         }
         else
         {
-            potentialDesc += "Costs " + ((cost * 10)) + "% Mana.";
+            potentialDesc += "Costs " + ((cost * 10)) + " Mana.";
         }
 
         if (SPECIAL_EVENTS.Count > 0)

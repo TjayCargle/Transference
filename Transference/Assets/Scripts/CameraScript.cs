@@ -131,28 +131,28 @@ public class CameraScript : MonoBehaviour
     public void SetCameraPosDefault()
     {
         x = 0;
-        y = 8;
+        y = 12;
         z = 0;
     }
 
     public void SetCameraPosSlightZoom()
     {
         x = 0;
-        y = 6;
+        y = 10;
         z = 0;
     }
 
     public void SetCameraPosZoom()
     {
         x = 0;
-        y = 4;
+        y = 8;
         z = 0;
     }
 
     public void SetCameraPosFar()
     {
         x = 0;
-        y = 9;
+        y = 13;
         z = -1;
     }
 
@@ -586,7 +586,7 @@ public class CameraScript : MonoBehaviour
                                 {
                                     infoText.text = "Tip";
                                     string[] extraParse = updateTile.EXTRA.Split(';');
-                                    if (extraParse.Length > 0)
+                                    if (extraParse.Length > 1)
                                     {
                                         infoText.text += ": " + extraParse[1];
                                     }

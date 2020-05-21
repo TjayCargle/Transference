@@ -485,9 +485,18 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                 break;
             case MenuItemType.prevMenu:
+              if(myManager.eventManager.activeEvents == 0)
+                {
+             //   Debug.Log("prev, " + myManager.GetState());
+                    myManager.returnState();
+                }
+              else
+                {
+                Debug.Log("nah, " + myManager.GetState());
 
                 myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
                 myManager.currentState = State.PlayerTransition;
+                }
                 break;
             case MenuItemType.generated:
 
@@ -842,6 +851,9 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.equipPS:
                 break;
             case MenuItemType.chooseOptions:
+                {
+                    desc = " Change music volume, camera speed and more.";
+                }
                 break;
             case MenuItemType.equipOS:
                 break;
@@ -889,8 +901,14 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 }
                 break;
             case MenuItemType.openBattleLog:
+                {
+                    desc = " Open battle log. Resets upon entering a new room.";
+                }
                 break;
             case MenuItemType.forceEnd:
+                {
+                    desc = " End the player turn.";
+                }
                 break;
             case MenuItemType.yesPrompt:
                 break;
@@ -906,6 +924,9 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.Talk:
                 break;
             case MenuItemType.Tip:
+                {
+                    desc = "See detailed info";
+                }
                 break;
         }
         return desc;

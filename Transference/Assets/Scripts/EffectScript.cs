@@ -92,6 +92,7 @@ public class EffectScript : ScriptableObject
                     manager.DamageGridObject(living, dmg);
                     manager.CreateDmgTextEvent("+ " + (-1*dmg).ToString() + "<sprite=2> ", Color.blue, living);
                     manager.CreateDmgTextEvent("Sleep", Color.blue, living);
+                    living.GENERATED += living.ACTIONS;
                     living.ACTIONS = 0;
                     //manager.NextTurn("effectScript");
                     manager.CreateTextEvent(this, "" + living.FullName + " is sleeping", "sleep effect", manager.CheckText, manager.TextStart);

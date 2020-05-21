@@ -24,6 +24,8 @@ public class GridAnimationObj : GridObject
 
             script = GetComponent<AnimationScript>();
             anim = GetComponent<Animation>();
+
+
             script.Setup();
             base.Setup();
             shake = GameObject.FindObjectOfType<CameraShake>();

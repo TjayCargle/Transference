@@ -41,11 +41,11 @@ public class TextEventManager : MonoBehaviour
             // GridEvent eve = gridEvents[0];
             if (textEvents.Count > 0)
             {
-                //Debug.Log("GOT AN EVENT BOUS");
+              //  Debug.Log("GOT AN EVENT BOUS");
                 //  Debug.Log(textEvents.Count);
                 if (currentEvent.isRunning == false)
                 {
-                    // Debug.Log("not running BOUS");
+                   //  Debug.Log("not running BOUS");
                     currentEvent = textEvents[0];//Dequeue();
                                                  //  Debug.Log(currentEvent.data);
                     textEvents.Remove(textEvents[0]);
@@ -56,12 +56,13 @@ public class TextEventManager : MonoBehaviour
                     }
                     if (flavor)
                     {
+
                         flavor.theText = currentEvent.data;
                         flavor.SetText();
                     }
 
 
-                    //     Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
+                      //   Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 
                 }
             }

@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/start.unity
     guid: 44804aeb8336b244b95878c9132dc244
+  - enabled: 1
+    path: Assets/DemoMap4.unity
+    guid: fbd0da1ff01841a4e865f74715763c4a
   m_configObjects: {}

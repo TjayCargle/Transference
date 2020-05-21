@@ -671,7 +671,7 @@ public class DatabaseManager : MonoBehaviour
                                             index++;
                                             SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
                                             index++;
-
+                                            cont.theSkill = ailment;
                                             cont.theEvent = se;
                                             cont.theReaction = sr;
                                             ailment.SPECIAL_EVENTS.Add(cont);
@@ -835,7 +835,7 @@ public class DatabaseManager : MonoBehaviour
                                             index++;
                                             SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
                                             index++;
-
+                                            cont.theSkill = command;
                                             cont.theEvent = se;
                                             cont.theReaction = sr;
                                             command.SPECIAL_EVENTS.Add(cont);
@@ -1092,7 +1092,7 @@ public class DatabaseManager : MonoBehaviour
                                     index++;
                                     SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
                                     index++;
-
+                                    cont.theSkill = ailment;
                                     cont.theEvent = se;
                                     cont.theReaction = sr;
                                     ailment.SPECIAL_EVENTS.Add(cont);
@@ -1183,7 +1183,7 @@ public class DatabaseManager : MonoBehaviour
                                     index++;
                                     SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
                                     index++;
-
+                                    cont.theSkill = command;
                                     cont.theEvent = se;
                                     cont.theReaction = sr;
                                     command.SPECIAL_EVENTS.Add(cont);
@@ -1575,6 +1575,7 @@ public class DatabaseManager : MonoBehaviour
 
     public void GetEnemy(int id, EnemyScript newEnemy)
     {
+
 
 
         if (newEnemy.GetComponent<InventoryScript>())

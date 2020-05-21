@@ -52,12 +52,29 @@ public class LivingObject : GridObject
     public List<TileScript> moveableTiles = new List<TileScript>();
 
     [SerializeField]
-    private TextMeshPro tmp;
+    protected List<Element> usedSkills = new List<Element>();
+
+    [SerializeField]
+    protected TextMeshPro actionCounterText;
+
+    [SerializeField]
+    protected TextMeshPro generatedCounterText;
 
     public TextMeshPro TEXT
     {
-        get { return tmp; }
+        get { return actionCounterText; }
     }
+
+    public TextMeshPro GEN_TEXT
+    {
+        get { return generatedCounterText; }
+    }
+
+    public List<Element> USED_LIST
+    {
+        get { return usedSkills; }
+    }
+
     public ShadowObject SHADOW
     {
         get { return shadow; }
@@ -213,10 +230,10 @@ public class LivingObject : GridObject
             //    actions = 0;
             //}
 
-            if (tmp)
+            if (actionCounterText)
             {
 
-                tmp.text = actions.ToString();
+                actionCounterText.text = actions.ToString();
             }
         }
     }
@@ -645,10 +662,14 @@ public class LivingObject : GridObject
 
             if (animationScript == null)
             {
+        
+
                 animationScript = GetComponent<AnimationScript>();
             }
             if (animationScript != null)
             {
+         
+
                 animationScript.Setup();
             }
 
@@ -698,19 +719,19 @@ public class LivingObject : GridObject
             barrier.Setup();
             //MeshRenderer meshy = new GameObject().AddComponent<MeshRenderer>();
 
-            if (tmp == null)
+            if (actionCounterText == null)
             {
-                tmp = new GameObject().AddComponent<TextMeshPro>();
+                actionCounterText = new GameObject().AddComponent<TextMeshPro>();
             }
 
-            tmp.name = "Action Counter";
-            tmp.transform.parent = this.transform;
-            tmp.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
-            tmp.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
+            actionCounterText.name = "Action Counter";
+            actionCounterText.transform.parent = this.transform;
+            actionCounterText.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
+            actionCounterText.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
             // tmp.text = "10";
-            tmp.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+            actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
             transform.hasChanged = false;
-            tmp.enableAutoSizing = true;
+            actionCounterText.enableAutoSizing = true;
             //if (WEAKNESS == null)
             //{
             //    worstWeakness = new GameObject().AddComponent<SpriteObject>();
@@ -784,7 +805,7 @@ public class LivingObject : GridObject
             }
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
 
-            ACTIONS = (int)(spd / 10) + 2;
+            ACTIONS = (int)(spd / 10.0f) + 3;
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.Rotate(new Vector3(90, 0, 0));
@@ -966,7 +987,10 @@ public class LivingObject : GridObject
             //   Debug.Log(FullName + " took an action in " + myManager.currentState.ToString());
         }
         if (myManager.liveEnemies.Count > 0)
+        {
+            if(ACTIONS > 0)
             ACTIONS--;
+        }
         if (myManager)
         {
             //  myManager.doubleAdjOppTiles.Clear();
@@ -1066,9 +1090,9 @@ public class LivingObject : GridObject
 
     public void TrueWait()
     {
-        ChangeHealth((int)(0.25f * MAX_HEALTH) * (actions + 1));
-        ChangeMana((int)(0.25f * MAX_MANA) * (actions + 1));
-        ChangeFatigue((int)(0.25f * MAX_FATIGUE) * (actions + 1));
+        ChangeHealth((int)((0.10f * MAX_HEALTH) * (actions + 1)));
+        ChangeMana((int)((0.10f * MAX_MANA) * (actions + 1)));
+        ChangeFatigue((int)((0.10f * MAX_FATIGUE) * (actions + 1)));
         //   Debug.Log(NAME + " pre: " + modifiedStats.MANA);
         // float t1 = ((int)(0.15 * MAX_MANA) * (actions + 1));
         // Debug.Log(NAME + " test: " + t1 + " actions:" + actions);
@@ -1106,14 +1130,14 @@ public class LivingObject : GridObject
         {
             if(bonus == 0)
             {
-                tmp.text = "";
+                actionCounterText.text = "";
             }
         }
     }
 
     public void TrueCharge()
     {
-        ChangeFatigue(-1 * ((int)(0.25f * MAX_FATIGUE) * (actions + 1)));
+        ChangeFatigue(-1 * ((int)((0.20f * MAX_FATIGUE) * (actions + 1))));
         //int amtft = ((int)(0.30f * (float)MAX_FATIGUE) * (actions + 1));
         ////Debug.Log(amtft);
         //STATS.FATIGUE += amtft;
@@ -1194,7 +1218,7 @@ public class LivingObject : GridObject
             //BASE_STATS.MAX_FATIGUE += 5 + physLevel;
 
             // BASE_STATS.MAX_MANA += 2 + magLevel;
-            //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            BASE_STATS.MAX_HEALTH += 2 + dexLevel;
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
@@ -1236,7 +1260,7 @@ public class LivingObject : GridObject
             STATS.MANA = BASE_STATS.MAX_MANA;
 
             //BASE_STATS.MAX_FATIGUE += 2 + physLevel;
-            //BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            BASE_STATS.MAX_HEALTH += 2 + dexLevel;
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
@@ -1265,7 +1289,7 @@ public class LivingObject : GridObject
             dexLevel++;
             BASE_STATS.HPCOSTCHANGE += 1;
 
-            // BASE_STATS.MAX_HEALTH += 5 + dexLevel;
+            BASE_STATS.MAX_HEALTH += 5 + dexLevel;
             STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 
             // BASE_STATS.MAX_FATIGUE += 2 + physLevel;
@@ -1626,14 +1650,10 @@ public class LivingObject : GridObject
     private void Update()
     {
        
-        if (tmp)
+        if (actionCounterText)
         {
-            if (tmp.rectTransform.hasChanged)
-            {
-
-                tmp.rectTransform.hasChanged = false;
-            }
-            if (prev != tmp.rectTransform.sizeDelta)
+   
+            if (prev != actionCounterText.rectTransform.sizeDelta)
             {
                 if (FACTION == Faction.ally)
                 { 
@@ -1641,20 +1661,20 @@ public class LivingObject : GridObject
                     ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
                     if (manager)
                     {
-                        Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
+       //                 Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
                     }
-                    System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
 
                     // Get calling method name
                     //Console.WriteLine(stackTrace.GetFrame(1).GetMethod().Name);
                     if (prev == Vector2.zero)
                     {
-
-                        prev = tmp.rectTransform.sizeDelta;
+                        actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                        prev = actionCounterText.rectTransform.sizeDelta;
                     }
                     else
                     {
-                        tmp.rectTransform.sizeDelta = prev;
+                        actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                        prev = actionCounterText.rectTransform.sizeDelta;
 
                     }
                 }

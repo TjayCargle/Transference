@@ -172,14 +172,25 @@ public class ConditionalDisplay : MonoBehaviour
             }
             if (requiresSelectedorSpecialTile == true)
             {
-                if (manager.myCamera.selectedTile)
+                if (manager.myCamera.currentTile)
                 {
 
-                    if (manager.myCamera.infoObject == null && manager.myCamera.selectedTile.TTYPE == TileType.regular)
+                    if (manager.myCamera.infoObject == null && manager.myCamera.currentTile.TTYPE == TileType.regular)
                     {
+                        if (debugging == true)
+                        {
+                            Debug.Log("found false");
+                        }
 
                         gameObject.SetActive(false);
                         return;
+                    }
+                    else
+                    {
+                        if (debugging == true)
+                        {
+                            Debug.Log("found true: " + manager.myCamera.currentTile.TTYPE);
+                        }
                     }
                 }
                
