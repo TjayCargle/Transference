@@ -486,6 +486,10 @@ public class CameraScript : MonoBehaviour
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
+                                        if(infoText.text == "Passive Coffin" || infoText.text == "PassiveCoffin")
+                                        {
+                                            infoText.text = "Combo Coffin";
+                                        }
                                         healthText.text = infoObject.STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
 
                                         if (attackingCheck == false)

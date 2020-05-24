@@ -244,7 +244,7 @@ public class ItemScript : UsableScript
                                 buff.SKILL = randomBuff;
                                 buff.BUFF = randomBuff.BUFF;
                                 buff.COUNT = 1;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
                             }
 
                             break;
@@ -262,7 +262,7 @@ public class ItemScript : UsableScript
                                 buff.SKILL = randomDeBuff;
                                 buff.BUFF = randomDeBuff.BUFF;
                                 buff.COUNT = 1;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
                             }
                             break;
                         case 9:
@@ -284,7 +284,7 @@ public class ItemScript : UsableScript
                                 buff.SKILL = randomBuff;
                                 buff.BUFF = randomBuff.BUFF;
                                 buff.COUNT = 1;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
 
                                 CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
                                 randomDeBuff.EFFECT = SideEffect.none;
@@ -298,7 +298,7 @@ public class ItemScript : UsableScript
                                 debuff.SKILL = randomDeBuff;
                                 debuff.BUFF = randomDeBuff.BUFF;
                                 debuff.COUNT = 1;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
                             }
                             break;
                     }
@@ -531,9 +531,9 @@ public class ItemScript : UsableScript
                                     deatindex++;
 
 
-                                    if (actor.INVENTORY.PASSIVES.Count < i)
+                                    if (actor.INVENTORY.COMBOS.Count < i)
                                     {
-                                        PassiveSkill pass = actor.INVENTORY.PASSIVES[i];
+                                        ComboSkill pass = actor.INVENTORY.COMBOS[i];
                                         if (pass.INDEX == passNum)
                                         {
                                             if (pass.LEVEL < passLevel)
@@ -547,7 +547,7 @@ public class ItemScript : UsableScript
                                     }
                                     else
                                     {
-                                        PassiveSkill pass2 = dm.LearnSkill(passNum, actor) as PassiveSkill;
+                                        ComboSkill pass2 = dm.LearnSkill(passNum, actor) as ComboSkill;
                                         if (pass2)
                                         {
                                             if (pass2.LEVEL < passLevel)

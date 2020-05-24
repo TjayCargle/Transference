@@ -8,7 +8,7 @@ public class LivingObject : GridObject
 
     private WeaponEquip equippedWeapon;
     private ArmorEquip equipedArmor;
-    private AccessoryEquip equippedAccessory;
+
     //[SerializeField]
     //private bool isEnenmy;
     [SerializeField]
@@ -44,7 +44,7 @@ public class LivingObject : GridObject
     private bool tookAction = false;
     protected ShadowObject shadow;
     protected SpriteObject barrier;
-    protected SpriteObject worstWeakness;
+    protected List<SpriteObject> lastUsedSprites = new List<SpriteObject>();
     protected SpriteObject highestDamage;
     protected List<SpriteObject> ailments;
 
@@ -70,7 +70,7 @@ public class LivingObject : GridObject
         get { return generatedCounterText; }
     }
 
-    public List<Element> USED_LIST
+    public List<Element> LAST_USED
     {
         get { return usedSkills; }
     }
@@ -86,10 +86,10 @@ public class LivingObject : GridObject
         set { barrier = value; }
     }
 
-    public SpriteObject WEAKNESS
+    public List<SpriteObject> LAST_SPRITES
     {
-        get { return worstWeakness; }
-        set { worstWeakness = value; }
+        get { return lastUsedSprites; }
+        set { lastUsedSprites = value; }
     }
 
     public SpriteObject DMGICON
@@ -143,7 +143,7 @@ public class LivingObject : GridObject
         get { return magicalSlots; }
         set { magicalSlots = value; }
     }
-    public skillSlots PASSIVE_SLOTS
+    public skillSlots COMBO_SLOTS
     {
         get { return passiveSlots; }
         set { passiveSlots = value; }
@@ -662,13 +662,13 @@ public class LivingObject : GridObject
 
             if (animationScript == null)
             {
-        
+
 
                 animationScript = GetComponent<AnimationScript>();
             }
             if (animationScript != null)
             {
-         
+
 
                 animationScript.Setup();
             }
@@ -732,6 +732,29 @@ public class LivingObject : GridObject
             actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
             transform.hasChanged = false;
             actionCounterText.enableAutoSizing = true;
+
+
+            LAST_SPRITES.Clear();
+            float startingX = -0.35f;
+            for (int i = 0; i < 3; i++)
+            {
+              
+            
+           
+                SpriteObject sprObj = new GameObject().AddComponent<SpriteObject>();
+                sprObj = new GameObject().AddComponent<SpriteObject>();
+                sprObj.name = FullName + "Last Sprite " + i;
+                sprObj.transform.parent = this.transform;
+                sprObj.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
+                sprObj.transform.localPosition = new Vector3(startingX, -0.65f, -0.1f);
+                SpriteRenderer worstSprite = sprObj.gameObject.AddComponent<SpriteRenderer>();
+                worstSprite.color = new Color(1, 1, 1, 0.8f);
+                sprObj.Setup();
+
+                LAST_SPRITES.Add(sprObj);
+                startingX += 0.55f;
+            }
+         
             //if (WEAKNESS == null)
             //{
             //    worstWeakness = new GameObject().AddComponent<SpriteObject>();
@@ -748,18 +771,18 @@ public class LivingObject : GridObject
             if (AILMENTS == null)
             {
                 AILMENTS = new List<SpriteObject>();
-                float startingX = -0.35f;
+                float startingXyz = -0.35f;
                 for (int i = 0; i < 6; i++)
                 {
                     SpriteObject anAilment = new GameObject().AddComponent<SpriteObject>();
                     anAilment.name = FullName + " Ailment " + i;
                     anAilment.transform.parent = this.transform;
                     anAilment.transform.localScale = new Vector3(0.2f, 0.2f, 1.0f);
-                    anAilment.transform.localPosition = new Vector3(startingX, 0.65f, -0.1f);
+                    anAilment.transform.localPosition = new Vector3(startingXyz, 0.65f, -0.1f);
                     SpriteRenderer ailmentSprite = anAilment.gameObject.AddComponent<SpriteRenderer>();
                     anAilment.Setup();
                     ailmentSprite.color = new Color(1, 1, 1, 0.8f);
-                    startingX += 0.15f;
+                    startingXyz += 0.15f;
                     AILMENTS.Add(anAilment);
                 }
             }
@@ -818,31 +841,29 @@ public class LivingObject : GridObject
 
     }
 
-    public void updateWeaknessIcon()
+    public void updateLastSprites()
     {
-        return;
-        if (WEAKNESS != null)
+        
+        if (LAST_SPRITES != null)
         {
             InventoryMangager invmger = GameObject.FindObjectOfType<InventoryMangager>();
-            if (invmger)
+            for (int i = 0; i < LAST_SPRITES.Count; i++)
             {
-                if (invmger.ELEMENTS.Length > 0)
+                SpriteObject spriteObject = LAST_SPRITES[i];
+                if(LAST_USED.Count > i)
                 {
-                    int worstIndex = 0;
-                    EHitType worstType = EHitType.normal;
-                    for (int i = 0; i < ARMOR.HITLIST.Count; i++)
-                    {
-                        EHitType testType = ARMOR.HITLIST[i];
-                        if (testType > worstType)
-                        {
-                            worstType = testType;
-                            worstIndex = i;
-                        }
-                    }
-                    WEAKNESS.sr.sprite = invmger.ELEMENTS[worstIndex];
-                    WEAKNESS.sr.color = new Color(1, 1, 1, 0.6f);
+                //Debug.Log("yonx");
+                    int indx = Common.GetElementIndex(LAST_USED[i]);
+               // Debug.Log(" " + indx);
+                spriteObject.sr.sprite = invmger.ELEMENTS[indx];
+                }
+                else
+                {
+               // Debug.Log("yon");
+                    spriteObject.sr.sprite = null;
                 }
             }
+         
         }
     }
 
@@ -935,22 +956,14 @@ public class LivingObject : GridObject
             }
         }
     }
-    public void ApplyPassives()
+    public void UpdateBuffsAndDebuffs()
     {
-        List<PassiveSkill> atkPassives = PASSIVE_SLOTS.ConvertToPassives();
         List<CommandSkill> buffs = inventory.BUFFS;
         List<CommandSkill> debuffs = inventory.DEBUFFS;
         modifiedStats.MODS.Clear();
         modifiedStats.Reset();
 
-        if (atkPassives.Count > 0)
-        {
-            for (int i = 0; i < atkPassives.Count; i++)
-            {
-                modifiedStats.IncreaseStat(atkPassives[i].ModStat, (int)atkPassives[i].ModValues[0], this);
-            }
 
-        }
 
         if (buffs.Count > 0)
         {
@@ -988,8 +1001,8 @@ public class LivingObject : GridObject
         }
         if (myManager.liveEnemies.Count > 0)
         {
-            if(ACTIONS > 0)
-            ACTIONS--;
+            if (ACTIONS > 0)
+                ACTIONS--;
         }
         if (myManager)
         {
@@ -1128,7 +1141,7 @@ public class LivingObject : GridObject
 
         if (FACTION == Faction.ally)
         {
-            if(bonus == 0)
+            if (bonus == 0)
             {
                 actionCounterText.text = "";
             }
@@ -1137,7 +1150,7 @@ public class LivingObject : GridObject
 
     public void TrueCharge()
     {
-        ChangeFatigue(-1 * ((int)((0.20f * MAX_FATIGUE) * (actions + 1))));
+        ChangeFatigue(-1 * ((int)((0.80f * MAX_FATIGUE) * (actions + 1))));
         //int amtft = ((int)(0.30f * (float)MAX_FATIGUE) * (actions + 1));
         ////Debug.Log(amtft);
         //STATS.FATIGUE += amtft;
@@ -1463,7 +1476,7 @@ public class LivingObject : GridObject
                                 }
                                 break;
                             case Element.Passive:
-                                if (attackingObject.PASSIVE_SLOTS.SKILLS.Count > 6)
+                                if (attackingObject.COMBO_SLOTS.SKILLS.Count > 6)
                                 {
                                     overFlow = true;
                                     LearnContainer learnContainer = ScriptableObject.CreateInstance<LearnContainer>();
@@ -1591,15 +1604,14 @@ public class LivingObject : GridObject
         STATS.HEALTH = BASE_STATS.MAX_HEALTH;
         INVENTORY.Clear();
         PHYSICAL_SLOTS.SKILLS.Clear();
-        PASSIVE_SLOTS.SKILLS.Clear();
+        COMBO_SLOTS.SKILLS.Clear();
         MAGICAL_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
         DEFAULT_ARMOR = null;
         ARMOR.unEquip();
         PSTATUS = PrimaryStatus.normal;
-        if (WEAKNESS)
-            WEAKNESS.GetComponent<SpriteRenderer>().color = Common.trans;
+        LAST_USED.Clear();
         shadow.SCRIPT.Unset();
         if (ANIM)
         {
@@ -1646,22 +1658,59 @@ public class LivingObject : GridObject
         return defaultString;
     }
 
+    public void UpdateLastUsed(Element anElement)
+    {
+        LAST_USED.Add(anElement);
+        if (LAST_USED.Count > 3)
+        {
+            LAST_USED.Remove(LAST_USED[0]);
+        }
+        updateLastSprites();
+        if (LAST_USED.Count == 3)
+        {
+            CheckForCombos();
+        }
+    }
+
+    public void CheckForCombos()
+    {
+        if (LAST_USED.Count == 3)
+        {
+
+            for (int i = 0; i < inventory.COMBOS.Count; i++)
+            {
+                ComboSkill aCombo = inventory.COMBOS[i];
+                if (aCombo.FIRST == LAST_USED[0])
+                {
+                    if (aCombo.SECOND == LAST_USED[1])
+                    {
+                        if (aCombo.THIRD == LAST_USED[2])
+                        {
+                            myManager.CreateEvent(this, aCombo, "skill activation", myManager.ReturnTrue, null, -1, myManager.ComboActivation);
+                            myManager.CreateDmgTextEvent("<sprite=6> " + aCombo.NAME, Color.green, this);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Vector2 prev = Vector2.zero;
     private void Update()
     {
-       
+
         if (actionCounterText)
         {
-   
+
             if (prev != actionCounterText.rectTransform.sizeDelta)
             {
                 if (FACTION == Faction.ally)
-                { 
+                {
 
                     ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
                     if (manager)
                     {
-       //                 Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
+                        //                 Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
                     }
 
                     // Get calling method name

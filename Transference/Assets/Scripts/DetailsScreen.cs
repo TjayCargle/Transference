@@ -405,11 +405,11 @@ public class DetailsScreen : MonoBehaviour
                         }
                         break;
                     case DetailType.Passive:
-                        currentSlot = currentObj.PASSIVE_SLOTS;
-                        sectionText.text = "Passive Skills";
+                        currentSlot = currentObj.COMBO_SLOTS;
+                        sectionText.text = "Combo Skills";
                         if (viewContent < 3)
                         {
-                            finalText = "Pasive Skills are non-useable skills that are always active when equipped.";
+                            finalText = "Combo Skills are non-useable skills that are always active when equipped.";
                         }
                         break;
                     case DetailType.Auto:
@@ -522,9 +522,9 @@ public class DetailsScreen : MonoBehaviour
                                                 descriptionText2.gameObject.SetActive(true);
                                         }
                                     }
-                                    else if (currentSlot.SKILLS[i].GetType() == typeof(PassiveSkill))
+                                    else if (currentSlot.SKILLS[i].GetType() == typeof(ComboSkill))
                                     {
-                                        (currentSlot.SKILLS[i] as PassiveSkill).UpdateDesc();
+                                        (currentSlot.SKILLS[i] as ComboSkill).UpdateDesc();
                                         finalText = currentSlot.SKILLS[i].DESC;
                                     }
                                     else if (currentSlot.SKILLS[i].GetType() == typeof(AutoSkill))
@@ -1246,10 +1246,10 @@ public class DetailsScreen : MonoBehaviour
                         break;
                     case DetailType.Passive:
                        // currentSlot = anotherObj.PASSIVE_SLOTS;
-                        sectionText.text = "Passive Skills";
+                        sectionText.text = "Combo Skills";
                         if (viewContent < 3)
                         {
-                            finalText = "Pasive Skills are non-useable skills that are always active when equipped.";
+                            finalText = "Combo Skills are non-useable skills that are always active when equipped.";
                         }
                         break;
                     case DetailType.Auto:

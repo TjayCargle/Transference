@@ -662,7 +662,7 @@ public class ShopScreen : MonoBehaviour
                 skillCount = buyer.MAGICAL_SLOTS.SKILLS.Count;
                 break;
             case 4:
-                skillCount = buyer.PASSIVE_SLOTS.SKILLS.Count;
+                skillCount = buyer.COMBO_SLOTS.SKILLS.Count;
                 break;
             case 5:
                 skillCount = buyer.AUTO_SLOTS.SKILLS.Count;
@@ -711,7 +711,7 @@ public class ShopScreen : MonoBehaviour
                                 currentTypeText.text = "Magical Spells";
                             break;
                         case 4:
-                            refUseable = buyer.PASSIVE_SLOTS.SKILLS[i];
+                            refUseable = buyer.COMBO_SLOTS.SKILLS[i];
                             selectedType = 4;
                             if (currentTypeText)
                                 currentTypeText.text = "Passive Skills";

@@ -436,7 +436,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Cost:
                     {
                         if (OWNER)
-                            return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
+                            return Mathf.Min(0, (cost + (OWNER.PHYSLEVEL*2)));
                         else
                             return (int)(cost * modification);
                     }
@@ -446,7 +446,7 @@ public class CommandSkill : SkillScript
                         if (cost < 0)
                         {
                             if (OWNER)
-                                return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
+                                return Mathf.Min(0, (cost + (OWNER.PHYSLEVEL * 2)));
 
                             else
                                 return (int)(cost * modification);

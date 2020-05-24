@@ -193,7 +193,7 @@ public class EffectScript : ScriptableObject
                             buff.SKILL = strDebuff;
                             buff.BUFF = strDebuff.BUFF;
                             buff.COUNT = 2;
-                        living.ApplyPassives();
+                        living.UpdateBuffsAndDebuffs();
 
                         }
                     else if(living.GetComponent<DebuffScript>())
@@ -245,7 +245,7 @@ public class EffectScript : ScriptableObject
                         buff.SKILL = Common.CommonDebuffStr;
                         buff.BUFF = Common.CommonDebuffStr.BUFF;
                         buff.COUNT = 1;
-                        living.ApplyPassives();
+                        living.UpdateBuffsAndDebuffs();
 
                     }
                     if (chance > 0)

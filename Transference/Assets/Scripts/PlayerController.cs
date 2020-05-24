@@ -103,16 +103,7 @@ public class PlayerController : MonoBehaviour
                         {
                             bool useation = true;
 
-                            for (int i = 0; i < current.INVENTORY.PASSIVES.Count; i++)
-                            {
-                                PassiveSkill passive = current.INVENTORY.PASSIVES[i];
-                                if(passive.ModStat == ModifiedStat.moveAct)
-                                {
-                                    useation = false;
-                                    break;
-                                }
-                            }
-
+                       
                             if(useation)
                             {
                             current.TakeAction();
@@ -827,12 +818,12 @@ public class PlayerController : MonoBehaviour
                                 {
                                     if (((SkillScript)invm.selectedMenuItem.refItem).ELEMENT == Element.Passive)
                                     {
-                                        PassiveSkill passiveSkill = (PassiveSkill)invm.selectedMenuItem.refItem;
+                                        ComboSkill passiveSkill = (ComboSkill)invm.selectedMenuItem.refItem;
                                         if (passiveSkill)
                                         {
-                                            if (current.INVENTORY.PASSIVES.Contains(passiveSkill))
+                                            if (current.INVENTORY.COMBOS.Contains(passiveSkill))
                                             {
-                                                current.INVENTORY.PASSIVES.Remove(passiveSkill);
+                                                current.INVENTORY.COMBOS.Remove(passiveSkill);
                                             }
                                             else
                                             {
@@ -841,17 +832,17 @@ public class PlayerController : MonoBehaviour
 
                                             if (myManager.newSkillEvent.data)
                                             {
-                                                if (myManager.newSkillEvent.data.GetType() == typeof(PassiveSkill))
+                                                if (myManager.newSkillEvent.data.GetType() == typeof(ComboSkill))
                                                 {
-                                                    current.INVENTORY.PASSIVES.Add(myManager.newSkillEvent.data as PassiveSkill);
+                                                    current.INVENTORY.COMBOS.Add(myManager.newSkillEvent.data as ComboSkill);
                                                     (myManager.newSkillEvent.data as UsableScript).USER = current;
                                                     myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as PassiveSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ComboSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                     if (myManager.log)
                                                     {
                                                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
-                                                        myManager.log.Log(coloroption + current.NAME + "</color> learned " + (myManager.newSkillEvent.data as PassiveSkill).NAME);
+                                                        myManager.log.Log(coloroption + current.NAME + "</color> learned " + (myManager.newSkillEvent.data as ComboSkill).NAME);
                                                     }
                                                 }
                                             }

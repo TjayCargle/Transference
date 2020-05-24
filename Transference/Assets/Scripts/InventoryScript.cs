@@ -17,7 +17,7 @@ public class InventoryScript : MonoBehaviour
     List<AutoSkill> autoSkills;
 
     [SerializeField]
-    List<PassiveSkill> passives;
+    List<ComboSkill> combos;
 
     [SerializeField]
     List<CommandSkill> activeBuffs;
@@ -78,10 +78,10 @@ public class InventoryScript : MonoBehaviour
         get { return autoSkills; }
         set { autoSkills = value; }
     }
-    public List<PassiveSkill> PASSIVES
+    public List<ComboSkill> COMBOS
     {
-        get { return passives; }
-        set { passives = value; }
+        get { return combos; }
+        set { combos = value; }
     }
 
     public List<CommandSkill> BUFFS
@@ -123,11 +123,11 @@ public class InventoryScript : MonoBehaviour
 
         }
 
-        for (int i = 0; i < passives.Count; i++)
+        for (int i = 0; i < combos.Count; i++)
         {
-            if (PASSIVES[i].NAME == name)
+            if (COMBOS[i].NAME == name)
             {
-                return PASSIVES[i];
+                return COMBOS[i];
             }
         }
 
@@ -183,7 +183,7 @@ public class InventoryScript : MonoBehaviour
             }
         }
 
-        if (useable.GetType() == typeof(PassiveSkill))
+        if (useable.GetType() == typeof(ComboSkill))
         {
             if (ContainsPassiveIndex(useable.INDEX) != null)
             {
@@ -265,13 +265,13 @@ public class InventoryScript : MonoBehaviour
         return null;
     }
 
-    public PassiveSkill ContainsPassiveIndex(int index)
+    public ComboSkill ContainsPassiveIndex(int index)
     {
-        for (int i = 0; i < passives.Count; i++)
+        for (int i = 0; i < combos.Count; i++)
         {
-            if (PASSIVES[i].INDEX == index)
+            if (COMBOS[i].INDEX == index)
             {
-                return PASSIVES[i];
+                return COMBOS[i];
             }
         }
         return null;
@@ -321,7 +321,7 @@ public class InventoryScript : MonoBehaviour
         this.EFFECTS.Clear();
         this.ITEMS.Clear();
         this.OPPS.Clear();
-        this.PASSIVES.Clear();
+        this.COMBOS.Clear();
         this.SKILLS.Clear();
         this.WEAPONS.Clear();
         this.USEABLES.Clear();

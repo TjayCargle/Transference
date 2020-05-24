@@ -60,7 +60,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AccessoryEquip.cs" />
     <Compile Include="Assets\Scripts\ActorScript.cs" />
     <Compile Include="Assets\Scripts\ActorSetup.cs" />
     <Compile Include="Assets\Scripts\AnimationScript.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\CameraShake.cs" />
     <Compile Include="Assets\Scripts\CanvasManager.cs" />
+    <Compile Include="Assets\Scripts\ComboSkill.cs" />
     <Compile Include="Assets\Scripts\CommandScript.cs" />
     <Compile Include="Assets\Scripts\CommandSkill.cs" />
     <Compile Include="Assets\Scripts\Common.cs" />
@@ -138,7 +138,6 @@
     <Compile Include="Assets\Scripts\OppSkill.cs" />
     <Compile Include="Assets\Scripts\OptionsCtrl.cs" />
     <Compile Include="Assets\Scripts\OptionsManager.cs" />
-    <Compile Include="Assets\Scripts\PassiveSkill.cs" />
     <Compile Include="Assets\Scripts\PathScript.cs" />
     <Compile Include="Assets\Scripts\PhaseImg.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
@@ -156,6 +155,7 @@
     <Compile Include="Assets\Scripts\StatIcon.cs" />
     <Compile Include="Assets\Scripts\StatScript.cs" />
     <Compile Include="Assets\Scripts\StatusIconManager.cs" />
+    <Compile Include="Assets\Scripts\SupportText.cs" />
     <Compile Include="Assets\Scripts\TalkButton.cs" />
     <Compile Include="Assets\Scripts\TalkPanel.cs" />
     <Compile Include="Assets\Scripts\TempObject.cs" />

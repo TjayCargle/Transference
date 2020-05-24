@@ -43,7 +43,7 @@ public class BuffScript : MonoBehaviour
         if(countDown <= 0)
         {
             living.INVENTORY.BUFFS.Remove(refSkill);
-            living.ApplyPassives();
+            living.UpdateBuffsAndDebuffs();
             Destroy(this);
         }
     }

@@ -681,7 +681,7 @@ public class SkillEventContainer : ScriptableObject
 
     public SkillEvent theEvent;
     public SkillReaction theReaction;
-    public CommandSkill theSkill;
+    public UsableScript theSkill;
 
 }
 
@@ -803,7 +803,9 @@ public enum SceneEvent
     showimage,
     hideimage,
     scaleimage,
-    shake
+    shake,
+    blackout,
+    dim
 }
 public struct SceneEventContainer
 {
@@ -1136,6 +1138,78 @@ public class Common : ScriptableObject
                 break;
         }
         return Color.magenta;
+    }
+
+    public static int GetElementIndex(Element e)
+    {
+        int indx = 0;
+        switch (e)
+        {
+            case Element.Water:
+                {
+                indx = 0;
+                }
+                break;
+            case Element.Pyro:
+                {
+                    indx = 1;
+                }
+                break;
+            case Element.Ice:
+                {
+                    indx = 2;
+                }
+                break;
+            case Element.Electric:
+                {
+                    indx = 3;
+                }
+                break;
+            case Element.Slash:
+                {
+                    indx = 4;
+                }
+                break;
+            case Element.Pierce:
+                {
+                    indx = 5;
+                }
+                break;
+            case Element.Blunt:
+                {
+                    indx = 6;
+                }
+                break;
+            case Element.Force:
+                {
+                    indx = 7;
+                }
+                break;
+            case Element.Buff:
+                {
+                    indx = 8;
+                }
+                break;
+            case Element.Support:
+                {
+                    indx = 9;
+                }
+                break;
+            case Element.Ailment:
+                {
+                    indx = 10;
+                }
+                break;
+            case Element.Passive:
+                break;
+            case Element.Opp:
+                break;
+            case Element.Auto:
+                break;
+            case Element.none:
+                break;
+        }
+        return indx;
     }
 
     public static string GetSkillEventText(SkillEvent se, SkillReaction sr)
@@ -1564,7 +1638,25 @@ public class Common : ScriptableObject
 
         return canUse;
     }
-
+    public static bool IsEnemy(Faction testFaction)
+    {
+        switch (testFaction)
+        {
+      
+            case Faction.enemy:
+                return true;
+                break;
+            case Faction.hazard:
+                return true;
+                break;
+        
+            case Faction.fairy:
+                return true;
+                break;
+       
+        }
+        return false;
+    }
     public static string GetStatusffectText(StatusEffect effect)
     {
         string text = "";
@@ -1779,10 +1871,10 @@ public class Common : ScriptableObject
                 text = "Upgrade Effects";
                 break;
             case Augment.effectAugment2:
-                text = "Upgrade More";
+                text = "Upgrade Effects";
                 break;
             case Augment.effectAugment3:
-                text = "Upgrade Even More";
+                text = "Upgrade Effects";
                 break;
             case Augment.strAugment:
                 text = "Increase Strength";
@@ -1897,7 +1989,7 @@ public class Common : ScriptableObject
                     boostText = "Increases the chance of inflicting the ailment. ";
                     break;
                 case Element.Passive:
-                    boostText = "Boosts the effects of the passive skill by 15%. ";
+                    boostText = "Increase actions gained when combo is executed";
                     break;
 
                 case Element.Auto:
@@ -2026,7 +2118,7 @@ public class Common : ScriptableObject
         }
 
 
-        if (useable.GetType() == typeof(PassiveSkill))
+        if (useable.GetType() == typeof(ComboSkill))
             return (int)IconSet.passive;
 
         if (useable.GetType() == typeof(AutoSkill))
