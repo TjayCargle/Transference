@@ -45,6 +45,8 @@ public class InventoryMangager : MonoBehaviour
     public Image elemImg;
     public Image dmgImg;
     public Sprite[] dmgSprites;
+    [SerializeField]
+    private List<LivingObject> attackbleObjects = new List<LivingObject>();
 
     public Sprite[] ELEMENTS
     {
@@ -712,10 +714,21 @@ public class InventoryMangager : MonoBehaviour
                 if (selectedMenuItem)
                 {
 
-
+                    SupportText support = selectedMenuItem.GetComponentInChildren<SupportText>();
                     Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
                     Image attr = null;
+                    if(support)
+                    {
+                        if(support.isSetup & support.isVisible)
+                        {
+                            if(support.freemove)
+                            {
+                                support.freemove.upDown = false;
+                                support.freemove.running = false;
+                            }
+                        }
+                    }
                     if (selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
                     {
 
@@ -749,6 +762,20 @@ public class InventoryMangager : MonoBehaviour
                     selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
                     attr = null;
+                    support = selectedMenuItem.GetComponentInChildren<SupportText>();
+
+                    if (support)
+                    {
+                        if (support.isSetup & support.isVisible)
+                        {
+                            if (support.freemove)
+                            {
+                                support.freemove.upDown = false;
+                                support.freemove.running = true;
+                            }
+                        }
+                    }
+
                     if (selectedMenuItem.GetComponentsInChildren<Image>().Length > 2)
                     {
                         attr = selectedMenuItem.GetComponentsInChildren<Image>()[2];
@@ -1578,9 +1605,9 @@ public class InventoryMangager : MonoBehaviour
             case 6:
                 useType = 4;
                 windowType = 5; //all passive skills
-                for (int i = 0; i < liveObject.INVENTORY.PASSIVES.Count; i++)
+                for (int i = 0; i < liveObject.INVENTORY.COMBOS.Count; i++)
                 {
-                    currentList.Add(liveObject.INVENTORY.PASSIVES[i]);
+                    currentList.Add(liveObject.INVENTORY.COMBOS[i]);
                 }
                 break;
 
@@ -1596,9 +1623,9 @@ public class InventoryMangager : MonoBehaviour
             case 8:
                 useType = 4;
                 windowType = 5; // passive skill slots
-                for (int i = 0; i < liveObject.PASSIVE_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.COMBO_SLOTS.SKILLS.Count; i++)
                 {
-                    currentList.Add(liveObject.PASSIVE_SLOTS.SKILLS[i]);
+                    currentList.Add(liveObject.COMBO_SLOTS.SKILLS[i]);
                 }
                 break;
             case 9:
@@ -1662,6 +1689,12 @@ public class InventoryMangager : MonoBehaviour
             Image attr = selectableItem.GetComponentsInChildren<Image>()[2];
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
             TextMeshProUGUI proText = selectableItem.GetComponentInChildren<TextMeshProUGUI>();
+            SupportText support = selectableItem.GetComponentInChildren<SupportText>();
+            if(support)
+            {
+                support.Setup();
+                support.SetTransparent();
+            }
             string newText = "";
             selectableItem.gameObject.SetActive(true);
             if (useCount < currentList.Count)
@@ -1729,6 +1762,48 @@ public class InventoryMangager : MonoBehaviour
                                     }
                                 }
                                 CommandSkill cmd = ((CommandSkill)item);
+                                if(support)
+                                {
+                                    List<TileScript>  cmdTiles = manager.GetSkillAttackableTilesOneList(cmd.OWNER.currentTile, cmd);
+                                    attackbleObjects.Clear();
+                                    for (int i = 0; i < cmdTiles.Count; i++)
+                                    {
+                                        GridObject possibleObject = manager.GetObjectAtTile(cmdTiles[i]);
+                                        if (possibleObject != null)
+                                        {
+                                        if(Common.IsEnemy(possibleObject.FACTION) )
+                                            { 
+                                            attackbleObjects.Add(possibleObject as LivingObject);
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < attackbleObjects.Count; i++)
+                                    {
+                                        LivingObject griddy = attackbleObjects[i];
+                                           int elIndx = Common.GetElementIndex(cmd.ELEMENT);
+                                        if(elIndx <= 7 )
+                                        {
+                                            EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
+                                            if(hitType < EHitType.normal)
+                                            {
+                                                if(support.isVisible == false)
+                                                {
+                                                support.SetVisible();
+                                                    support.SetText(hitType.ToString(), Color.blue);
+                                                }
+                                            }
+                                            else if (hitType > EHitType.normal)
+                                            {
+                                                if (support.isVisible == false)
+                                                {
+                                                support.SetVisible();
+                                                    support.SetText(hitType.ToString(), Color.red);
+                                                }
+                                            }
+                                        }
+                                     
+                                    }
+                                }
                                 string extraText = "";
                                 if (proText)
                                 {
@@ -1827,7 +1902,48 @@ public class InventoryMangager : MonoBehaviour
                                 }
 
                                 WeaponScript cmd = ((WeaponScript)item);
+                                if (support)
+                                {
+                                    List<TileScript> cmdTiles = manager.GetWeaponAttackableTilesOneList(cmd.USER.currentTile, cmd);
+                                    attackbleObjects.Clear();
+                                    for (int i = 0; i < cmdTiles.Count; i++)
+                                    {
+                                        GridObject possibleObject = manager.GetObjectAtTile(cmdTiles[i]);
+                                        if (possibleObject != null)
+                                        {
+                                            if (Common.IsEnemy(possibleObject.FACTION))
+                                            {
+                                                attackbleObjects.Add(possibleObject as LivingObject);
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < attackbleObjects.Count; i++)
+                                    {
+                                        LivingObject griddy = attackbleObjects[i];
+                                        int elIndx = Common.GetElementIndex(cmd.ELEMENT);
+                                        if (elIndx <= 7)
+                                        {
+                                            EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
+                                            if (hitType < EHitType.normal)
+                                            {
+                                                if (support.isVisible == false)
+                                                {
+                                                    support.SetVisible();
+                                                    support.SetText(hitType.ToString(), Color.blue);
+                                                }
+                                            }
+                                            else if (hitType > EHitType.normal)
+                                            {
+                                                if (support.isVisible == false)
+                                                {
+                                                    support.SetVisible();
+                                                    support.SetText(hitType.ToString(), Color.red);
+                                                }
+                                            }
+                                        }
 
+                                    }
+                                }
                                 if (proText)
                                 {
 
@@ -2425,9 +2541,9 @@ public class InventoryMangager : MonoBehaviour
 
             case 1:
                 useType = 4;
-                for (int i = 0; i < liveObject.PASSIVE_SLOTS.SKILLS.Count; i++)
+                for (int i = 0; i < liveObject.COMBO_SLOTS.SKILLS.Count; i++)
                 {
-                    extraList.Add(liveObject.PASSIVE_SLOTS.SKILLS[i]);
+                    extraList.Add(liveObject.COMBO_SLOTS.SKILLS[i]);
                 }
                 break;
 
@@ -2552,7 +2668,7 @@ public class InventoryMangager : MonoBehaviour
                         loadExtra(0, lastObject);
                     }
 
-                    if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
+                    if (selectedMenuItem.refItem.GetType() == typeof(ComboSkill))
                     {
                         loadExtra(1, lastObject);
                     }
@@ -2613,15 +2729,15 @@ public class InventoryMangager : MonoBehaviour
 
         }
 
-        else if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
+        else if (selectedMenuItem.refItem.GetType() == typeof(ComboSkill))
         {
-            if (!lastObject.PASSIVE_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
+            if (!lastObject.COMBO_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
             {
-                if (lastObject.PASSIVE_SLOTS.SKILLS.Count < 6)
+                if (lastObject.COMBO_SLOTS.SKILLS.Count < 6)
                 {
 
-                    lastObject.PASSIVE_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
-                    lastObject.ApplyPassives();
+                    lastObject.COMBO_SLOTS.SKILLS.Add((SkillScript)selectedMenuItem.refItem);
+                    lastObject.UpdateBuffsAndDebuffs();
                     loadExtra(1, lastObject);
                 }
             }
@@ -2695,13 +2811,13 @@ public class InventoryMangager : MonoBehaviour
                 }
 
 
-                else if (selectedMenuItem.refItem.GetType() == typeof(PassiveSkill))
+                else if (selectedMenuItem.refItem.GetType() == typeof(ComboSkill))
                 {
-                    if (lastObject.PASSIVE_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
+                    if (lastObject.COMBO_SLOTS.Contains((SkillScript)selectedMenuItem.refItem))
                     {
 
-                        lastObject.PASSIVE_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
-                        lastObject.ApplyPassives();
+                        lastObject.COMBO_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
+                       // lastObject.UpdateBuffsAndDebuffs();
                         loadExtra(1, lastObject);
                     }
                 }

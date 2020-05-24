@@ -66,14 +66,14 @@ public class skillSlots : MonoBehaviour {
             return true;
         return false;
     }
-    public List<PassiveSkill> ConvertToPassives()
+    public List<ComboSkill> ConvertToPassives()
     {
-        List<PassiveSkill> passives = new List<PassiveSkill>();
+        List<ComboSkill> passives = new List<ComboSkill>();
         for (int i = 0; i < SKILLS.Count; i++)
         {
-            if(skills[i].GetType() == typeof(PassiveSkill))
+            if(skills[i].GetType() == typeof(ComboSkill))
             {
-                passives.Add(skills[i] as PassiveSkill);
+                passives.Add(skills[i] as ComboSkill);
             }
         }
 

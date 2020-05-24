@@ -331,6 +331,7 @@ public class EnemyScript : LivingObject
                 //myManager.CreateGridAnimationEvent(lastAttack.dmgObject.currentTile.transform.position, bestReaction.usedStrike, lastAttack.dmg);
                 //myManager.CreateEvent(this, lastAttack, "apply reaction event", myManager.ApplyReactionEvent, null, 0);
                 //bestReaction.usedStrike.GrantXP(1);
+                WEAPON.Equip(lastAttack.strike);
                 myManager.AttackTargets(this, WEAPON, true);
 
                 //myManager.ApplyReaction(this, atkTarget, bestReaction, bestReaction.dmgElement);
@@ -1847,7 +1848,7 @@ public class EnemyScript : LivingObject
             physLevel = 1;
             
             PHYSICAL_SLOTS.SKILLS.Clear();
-            PASSIVE_SLOTS.SKILLS.Clear();
+            COMBO_SLOTS.SKILLS.Clear();
             MAGICAL_SLOTS.SKILLS.Clear();
             OPP_SLOTS.SKILLS.Clear();
             AUTO_SLOTS.SKILLS.Clear();

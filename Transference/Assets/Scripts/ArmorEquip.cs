@@ -162,7 +162,7 @@ public class ArmorEquip : Equipable
                     owner.BARRIER.GetComponent<SpriteRenderer>().color = Color.white;
                 }
             }
-            owner.updateWeaknessIcon();
+        //    owner.updateLastSprites();
         }
 
     }
@@ -192,7 +192,7 @@ public class ArmorEquip : Equipable
                 {
                     owner.BARRIER.GetComponent<SpriteRenderer>().color = Common.trans;
                 }
-                owner.updateWeaknessIcon();
+             //   owner.updateLastSprites();
             }
         }
 

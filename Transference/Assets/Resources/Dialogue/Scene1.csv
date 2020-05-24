@@ -1,10 +1,16 @@
 -folder,facdnum, name, text
-a,0,I thought this place was supposed to be so secure.
-a,0, Why was a window left wide open?
-a,0,*Sigh*,1
+a,0,You would think the security would be a bit better here.
+a,0,Now where to find my entrance?
+a,0, Why was a door left wide open?
+a,0,Probably a trap.....,1
+a,0, Or.. not?
 a,0,That book better be here.,1
 a,0,Everything else I tried has been a dud.
 a,0,If the legend is true... 
 a,0,The Book of Transference can finally make me normal.
 a,0,...,1
 a,0,I probably shouldn't sit here talking to myself for too long.,2
+i,0,blackout,0
+i,1,showimage,0
+i,4,hideimage,0
+i,3,dim,0

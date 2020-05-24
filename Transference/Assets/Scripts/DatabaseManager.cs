@@ -324,11 +324,11 @@ public class DatabaseManager : MonoBehaviour
     }
     static void WriteString()
     {
-      //  string path = "Assets/Resources/skills.csv";
+        //  string path = "Assets/Resources/skills.csv";
 
         //Write some text to the test.txt file
-       // StreamWriter writer = new StreamWriter(path, true);
-       // writer.WriteLine("Test");
+        // StreamWriter writer = new StreamWriter(path, true);
+        // writer.WriteLine("Test");
         //writer.Close();
 
     }
@@ -576,50 +576,46 @@ public class DatabaseManager : MonoBehaviour
                                     int index = 10;
                                     int count = Int32.Parse(parsed[9]);
 
-                                    PassiveSkill passive = ScriptableObject.CreateInstance<PassiveSkill>();
-                                    skill.Transfer(passive);
-                                    passive.ModElements = new List<Element>();
-                                    passive.ModValues = new List<float>();
-                                    passive.DESC = parsed[4];
-                                    passive.PERCENT = (float)Double.Parse(parsed[5]);
+                                    ComboSkill combo = ScriptableObject.CreateInstance<ComboSkill>();
+                                    skill.Transfer(combo);
+
+                                    combo.GAIN = Int32.Parse(parsed[5]);
+                                    combo.FIRST = (Element)Enum.Parse(typeof(Element), parsed[6]);
+                                    combo.SECOND = (Element)Enum.Parse(typeof(Element), parsed[7]);
+                                    combo.THIRD = (Element)Enum.Parse(typeof(Element), parsed[8]);
+
+
                                     if (count > 0)
                                     {
 
                                         for (int i = 0; i < count; i++)
                                         {
-                                            Modification mod = new Modification();
-                                            mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
-                                            mod.affectedElement = (Element)Enum.Parse(typeof(Element), parsed[index]);
-                                            mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
+                                            SkillEventContainer cont = new SkillEventContainer();
+                                            SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
                                             index++;
-                                            passive.ModStat = mod.affectedStat;
-                                            passive.ModValues.Add(mod.editValue);
-                                            passive.ModElements.Add(mod.affectedElement);
+                                            SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                            index++;
+                                            cont.theSkill = combo;
+                                            cont.theEvent = se;
+                                            cont.theReaction = sr;
+                                            combo.SPECIAL_EVENTS.Add(cont);
                                         }
                                     }
-                                    else
-                                    {
-                                        Modification mod = new Modification();
-                                        mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
-                                        mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
-                                        passive.ModStat = mod.affectedStat;
-                                        passive.ModValues.Add(mod.editValue);
-                                        passive.ModElements.Add(mod.affectedElement);
-                                    }
-                                    livingObject.INVENTORY.USEABLES.Add(passive);
-                                    livingObject.INVENTORY.PASSIVES.Add(passive);
-                                    livingObject.INVENTORY.SKILLS.Add(passive);
+
+                                    livingObject.INVENTORY.USEABLES.Add(combo);
+                                    livingObject.INVENTORY.COMBOS.Add(combo);
+                                    livingObject.INVENTORY.SKILLS.Add(combo);
 
                                     //    if (equip == true)
                                     {
-                                        if (livingObject.PASSIVE_SLOTS.CanAdd())
+                                        if (livingObject.COMBO_SLOTS.CanAdd())
                                         {
-                                            livingObject.PASSIVE_SLOTS.SKILLS.Add(passive);
-                                            livingObject.ApplyPassives();
+                                            livingObject.COMBO_SLOTS.SKILLS.Add(combo);
+                                            livingObject.UpdateBuffsAndDebuffs();
                                         }
                                     }
-                                    passive.UpdateDesc();
-                                    return passive;
+                                    combo.UpdateDesc();
+                                    return combo;
                                 }
                                 break;
                             case Element.Opp:
@@ -646,7 +642,7 @@ public class DatabaseManager : MonoBehaviour
                                 break;
                             case Element.Ailment:
                                 {
-                                   
+
                                     int count = Int32.Parse(parsed[14]);
                                     CommandSkill ailment = ScriptableObject.CreateInstance<CommandSkill>();
                                     skill.Transfer(ailment);
@@ -660,7 +656,7 @@ public class DatabaseManager : MonoBehaviour
 
                                     ailment.HITS = 1;//Int32.Parse(parsed[11]);
 
-                                    if(count > 0)
+                                    if (count > 0)
                                     {
 
                                         int index = 15;
@@ -678,7 +674,7 @@ public class DatabaseManager : MonoBehaviour
                                         }
                                     }
 
-                                  
+
                                     livingObject.GetComponent<InventoryScript>().CSKILLS.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().USEABLES.Add(ailment);
                                     livingObject.GetComponent<InventoryScript>().SKILLS.Add(ailment);
@@ -753,7 +749,7 @@ public class DatabaseManager : MonoBehaviour
                                     command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                                     command.HITS = Int32.Parse(parsed[12]);
                                     command.CRIT_RATE = Int32.Parse(parsed[13]);
-                                  //  command.TILES = new System.Collections.Generic.List<Vector2>();
+                                    //  command.TILES = new System.Collections.Generic.List<Vector2>();
 
 
                                     //for (int i = 0; i < count; i++)
@@ -768,7 +764,7 @@ public class DatabaseManager : MonoBehaviour
                                     if (command.SUBTYPE == SubSkillType.RngAtk)
                                     {
                                         command.MIN_HIT = Int32.Parse(parsed[8]);
-                                       // index++;
+                                        // index++;
                                         command.MAX_HIT = Int32.Parse(parsed[9]);
 
                                     }
@@ -931,7 +927,7 @@ public class DatabaseManager : MonoBehaviour
 
                             buff.HITS = Int32.Parse(parsed[11]);
                             buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
-                          //  buff.TILES = new System.Collections.Generic.List<Vector2>();
+                            //  buff.TILES = new System.Collections.Generic.List<Vector2>();
 
                             Modification mod = new Modification();
                             switch (buff.BUFF)
@@ -1015,43 +1011,41 @@ public class DatabaseManager : MonoBehaviour
                         break;
                     case Element.Passive:
                         {
-
                             int index = 10;
                             int count = Int32.Parse(parsed[9]);
 
-                            PassiveSkill passive = ScriptableObject.CreateInstance<PassiveSkill>();
-                            skill.Transfer(passive);
-                            passive.ModElements = new List<Element>();
-                            passive.ModValues = new List<float>();
-                            passive.DESC = parsed[4];
-                            passive.PERCENT = (float)Double.Parse(parsed[5]);
+                            ComboSkill combo = ScriptableObject.CreateInstance<ComboSkill>();
+                            skill.Transfer(combo);
+
+                            combo.GAIN = Int32.Parse(parsed[5]);
+                            combo.FIRST = (Element)Enum.Parse(typeof(Element), parsed[6]);
+                            combo.SECOND = (Element)Enum.Parse(typeof(Element), parsed[7]);
+                            combo.THIRD = (Element)Enum.Parse(typeof(Element), parsed[8]);
+
+
                             if (count > 0)
                             {
 
                                 for (int i = 0; i < count; i++)
                                 {
-                                    Modification mod = new Modification();
-                                    mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
-                                    mod.affectedElement = (Element)Enum.Parse(typeof(Element), parsed[index]);
-                                    mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
+                                    SkillEventContainer cont = new SkillEventContainer();
+                                    SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
                                     index++;
-                                    passive.ModStat = mod.affectedStat;
-                                    passive.ModValues.Add(mod.editValue);
-                                    passive.ModElements.Add(mod.affectedElement);
+                                    SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
+                                    index++;
+                                    cont.theSkill = combo;
+                                    cont.theEvent = se;
+                                    cont.theReaction = sr;
+                                    combo.SPECIAL_EVENTS.Add(cont);
                                 }
                             }
-                            else
-                            {
-                                Modification mod = new Modification();
-                                mod.affectedStat = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[8]);
-                                mod.editValue = (float)Double.Parse(parsed[6]) * passive.PERCENT;
-                                passive.ModStat = mod.affectedStat;
-                                passive.ModValues.Add(mod.editValue);
-                                passive.ModElements.Add(mod.affectedElement);
-                            }
-                            passive.UpdateDesc();
-                            return passive;
+
+
+                            combo.UpdateDesc();
+                            return combo;
                         }
+
+
                         break;
                     case Element.Opp:
                         {
@@ -1152,7 +1146,7 @@ public class DatabaseManager : MonoBehaviour
                             command.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
                             command.HITS = Int32.Parse(parsed[12]);
                             command.CRIT_RATE = Int32.Parse(parsed[13]);
-                          //  command.TILES = new System.Collections.Generic.List<Vector2>();
+                            //  command.TILES = new System.Collections.Generic.List<Vector2>();
 
 
                             //for (int i = 0; i < count; i++)
@@ -1167,7 +1161,7 @@ public class DatabaseManager : MonoBehaviour
                             if (command.SUBTYPE == SubSkillType.RngAtk)
                             {
                                 command.MIN_HIT = Int32.Parse(parsed[8]);
-                              //  index++;
+                                //  index++;
                                 command.MAX_HIT = Int32.Parse(parsed[9]);
 
                             }
@@ -1486,10 +1480,10 @@ public class DatabaseManager : MonoBehaviour
                 {
                     details += "," + enemy.INVENTORY.CSKILLS[i].INDEX + "," + enemy.INVENTORY.CSKILLS[i].LEVEL;
                 }
-                details += "," + enemy.INVENTORY.PASSIVES.Count + "";
-                for (int i = 0; i < enemy.INVENTORY.PASSIVES.Count; i++)
+                details += "," + enemy.INVENTORY.COMBOS.Count + "";
+                for (int i = 0; i < enemy.INVENTORY.COMBOS.Count; i++)
                 {
-                    details += "," + enemy.INVENTORY.PASSIVES[i].INDEX + "," + enemy.INVENTORY.PASSIVES[i].LEVEL;
+                    details += "," + enemy.INVENTORY.COMBOS[i].INDEX + "," + enemy.INVENTORY.COMBOS[i].LEVEL;
                 }
 
                 details += "," + enemy.INVENTORY.AUTOS.Count + "";

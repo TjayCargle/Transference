@@ -250,13 +250,13 @@ public class ManagerScript : EventRunner
             {
                 expbar.manager = this;
             }
-            if(!flavor)
+            if (!flavor)
             {
 
-            flavor = FindObjectOfType<FlavorTextImg>();
+                flavor = FindObjectOfType<FlavorTextImg>();
             }
 
-            if(textManager && flavor)
+            if (textManager && flavor)
             {
                 textManager.flavor = flavor;
             }
@@ -3674,6 +3674,30 @@ public class ManagerScript : EventRunner
                                 eventImage.transform.localScale = new Vector3(sceneEvent.data, sceneEvent.data, 1);
                             }
                             break;
+                        case SceneEvent.blackout:
+                            {
+                                if (eventImage)
+                                {
+                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                                    if (img)
+                                    {
+                                        img.color = new Color(0, 0, 0, 1.0f);
+                                    }
+                                }
+                            }
+                            break;
+                        case SceneEvent.dim:
+                            {
+                                if (eventImage)
+                                {
+                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                                    if (img)
+                                    {
+                                        img.color = new Color(0, 0, 0, 0.65f);
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
             }
@@ -3958,6 +3982,7 @@ public class ManagerScript : EventRunner
                 asetup.characterId = 1;
                 LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
                 liveZeff.Setup();
+                liveZeff.TEXT.text = "";
                 gridObjects.Add(liveZeff);
                 turnOrder.Add(liveZeff);
 
@@ -4214,7 +4239,7 @@ public class ManagerScript : EventRunner
                     livingobjs[i].STATS.HEALTH = 1;
                     livingobjs[i].DEAD = false;
                     LivingObject playable = livingobjs[i];
-                    playable.updateWeaknessIcon();
+                    //  playable.updateLastSprites();
                     for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
                     {
                         EffectScript anEffect = playable.INVENTORY.EFFECTS[j];
@@ -5341,6 +5366,8 @@ public class ManagerScript : EventRunner
 
             turnOrder[i].GENERATED = 0;
             turnOrder[i].ACTIONS = acts;
+            turnOrder[i].LAST_USED.Clear();
+            turnOrder[i].updateLastSprites();
         }
 
         switch (currentState)
@@ -5438,7 +5465,7 @@ public class ManagerScript : EventRunner
                 int total = ((int)((float)turnOrder[i].SPEED / 10.0f) * 3);
                 if (total == 0)
                 { total = 6; }
- //               Debug.Log("yo" + turnOrder[i].NAME);
+                //               Debug.Log("yo" + turnOrder[i].NAME);
                 turnOrder[i].GENERATED += total;
                 ;
             }
@@ -5616,7 +5643,7 @@ public class ManagerScript : EventRunner
                 }
 
                 playable.GetComponent<SpriteRenderer>().color = Color.white;
-                playable.updateWeaknessIcon();
+                //   playable.updateLastSprites();
                 for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
                 {
                     EffectScript anEffect = playable.INVENTORY.EFFECTS[j];
@@ -5658,15 +5685,15 @@ public class ManagerScript : EventRunner
                 for (int j = playable.INVENTORY.USEABLES.Count - 1; j >= 0; j--)
                 {
                     UsableScript usable = playable.INVENTORY.USEABLES[j];
-                    if (usable.GetType() == typeof(PassiveSkill) || usable.GetType() == typeof(AutoSkill) || usable.GetType() == typeof(OppSkill))
+                    if (usable.GetType() == typeof(ComboSkill) || usable.GetType() == typeof(AutoSkill) || usable.GetType() == typeof(OppSkill))
                     {
                         playable.INVENTORY.USEABLES.Remove(usable);
                     }
-                    playable.INVENTORY.PASSIVES.Clear();
+                    playable.INVENTORY.COMBOS.Clear();
                     playable.INVENTORY.AUTOS.Clear();
                     playable.INVENTORY.OPPS.Clear();
 
-                    playable.PASSIVE_SLOTS.SKILLS.Clear();
+                    playable.COMBO_SLOTS.SKILLS.Clear();
                     playable.AUTO_SLOTS.SKILLS.Clear();
                     playable.OPP_SLOTS.SKILLS.Clear();
                     playable.INVENTORY.OPPS.Clear();
@@ -5685,7 +5712,7 @@ public class ManagerScript : EventRunner
                 playable.STATS.MANA = (int)((float)playable.BASE_STATS.MAX_MANA * 0.5f);
                 playable.STATS.FATIGUE = (int)((float)playable.BASE_STATS.MAX_FATIGUE * 0.5f);
                 playable.GetComponent<SpriteRenderer>().color = Color.white;
-                playable.updateWeaknessIcon();
+                //  playable.updateLastSprites();
                 for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
                 {
                     EffectScript anEffect = playable.INVENTORY.EFFECTS[j];
@@ -5743,7 +5770,7 @@ public class ManagerScript : EventRunner
 
                 playable.STATS.HEALTH = 1;
                 playable.GetComponent<SpriteRenderer>().color = Color.white;
-                playable.updateWeaknessIcon();
+                //  playable.updateLastSprites();
                 for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
                 {
                     EffectScript anEffect = playable.INVENTORY.EFFECTS[j];
@@ -6950,10 +6977,10 @@ public class ManagerScript : EventRunner
         //{
         //    //return false;
         //}
-        int TileIndex = TwoToOneD((int)newPos.z, MapWidth, (int)newPos.x) ;
-        TileIndex = TileIndex/2;
-        Debug.Log("pre result: " + TwoToOneD( (int)newPos.z, MapWidth, (int)newPos.x));
-        Debug.Log("post result: " + TileIndex);
+        int TileIndex = TwoToOneD((int)newPos.z, MapWidth, (int)newPos.x);
+        TileIndex = TileIndex / 2;
+        //       Debug.Log("pre result: " + TwoToOneD( (int)newPos.z, MapWidth, (int)newPos.x));
+        //     Debug.Log("post result: " + TileIndex);
         //for (int i = 0; i < tileMap.Count; i++)
         //{
         //    if (tileMap[i].transform.position == newPos)
@@ -9534,7 +9561,7 @@ public class ManagerScript : EventRunner
         {
             calc = 0;
         }
-        if (calc == 0.5f)
+        else if (calc < 1)
         {
             calc = 1.0f;
         }
@@ -9798,14 +9825,14 @@ public class ManagerScript : EventRunner
             calc *= ((float)(dmg * increasedDmg * reduction) / (float)resist);
         }
 
-        if (attackingObject.LEVEL > dmgObject.LEVEL + 2)
-        {
-            calc *= 1.2f;
-        }
-        else if (attackingObject.LEVEL - 2 < dmgObject.LEVEL)
-        {
-            calc *= 0.8f;
-        }
+        //if (attackingObject.LEVEL > dmgObject.LEVEL + 2)
+        //{
+        //    calc *= 1.2f;
+        //}
+        //else if (attackingObject.LEVEL - 2 < dmgObject.LEVEL)
+        //{
+        //    calc *= 0.8f;
+        //}
 
         mod = ApplyDmgMods(attackingObject, dmgObject, mod, attackingElement, attackType);
 
@@ -10018,25 +10045,13 @@ public class ManagerScript : EventRunner
 
     public float ApplyDmgMods(LivingObject attacker, LivingObject defender, float dmg, Element atkAffinity, EType eType)
     {
-        List<PassiveSkill> passives = attacker.INVENTORY.PASSIVES;
-        attacker.ApplyPassives();
+        List<ComboSkill> passives = attacker.INVENTORY.COMBOS;
+        attacker.UpdateBuffsAndDebuffs();
         float modification = 1.0f;
-        for (int i = 0; i < passives.Count; i++)
-        {
-            if (passives[i].ModStat == ModifiedStat.ElementDmg)
-            {
-                for (int k = 0; k < passives[i].ModElements.Count; k++)
-                {
-                    if (passives[i].ModElements[k] == atkAffinity)
-                    {
-                        modification *= ((float)passives[i].ModValues[k] / 100.0f);
-                    }
-                }
-            }
-        }
 
-        List<PassiveSkill> epassives = defender.INVENTORY.PASSIVES;
-        defender.ApplyPassives();
+
+        List<ComboSkill> epassives = defender.INVENTORY.COMBOS;
+        defender.UpdateBuffsAndDebuffs();
 
         List<CommandSkill> buffs = attacker.INVENTORY.BUFFS;
 
@@ -10104,21 +10119,8 @@ public class ManagerScript : EventRunner
 
     public float ApplyDmgMods(LivingObject attacker, float dmg, Element atkAffinity, EType eType)
     {
-        List<PassiveSkill> passives = attacker.INVENTORY.PASSIVES;
-        attacker.ApplyPassives();
-        for (int i = 0; i < passives.Count; i++)
-        {
-            if (passives[i].ModStat == ModifiedStat.ElementDmg)
-            {
-                for (int k = 0; k < passives[i].ModElements.Count; k++)
-                {
-                    if (passives[i].ModElements[k] == atkAffinity)
-                    {
-                        dmg *= ((float)passives[i].ModValues[k] / 100.0f);
-                    }
-                }
-            }
-        }
+        attacker.UpdateBuffsAndDebuffs();
+
 
         List<CommandSkill> buffs = attacker.INVENTORY.BUFFS;
 
@@ -10368,7 +10370,7 @@ public class ManagerScript : EventRunner
                                     buff.SKILL = cmd;
                                     buff.BUFF = cmd.BUFF;
                                     buff.COUNT = 3;
-                                    livetarget.ApplyPassives();
+                                    livetarget.UpdateBuffsAndDebuffs();
                                     livetarget.updateAilmentIcons();
                                 }
                             }
@@ -10648,7 +10650,7 @@ public class ManagerScript : EventRunner
                             liveTarget.PSTATUS = PrimaryStatus.crippled;
                             liveTarget.updateAilmentIcons();
                         }
-                
+
 
                     }
                     attackingObject.GENERATED++;
@@ -10671,7 +10673,7 @@ public class ManagerScript : EventRunner
                     }
                     liveTarget.ACTIONS--;
 
-                CreateTextEvent(this, "" + liveTarget.FullName + " lost an action", "enemy atk", CheckText, TextStart);
+                    CreateTextEvent(this, "" + liveTarget.FullName + " lost an action", "enemy atk", CheckText, TextStart);
                 }
                 if (log)
                 {
@@ -10721,7 +10723,7 @@ public class ManagerScript : EventRunner
                                     buff.BUFF = cmd.BUFF;
                                     buff.COUNT = 3;
 
-                                    livetarget.ApplyPassives();
+                                    livetarget.UpdateBuffsAndDebuffs();
                                     livetarget.updateAilmentIcons();
                                 }
                             }
@@ -11067,19 +11069,7 @@ public class ManagerScript : EventRunner
 
                 }
 
-                for (int i = 0; i < attackingObject.INVENTORY.PASSIVES.Count; i++)
-                {
-                    PassiveSkill passive = attackingObject.INVENTORY.PASSIVES[i];
-                    if (passive.ModStat == ModifiedStat.deathAct)
-                    {
-                        attackingObject.ACTIONS++;
-                        if (log)
-                        {
-                            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
-                            log.Log(coloroption + attackingObject.NAME + "</color> passive " + passive.NAME + " gave them an additional action point");
-                        }
-                    }
-                }
+
 
                 //  Debug.Log("current state: " + currentState);
             }
@@ -11295,7 +11285,7 @@ public class ManagerScript : EventRunner
                             break;
                         case Faction.dropsPassive:
                             {
-                                if (attackingObject.INVENTORY.PASSIVES.Count < 6)
+                                if (attackingObject.INVENTORY.COMBOS.Count < 6)
                                 {
 
                                     int itemNum = 0;
@@ -11883,11 +11873,11 @@ public class ManagerScript : EventRunner
                         {
                             //skill.UseSkill(invokingObject, modification);
                             hitSomething = true;
-                            if(flavor)
+                            if (flavor)
                             {
-                                if(flavor.myOtherText != null)
+                                if (flavor.myOtherText != null)
                                 {
-                                    CreateTextEvent(this, "" + invokingObject.FullName + " used " + (skill.ETYPE == EType.physical? " <sprite=0> " : " <sprite=1> ") + skill.NAME + " " + Common.GetElementSpriteIndex(skill.ELEMENT), "skill atk", CheckText, TextStart);
+                                    CreateTextEvent(this, "" + invokingObject.FullName + " used " + (skill.ETYPE == EType.physical ? " <sprite=0> " : " <sprite=1> ") + skill.NAME + " " + Common.GetElementSpriteIndex(skill.ELEMENT), "skill atk", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -12112,6 +12102,10 @@ public class ManagerScript : EventRunner
                             bool leveledup = skill.GrantXP(1);
                         }
                         skill.UseSkill(invokingObject, modification);
+                        if (skill.OWNER)
+                        {
+                            skill.OWNER.UpdateLastUsed(skill.ELEMENT);
+                        }
                         if (skill.SPECIAL_EVENTS.Count > 0)
                         {
                             for (int i = 0; i < skill.SPECIAL_EVENTS.Count; i++)
@@ -12655,6 +12649,9 @@ public class ManagerScript : EventRunner
 
                     //invokingObject.WEAPON.EQUIPPED.GrantXP(1);
                     invokingObject.WEAPON.Use();
+
+                    invokingObject.UpdateLastUsed(weapon.ELEMENT);
+
                     if (options)
                     {
                         if (options.showExp)
@@ -12863,7 +12860,7 @@ public class ManagerScript : EventRunner
                                 buff.SKILL = strDebuff;
                                 buff.BUFF = strDebuff.BUFF;
                                 buff.COUNT = 2;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
                                 usedEffect = true;
                                 target.updateAilmentIcons();
                             }
@@ -12977,7 +12974,7 @@ public class ManagerScript : EventRunner
                                     buff.SKILL = skill;
                                     buff.BUFF = skill.BUFF;
                                     buff.COUNT = 3;
-                                    target.ApplyPassives();
+                                    target.UpdateBuffsAndDebuffs();
                                     usedEffect = true;
 
                                     target.updateAilmentIcons();
@@ -13086,7 +13083,7 @@ public class ManagerScript : EventRunner
                                 buff.SKILL = skill;
                                 buff.BUFF = skill.BUFF;
                                 buff.COUNT = 3;
-                                target.ApplyPassives();
+                                target.UpdateBuffsAndDebuffs();
 
                                 target.updateAilmentIcons();
                             }
@@ -13435,7 +13432,37 @@ public class ManagerScript : EventRunner
         SkillEventContainer sec = data as SkillEventContainer;
 
         sec.theSkill.Activate(sec.theReaction, 0.0f, null);
+        if (flavor)
+        {
+                string eindx = Common.GetElementSpriteIndex((sec.theSkill as SkillScript).ELEMENT);
+            if (flavor.myOtherText != null)
+            {
+                CreateTextEvent(this,  eindx  +" " +sec.theSkill.NAME + " activated!", "skill atk", CheckText, TextStart);
+            }
+            else
+            {
+                CreateTextEvent(this, "" + sec.theSkill.NAME + " activated! ", "skill atk", CheckText, TextStart);
+            }
+        CreateDmgTextEvent(eindx +" "+ sec.theSkill.NAME, Color.green,sec.theSkill.USER);
+        }
 
+    }
+    public void ComboActivation(Object data)
+    {
+        ComboSkill sec = data as ComboSkill;
+
+        sec.Activate(SkillReaction.extraAction, 0.0f, null);
+        if (flavor)
+        {
+            if (flavor.myOtherText != null)
+            {
+                CreateTextEvent(this, "<sprite=6> " + sec.NAME + " activated!", "skill atk", CheckText, TextStart);
+            }
+            else
+            {
+                CreateTextEvent(this, "" + sec.NAME + " activated! ", "skill atk", CheckText, TextStart);
+            }
+        }
     }
     public void NewSkillStart(Object data)
     {
@@ -13470,7 +13497,7 @@ public class ManagerScript : EventRunner
             {
                 menuManager.ShowItemCanvas(11, container.attackingObject);
             }
-            else if (container.usable.GetType() == typeof(PassiveSkill))
+            else if (container.usable.GetType() == typeof(ComboSkill))
             {
                 menuManager.ShowItemCanvas(8, container.attackingObject);
             }
@@ -14548,7 +14575,7 @@ public class ManagerScript : EventRunner
                 ItemIndex = 5;
                 extraIndex = 0;
             }
-            else if (skill.GetType() == typeof(PassiveSkill))
+            else if (skill.GetType() == typeof(ComboSkill))
             {
                 ItemIndex = 6;
                 extraIndex = 1;
@@ -14806,9 +14833,9 @@ public class ManagerScript : EventRunner
 
                                 player.current.INVENTORY.AUTOS.Add((AutoSkill)shopScreen.SELECTED.refItem);
                                 player.current.AUTO_SLOTS.SKILLS.Add((AutoSkill)shopScreen.SELECTED.refItem);
-                                player.current.PASSIVE_SLOTS.SKILLS.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
-                                player.current.INVENTORY.PASSIVES.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
-                                player.current.INVENTORY.SKILLS.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
+                                player.current.COMBO_SLOTS.SKILLS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.COMBOS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.SKILLS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
 
                                 SHOPLIST.Remove(shopScreen.SELECTED.refItem);
 
@@ -14819,11 +14846,11 @@ public class ManagerScript : EventRunner
                             }
                             break;
                         case 5:
-                            if (player.current.PASSIVE_SLOTS.CanAdd())
+                            if (player.current.COMBO_SLOTS.CanAdd())
                             {
 
-                                player.current.INVENTORY.PASSIVES.Add((PassiveSkill)shopScreen.SELECTED.refItem);
-                                player.current.PASSIVE_SLOTS.SKILLS.Add((PassiveSkill)shopScreen.SELECTED.refItem);
+                                player.current.INVENTORY.COMBOS.Add((ComboSkill)shopScreen.SELECTED.refItem);
+                                player.current.COMBO_SLOTS.SKILLS.Add((ComboSkill)shopScreen.SELECTED.refItem);
                                 player.current.AUTO_SLOTS.SKILLS.Remove((AutoSkill)shopScreen.REMOVING.refItem);
                                 player.current.INVENTORY.AUTOS.Remove((AutoSkill)shopScreen.REMOVING.refItem);
                                 player.current.INVENTORY.SKILLS.Remove((AutoSkill)shopScreen.REMOVING.refItem);
@@ -14911,9 +14938,9 @@ public class ManagerScript : EventRunner
                                 break;
                             case 4:
 
-                                player.current.PASSIVE_SLOTS.SKILLS.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
-                                player.current.INVENTORY.PASSIVES.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
-                                player.current.INVENTORY.SKILLS.Remove((PassiveSkill)shopScreen.REMOVING.refItem);
+                                player.current.COMBO_SLOTS.SKILLS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.COMBOS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
+                                player.current.INVENTORY.SKILLS.Remove((ComboSkill)shopScreen.REMOVING.refItem);
                                 break;
                             case 5:
 

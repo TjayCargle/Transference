@@ -734,7 +734,7 @@ private void IncreaseHacks(SubSkillType sub)
         STATS.HEALTH = BASE_STATS.MAX_HEALTH;
         INVENTORY.Clear();
         PHYSICAL_SLOTS.SKILLS.Clear();
-        PASSIVE_SLOTS.SKILLS.Clear();
+        COMBO_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
         dexLevel = 1;

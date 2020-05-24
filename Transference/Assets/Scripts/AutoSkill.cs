@@ -137,7 +137,7 @@ public class AutoSkill : SkillScript
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
                         
-                            liveTarget.ApplyPassives();
+                            liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
                         }
                     }

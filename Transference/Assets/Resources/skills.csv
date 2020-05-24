@@ -24,17 +24,17 @@
 - Water all moves area
 -
 -Slash
-10,Slice,Slash,Charge,none,10,physical,adjacent,2,2,70,tiny,2,0,0
-11,Alt Slice,Slash,Charge,none,15,physical,spear,2,2,70,tiny,2,0,0
-12,Mega Slice,Slash,Cost,none,-30,physical,rotator,2,2,75,tiny,2,0,0
-13,Ultra Slice,Slash,Cost,none,-50,physical,line,2,2,75,tiny,2,0,0
+10,Slice,Slash,Charge,none,15,physical,adjacent,2,2,70,tiny,2,0,0
+11,Alt Slice,Slash,Charge,none,17,physical,spear,2,2,70,tiny,2,0,0
+12,Mega Slice,Slash,Cost,none,-40,physical,rotator,2,2,75,tiny,2,0,0
+13,Ultra Slice,Slash,Cost,none,-30,physical,line,1,1,75,tiny,1,0,0
 14,Arcane Slice,Slash,Magic,none,15,magical,spear,2,2,80,tiny,2,0,0
 15,Etherial Slice,Slash,Magic,none,20,magical,line,2,2,80,tiny,2,0,0
 16,Mystic Slice,Slash,Magic,jumpback,15,magical,adjacent,1,1,80,tiny,1,0,0
 17,Hidden Slice,Slash,Charge,reposition,18,physical,adjacent,1,1,80,tiny,1,0,0
 -
 -Pierce
-20,Sting,Pierce,Charge,none,10,physical,adjacent,1,1,70,tiny,1,0,0
+20,Sting,Pierce,Charge,none,15,physical,adjacent,1,1,70,tiny,1,0,0
 21,Alt Sting,Pierce,Charge,none,10,physical,detached,1,1,70,tiny,1,0,0
 22,Mega Sting,Pierce,Cost,none,-30,physical,spear,1,1,85,tiny,1,0,0
 23,Ultra Sting,Pierce,Cost,none,-50,physical,lance,2,2,85,tiny,2,0,0
@@ -45,7 +45,7 @@
 28,Impalement,Pierce,Cost,none,0,physical,spear,1,1,100,tiny,1,0,1,onKill,maxHealth
 -
 -Blunt
-30,Smash,Blunt,Charge,none,10,physical,adjacent,1,1,70,tiny,1,10,0
+30,Smash,Blunt,Charge,none,15,physical,adjacent,1,1,70,tiny,1,10,0
 31,Alt Smash,Blunt,Charge,none,14,physical,rotator,1,1,70,tiny,1,10,0
 32,Mega Smash,Blunt,Cost,none,-50,physical,adjacent,2,2,75,tiny,2,10,0
 33,Ultra Smash,Blunt,Cost,none,-20,physical,square,2,2,75,tiny,1,10,0
@@ -56,7 +56,7 @@
 38,Killing Blow,Blunt,Cost,none,0,physical,adjacent,1,1,100,tiny,1,0,1,onKill,increaseStr
 -
 -Water
-40,Splash,Water,Charge,none,10,physical,adjacent,1,1,70,tiny,1,0,0
+40,Splash,Water,Charge,none,15,physical,adjacent,1,1,70,tiny,1,0,0
 41,Alt Splash,Water,Charge,none,12,physical,diamond,1,1,70,tiny,1,0,0
 42,Mega Splash,Water,Cost,none,-20,physical,cross,2,2,75,tiny,2,0,0
 43,Ultra Splash,Water,RngAtk,none,-40,physical,square,2,5,75,tiny,1,0,0
@@ -67,7 +67,7 @@
 48,Blazing Splash,Water,Magic,none,0,magical,pinWheel,1,1,70,tiny,1,0,4,onHit,becomePyro,onMiss,becomeWater,onHit,decreaseAccurracy,onMiss,increaseAccurracy
 -
 -Pyro
-50,Blaze,Pyro,Charge,none,10,physical,adjacent,1,1,70,tiny,1,0,0
+50,Blaze,Pyro,Charge,none,15,physical,adjacent,1,1,70,tiny,1,0,0
 51,Alt Blaze,Pyro,Charge,none,13,physical,rotator,1,1,70,tiny,1,0,0
 52,Mega Blaze,Pyro,Cost,burn,-20,physical,line,2,2,85,tiny,2,0,0
 53,Ultra Blaze,Pyro,Cost,burn,-50,physical,cone,2,2,85,tiny,2,0,0
@@ -77,7 +77,7 @@
 57,Hidden Blaze,Pyro,Charge,knockback,20,physical,adjacent,1,1,80,tiny,1,0,0
 -
 -Ice
-60,Frost,Ice,Charge,none,10,physical,adjacent,1,1,70,tiny,1,0,0
+60,Frost,Ice,Charge,none,15,physical,adjacent,1,1,70,tiny,1,0,0
 61,Alt Frost,Ice,Charge,none,10,physical,detached,1,1,70,tiny,1,0,0
 62,Mega Frost,Ice,Cost,none,-30,physical,cone,2,2,75,tiny,2,0,0
 63,Ultra Frost,Ice,Cost,none,-10,physical,lance,1,1,75,tiny,1,0,0
@@ -87,7 +87,7 @@
 67,Hidden Frost,Ice,Charge,reposition,2,physical,adjacent,1,1,80,tiny,1,0,0
 -
 -Elec
-70,Zap,Electric,RngAtk,none,10,physical,adjacent,1,2,70,tiny,1,0,0
+70,Zap,Electric,RngAtk,none,15,physical,adjacent,1,2,70,tiny,1,0,0
 71,Alt Zap,Electric,RngAtk,none,12,physical,rotator,1,2,70,tiny,1,0,0
 72,Mega Zap,Electric,RngAtk,none,-20,physical,clover,1,4,65,tiny,1,0,0
 73,Ultra Zap,Electric,RngAtk,none,-40,physical,cone,2,3,65,tiny,1,0,0
@@ -202,29 +202,29 @@
 164,Arcane Pulse,Force,Magic,pullin,4,magical,cone,0,0,80,tiny,1,0,1,1,1
 165,Etherial Pulse,Force,Magic,pullin,2,magical,detached,0,0,80,tiny,2,0,1,0,2
 -
--Passives
-200,FT Charge Up,Passive,None,Increases FT charge by 50%,-1,50,0,FTCharge,0
-201,SP Cost Down,Passive,None,Decreases mana cost by 50%,1,50,0,SPCost,0
-202,FT Cost Down,Passive,None,Decreases FT cost by 50%,1,50,0,FTCost,0
-203,FT Charge Down,Passive,None,Decreases FT charge by 50%,1,-50,0,FTCharge,0
-204,DragonStone,Passive,None,Pyro and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Slash
-205,WitchStone,Passive,None,Pyro and Water attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Water
-206,PhoenixStone,Passive,None,Pyro and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Pyro, Pierce
-207,PixieStone,Passive,None,Ice and Pierce attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Pierce
-208,GorgonStone,Passive,None,Elec and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Electric, Blunt
-209,ArachnidStone,Passive,None,Water and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Water, Blunt
-210,FairyStone,Passive,None,Ice and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Slash
-211,MoonlightStone,Passive,None,Ice and Elec attacks do 75% more dmg,1,200,0,ElementDmg,2, Ice, Electric
-212,DroidStone,Passive,None,Pierce and Blunt attacks do 75% more dmg,1,200,0,ElementDmg,2, Pierce, Blunt
-213,ZombieStone,Passive,None,Water and Slash attacks do 75% more dmg,1,200,0,ElementDmg,2, Water, Slash
-214,Strength Gem,Passive,None,Strength increased by 5,1,10,0,Str,0
-215,Magic Gem,Passive,None,Strength increased by 5,1,10,0,Mag,0
-216,Dexterity Gem,Passive,None,Strength increased by 5,1,10,0,Dex,0
-217,Speed Gem,Passive,None,Strength increased by 5,1,10,0,Spd,0
-218,Defense Gem,Passive,None,Strength increased by 5,1,10,0,Def,0
-219,Resistance Gem,Passive,None,Strength increased by 5,1,10,0,Res,0
-220,Death Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,deathAct,0  
-221,Opportunity Pearl,Passive,None,Gain 1 action point after defeating a living enemy,1,0,0,oppAct,0  
-222,Movement Pearl,Passive,None,No action points used for moving,1,0,0,moveAct,0
-223,Knockback Bonus,Passive,None,All attacks will knockback the target 1 tile.,1,0,0,pushBonus,0
--212,Element Body,Passive, None,Absorb Element; Null Other;Take Leathal damage from opp and Savage damage from final,ElementAbsorb,ElementNull,ElementLeathal,ElementBody,ElementSavage
+-Passives/Combos
+200,Dragon Special,Passive,None,N/A,1,Pyro,Pyro,Slash,0
+201,Mage Expertise,Passive,None,N/A,1,Ice,Pyro,Water,0
+202,Static Execution ,Passive,None,N/A,1,Water,Electric,Electric,0
+203,Frost Breaker,Passive,None,N/A,1,Ice,Ice,Pierce,0
+204,Scorpie Drill,Passive,None,N/A,1,Pierce,Blunt,Pierce,0
+205,Trauma,Passive,None,N/A,1,Blunt,Force,Blunt,0
+206,Exhibit A,Passive,None,N/A,1,Slash,Pierce,Blunt,0
+207,Exhibit B,Passive,None,N/A,1,Water,Pyro,Ice,0
+208,Exhibit C,Passive,None,N/A,1,Ailment,Force,Electric,0
+209,Warm Topic,Passive,None,N/A,1,Pyro,Electric,Slash,0
+210,Meltdown,Passive,None,N/A,1,Electric,Ice,Pierce,0
+211,Bad Medicine,Passive,None,N/A,1,Pyro,Blunt,Ailment,0
+212,Hammer Time,Passive,None,N/A,1,Blunt,Pierce,Water,0
+213,Pyromaniac,Passive,None,N/A,1,Electric,Pyro,Pyro,0
+214,Sewer Trap,Passive,None,N/A,1,Blunt,Water,Pyro,0
+215,Hot Head,Passive,None,N/A,1,Slash,Blunt,Pyro,0
+216,Trust Me,Passive,None,N/A,1,Pierce,Water,Force,0
+217,Love Tap,Passive,None,N/A,1,Blunt,Pierce,Blunt,0
+218,Burning Passion,Passive,None,N/A,1,Force,Pyro,Pierce,0
+219,Infection,Passive,None,N/A,1,Pyro,Pierce,Water,0
+220,HydroElectric,Passive,None,N/A,1,Water,Force,Electric,0
+221,Frostbite,Passive,None,N/A,1,Ice,Force,Slash,0
+222,Luck Be a Lady,Passive,None,N/A,1,Electric,Water,Slash,0
+223,Arachnofobia,Passive,None,N/A,1,Force,Ailment,Blunt,0
+224,On Guard,Passive,None,N/A,0,Force,slash,Force,1,onUse,enterGuardState

@@ -164,7 +164,7 @@ public class HazardSetup : LivingSetup
             //        //}
             //    }
             //}
-            myself.updateWeaknessIcon();
+          //  myself.updateLastSprites();
             isSetup = true;
         }
     }

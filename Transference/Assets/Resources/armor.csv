@@ -19,5 +19,6 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 204,Soft Fuzz,Purely Neutral, 0, 0, 0, weak,cripples,normal,resists,normal,resists, normal,normal
 205,Dust,Purely Neutral, 0, 0, 0, normal,resists,weak,resists,normal,normal, cripples,normal
 206,Ice,Purely Neutral, 0, 0, 0, normal,normal,resists,normal,cripples,weak, resists,normal
+207,fuzzy Robes,Purely Neutral, 0, 0, 0, resists,cripples,weak,resists,normal,normal, normal,resists
 -204,Royal Barrier,Purely Neutral, 0, 0, 0, absorbs,resists,resists,resists,resists,resists, cripples,normal
 -204,Queen Barrier,Purely Neutral, 0, 0, 0, cripples,nulls,reflects,nulls,resists,weak, reflects,resists
