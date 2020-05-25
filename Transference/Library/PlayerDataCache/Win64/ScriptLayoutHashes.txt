@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/TJay/Desktop/repos/builds/May24th/Transference.exe
+C:/Users/tjcar/Desktop/repos/May24th/Transference.exe
 SceneListBegin?
 Assets/start.unity
 Assets/DemoMap4.unity
@@ -69,6 +69,8 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 aff0838809850bd54e7fc7416d8d596c Assembly-CSharp.dll:.PathScript
 d3c76b14a25eebd3a3323dd43297919c Unity.TextMeshPro.dll:TMPro.TMP_InputField
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.WeaponManager
+71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
+71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 1b06decb9e7058a29bdad564ef6bbb8a Assembly-CSharp.dll:.LivingObject
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput

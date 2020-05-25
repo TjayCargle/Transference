@@ -166,8 +166,8 @@ public class NonCombatController : MonoBehaviour
                     case 4:
                         {
 
-                    selectedButton.playJax();
                             loading = true;
+                    selectedButton.playJax();
                         }
 
                     break;
@@ -175,8 +175,8 @@ public class NonCombatController : MonoBehaviour
                 case 5:
                         {
 
-                    selectedButton.playZeffron();
                             loading = true;
+                    selectedButton.playZeffron();
                         }
                     break;
                 case 6:
