@@ -271,6 +271,7 @@ public class ManagerScript : EventRunner
             dmgText = new List<DmgTextObj>();
             targets = new List<LivingObject>();
             tileParent = new GameObject();
+            tileParent.name = "Tile Parent";
             tileMap = null;// new GameObject[MapWidth * MapHeight];
 
 
@@ -1922,18 +1923,8 @@ public class ManagerScript : EventRunner
 
                                 if (detailsScreen)
                                 {
-                                    if (myCamera.infoObject.GetComponent<LivingObject>())
-                                    {
-                                        detailsScreen.anotherObj = null;
-                                        detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
                                         StackDetails();
-                                    }
-                                    else
-                                    {
-                                        detailsScreen.currentObj = null;
-                                        detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
-                                        StackDetails();
-                                    }
+                               
                                 }
                             }
                             else
@@ -4367,7 +4358,7 @@ public class ManagerScript : EventRunner
                                 if (anEnemy.INVENTORY.CSKILLS.Count > 0)
                                 {
                                     rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
-                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(2);
+                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(2,false);
                                 }
                             }
                             break;
@@ -4377,7 +4368,7 @@ public class ManagerScript : EventRunner
                                 if (anEnemy.INVENTORY.WEAPONS.Count > 0)
                                 {
                                     rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
-                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(2);
+                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(2, false);
                                 }
                             }
                             break;
@@ -4390,7 +4381,7 @@ public class ManagerScript : EventRunner
                                     UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
                                     if (useable.GetType() != typeof(ItemScript))
                                     {
-                                        useable.GrantXP(2);
+                                        useable.GrantXP(2, false);
                                     }
                                 }
                             }
@@ -7826,6 +7817,12 @@ public class ManagerScript : EventRunner
 
     public List<TileScript> GetSkillAttackableTilesOneList(TileScript origin, CommandSkill skill)
     {
+        if (origin == null)
+        {
+            Debug.Log("um.. freindino i hate to tell u but....");
+            tileManager.EDITABLE_TILES.Clear();
+            return tileManager.EDITABLE_TILES;
+        }
         //TileScript origin = obj.currentTile;
         switch (skill.RTYPE)
         {
@@ -7898,6 +7895,12 @@ public class ManagerScript : EventRunner
     public List<TileScript> GetWeaponAttackableTilesOneList(TileScript origin, WeaponScript skill)
     {
         // TileScript origin = obj.currentTile;
+        if(origin == null)
+        {
+            Debug.Log("um.. fam i hate to tell u but...." );
+            tileManager.EDITABLE_TILES.Clear();
+            return tileManager.EDITABLE_TILES;
+        }
         switch (skill.ATKRANGE)
         {
             case RangeType.adjacent:
@@ -14217,10 +14220,21 @@ public class ManagerScript : EventRunner
         {
             return;
         }
+
         if (stackManager)
         {
             if (currentState != State.CheckDetails)
             {
+                if (myCamera.infoObject.GetComponent<LivingObject>())
+                {
+                    detailsScreen.anotherObj = null;
+                    detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
+                }
+                else
+                {
+                    detailsScreen.currentObj = null;
+                    detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
+                }
                 // detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
                 menuStackEntry playerDetails = stackManager.GetDetailStack();
                 if (GetState() == State.FreeCamera)

@@ -21,6 +21,11 @@ public class DetailsScreen : MonoBehaviour
     Text[] skills;
 
     [SerializeField]
+    Slider[] skillSliders;
+    [SerializeField]
+    TextMeshProUGUI[] skillProText;
+
+    [SerializeField]
     Image[] armorreacts;
 
     [SerializeField]
@@ -186,7 +191,7 @@ public class DetailsScreen : MonoBehaviour
     {
         if (!currentObj)
             return;
-        if(!currentObj.ARMOR)
+        if (!currentObj.ARMOR)
         {
             Debug.Log("No armor found or details");
             return;
@@ -231,6 +236,12 @@ public class DetailsScreen : MonoBehaviour
         if (descriptionText2)
             descriptionText2.gameObject.SetActive(true);
         string finalText = "";
+        for (int i = 0; i < skillSliders.Length; i++)
+        {
+            skillSliders[i].maxValue = 1;
+            skillSliders[i].value = 0;
+            skillProText[i].text = "";
+        }
         for (int i = 0; i < selectableContent.Length; i++)
         {
             if (i >= 8 && i <= 13)
@@ -404,7 +415,7 @@ public class DetailsScreen : MonoBehaviour
                             finalText = "Magical Spells are usable spells that cost Mana to be used.";
                         }
                         break;
-                    case DetailType.Passive:
+                    case DetailType.Combo:
                         currentSlot = currentObj.COMBO_SLOTS;
                         sectionText.text = "Combo Skills";
                         if (viewContent < 3)
@@ -479,14 +490,27 @@ public class DetailsScreen : MonoBehaviour
                         if (currentSlot.SKILLS.Count > i)
                         {
                             if (currentSlot.SKILLS[i].GetType() == typeof(CommandSkill))
+                            {
                                 skills[i].text = currentSlot.SKILLS[i].NAME + " LV: " + currentSlot.SKILLS[i].LEVEL;
+                                CommandSkill command = (currentSlot.SKILLS[i] as CommandSkill);
+                                int currAmount = (int)Mathf.Abs(command.maxExp - command.EXP);
+                                skillSliders[i].maxValue = command.maxExp;
+                                skillSliders[i].value = currAmount;
+                                skillProText[i].text = "" + currAmount + "/" + command.maxExp;
+                             
+                            }
                             else
+                            {
                                 skills[i].text = currentSlot.SKILLS[i].NAME;
+                                skillSliders[i].maxValue = 0;
+                                skillSliders[i].value = 0;
+                                skillProText[i].text = "";
+                            }
                             if (selectableContent[viewContent].GetComponentInChildren<Text>())
                             {
                                 if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                 {
-                                  
+
                                     if (currentSlot.SKILLS[i].GetType() == typeof(CommandSkill))
                                     {
                                         (currentSlot.SKILLS[i] as CommandSkill).UpdateDesc();
@@ -526,6 +550,7 @@ public class DetailsScreen : MonoBehaviour
                                     {
                                         (currentSlot.SKILLS[i] as ComboSkill).UpdateDesc();
                                         finalText = currentSlot.SKILLS[i].DESC;
+                                      
                                     }
                                     else if (currentSlot.SKILLS[i].GetType() == typeof(AutoSkill))
                                     {
@@ -562,6 +587,11 @@ public class DetailsScreen : MonoBehaviour
                             if (currentObj.INVENTORY.ARMOR.Count > i)
                             {
                                 skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME + " LV: " + currentObj.INVENTORY.ARMOR[i].LEVEL;
+                                ArmorScript command = currentObj.INVENTORY.ARMOR[i];
+                                int currAmount = command.USECOUNT % 2;
+                                skillSliders[i].maxValue = command.maxExp;
+                                skillSliders[i].value = currAmount;
+                                skillProText[i].text = "" + currAmount + "/2";
                                 if (selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
@@ -664,6 +694,11 @@ public class DetailsScreen : MonoBehaviour
                             if (currentObj.INVENTORY.WEAPONS.Count > i)
                             {
                                 skills[i].text = currentObj.INVENTORY.WEAPONS[i].NAME + " LV: " + currentObj.INVENTORY.WEAPONS[i].LEVEL;
+                                WeaponScript command = currentObj.INVENTORY.WEAPONS[i];
+                                int currAmount = (int)Mathf.Abs(command.maxExp - command.EXP);
+                                skillSliders[i].maxValue = command.maxExp;
+                                skillSliders[i].value = currAmount;
+                                skillProText[i].text = "" + currAmount + "/" + command.maxExp;
                                 if (selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
@@ -735,7 +770,7 @@ public class DetailsScreen : MonoBehaviour
                             if (currentObj.INVENTORY.DEBUFFS.Count > i)
                             {
                                 skills[i].text = currentObj.INVENTORY.DEBUFFS[i].NAME;
-                                if(skills[i].text == "")
+                                if (skills[i].text == "")
                                 {
                                     skills[i].text = "Debuff";
                                 }
@@ -1049,7 +1084,12 @@ public class DetailsScreen : MonoBehaviour
         selectedArmor = null;// anotherObj.ARMOR.SCRIPT;
         if (descriptionText)
             descriptionText.text = "";
-
+        for (int i = 0; i < skillSliders.Length; i++)
+        {
+            skillSliders[i].maxValue = 1;
+            skillSliders[i].value = 0;
+            skillProText[i].text = "";
+        }
         if (descriptionText2)
             descriptionText2.text = "";
         if (levelShowcase)
@@ -1211,6 +1251,12 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
         }
+        for (int i = 0; i < skillSliders.Length; i++)
+        {
+            skillSliders[i].maxValue = 1;
+            skillSliders[i].value = 0;
+            skillProText[i].text = "";
+        }
         if (detail != DetailType.Exp)
         {
             if (expObj)
@@ -1237,15 +1283,15 @@ public class DetailsScreen : MonoBehaviour
 
                         break;
                     case DetailType.Magical:
-                       // currentSlot = anotherObj.MAGICAL_SLOTS;
+                        // currentSlot = anotherObj.MAGICAL_SLOTS;
                         sectionText.text = "Magical Spells";
                         if (viewContent < 3)
                         {
                             finalText = "Magical Command Spells are usable spells that cost Mana to be used.";
                         }
                         break;
-                    case DetailType.Passive:
-                       // currentSlot = anotherObj.PASSIVE_SLOTS;
+                    case DetailType.Combo:
+                        // currentSlot = anotherObj.PASSIVE_SLOTS;
                         sectionText.text = "Combo Skills";
                         if (viewContent < 3)
                         {
@@ -1253,7 +1299,7 @@ public class DetailsScreen : MonoBehaviour
                         }
                         break;
                     case DetailType.Auto:
-                       // currentSlot = anotherObj.AUTO_SLOTS;
+                        // currentSlot = anotherObj.AUTO_SLOTS;
                         sectionText.text = "Auto Skills";
                         if (viewContent < 3)
                         {
@@ -1314,14 +1360,15 @@ public class DetailsScreen : MonoBehaviour
                 for (int i = 0; i < skills.Length; i++)
                 {
                     skills[i].text = "-";
-              
-                    
+
+
                 }
 
             }
         }
         else
         {
+         
             sectionText.text = "Levels and XP";
             if (expObj)
             {

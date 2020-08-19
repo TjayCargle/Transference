@@ -57,6 +57,7 @@ public class TileManager : MonoBehaviour
             while (tiles.Count < num)
             {
                 GameObject temp = Instantiate(Tile, Vector2.zero, Quaternion.identity);
+                temp.name = "yo";
                 TileScript tile = temp.AddComponent<TileScript>();
                 tile.Setup();
                 tiles.Add(tile);

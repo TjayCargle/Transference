@@ -18,8 +18,8 @@ public class UsableScript : ScriptableObject
     protected int level = 1;
 
     [SerializeField]
-    protected float exp = 10;
-
+    protected int exp = 10;
+    public int maxExp = 10;
     protected int refType;
 
     [SerializeField]
@@ -36,6 +36,10 @@ public class UsableScript : ScriptableObject
     [SerializeField]
     protected List<SkillEventContainer> specialEvents = new List<SkillEventContainer>();
 
+    public float EXP
+    {
+        get { return exp; }
+    }
     public LivingObject USER
     {
         get { return owner; }
@@ -98,7 +102,7 @@ public class UsableScript : ScriptableObject
 
         }
     }
-    public virtual bool GrantXP(float amount)
+    public virtual bool GrantXP(int amount, bool show = true)
     {
 
         exp -= amount;
@@ -106,7 +110,7 @@ public class UsableScript : ScriptableObject
         {
             LevelUP();
             exp = 5 + (level * 3);
-
+            maxExp = exp;
             if (USER)
             {
                 ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
@@ -114,14 +118,18 @@ public class UsableScript : ScriptableObject
                 {
                     if (manager.GetState() != State.EnemyTurn && manager.GetState() != State.HazardTurn)
                     {
-                        manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
-                        manager.CreateTextEvent(this, "" + USER.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
-                        if (manager.log)
+                        if (show == true)
                         {
-                            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(USER.FACTION)) + ">";
 
-                            manager.log.Log(coloroption + USER.NAME + "</color> lost " + NAME + " leveled up!");
+                            manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
+                            manager.CreateTextEvent(this, "" + USER.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
                         }
+                    }
+                    if (manager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(USER.FACTION)) + ">";
+
+                        manager.log.Log(coloroption + USER.NAME + "</color> " + NAME + " leveled up!");
                     }
                 }
             }

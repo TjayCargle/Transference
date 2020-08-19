@@ -230,7 +230,7 @@ public enum DetailType
     Armor,
     Physical,
     Magical,
-    Passive,
+    Combo,
     Auto,
     Opportunity,
     Items,

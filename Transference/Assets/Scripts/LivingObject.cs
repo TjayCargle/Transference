@@ -688,6 +688,7 @@ public class LivingObject : GridObject
             if (SHADOW == null)
             {
                 shadow = new GameObject().AddComponent<ShadowObject>();
+                shadow.name = "shadow";
 
             }
             shadow.USER = this;
@@ -710,7 +711,7 @@ public class LivingObject : GridObject
             if (BARRIER == null)
             {
                 barrier = new GameObject().AddComponent<SpriteObject>();
-                barrier.name = "Barrier";
+                barrier.name = " Barrier ";
                 barrier.transform.parent = this.transform;
                 barrier.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
                 barrier.transform.localPosition = new Vector3(0.25f, 0.25f, 0.1f);
@@ -722,9 +723,9 @@ public class LivingObject : GridObject
             if (actionCounterText == null)
             {
                 actionCounterText = new GameObject().AddComponent<TextMeshPro>();
+            actionCounterText.name = "Action Counter";
             }
 
-            actionCounterText.name = "Action Counter";
             actionCounterText.transform.parent = this.transform;
             actionCounterText.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
             actionCounterText.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
@@ -742,8 +743,7 @@ public class LivingObject : GridObject
             
            
                 SpriteObject sprObj = new GameObject().AddComponent<SpriteObject>();
-                sprObj = new GameObject().AddComponent<SpriteObject>();
-                sprObj.name = FullName + "Last Sprite " + i;
+                sprObj.name = FullName + " Last Sprite " + i;
                 sprObj.transform.parent = this.transform;
                 sprObj.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
                 sprObj.transform.localPosition = new Vector3(startingX, -0.65f, -0.1f);

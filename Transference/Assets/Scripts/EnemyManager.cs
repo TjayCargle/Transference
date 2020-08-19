@@ -101,7 +101,7 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                Debug.Log("4");
+               // Debug.Log("4");
 
                 if (i < data.EnemyIds.Count)
                 {

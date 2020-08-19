@@ -18,6 +18,10 @@ public class StatusIconManager : MonoBehaviour
         GameObject newImage = new GameObject();
         GameObject newText = new GameObject();
 
+        newContainer.name = "new container";
+        newImage.name = "new image";
+        newText.name = "new text";
+
         StatIcon icon = newContainer.AddComponent<StatIcon>();
         newContainer.transform.SetParent(transform);
 
