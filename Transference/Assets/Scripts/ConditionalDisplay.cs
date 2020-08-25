@@ -24,6 +24,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool playerHasStrikes = false;
     public bool playerHasBarriers = false;
     public bool playerHasItems = false;
+    LivingObject livvy = null;
     // Use this for initialization
     void Start()
     {
@@ -54,11 +55,22 @@ public class ConditionalDisplay : MonoBehaviour
         manager = newmanager;
         gameObject.SetActive(false);
         bool found = false;
+        if (null != newmanager)
+        {
+            if (null != newmanager.myCamera)
+            {
+                if (null != newmanager.myCamera.infoObject)
+                {
+
+                    livvy = manager.myCamera.infoObject.GetComponent<LivingObject>();
+                }
+            }
+        }
         if (requiresSelected == true)
         {
             if (manager.myCamera.infoObject == null)
             {
-                if(debugging)
+                if (debugging)
                 {
                     Debug.Log("no info obj");
                 }
@@ -69,10 +81,9 @@ public class ConditionalDisplay : MonoBehaviour
             {
                 if (manager)
                 {
-                    LivingObject livvy = manager.myCamera.infoObject.GetComponent<LivingObject>();
                     if (livvy)
                     {
-                        if (livvy.INVENTORY.DEBUFFS.Count > 0 || livvy.INVENTORY.BUFFS.Count > 0 || livvy.INVENTORY.EFFECTS.Count > 0|| livvy.GetComponent<SecondStatusScript>())
+                        if (livvy.INVENTORY.DEBUFFS.Count > 0 || livvy.INVENTORY.BUFFS.Count > 0 || livvy.INVENTORY.EFFECTS.Count > 0 || livvy.GetComponent<SecondStatusScript>())
                         {
                             gameObject.SetActive(true);
                         }
@@ -104,58 +115,74 @@ public class ConditionalDisplay : MonoBehaviour
 
         if (manager)
         {
-            if (manager.menuManager.isGameOverShowing() == true) 
+            if (manager.menuManager.isGameOverShowing() == true)
             {
                 gameObject.SetActive(false);
                 return;
             }
 
-            if(manager.player)
+            if (manager.player)
             {
-                if(manager.player.current)
+                if (manager.player.current)
                 {
-                    if(playerHasSkills == true)
+                    if (playerHasSkills == true)
                     {
-                        if(manager.player.current.PHYSICAL_SLOTS.SKILLS.Count == 0)
+                        if (livvy)
                         {
-                            gameObject.SetActive(false);
-                            return;
+
+                            if (livvy.PHYSICAL_SLOTS.SKILLS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
                         }
                     }
                     if (playerHasSpells == true)
                     {
-                        if (manager.player.current.MAGICAL_SLOTS.SKILLS.Count == 0)
+                        if (livvy)
                         {
-                            gameObject.SetActive(false);
-                            return;
+                            if (livvy.MAGICAL_SLOTS.SKILLS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
                         }
                     }
                     if (playerHasStrikes == true)
                     {
-                        if (manager.player.current.INVENTORY.WEAPONS.Count == 0)
+                        if (livvy)
                         {
-                            gameObject.SetActive(false);
-                            return;
+                            if (livvy.INVENTORY.WEAPONS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
                         }
                     }
                     if (playerHasBarriers == true)
                     {
-                        if (manager.player.current.INVENTORY.ARMOR.Count == 0)
+                        if (livvy)
                         {
-                            gameObject.SetActive(false);
-                            return;
+                            if (livvy.INVENTORY.ARMOR.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
                         }
                     }
                     if (playerHasItems == true)
                     {
-                        if (manager.player.current.INVENTORY.ITEMS.Count == 0)
+                        if (livvy)
                         {
-                            gameObject.SetActive(false);
-                            return;
+                            if (livvy.INVENTORY.ITEMS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
                         }
                     }
                 }
-            
+
             }
 
             if (requiresDoorTile == true)
@@ -193,7 +220,7 @@ public class ConditionalDisplay : MonoBehaviour
                         }
                     }
                 }
-               
+
             }
             if (checksForGlyph == true)
             {
@@ -213,26 +240,26 @@ public class ConditionalDisplay : MonoBehaviour
                     return;
                 }
             }
-            if(checkForHelpTile == true)
+            if (checkForHelpTile == true)
             {
-                if(!manager.myCamera)
+                if (!manager.myCamera)
                 {
                     gameObject.SetActive(false);
                     return;
                 }
-                if(!manager.myCamera.currentTile)
+                if (!manager.myCamera.currentTile)
                 {
                     gameObject.SetActive(false);
                     return;
                 }
-                if(manager.myCamera.currentTile.TTYPE != TileType.help)
+                if (manager.myCamera.currentTile.TTYPE != TileType.help)
                 {
-                    if(Common.isOverrideTile(manager.myCamera.currentTile) == false)
+                    if (Common.isOverrideTile(manager.myCamera.currentTile) == false)
                     {
-                
-                            gameObject.SetActive(false);
-                            return;                      
-                
+
+                        gameObject.SetActive(false);
+                        return;
+
                     }
                 }
             }
@@ -252,7 +279,7 @@ public class ConditionalDisplay : MonoBehaviour
                 }
                 if (!manager.CheckAdjecentTilesEnemy(manager.player.current))
                 {
-       
+
                 }
             }
             if (checksForEvent == true)
@@ -294,9 +321,9 @@ public class ConditionalDisplay : MonoBehaviour
 
             for (int i = 0; i < displayStates.Length; i++)
             {
-                if (manager. GetState() == displayStates[i])
+                if (manager.GetState() == displayStates[i])
                 {
-                
+
                     found = true;
                     break;
                 }
@@ -305,7 +332,7 @@ public class ConditionalDisplay : MonoBehaviour
             if (found == false)
             {
                 gameObject.SetActive(false);
-                if(debugging == true)
+                if (debugging == true)
                 {
                     Debug.Log("found false");
                 }
