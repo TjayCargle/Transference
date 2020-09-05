@@ -75,14 +75,40 @@ public class InventoryMangager : MonoBehaviour
         }
         isSetup = true;
     }
+    private int GetActiveChildNumber(Transform someTransform, int idealNumber)
+    {
+        int num = -1;
 
+        for (int i = 0; i < someTransform.childCount; i++)
+        {
+            Transform child = someTransform.GetChild(i);
+            if(child.gameObject.activeInHierarchy == true)
+            {
+                num++;
+                if(num == idealNumber)
+                {
+                    num = i;
+                    break;
+                }
+            }
+        }
+        return num;
+    }
     private void Start()
     {
         Setup();
     }
 
 
-
+    public void SetNumAndSelect(int numToCheck)
+    {
+        if (currentContent)
+        {
+            currentIndex = currentIndex = GetActiveChildNumber(currentContent.transform, numToCheck);
+            selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+            selectedMenuItem.ApplyAction(manager.player.current);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -108,6 +134,8 @@ public class InventoryMangager : MonoBehaviour
                     {
                         DecreaseScroll();
                     }
+
+                 
                     break;
                 case State.PlayerEquippingMenu:
                     if (Input.GetKeyDown(KeyCode.W))
@@ -432,36 +460,36 @@ public class InventoryMangager : MonoBehaviour
                         currentIndex = currentContent.transform.childCount - 1;
                     }
 
-                    if(currentIndex < currentContent.transform.childCount)
+                    if (currentIndex < currentContent.transform.childCount)
                     {
-                    if (currentContent.transform.GetChild(currentIndex))
-                    {
-
-                        MenuItem hoverItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                        SetSelectedAndUpdateMovement(hoverItem);
-                        if (selectedMenuItem)
+                        if (currentContent.transform.GetChild(currentIndex))
                         {
-                            if (selectedMenuItem.gameObject.activeInHierarchy)
-                            {
 
-                                Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
-                                TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
-                                if (selectedText)
-                                {
-                                    SetSelected(selectedText);
-                                }
-                                if (proText)
-                                {
-                                    SetSelected(proText);
-                                }
-                            }
-                            else
+                            MenuItem hoverItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                            SetSelectedAndUpdateMovement(hoverItem);
+                            if (selectedMenuItem)
                             {
-                                IncreaseScroll();
-                            }
+                                if (selectedMenuItem.gameObject.activeInHierarchy)
+                                {
 
+                                    Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
+                                    TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
+                                    if (selectedText)
+                                    {
+                                        SetSelected(selectedText);
+                                    }
+                                    if (proText)
+                                    {
+                                        SetSelected(proText);
+                                    }
+                                }
+                                else
+                                {
+                                    IncreaseScroll();
+                                }
+
+                            }
                         }
-                    }
 
                     }
                     float index = currentIndex / (float)currentContent.transform.childCount;
@@ -644,7 +672,7 @@ public class InventoryMangager : MonoBehaviour
 
                                     UpdateDescriptions(cmd);
                                 }
-                       
+
                                 if (selectedMenuItem.refItem.GetType() == typeof(WeaponScript))
                                 {
                                     WeaponScript wep = selectedMenuItem.refItem as WeaponScript;
@@ -718,11 +746,11 @@ public class InventoryMangager : MonoBehaviour
                     Text selectedText = selectedMenuItem.GetComponentInChildren<Text>();
                     TextMeshProUGUI proText = selectedMenuItem.GetComponentInChildren<TextMeshProUGUI>();
                     Image attr = null;
-                    if(support)
+                    if (support)
                     {
-                        if(support.isSetup & support.isVisible)
+                        if (support.isSetup & support.isVisible)
                         {
-                            if(support.freemove)
+                            if (support.freemove)
                             {
                                 support.freemove.upDown = false;
                                 support.freemove.running = false;
@@ -1026,7 +1054,7 @@ public class InventoryMangager : MonoBehaviour
                         }
                         break;
                     case SideEffect.jumpback:
-                        { 
+                        {
                             newdescs[4].text += " Pull self away 1 tile";
                         }
                         break;
@@ -1042,17 +1070,17 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     default:
                         {
-                            if(cmd.SUBTYPE == SubSkillType.Ailment)
+                            if (cmd.SUBTYPE == SubSkillType.Ailment)
                             {
-                            //newdescs[4].text += "" + cmd.ACCURACY + "% chance of " + cmd.EFFECT.ToString() + ".";
+                                //newdescs[4].text += "" + cmd.ACCURACY + "% chance of " + cmd.EFFECT.ToString() + ".";
 
                             }
                             else
                             {
-                            newdescs[4].text += "" + ((cmd.OWNER.MAGIC * 0.5f) + cmd.LEVEL).ToString() + "% chance of " + cmd.EFFECT.ToString() + ".";
+                                newdescs[4].text += "" + ((cmd.OWNER.MAGIC * 0.5f) + cmd.LEVEL).ToString() + "% chance of " + cmd.EFFECT.ToString() + ".";
 
                             }
-                         
+
                         }
                         break;
                 }
@@ -1690,7 +1718,7 @@ public class InventoryMangager : MonoBehaviour
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
             TextMeshProUGUI proText = selectableItem.GetComponentInChildren<TextMeshProUGUI>();
             SupportText support = selectableItem.GetComponentInChildren<SupportText>();
-            if(support)
+            if (support)
             {
                 support.Setup();
                 support.SetTransparent();
@@ -1744,7 +1772,7 @@ public class InventoryMangager : MonoBehaviour
 
                             if (item.GetType() == typeof(CommandSkill))
                             {
-                               //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -1762,33 +1790,33 @@ public class InventoryMangager : MonoBehaviour
                                     }
                                 }
                                 CommandSkill cmd = ((CommandSkill)item);
-                                if(support)
+                                if (support)
                                 {
-                                    List<TileScript>  cmdTiles = manager.GetSkillAttackableTilesOneList(cmd.OWNER.currentTile, cmd);
+                                    List<TileScript> cmdTiles = manager.GetSkillAttackableTilesOneList(cmd.OWNER.currentTile, cmd);
                                     attackbleObjects.Clear();
                                     for (int i = 0; i < cmdTiles.Count; i++)
                                     {
                                         GridObject possibleObject = manager.GetObjectAtTile(cmdTiles[i]);
                                         if (possibleObject != null)
                                         {
-                                        if(Common.IsEnemy(possibleObject.FACTION) )
-                                            { 
-                                            attackbleObjects.Add(possibleObject as LivingObject);
+                                            if (Common.IsEnemy(possibleObject.FACTION))
+                                            {
+                                                attackbleObjects.Add(possibleObject as LivingObject);
                                             }
                                         }
                                     }
                                     for (int i = 0; i < attackbleObjects.Count; i++)
                                     {
                                         LivingObject griddy = attackbleObjects[i];
-                                           int elIndx = Common.GetElementIndex(cmd.ELEMENT);
-                                        if(elIndx <= 7 )
+                                        int elIndx = Common.GetElementIndex(cmd.ELEMENT);
+                                        if (elIndx <= 7)
                                         {
                                             EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
-                                            if(hitType < EHitType.normal)
+                                            if (hitType < EHitType.normal)
                                             {
-                                                if(support.isVisible == false)
+                                                if (support.isVisible == false)
                                                 {
-                                                support.SetVisible();
+                                                    support.SetVisible();
                                                     support.SetText(hitType.ToString(), Color.blue);
                                                 }
                                             }
@@ -1796,12 +1824,12 @@ public class InventoryMangager : MonoBehaviour
                                             {
                                                 if (support.isVisible == false)
                                                 {
-                                                support.SetVisible();
+                                                    support.SetVisible();
                                                     support.SetText(hitType.ToString(), Color.red);
                                                 }
                                             }
                                         }
-                                     
+
                                     }
                                 }
                                 string extraText = "";
@@ -1883,7 +1911,7 @@ public class InventoryMangager : MonoBehaviour
                             }
                             else if (item.GetType() == typeof(WeaponScript))
                             {
-                               //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -1947,10 +1975,10 @@ public class InventoryMangager : MonoBehaviour
                                 if (proText)
                                 {
 
-                                   // proText.text += newText;
+                                    // proText.text += newText;
                                     int cost = (cmd.GetCost(lastObject, lastObject.STATS.HPCOSTCHANGE));
-                                    
-                                    proText.text += "<size=32><color=#FFC0CB>-" + cost.ToString()+ "</color></size> <size=32><sprite=2></size>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
+
+                                    proText.text += "<size=32><color=#FFC0CB>-" + cost.ToString() + "</color></size> <size=32><sprite=2></size>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
 
                                     //if (((WeaponScript)item).ATTACK_TYPE == EType.physical)
                                     //{
@@ -1985,10 +2013,10 @@ public class InventoryMangager : MonoBehaviour
                                 if (attr)
                                 {
                                     attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                                 
-                                        // int indxex = (int)realitem.ELEMENT;
-                                        attr.sprite = armor.FACE; //attributeImages[indxex];
-                              
+
+                                    // int indxex = (int)realitem.ELEMENT;
+                                    attr.sprite = armor.FACE; //attributeImages[indxex];
+
                                 }
 
                             }
@@ -2214,7 +2242,7 @@ public class InventoryMangager : MonoBehaviour
 
                             if (item.GetType() == typeof(CommandSkill))
                             {
-                               ////  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                ////  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -2311,7 +2339,7 @@ public class InventoryMangager : MonoBehaviour
                             }
                             else if (item.GetType() == typeof(WeaponScript))
                             {
-                              // //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
+                                // //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
                                     {
@@ -2339,9 +2367,9 @@ public class InventoryMangager : MonoBehaviour
                                     proText.text += "<size=32><color=#FFC0CB> -" + cost.ToString() + "</color></size> <size=32><sprite=2></size>"; //<sprite=0><color=#72a8ff><size=30> +</size>" + extraText + "</color>";
 
 
-                                    
-                                   
-                                   // proText.text += newText;
+
+
+                                    // proText.text += newText;
 
                                     proText.enableAutoSizing = true;
 
@@ -2504,7 +2532,7 @@ public class InventoryMangager : MonoBehaviour
 
         //UpdateColors(itemSlots);
 
-    
+
         if (menuManager)
         {
             if (menuManager.DESC)
@@ -2817,7 +2845,7 @@ public class InventoryMangager : MonoBehaviour
                     {
 
                         lastObject.COMBO_SLOTS.SKILLS.Remove((SkillScript)selectedMenuItem.refItem);
-                       // lastObject.UpdateBuffsAndDebuffs();
+                        // lastObject.UpdateBuffsAndDebuffs();
                         loadExtra(1, lastObject);
                     }
                 }

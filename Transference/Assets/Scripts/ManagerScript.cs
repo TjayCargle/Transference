@@ -24,6 +24,7 @@ public class ManagerScript : EventRunner
     public bool isSetup = false;
     public GridObject currentObject;
     public GameObject tempObject;// = new GridObject();
+    [SerializeField]
     MenuItem[] commandItems;
     //    public MenuItem hoveredMenuItem;
     public MenuManager menuManager;
@@ -591,6 +592,39 @@ public class ManagerScript : EventRunner
 
                         returnState();
                     }
+
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        SelectMenuItem(player.current);
+
+                    }
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        returnState();
+
+                    }
+                    if (Input.GetKeyDown(KeyCode.UpArrow))
+                    {
+                        invManager.SetNumAndSelect(0);
+
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    {
+                        invManager.SetNumAndSelect(1);
+
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    {
+                        invManager.SetNumAndSelect(2);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    {
+                        invManager.SetNumAndSelect(3);
+
+                    }
                     break;
 
 
@@ -676,6 +710,15 @@ public class ManagerScript : EventRunner
                         if (Input.GetMouseButtonDown(0))
                         {
                             MovetoMousePos(player.current);
+                        }
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                        {
+                            CancelMenuAction(player.current);
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
+                        {
+                            CancelMenuAction(player.current);
                         }
                         break;
                     }
@@ -1360,6 +1403,40 @@ public class ManagerScript : EventRunner
                             CancelMenuAction(player.current);
                             player.currentSkill = null;
                         }
+
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            SelectMenuItem(player.current);
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.A))
+                        {
+                            CancelMenuAction(player.current);
+                            player.currentSkill = null;
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.UpArrow))
+                        {
+                            invManager.SetNumAndSelect(0);
+
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            invManager.SetNumAndSelect(1);
+
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
+                        {
+                            invManager.SetNumAndSelect(2);
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            invManager.SetNumAndSelect(3);
+
+                        }
                     }
                     break;
                 case State.PlayerWait:
@@ -1832,6 +1909,7 @@ public class ManagerScript : EventRunner
                     }
                     if (Input.GetKeyDown(KeyCode.D))
                     {
+
                         ShowWhite();
                         for (int i = 0; i < turnOrder.Count; i++)
                         {
@@ -2313,7 +2391,41 @@ public class ManagerScript : EventRunner
                             CancelMenuAction(player.current);
                             player.currentItem = null;
                         }
-                    }
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            SelectMenuItem(player.current);
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.A))
+                        {
+                            CancelMenuAction(player.current);
+                            player.currentItem = null;
+
+                        }
+                        if (Input.GetKeyDown(KeyCode.UpArrow))
+                        {
+                            invManager.SetNumAndSelect(0);
+
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            invManager.SetNumAndSelect(1);
+
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
+                        {
+                            invManager.SetNumAndSelect(2);
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            invManager.SetNumAndSelect(3);
+
+                        }
+                    
+            }
                     break;
                 case State.PlayerTransition:
                     break;
@@ -6837,9 +6949,10 @@ public class ManagerScript : EventRunner
             return;
         // direction.Normalize();
         Vector3 curPos = GetTile(obj).transform.position;
-        Vector3 newPos = curPos + direction;
+        Vector3 newPos = curPos + (direction * 2);
 
         int TileIndex = TwoToOneD((int)newPos.z, MapWidth, (int)newPos.x);
+        TileIndex = TileIndex / 2;
         if (TileIndex >= MapHeight * MapWidth)
             return;
         if (TileIndex < 0)

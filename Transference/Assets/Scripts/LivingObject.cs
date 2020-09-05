@@ -726,7 +726,7 @@ public class LivingObject : GridObject
             actionCounterText.name = "Action Counter";
             }
 
-            actionCounterText.transform.parent = this.transform;
+            actionCounterText.transform.SetParent( this.transform);
             actionCounterText.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
             actionCounterText.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
             // tmp.text = "10";

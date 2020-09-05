@@ -79,6 +79,10 @@ public class PlayerController : MonoBehaviour
 
                         myManager.SelectMenuItem(current);
                     }
+
+         
+
+
                     break;
                 case State.PlayerMove:
                     if (Input.GetKeyDown(KeyCode.W))
@@ -112,10 +116,10 @@ public class PlayerController : MonoBehaviour
                         }
 
                     }
-                    if (Input.GetKeyDown(KeyCode.Escape))
-                    {
-                        myManager.CancelMenuAction(current);
-                    }
+                    //if (Input.GetKeyDown(KeyCode.Escape))
+                    //{
+                    //    myManager.CancelMenuAction(current);
+                    //}
                     break;
                 case State.PlayerAttacking:
                     {
