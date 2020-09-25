@@ -387,7 +387,8 @@ public enum MenuItemType
     Hack,
     Guard,
     Talk,
-    Tip
+    Tip,
+    Interact
 
 }
 
@@ -605,7 +606,7 @@ public enum TalkStage
 }
 public enum EPType
 {
-    tactical,//prefers skills over spells or strikes
+    skillful,//prefers skills over spells or strikes
     itemist,//prefers to use items
     optimal,//priortizes using moves that will trigger opportunity attacks
     forceful,//prefers stikes over spells or skills
@@ -752,6 +753,18 @@ public enum Faction
     inflictsDmg
 }
 
+public enum Interaction
+{
+    none,
+    dropChandelier,
+    drink,
+    strUp,
+    defUp,
+    spdUp,
+    slashDmg,
+    pierceDmg,
+    bluntDmg
+}
 
 public class path : ScriptableObject
 {
@@ -795,7 +808,7 @@ public struct MapDetail
     public List<int> tileIndexes;
     public List<int> unOccupiedIndexes;
     public List<TileType> specialiles;
-
+    public List<int> tilesInShadow;
 }
 public enum SceneEvent
 {
@@ -875,6 +888,7 @@ public struct MapData
     public List<int> EnemyIds;
     public List<TileType> specialiles;
     public List<int> specialExtra;
+    public List<int> tilesInShadow;
 }
 public enum descState
 {
@@ -978,6 +992,7 @@ public class Common : ScriptableObject
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     public static Color selcted = new Color(0.4f, 0.6f, 0.4f);
     public static Color blackened = new Color(0.117f, 0.0f, 0.0f);
+    public static Color dark = new Color(0.278f, 0.278f, 0.278f);
 
 
     public static Color errored = new Color(0.81569f, 0.25f, 0.00784f);
@@ -2655,7 +2670,7 @@ public class Common : ScriptableObject
 
         switch (type)
         {
-            case EPType.tactical:
+            case EPType.skillful:
                 return EPCluster.physical;
                 break;
             case EPType.itemist:
@@ -2704,7 +2719,7 @@ public class Common : ScriptableObject
                     {
                         case 0:
                             {
-                                return EPType.tactical;
+                                return EPType.skillful;
                             }
                             break;
                         case 1:
@@ -2998,6 +3013,7 @@ public class Common : ScriptableObject
 
         detail.specialiles.AddRange(data.specialiles);
         detail.specialExtra.AddRange(data.specialExtra);
+        detail.tilesInShadow.AddRange(data.tilesInShadow);
         detail.tileIndexes.AddRange(data.specialTileIndexes);
 
         return detail;
@@ -3024,6 +3040,7 @@ public class Common : ScriptableObject
         detail.objMapIndexes.Clear();
         detail.objIds.Clear();
         detail.specialiles.Clear();
+        detail.tilesInShadow.Clear();
         detail.specialExtra.Clear();
         detail.specialTileIndexes.Clear();
 
@@ -3053,6 +3070,7 @@ public class Common : ScriptableObject
 
         detail.specialiles.AddRange(data.specialiles);
         detail.specialExtra.AddRange(data.specialExtra);
+        detail.tilesInShadow.AddRange(data.tilesInShadow);
         detail.specialTileIndexes.AddRange(data.tileIndexes);
 
         detail.StartingPosition = data.StartingPosition;

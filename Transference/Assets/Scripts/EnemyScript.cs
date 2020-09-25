@@ -33,6 +33,7 @@ public class EnemyScript : LivingObject
     protected TalkStage talk = TalkStage.initial;
     private Element talkElement;
     private List<TileScript> personalAttackList = new List<TileScript>();
+    public List<LivingObject> sightedTargets = new List<LivingObject>();
     public TalkStage TALK
     {
         get { return talk; }
@@ -173,7 +174,7 @@ public class EnemyScript : LivingObject
     }
     public bool EAtkEvent(Object target)
     {
-        if(atkTarget == null)
+        if (atkTarget == null)
         {
             Debug.Log("what the hell " + NAME);
             TakeRealAction();
@@ -261,7 +262,7 @@ public class EnemyScript : LivingObject
 
             DmgReaction bestReaction = lastReaction;//DetermineBestDmgOutput();
             lastReaction = bestReaction;
-           // manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
+            // manager.CreateTextEvent(this, "" + FullName + " used " + bestReaction.atkName, "enemy atk", manager.CheckText, manager.TextStart);
             if (manager.log)
             {
                 manager.log.Log("<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">" + FullName + "</color> used " + bestReaction.atkName);
@@ -516,7 +517,7 @@ public class EnemyScript : LivingObject
         }
         for (int i = 0; i < objects.Length; i++)
         {
-            if(objects[i].GetComponent<TempObject>())
+            if (objects[i].GetComponent<TempObject>())
             {
                 continue;
             }
@@ -538,7 +539,7 @@ public class EnemyScript : LivingObject
             {
                 if (!objects[i].DEAD)
                 {
-                    if (personality == EPType.mystical || personality == EPType.tactical || personality == EPType.support)
+                    if (personality == EPType.mystical || personality == EPType.skillful || personality == EPType.support)
                     {
                         consider = Random.Range(0, 3);
                         if (consider != 0)
@@ -676,7 +677,7 @@ public class EnemyScript : LivingObject
                             }
                             else if (possibleSkill.ETYPE == EType.magical)
                             {
-                                if (personality == EPType.forceful || personality == EPType.tactical)
+                                if (personality == EPType.forceful || personality == EPType.skillful)
                                 {
                                     consider = Random.Range(0, 3);
                                     if (consider != 0)
@@ -750,7 +751,7 @@ public class EnemyScript : LivingObject
     public bool FoundItemsCanUse()
     {
         bool found = false;
-        if(LEVEL < 7)
+        if (LEVEL < 7)
         {
             return false;
         }
@@ -974,9 +975,9 @@ public class EnemyScript : LivingObject
                     if (dist2 < dist1)
                     {
                         GridObject griddy = myManager.GetObjectAtTile(tiles[i]);
-                        if(griddy == null)
+                        if (griddy == null)
                         {
-                        returnTile = tiles[i];
+                            returnTile = tiles[i];
                         }
                     }
                 }
@@ -989,20 +990,40 @@ public class EnemyScript : LivingObject
     {
         // Debug.Log(FullName + " is finding near enemies");
         GridObject newTarget = null;
-        GridObject[] objects = GameObject.FindObjectsOfType<LivingObject>();
+        GridObject[] objects = GameObject.FindObjectsOfType<GridObject>();
         for (int i = 0; i < objects.Length; i++)
         {
             //if(objects[i].GetComponent<LivingObject>())
             {
                 GridObject living = objects[i];//.GetComponent<LivingObject>();
-                if (living.FACTION != this.FACTION)
+       
+                if (living.FACTION != this.FACTION && living != this && !living.GetComponent<TempObject>())
                 {
+
                     if (!living.DEAD)
                     {
 
                         if (newTarget == null)
                         {
-                            newTarget = living;
+                            if (living.currentTile.isInShadow)
+                            {
+                                if (living == currentEnemy)
+                                {
+                                    newTarget = living;
+                                }
+                                else if(manager.GetAdjecentTiles(living).Contains(currentTile))
+                                {
+                                    newTarget = living;
+                                }
+                                else if (living.GetComponent<LivingObject>() && sightedTargets.Contains(living as LivingObject))
+                                {
+                                    newTarget = living;
+                                }
+                            }
+                            else
+                            {
+                                newTarget = living;
+                            }
                         }
                         else
                         {
@@ -1010,13 +1031,24 @@ public class EnemyScript : LivingObject
                             float dist2 = Vector3.Distance(living.transform.position, transform.position); //Mathf.Sqrt(Mathf.Abs(living.transform.position.sqrMagnitude - transform.position.sqrMagnitude));
                             if (dist2 < dist1)
                             {
-                                newTarget = living;
+                                if (living.currentTile.isInShadow)
+                                {
+                                    if (living == currentEnemy)
+                                    {
+                                        newTarget = living;
+                                    }
+                                }
+                                else
+                                {
+                                    newTarget = living;
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
         return newTarget;
     }
     public DmgReaction DetermineBestDmgOutput()
@@ -1090,14 +1122,14 @@ public class EnemyScript : LivingObject
             chosen = Random.Range(0, attackOptions.Count);
             AtkContainer chosenContainer = possibleAttacks[attackOptions[chosen]];
 
-            if(chosenContainer.strike)
+            if (chosenContainer.strike)
             {
                 WEAPON.Equip(chosenContainer.strike);
             }
             bestReaction = myManager.CalcDamage(chosenContainer);
             chosen = attackOptions[chosen];
             atkTarget = chosenContainer.dmgObject;
-         
+
             if (chosenContainer.command)
             {
                 bestReaction.atkName = chosenContainer.command.NAME;
@@ -1109,7 +1141,7 @@ public class EnemyScript : LivingObject
             }
             else
             {
-              
+
                 if (WEAPON.EQUIPPED)
                 {
                     //   WEAPON.Use();
@@ -1331,7 +1363,7 @@ public class EnemyScript : LivingObject
                         }
                         break;
 
-                    case EPType.tactical:
+                    case EPType.skillful:
                         {
                             if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
                             {
@@ -1495,8 +1527,59 @@ public class EnemyScript : LivingObject
         }
         else
         {
+
+            if (HEALTH < MAX_HEALTH )
+            {
+
+
             waiting = true;
             myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+            }
+            else if (Common.GetEPCluster(personality) == EPCluster.magical && MANA != MAX_MANA)
+            {
+                waiting = true;
+                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+            }
+            else if (Common.GetEPCluster(personality) == EPCluster.physical && FATIGUE > 0)
+            {
+                waiting = true;
+                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+            }
+            else
+            {
+                TileScript targetTile = null;
+                int depth = 0;
+                while (true)
+                {
+                    if(depth > 100)
+                    {
+                        break;
+                    }
+                    targetTile = manager.tileMap[Random.Range(0, manager.tileMap.Count)];
+                    if(targetTile.isInShadow || targetTile.isOccupied || currentTile == targetTile)
+                    {
+                        targetTile = null;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    depth++;
+                }
+               
+                if (currentTile != targetTile && targetTile != null && targetTile.canBeOccupied == true)
+                {
+
+                    targetTile = DetermineMoveLocation(targetTile);
+                    PrepareMoveEvent(targetTile);
+                }
+                else
+                {
+                    waiting = true;
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                }
+            }
+
         }
         return true;
     }
@@ -1846,12 +1929,13 @@ public class EnemyScript : LivingObject
             dexLevel = 1;
             magLevel = 1;
             physLevel = 1;
-            
+
             PHYSICAL_SLOTS.SKILLS.Clear();
             COMBO_SLOTS.SKILLS.Clear();
             MAGICAL_SLOTS.SKILLS.Clear();
             OPP_SLOTS.SKILLS.Clear();
             AUTO_SLOTS.SKILLS.Clear();
+            sightedTargets.Clear();
             if (DEFAULT_ARMOR)
             {
                 ARMOR.unEquip();
@@ -1861,7 +1945,7 @@ public class EnemyScript : LivingObject
             refreshState = 0;
             PSTATUS = PrimaryStatus.normal;
             reflectedSkills.Clear();
-            if(GetComponent<EnemySetup>())
+            if (GetComponent<EnemySetup>())
             {
 
                 GetComponent<EnemySetup>().Unset();
@@ -1872,7 +1956,7 @@ public class EnemyScript : LivingObject
 
                 GetComponent<AnimationScript>().Unset();
             }
-          
+
             if (GetComponent<BuffScript>())
             {
                 Destroy(GetComponent<BuffScript>());

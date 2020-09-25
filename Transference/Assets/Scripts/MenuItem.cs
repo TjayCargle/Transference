@@ -632,6 +632,11 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     myManager.CheckHelpPrompt();
                 }
                 break;
+            case MenuItemType.Interact:
+                {
+                    myManager.InteractWithObject();
+                }
+                break;
             case MenuItemType.Hack:
                 {
                     if (myManager)
@@ -926,6 +931,11 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.Tip:
                 {
                     desc = "See detailed info";
+                }
+                break;
+            case MenuItemType.Interact:
+                {
+                    desc = "Interact with object";
                 }
                 break;
         }

@@ -17,6 +17,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool debugging = false;
     public bool checksForGlyph = false;
     public bool checksForEnemy = false;
+    public bool checksForInteractable = false;
     public bool checkForHelpTile = false;
 
     public bool playerHasSkills = false;

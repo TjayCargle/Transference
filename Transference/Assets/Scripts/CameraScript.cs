@@ -80,7 +80,7 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (manager)
         {
@@ -112,7 +112,7 @@ public class CameraScript : MonoBehaviour
             tilePos.y += y;
             tilePos.z += z;
             Vector3 targetLocation = tilePos - camPos;
-            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd);
+            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
             transform.position = smooth;
 
         }
@@ -123,7 +123,7 @@ public class CameraScript : MonoBehaviour
             tilePos.y += y;
             tilePos.z += z;
             Vector3 targetLocation = tilePos - camPos;
-            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd);
+            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
             transform.position = smooth;
         }
     }
@@ -146,6 +146,13 @@ public class CameraScript : MonoBehaviour
     {
         x = 0;
         y = 8;
+        z = 0;
+    }
+
+    public void SetCameraPosOffsetZoom()
+    {
+        x = -2;
+        y = 6;
         z = 0;
     }
 

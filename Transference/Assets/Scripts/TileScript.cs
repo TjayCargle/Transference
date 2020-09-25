@@ -11,6 +11,7 @@ public class TileScript : MonoBehaviour, IComparable
     public bool canBeOccupied = true;
     MeshRenderer myRender;
     public int listindex = -1;
+    public bool isInShadow = false;
     [SerializeField]
     private TileType myType;
     [SerializeField]
@@ -57,13 +58,22 @@ public class TileScript : MonoBehaviour, IComparable
                 {
                     previousColor = myColor;
                     myColor = value;
+                    if (isInShadow)
+                    {
+                        myColor = value * 0.75f;
+                    }
                 }
             }
             else
             {
                 previousColor = myColor;
                 myColor = value;
+                if (isInShadow)
+                {
+                    myColor = value * 0.75f;
+                }
             }
+          
         }
     }
 

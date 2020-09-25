@@ -1011,9 +1011,9 @@ public class LivingObject : GridObject
             {
                 tookAction = false;
                 myManager.NextTurn(FullName, myManager.currentState);
-                if (GetComponent<SpriteRenderer>())
+                if (RENDERER)
                 {
-                    GetComponent<SpriteRenderer>().color = Color.gray;
+                    RENDERER.color = Color.gray;
                 }
                 //myManager.CreateEvent(this, null, "clean state state event", myManager.BufferedCleanEvent);
 

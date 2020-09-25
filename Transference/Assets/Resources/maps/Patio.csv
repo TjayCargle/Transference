@@ -28,3 +28,5 @@ oi,5,1
 stt,help,help
 sti,5,23
 ex,0, 12
+st,1,8,5,12
+e,10

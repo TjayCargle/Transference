@@ -284,6 +284,7 @@ public class DatabaseManager : MonoBehaviour
             data.EnemyIds = new List<int>();
             data.specialiles = new List<TileType>();
             data.specialExtra = new List<int>();
+            data.tilesInShadow = new List<int>();
             data.specialTileIndexes = new List<int>();
 
             scene.speakerNames = new List<string>();
@@ -1903,6 +1904,7 @@ public class DatabaseManager : MonoBehaviour
         map.specialiles = new List<TileType>();
         map.specialExtra = new List<int>();
         map.tileIndexes = new List<int>();
+        map.tilesInShadow = new List<int>();
         string lines = "";
         if (mapDictionary.TryGetValue(id, out lines))
         {
@@ -2025,6 +2027,7 @@ public class DatabaseManager : MonoBehaviour
         data.revealCount = 0;
 
         data.specialExtra.Clear();
+        data.tilesInShadow.Clear();
         data.specialiles.Clear();
         data.specialTileIndexes.Clear();
         TextAsset asset = Resources.Load("maps/" + shrtname) as TextAsset;
@@ -2129,6 +2132,15 @@ public class DatabaseManager : MonoBehaviour
                                     for (int j = 0; j < parsed.Length - 1; j++)
                                     {
                                         data.specialExtra.Add(Int32.Parse(parsed[j + 1]));
+
+                                    }
+                                }
+                                break;
+                            case "st":
+                                {
+                                    for (int j = 0; j < parsed.Length - 1; j++)
+                                    {
+                                        data.tilesInShadow.Add(Int32.Parse(parsed[j + 1]));
 
                                     }
                                 }
