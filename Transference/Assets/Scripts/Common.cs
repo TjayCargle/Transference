@@ -750,7 +750,8 @@ public enum Faction
     dropsPassive,
     dropsAuto,
     inflictsAilment,
-    inflictsDmg
+    inflictsDmg,
+    interactable
 }
 
 public enum Interaction
