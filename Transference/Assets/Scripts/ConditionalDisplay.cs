@@ -264,6 +264,24 @@ public class ConditionalDisplay : MonoBehaviour
                     }
                 }
             }
+            if(checksForInteractable == true)
+            {
+                if (manager.myCamera.infoObject == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (manager.myCamera.infoObject != manager.player.current)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                if (!manager.CheckAdjecentTilesInteractable(manager.player.current))
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
             if (checksForEnemy == true)
             {
                 gameObject.SetActive(false);

@@ -1803,6 +1803,64 @@ public class DatabaseManager : MonoBehaviour
         }
         return newObject;
     }
+
+    public InteractableObject GetInteractable(int id, InteractableObject newObject)
+    {
+
+
+        if (!newObject.GetComponent<BaseStats>())
+        {
+            newObject.BASE_STATS = newObject.gameObject.AddComponent<BaseStats>();
+        }
+
+        if (!newObject.GetComponent<ModifiedStats>())
+        {
+            newObject.STATS = newObject.gameObject.AddComponent<ModifiedStats>();
+        }
+        BaseStats baseStats = newObject.GetComponent<BaseStats>();
+        ModifiedStats modStats = newObject.GetComponent<ModifiedStats>();
+        string lines = "";
+        if (objDictionary.TryGetValue(id, out lines))
+        {
+            string[] parsed = lines.Split(',');
+            if (Int32.Parse(parsed[0]) == id)
+            {
+                baseStats.Reset(true);
+                modStats.Reset(true);
+                newObject.id = id;
+                int fileIndex = 1;
+                newObject.FullName = parsed[fileIndex];
+                newObject.name = newObject.FullName;
+
+                fileIndex++;
+                baseStats.MAX_HEALTH = Int32.Parse(parsed[fileIndex]);
+                modStats.HEALTH = baseStats.MAX_HEALTH;
+                fileIndex++;
+                baseStats.DEFENSE = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                baseStats.RESIESTANCE = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                baseStats.SPEED = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                baseStats.DEX = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                newObject.FACTION = (Faction)Enum.Parse(typeof(Faction), parsed[fileIndex]);
+                baseStats.MOVE_DIST = 0;
+                fileIndex++;
+                newObject.reaction = (Interaction)Enum.Parse(typeof(Interaction), parsed[fileIndex]);
+                fileIndex++;
+                newObject.range = (RangeType)Enum.Parse(typeof(RangeType), parsed[fileIndex]);
+                fileIndex++;
+                newObject.onlyOnce = Boolean.Parse(parsed[fileIndex]);
+                fileIndex++;
+                newObject.targetTileIndex = Int32.Parse(parsed[fileIndex]);
+                fileIndex++;
+                newObject.useTargetIndex = Boolean.Parse(parsed[fileIndex]);
+
+            }
+        }
+        return newObject;
+    }
     public void GetActor(int id, LivingObject living)
     {
 

@@ -1,4 +1,4 @@
-id, nam3, health, def, res,speed,eventnum,faction
+id, name, health, def, res,speed,eventnum,faction
 0,Skill Coffin, 3, 12,9,9,0,dropsSkill
 1,Spell Coffin, 3,9,12,9,0,dropsSpell
 2,Ankh,99,99,99,99,1,eventObj
@@ -9,3 +9,5 @@ id, nam3, health, def, res,speed,eventnum,faction
 7,Passive Coffin, 3,12,8,10,0,dropsPassive
 8,Auto Coffin, 3,8,12,10,0,dropsAuto
 9,Ankh,99,99,99,99,3,eventObj
+-id, name, health, def, res, speed, eventnum, faction, Interaction, RangeType, once?, targetIndex, useTarget?
+-interactables

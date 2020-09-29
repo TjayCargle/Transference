@@ -41,19 +41,25 @@ public class InteractableObject : GridObject
                     break;
                 case Interaction.slashDmg:
                     {
-
-                        fakeSKill.SKILLTYPE = SkillType.Command;
-                        fakeSKill.SUBTYPE = SubSkillType.Skill;
-                        fakeSKill.ELEMENT = Element.Slash;
-                        if (useTargetIndex == false)
-                            myManager.SetTargetList(myManager.GetSkillAttackableTilesOneList(currentTile, fakeSKill));
-                        else
-                            myManager.SetTargetList(myManager.GetSkillAttackableTilesOneList(myManager.tileMap[targetTileIndex], fakeSKill));
-                        bool check = myManager.AttackTargets(invokingObject, fakeSKill);
-                        if (check == true)
+                        if (interactedWith == false)
                         {
-                            if (onlyOnce == true)
-                                interactedWith = true;
+
+                            fakeSKill.SKILLTYPE = SkillType.Command;
+                            fakeSKill.SUBTYPE = SubSkillType.Skill;
+                            fakeSKill.ELEMENT = Element.Slash;
+                            if (useTargetIndex == false)
+                                myManager.SetTargetList(myManager.GetSkillAttackableTilesOneList(currentTile, fakeSKill));
+                            else
+                                myManager.SetTargetList(myManager.GetSkillAttackableTilesOneList(myManager.tileMap[targetTileIndex], fakeSKill));
+                            bool check = myManager.AttackTargets(invokingObject, fakeSKill);
+                            if (check == true)
+                            {
+                                if (onlyOnce == true)
+                                {
+                                    interactedWith = true;
+
+                                }
+                            }
 
                         }
                     }
