@@ -1,11 +1,11 @@
 id, nam3, health, def, res,speed,eventnum,faction
-0,Skill Coffin, 9, 12,9,9,0,dropsSkill
-1,Spell Coffin, 9,9,12,9,0,dropsSpell
+0,Skill Coffin, 3, 12,9,9,0,dropsSkill
+1,Spell Coffin, 3,9,12,9,0,dropsSpell
 2,Ankh,99,99,99,99,1,eventObj
 3,Ankh,99,99,99,99,2,eventObj
-4,Strike Coffin, 9,9,9,12,0,dropsStrike
-5,Barrier Coffin, 9,10,10,10,0,dropsBarrier
-6,Item Coffin, 9,10,8,12,0,dropsItem
-7,Passive Coffin, 9,12,8,10,0,dropsPassive
-8,Auto Coffin, 9,8,12,10,0,dropsAuto
+4,Strike Coffin, 3,9,9,12,0,dropsStrike
+5,Barrier Coffin, 3,10,10,10,0,dropsBarrier
+6,Item Coffin, 3,10,8,12,0,dropsItem
+7,Passive Coffin, 3,12,8,10,0,dropsPassive
+8,Auto Coffin, 3,8,12,10,0,dropsAuto
 9,Ankh,99,99,99,99,3,eventObj

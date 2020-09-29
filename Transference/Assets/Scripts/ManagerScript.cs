@@ -4833,7 +4833,7 @@ public class ManagerScript : EventRunner
         {
             for (int i = 0; i < data.tilesInShadow.Count; i++)
             {
-                tileMap[i].isInShadow = true;
+                tileMap[data.tilesInShadow[i]].isInShadow = true;
             }
         }
         if (data.specialTileIndexes.Count > 0)
