@@ -2063,6 +2063,7 @@ public class DatabaseManager : MonoBehaviour
             shrtname += subs[i];
         }
 
+        data.mapName = name;
         data.unOccupiedIndexes.Clear();
         data.events.Clear();
         data.eventMap = false;
