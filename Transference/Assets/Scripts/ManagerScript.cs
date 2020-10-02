@@ -7656,7 +7656,7 @@ public class ManagerScript : EventRunner
                     else
                     {
 
-                        if (GetObjectAtTile(newTile).GetComponent<InteractableObject>())
+                        if (GetObjectAtTile(newTile).FACTION == Faction.interactable)
                         {
                             if (checkBool == false)
                             {
