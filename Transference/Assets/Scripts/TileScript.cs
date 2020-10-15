@@ -171,12 +171,12 @@ public class TileScript : MonoBehaviour, IComparable
 
     public void setTexture(Texture t)
     {
-        texture = t;
-        mat.mainTexture = texture;
+        //texture = t;
+        //mat.mainTexture = texture;
     }
     public void setUVs(float startX, float finaleX, float startY, float finaleY)
     {
-
+        return;
         if (uvs.Length != 4)
         {
             uvs = new Vector2[4];

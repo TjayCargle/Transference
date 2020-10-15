@@ -977,17 +977,27 @@ public enum EActType
     move,
     atk
 }
-
+public enum ObjectiveType
+{
+    none,
+    reachLocation,
+    defeatSpecificEnemy,
+    defeatAllEnemies,
+    defeatSpecificGlyph,
+    defeatAllGlyphs,
+    storyRelated
+}
 
 public class Common : ScriptableObject
 {
     public static Color gold = new Color(0.8f, 0.569f, 0.2f);
     public static Color orange = new Color(1.0f, 0.369f, 0.0f);
-    public static Color pink = new Color(1, 0.678f, 0.925f);
+    public static Color pink = new Color(1, 0.678f, 0.625f);
     public static Color lime = new Color(0.802f, 1, 0.825f);
     public static Color green = new Color(0.220f, 1, 0.230f);
     public static Color cyan = new Color(0.1647f, 0.8215f, 1f);
-    public static Color red = new Color(0.693f, 0.0f, 0.230f);
+   // public static Color red = new Color(0.693f, 0.0f, 0.230f);
+    public static Color red = new Color(1, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color moresemi = new Color(1.0f, 1.0f, 1.0f, 0.083f);
     public static Color trans = new Color(0.0f, 0.0f, 0.0f, 0.0f);

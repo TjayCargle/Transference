@@ -102,6 +102,9 @@ public class ManagerScript : EventRunner
     public bool showEnemyRanges = false;
     RaycastHit hit = new RaycastHit();
     public TextObjHolder textHolder;
+
+    public Objective currentObjective = null;
+
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -146,6 +149,7 @@ public class ManagerScript : EventRunner
             log = GameObject.FindObjectOfType<BattleLog>();
             hackingGame = GameObject.FindObjectOfType<HackingCtrl>();
             NewSkillPrompt aprompt = GameObject.FindObjectOfType<NewSkillPrompt>();
+            currentObjective = ScriptableObject.CreateInstance<Objective>();
             if (eventImage)
             {
                 eventImage.Setup();
@@ -10431,7 +10435,7 @@ public class ManagerScript : EventRunner
     }
     public void InteractWithObject()
     {
-        if(adjacentInteractable != null)
+        if (adjacentInteractable != null)
         {
             menuManager.ShowNone();
             adjacentInteractable.Interact(player.current);
@@ -14926,6 +14930,105 @@ public class ManagerScript : EventRunner
         menuManager.ShowExtraCanvas(extraIndex, living);
 
 
+    }
+    private bool isObjectiveMet()
+    {
+        if (currentObjective == null)
+        {
+            return false;
+        }
+
+        switch (currentObjective.TYPE)
+        {
+            case ObjectiveType.reachLocation:
+                {
+                    for (int i = 0; i < gridObjects.Count; i++)
+                    {
+                        if (gridObjects[i].FACTION == Faction.ally)
+                        {
+                            if (gridObjects[i].currentTileIndex == currentObjective.TILE)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                break;
+            case ObjectiveType.defeatSpecificEnemy:
+                {
+                    for (int i = 0; i < liveEnemies.Count; i++)
+                    {
+                        if (liveEnemies[i].FACTION != Faction.hazard)
+                        {
+
+                            if (liveEnemies[i].id == currentObjective.ENEMY)
+                            {
+
+                                return false;
+
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                break;
+            case ObjectiveType.defeatAllEnemies:
+                {
+                    if (currentMap.enemyIndexes.Count > 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                break;
+            case ObjectiveType.storyRelated:
+                {
+                    return true;
+                }
+                break;
+            case ObjectiveType.none:
+                {
+                    return true;
+                }
+                break;
+            case ObjectiveType.defeatSpecificGlyph:
+                {
+                    for (int i = 0; i < liveEnemies.Count; i++)
+                    {
+                        if (liveEnemies[i].FACTION == Faction.hazard)
+                        {
+
+                            if (liveEnemies[i].id == currentObjective.GLYPH)
+                            {
+
+                                return false;
+
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                break;
+            case ObjectiveType.defeatAllGlyphs:
+                {
+                    if (currentMap.hazardIndexes.Count > 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                break;
+        }
+
+        return false;
     }
     //private void ChangeSkillPrompt(string objName, SkillScript skill)
     //{

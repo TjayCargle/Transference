@@ -109,6 +109,7 @@ public class CameraScript : MonoBehaviour
         {
             Vector3 tilePos = currentTile.transform.position;
             Vector3 camPos = transform.position;
+            tilePos.x += x;
             tilePos.y += y;
             tilePos.z += z;
             Vector3 targetLocation = tilePos - camPos;

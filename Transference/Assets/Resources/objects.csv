@@ -1,4 +1,4 @@
-id, name, health, def, res,speed,eventnum,faction
+-id, name, health, def, res,speed,eventnum,faction
 0,Skill Coffin, 3, 12,9,9,0,dropsSkill
 1,Spell Coffin, 3,9,12,9,0,dropsSpell
 2,Ankh,99,99,99,99,1,eventObj
