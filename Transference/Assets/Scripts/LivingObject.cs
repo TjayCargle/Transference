@@ -728,7 +728,7 @@ public class LivingObject : GridObject
 
             actionCounterText.transform.SetParent( this.transform);
             actionCounterText.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
-            actionCounterText.transform.localPosition = new Vector3(0.0f, 0.75f, -0.1f);
+            actionCounterText.transform.localPosition = new Vector3(0.85f, 0.25f, -0.1f);
             // tmp.text = "10";
             actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
             transform.hasChanged = false;
@@ -1369,8 +1369,7 @@ public class LivingObject : GridObject
             yield return null;
         }
         isdoneDying = true;
-
-        //Debug.Log("livr fade end");
+        Debug.Log("livr fade end");
     }
     public override bool DieEvent(Object data)
     {

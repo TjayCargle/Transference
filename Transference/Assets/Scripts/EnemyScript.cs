@@ -1011,10 +1011,10 @@ public class EnemyScript : LivingObject
                                 {
                                     newTarget = living;
                                 }
-                                else if(manager.GetAdjecentTiles(living).Contains(currentTile))
-                                {
-                                    newTarget = living;
-                                }
+                                //else if(manager.GetAdjecentTiles(living).Contains(currentTile))
+                                //{
+                                //    newTarget = living;
+                                //}
                                 else if (living.GetComponent<LivingObject>() && sightedTargets.Contains(living as LivingObject))
                                 {
                                     newTarget = living;
@@ -1556,7 +1556,8 @@ public class EnemyScript : LivingObject
                     {
                         break;
                     }
-                    targetTile = manager.tileMap[Random.Range(0, manager.tileMap.Count)];
+                    List<TileScript> possibleTiles = manager.GetDoubleAdjecentTiles(this);
+                    targetTile = possibleTiles[Random.Range(0,possibleTiles.Count -1)];
                     if(!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
                     {
                         break;
@@ -1716,9 +1717,8 @@ public class EnemyScript : LivingObject
             mySR.color = mySR.color - subtract;
             yield return null;
         }
-        isdoneDying = true;
-        startedDeathAnimation = true;
         myManager.gridObjects.Remove(this);
+        isdoneDying = true;
         gameObject.SetActive(false);
         //myManager.NextTurn(FullName);
         //Debug.Log("enemy fade out end");

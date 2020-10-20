@@ -82,10 +82,10 @@ public class InventoryMangager : MonoBehaviour
         for (int i = 0; i < someTransform.childCount; i++)
         {
             Transform child = someTransform.GetChild(i);
-            if(child.gameObject.activeInHierarchy == true)
+            if (child.gameObject.activeInHierarchy == true)
             {
                 num++;
-                if(num == idealNumber)
+                if (num == idealNumber)
                 {
                     num = i;
                     break;
@@ -135,7 +135,7 @@ public class InventoryMangager : MonoBehaviour
                         DecreaseScroll();
                     }
 
-                 
+
                     break;
                 case State.PlayerEquippingMenu:
                     if (Input.GetKeyDown(KeyCode.W))
@@ -1306,70 +1306,6 @@ public class InventoryMangager : MonoBehaviour
         // UpdateColors(extraSlots);
     }
 
-    public void Validate(string caller)
-    {
-        return;
-        if (currentRect)
-        {
-            if (currentContent)
-            {
-                //Debug.Log("validating from " + caller);
-
-                if (currentContent.transform.childCount > 0)
-                {
-                    for (int i = 0; i < currentContent.transform.childCount; i++)
-                    {
-                        MenuItem temp = currentContent.transform.GetChild(i).GetComponent<MenuItem>();
-                        temp.GetComponentInChildren<Text>().color = Color.white;
-                        //temp.GetComponent<Image>().sprite = imgTypes[0];
-                        if (selectedMenuItem)
-                        {
-
-                            selectedMenuItem.GetComponent<Image>().color = Color.black;
-                            Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                            pos.x = 0;
-                            selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-
-                        }
-
-                        if (temp.refItem)
-                        {
-
-                            {
-                                //      temp.GetComponent<Image>().sprite = imgTypes[5];
-                            }
-
-
-
-                        }
-                    }
-                    if (selectedMenuItem)
-                    {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.white;
-                        selectedMenuItem.GetComponent<Image>().color = Color.black;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 0;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-                    }
-
-                    if (currentContent.transform.childCount < currentIndex)
-                        selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                    if (selectedMenuItem)
-                    {
-                        selectedMenuItem.GetComponentInChildren<Text>().color = Color.yellow;
-                        selectedMenuItem.GetComponent<Image>().color = Color.yellow;
-                        Vector2 pos = selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition;
-                        pos.x = 15;
-                        selectedMenuItem.GetComponentInChildren<Text>().GetComponent<RectTransform>().localPosition = pos;
-
-                    }
-
-                }
-            }
-        }
-    }
 
     public void ForceSelect()
     {
@@ -1501,46 +1437,7 @@ public class InventoryMangager : MonoBehaviour
 
         }
     }
-    private void UpdateColors(MenuItem[] items)
-    {
 
-        return;
-        for (int i = 0; i < items.Length; i++)
-        {
-            MenuItem selectableItem = items[i];
-            if (selectableItem.gameObject.activeInHierarchy)
-            {
-                if (selectableItem.refItem)
-                {
-                    System.Type itype = selectableItem.refItem.GetType();
-
-                    {
-                        Image selectedImg = selectableItem.GetComponent<Image>();
-                        if (selectableItem.refItem)
-                        {
-                            if (selectableItem.refItem.GetType() != typeof(UsableScript))
-                                switch (((SkillScript)selectableItem.refItem).ELEMENT)
-                                {
-                                    //case Element.Passive:
-                                    //    selectedImg.sprite = imgTypes[2];
-                                    //    break;
-                                    //case Element.Auto:
-                                    //    selectedImg.sprite = imgTypes[3];
-                                    //    break;
-                                    //case Element.Opp:
-                                    //    selectedImg.sprite = imgTypes[4];
-                                    //    break;
-                                    //default:
-                                    //    selectedImg.sprite = imgTypes[1];
-                                    //    break;
-                                }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
     public void setContentAndScroll(GameObject content, ScrollRect rect, int index, LivingObject liveObject)
     {
         if (liveObject != null)
@@ -1549,7 +1446,88 @@ public class InventoryMangager : MonoBehaviour
         }
         currentContent = content;
         currentRect = rect;
+        AutoRotate();
     }
+
+    private void AutoRotate()
+    {
+        int startingDegree = 0;
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                int childCount = ActiveChildCount();
+                switch (childCount)
+                {
+                    case 1:
+                        {
+                            GetActiveChild(0).eulerAngles = Vector3.zero;
+                        }
+                        break;
+                    case 2:
+                        {
+                            GetActiveChild(0).eulerAngles = new Vector3(0, 0, -10);
+                            GetActiveChild(1).eulerAngles = new Vector3(0, 0, 10);
+                        }
+                        break;
+                    default:
+                        {
+                            startingDegree = -childCount * childCount;
+                            for (int i = 0; i < childCount; i++)
+                            {
+                                GetActiveChild(i).eulerAngles = new Vector3(0, 0, startingDegree);
+                                startingDegree += childCount * 2;
+                            }
+
+                        }
+                        break;
+                }
+
+            }
+        }
+    }
+    private int ActiveChildCount()
+    {
+        int count = 0;
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                for (int i = 0; i < currentContent.transform.childCount; i++)
+                {
+                    if (currentContent.transform.GetChild(i).gameObject.activeInHierarchy)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private Transform GetActiveChild(int index)
+    {
+        int count = 0;
+        if (currentRect)
+        {
+            if (currentContent)
+            {
+                for (int i = 0; i < currentContent.transform.childCount; i++)
+                {
+                    if (currentContent.transform.GetChild(i).gameObject.activeInHierarchy)
+                    {
+                        if (index == count)
+                        {
+                            return currentContent.transform.GetChild(i);
+                        }
+                        count++;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public void loadContents(GameObject content, ScrollRect rect, int index, LivingObject liveObject)
     {
 
@@ -2139,8 +2117,8 @@ public class InventoryMangager : MonoBehaviour
                 if (proText)
                     proText.text = "";
                 selectableItem.refItem = null;
-                //if (windowType < 5)
-                //    selectableItem.gameObject.SetActive(false);
+                if (windowType < 5)
+                    selectableItem.gameObject.SetActive(false);
                 if (attr)
                     attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             }
@@ -2158,7 +2136,6 @@ public class InventoryMangager : MonoBehaviour
             {
                 if (currentContent.transform.childCount > 0)
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
-                Validate("inv manager for loading");
             }
         }
         if (menuManager)
@@ -2177,7 +2154,7 @@ public class InventoryMangager : MonoBehaviour
                 }
             }
         }
-
+        AutoRotate();
 
     }
     public void loadExtra(UsableScript useable, LivingObject liveObject)

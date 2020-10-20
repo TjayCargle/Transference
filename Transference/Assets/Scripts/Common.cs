@@ -2474,13 +2474,13 @@ public class Common : ScriptableObject
                 returnedString = "Move to position";
                 break;
             case tutorialStep.useStrike:
-                returnedString = "Use a strike";
+                returnedString = "Attack with a strike";
                 break;
             case tutorialStep.useSkill:
-                returnedString = "Use a skill";
+                returnedString = "Attack with a skill";
                 break;
             case tutorialStep.useSpell:
-                returnedString = "Use a spell";
+                returnedString = "Attack with a spell";
                 break;
             case tutorialStep.useBarrier:
                 returnedString = "Use a barrier";

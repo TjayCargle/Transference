@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
                         myManager.SelectMenuItem(current);
                     }
 
-         
+
 
 
                     break;
@@ -107,10 +107,10 @@ public class PlayerController : MonoBehaviour
                         {
                             bool useation = true;
 
-                       
-                            if(useation)
+
+                            if (useation)
                             {
-                            current.TakeAction();
+                                current.TakeAction();
                             }
                             // myManager.ComfirmMoveGridObject(current,myManager.GetTileIndex(current));
                         }
@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.Return))
                         {
-                         
+
                             UseOrAttack();
 
                         }
@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
                             myManager.CreateEvent(this, null, "buffered use", myManager.ReturnTrue, BuffereduseOrEquip);
 
                         }
-                    
+
                         break;
                     }
                 case State.PlayerWait:
@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour
                         //   useOrEquip();
                     }
 
-            
+
 
                     break;
                 case State.PlayerSkillsMenu:
@@ -280,16 +280,16 @@ public class PlayerController : MonoBehaviour
 
                             if (Input.GetKeyDown(KeyCode.Return))
                             {
-                             
+
                                 if (myManager.myCamera.infoObject)
                                 {
-                                  
+
                                     if (myManager.myCamera.infoObject)
                                     {
-                                      
+
                                         if (myManager.myCamera.infoObject.GetComponent<LivingObject>())
                                         {
-                                       
+
                                             UseItem(myManager.myCamera.infoObject.GetComponent<LivingObject>(), myManager.myCamera.currentTile);
                                         }
                                         else if (currentItem.ITYPE == ItemType.dmg || currentItem.ITYPE == ItemType.dart)
@@ -298,7 +298,7 @@ public class PlayerController : MonoBehaviour
                                         }
                                         else
                                         {
-                                           myManager.CreateTextEvent(this, "Invalid target", "validation text", myManager.CheckText, myManager.TextStart);
+                                            myManager.CreateTextEvent(this, "Invalid target", "validation text", myManager.CheckText, myManager.TextStart);
                                             myManager.PlayExitSnd();
                                         }
                                     }
@@ -338,7 +338,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (target)
         {
-            
+
             myManager.CreateEvent(this, target.currentTile, "use item 1 event", UseItemEvent);
         }
     }
@@ -379,7 +379,7 @@ public class PlayerController : MonoBehaviour
                         myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME);
                     }
 
-                    myManager.CreateTextEvent(this,currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
+                    myManager.CreateTextEvent(this, currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
 
                     current.INVENTORY.ITEMS.Remove(currentItem);
 
@@ -462,7 +462,7 @@ public class PlayerController : MonoBehaviour
                         string coloroption2 = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(target.FACTION)) + ">";
                         myManager.log.Log(coloroption + current.NAME + "</color> used " + currentItem.NAME + " on " + coloroption2 + target.NAME + "</color>");
                     }
-                    myManager.CreateTextEvent(this,  currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
+                    myManager.CreateTextEvent(this, currentItem.NAME, "item used", myManager.CheckText, myManager.TextStart);
                     current.INVENTORY.ITEMS.Remove(currentItem);
                     current.INVENTORY.USEABLES.Remove(currentItem);
                     //   myManager.menuManager.ShowItemCanvas(11, current);
@@ -542,7 +542,7 @@ public class PlayerController : MonoBehaviour
                                             myManager.menuManager.ShowNone();
                                             myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
 
-                                            myManager.CreateTextEvent(this,  newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+                                            myManager.CreateTextEvent(this, newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
                                             if (myManager.log)
                                             {
                                                 string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(current.FACTION)) + ">";
@@ -748,7 +748,7 @@ public class PlayerController : MonoBehaviour
                                             current.INVENTORY.WEAPONS.Add(myManager.newSkillEvent.data as WeaponScript);
                                             (myManager.newSkillEvent.data as UsableScript).USER = current;
                                             myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                            myManager.CreateTextEvent(this,"Learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                            myManager.CreateTextEvent(this, "Learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                             if (myManager.log)
                                             {
@@ -1410,7 +1410,7 @@ public class PlayerController : MonoBehaviour
                                         attacker = myManager.currentObject as LivingObject;
                                     }
                                 }
-                            check = myManager.AttackTargets(attacker, currentSkill,true);
+                                check = myManager.AttackTargets(attacker, currentSkill, true);
                             }
                             else
                             {
@@ -1463,9 +1463,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if(current.WEAPON.EQUIPPED != null)
+            if (current.WEAPON.EQUIPPED != null)
             {
-                if(current.WEAPON.CanUse())
+                if (current.WEAPON.CanUse())
                 {
                     if (current.SSTATUS == SecondaryStatus.confusion)
                     {
@@ -1506,7 +1506,7 @@ public class PlayerController : MonoBehaviour
                     myManager.ShowCantUseText(current.WEAPON.EQUIPPED);
                 }
             }
-      
+
 
             if (check == true)
             {
@@ -1887,17 +1887,17 @@ public class PlayerController : MonoBehaviour
                 if (griddy.GetComponent<LivingObject>())
                 {
                     LivingObject livvy = griddy.GetComponent<LivingObject>();
-                    
+
                     reac = myManager.CalcDamage(current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
                 else
                 {
-                   
+
                     reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
                 if (reac.reaction > Reaction.weak)
                     reac.damage = 0;
-               
+
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
                 if (myManager.potential)
@@ -2051,14 +2051,13 @@ public class PlayerController : MonoBehaviour
 
     public void BuffereduseOrEquip()
     {
-    
+
         useOrEquip();
     }
 
 
     public bool ShowCmd(Object data)
     {
-
         if (myManager.oppEvent.caller == null)
         {
             if (current)
@@ -2074,14 +2073,16 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (current)
+        if (current != null)
         {
+
+
             if (!current.DEAD && current)
             {
-                if(current.ACTIONS > 1)
+                if (current.ACTIONS > 1)
                 {
-                myManager.CleanMenuStack();
-                myManager.ShowGridObjectAffectArea(current);
+                    myManager.CleanMenuStack();
+                    myManager.ShowGridObjectAffectArea(current);
                 }
                 else
                 {
@@ -2092,12 +2093,24 @@ public class PlayerController : MonoBehaviour
             {
                 myManager.CleanMenuStack(true);
             }
+           // myManager.MoveCameraAndShow(current);
+
         }
         else
         {
             myManager.CleanMenuStack(true);
+            LivingObject lastCurrentObject = data as LivingObject;
+            if (lastCurrentObject != null)
+            {
+                Debug.Log("call for " + lastCurrentObject.FullName);
+                myManager.MoveCameraAndShow(lastCurrentObject);
+            }
+            else
+            {
+                Debug.Log("last was null");
+            }
         }
-      
+
         return true;
     }
     public bool BeforeOpp(Object data)

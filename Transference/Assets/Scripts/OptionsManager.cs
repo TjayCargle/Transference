@@ -115,6 +115,10 @@ public class OptionsManager : MonoBehaviour
     {
         Setup();
     }
+    private void Awake()
+    {
+        Setup();
+    }
     void ChangeBattleAnim(Toggle change)
     {
         battleAnims = !battleAnims;

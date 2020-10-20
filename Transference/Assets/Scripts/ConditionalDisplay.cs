@@ -25,9 +25,14 @@ public class ConditionalDisplay : MonoBehaviour
     public bool playerHasStrikes = false;
     public bool playerHasBarriers = false;
     public bool playerHasItems = false;
+    public bool playerHasCombos = false;
+    public bool playerHasAutos = false;
+    public bool playerHasOpps = false;
     LivingObject livvy = null;
-    public bool dontShowForMovement = false;
-    public bool dontShowForSpell = false;
+    public bool dontShowForMovementTutorial = false;
+    public bool dontShowForStrikeTutorial = false;
+    public bool dontShowForSkillTutorial = false;
+    public bool dontShowForSpellTutorial = false;
 
     // Use this for initialization
     void Start()
@@ -185,6 +190,99 @@ public class ConditionalDisplay : MonoBehaviour
                             }
                         }
                     }
+
+                    if (playerHasOpps == true)
+                    {
+                        if (livvy)
+                        {
+                            if (livvy.INVENTORY.OPPS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
+                        }
+                    }
+
+                    if (playerHasCombos == true)
+                    {
+                        if (livvy)
+                        {
+                            if (livvy.INVENTORY.COMBOS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
+                        }
+                    }
+
+                    if (playerHasAutos == true)
+                    {
+                        if (livvy)
+                        {
+                            if (livvy.INVENTORY.AUTOS.Count == 0)
+                            {
+                                gameObject.SetActive(false);
+                                return;
+                            }
+                        }
+                    }
+
+                    if (manager.currentTutorial.steps.Count > 0)
+                    {
+                        if (manager.currentTutorial.currentStep < manager.currentTutorial.steps.Count)
+                        {
+
+                            switch (manager.currentTutorial.steps[manager.currentTutorial.currentStep])
+                            {
+                                case tutorialStep.moveToPosition:
+                                    {
+                                        if (dontShowForMovementTutorial == true)
+                                        {
+                                            gameObject.SetActive(false);
+                                            return;
+                                        }
+                                    }
+                                    break;
+                                case tutorialStep.useStrike:
+                                    {
+                                        if (dontShowForStrikeTutorial == true)
+                                        {
+                                            gameObject.SetActive(false);
+                                            return;
+                                        }
+                                    }
+                                    break;
+                                case tutorialStep.useSkill:
+                                    {
+                                        if (dontShowForSkillTutorial == true)
+                                        {
+                                            gameObject.SetActive(false);
+                                            return;
+                                        }
+                                    }
+                                    break;
+                                case tutorialStep.useSpell:
+                                    {
+                                        if (dontShowForSpellTutorial == true)
+                                        {
+                                            gameObject.SetActive(false);
+                                            return;
+                                        }
+                                    }
+                                    break;
+                                case tutorialStep.useBarrier:
+                                    break;
+                                case tutorialStep.useItem:
+                                    break;
+                                case tutorialStep.allocate:
+                                    break;
+                                case tutorialStep.defeatEnemy:
+                                    break;
+                                case tutorialStep.hackGlyph:
+                                    break;
+                            }
+                        }
+                    }
                 }
 
             }
@@ -267,7 +365,7 @@ public class ConditionalDisplay : MonoBehaviour
                     }
                 }
             }
-            if(checksForInteractable == true)
+            if (checksForInteractable == true)
             {
                 if (manager.myCamera.infoObject == null)
                 {

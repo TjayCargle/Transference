@@ -55,6 +55,10 @@ public class CameraScript : MonoBehaviour
     public TextObj cancelButton;
 
     public Camera mainCam;
+    public bool moving = false;
+    public float targetOrthoSize = 8.0f;
+    private float editedOthoSize = 8.0f;
+    private bool updateOrtho = false;
     void Start()
     {
         Setup();
@@ -101,11 +105,18 @@ public class CameraScript : MonoBehaviour
         {
             UpdatePosition();
         }
+        if(updateOrtho == true)
+        {
+            mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, editedOthoSize,smoothSpd * Time.fixedDeltaTime);
+            if(mainCam.orthographicSize == editedOthoSize)
+            {
+                updateOrtho = false;
+            }
+        }
     }
 
     public void UpdatePosition()
     {
-
         if (currentTile)
         {
             Vector3 tilePos = currentTile.transform.position;
@@ -113,9 +124,18 @@ public class CameraScript : MonoBehaviour
             tilePos.x += x;
             tilePos.y += y;
             tilePos.z += z;
-            Vector3 targetLocation = tilePos - camPos;
-            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
-            transform.position = smooth;
+            //Vector3 targetLocation = tilePos - camPos;
+            if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            {
+                moving = true;
+
+                Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                transform.position = smooth;
+            }
+            else
+            {
+                moving = false;
+            }
 
         }
         else if (infoObject)
@@ -124,90 +144,75 @@ public class CameraScript : MonoBehaviour
             Vector3 camPos = transform.position;
             tilePos.y += y;
             tilePos.z += z;
-            Vector3 targetLocation = tilePos - camPos;
-            Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
-            transform.position = smooth;
+            //Vector3 targetLocation = tilePos - camPos;
+            if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            {
+                moving = true;
+                Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                transform.position = smooth;
+            }
+            else
+            {
+                moving = false;
+            }
         }
     }
 
     public void SetCameraPosDefault()
     {
-        x = 0;
-        y = 12;
-        z = 0;
+  
+        if (mainCam)
+        {
+            editedOthoSize = targetOrthoSize;
+            updateOrtho = true;
+        }
     }
 
     public void SetCameraPosSlightZoom()
     {
-        x = 0;
+
         y = 10;
-        z = 0;
+        if (mainCam)
+        {
+            editedOthoSize = targetOrthoSize - 0.5f;
+            updateOrtho = true;
+        }
     }
 
     public void SetCameraPosZoom()
     {
-        x = 0;
+
         y = 8;
-        z = 0;
+        if (mainCam)
+        {
+            editedOthoSize = targetOrthoSize - 1.0f;
+            updateOrtho = true;
+        }
     }
 
     public void SetCameraPosOffsetZoom()
     {
-        x = -2;
+
         y = 6;
-        z = 0;
+        if (mainCam)
+        {
+            editedOthoSize = targetOrthoSize + 1.0f;
+            updateOrtho = true;
+        }
     }
 
     public void SetCameraPosFar()
     {
-        x = 0;
+
         y = 13;
-        z = -1;
-    }
-
-    public void PlaySoundTrack1()
-    {
-        if (audio)
+        if (mainCam)
         {
-            if (soundTrack != 1)
-            {
-                previousClip = musicClips[soundTrack - 1];
-                soundTrack = 1;
-                audio.clip = musicClips[0];
-                audio.Play();
-            }
+            editedOthoSize = targetOrthoSize + 3.0f;
+            updateOrtho = true;
         }
     }
 
 
-    public void PlaySoundTrack2()
-    {
-        if (audio)
-        {
-            if (soundTrack != 2)
-            {
-                previousClip = musicClips[soundTrack - 1];
-                soundTrack = 2;
-                audio.clip = musicClips[1];
-                audio.Play();
-            }
-        }
-    }
-
-    public void PlaySoundTrack3()
-    {
-        if (audio)
-        {
-            if (soundTrack != 3)
-            {
-                previousClip = musicClips[soundTrack - 1];
-                soundTrack = 3;
-                audio.clip = musicClips[2];
-
-                audio.Play();
-            }
-        }
-    }
 
     public void PlaySoundTrack(int num)
     {
@@ -400,7 +405,7 @@ public class CameraScript : MonoBehaviour
                                     else
                                         actionText.text = "Actions: unlimited";
 
-                                   
+
 
                                     if (manager.liveEnemies.Count > 0)
                                     {
@@ -497,7 +502,7 @@ public class CameraScript : MonoBehaviour
                                     if (healthSlider)
                                     {
                                         infoText.text = infoObject.FullName;
-                                        if(infoText.text == "Passive Coffin" || infoText.text == "PassiveCoffin")
+                                        if (infoText.text == "Passive Coffin" || infoText.text == "PassiveCoffin")
                                         {
                                             infoText.text = "Combo Coffin";
                                         }
@@ -694,7 +699,7 @@ public class CameraScript : MonoBehaviour
                                     MenuItemType menuItem = (MenuItemType)manager.currentMenuitem.itemType;
                                     confirmButton.textmeshpro.text = menuItem.ToString();
                                     cancelButton.textmeshpro.text = "Cancel";
-                                   
+
                                 }
                             }
                             break;
