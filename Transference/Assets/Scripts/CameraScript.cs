@@ -54,7 +54,7 @@ public class CameraScript : MonoBehaviour
     public TextObj confirmButton;
     public TextObj cancelButton;
 
-
+    public Camera mainCam;
     void Start()
     {
         Setup();
@@ -77,6 +77,7 @@ public class CameraScript : MonoBehaviour
                 manager.Setup();
             }
             previousClip = musicClips[0];
+            mainCam = GetComponent<Camera>();
         }
     }
 
@@ -398,6 +399,8 @@ public class CameraScript : MonoBehaviour
                                         actionText.text = "Actions: " + liver.ACTIONS;
                                     else
                                         actionText.text = "Actions: unlimited";
+
+                                   
 
                                     if (manager.liveEnemies.Count > 0)
                                     {

@@ -146,7 +146,7 @@ public class EnemyScript : LivingObject
             }
             //Debug.Log("Move Event Done!");
         }
-
+        myManager.UpdateMarkedArea();
         myManager.myCamera.currentTile = currentTile;
         return isDone;
     }
@@ -157,7 +157,7 @@ public class EnemyScript : LivingObject
 
         Wait();
         // TakeRealAction();
-
+        myManager.UpdateMarkedArea();
         return isDone;
     }
     public bool RunAwayEvent(Object target)
@@ -1230,6 +1230,7 @@ public class EnemyScript : LivingObject
         {
             return true;
         }
+        myManager.UpdateMarkedArea();
         //clear up lists
         {
 
@@ -1556,13 +1557,13 @@ public class EnemyScript : LivingObject
                         break;
                     }
                     targetTile = manager.tileMap[Random.Range(0, manager.tileMap.Count)];
-                    if(targetTile.isInShadow || targetTile.isOccupied || currentTile == targetTile)
+                    if(!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
                     {
-                        targetTile = null;
+                        break;
                     }
                     else
                     {
-                        break;
+                        targetTile = null;
                     }
                     depth++;
                 }
@@ -1581,6 +1582,7 @@ public class EnemyScript : LivingObject
             }
 
         }
+
         return true;
     }
     public void DetermineActions()

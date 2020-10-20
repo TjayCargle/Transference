@@ -26,6 +26,9 @@ public class ConditionalDisplay : MonoBehaviour
     public bool playerHasBarriers = false;
     public bool playerHasItems = false;
     LivingObject livvy = null;
+    public bool dontShowForMovement = false;
+    public bool dontShowForSpell = false;
+
     // Use this for initialization
     void Start()
     {

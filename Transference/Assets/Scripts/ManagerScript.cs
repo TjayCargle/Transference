@@ -102,9 +102,9 @@ public class ManagerScript : EventRunner
     public bool showEnemyRanges = false;
     RaycastHit hit = new RaycastHit();
     public TextObjHolder textHolder;
-
+    GridObject tempGridObj = null;
     public Objective currentObjective = null;
-
+    public Tutorial currentTutorial = new Tutorial();
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -150,6 +150,16 @@ public class ManagerScript : EventRunner
             hackingGame = GameObject.FindObjectOfType<HackingCtrl>();
             NewSkillPrompt aprompt = GameObject.FindObjectOfType<NewSkillPrompt>();
             currentObjective = ScriptableObject.CreateInstance<Objective>();
+            currentTutorial.steps = new List<tutorialStep>();
+            currentTutorial.clarifications = new List<int>();
+
+            List<tutorialStep> tSteps = new List<tutorialStep>();
+            List<int> tClar = new List<int>();
+
+            tSteps.Add(tutorialStep.moveToPosition);
+            tClar.Add(20);
+
+
             if (eventImage)
             {
                 eventImage.Setup();
@@ -291,9 +301,10 @@ public class ManagerScript : EventRunner
             player = GameObject.FindObjectOfType<PlayerController>();
             tempObject = new GameObject();
             tempObject.AddComponent<TempObject>();
+            tempGridObj = tempObject.GetComponent<GridObject>();
             tempObject.name = "TempObj";
-            tempObject.GetComponent<GridObject>().NAME = "TEMPY";
-            tempObject.GetComponent<GridObject>().MOVE_DIST = 10000;
+            tempGridObj.NAME = "TEMPY";
+            tempGridObj.MOVE_DIST = 10000;
             tempObject.transform.position = Vector3.zero;
             menuManager.ShowNone();
 
@@ -301,14 +312,16 @@ public class ManagerScript : EventRunner
             enterStateTransition();
             if (PlayerPrefs.HasKey("defaultSceneEntry"))
             {
-                defaultSceneEntry = PlayerPrefs.GetInt("defaultSceneEntry");
+                defaultSceneEntry = 26;// PlayerPrefs.GetInt("defaultSceneEntry");
             }
 
             LoadDefaultScene();
 
 
-
             updateConditionals();
+            PrepareTutorial(tSteps, tClar);
+
+            StartCoroutine(performChecks());
         }
     }
     void Start()
@@ -528,6 +541,7 @@ public class ManagerScript : EventRunner
             }
         }
     }
+    private bool isperforming = false;
     void LateUpdate()
     {
         if (menuStack != null)
@@ -662,7 +676,7 @@ public class ManagerScript : EventRunner
 
                                                     bool alreadySelected = false;
 
-                                                    if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                                    if (tempGridObj.currentTile == hitTile)
                                                     {
                                                         alreadySelected = true;
 
@@ -680,9 +694,9 @@ public class ManagerScript : EventRunner
                                                             if (tileManager.currentMoveableTiles.Contains(hitTile))
                                                             {
                                                                 tempObject.transform.position = hitTile.transform.position;
-                                                                ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile, true);
+                                                                ComfirmMoveGridObject(tempGridObj, hitTile, true);
                                                                 ShowGridObjectMoveArea(player.current);
-                                                                ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                                                                ShowSelectedTile(tempGridObj);
                                                                 myCamera.UpdateCamera();
                                                                 updateConditionals();
                                                             }
@@ -801,9 +815,9 @@ public class ManagerScript : EventRunner
                                                         outer = i;
                                                         innner = j;
                                                         currentAttackList = attackableTiles[i];
-                                                        if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                                        if (tempGridObj.currentTile == hitTile)
                                                         {
-                                                            myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                            myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
                                                             alreadySelected = true;
                                                             break;
 
@@ -813,7 +827,7 @@ public class ManagerScript : EventRunner
                                                 }
 
                                             }
-                                            if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                            if (tempGridObj.currentTile == hitTile)
                                             {
                                                 alreadySelected = true;
 
@@ -831,7 +845,7 @@ public class ManagerScript : EventRunner
 
                                                     showAttackableTiles();
                                                     tempObject.transform.position = hitTile.transform.position;
-                                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+                                                    ComfirmMoveGridObject(tempGridObj, hitTile);
 
                                                     myCamera.potentialDamage = 0;
                                                     myCamera.UpdateCamera();
@@ -854,8 +868,8 @@ public class ManagerScript : EventRunner
                                                             {
                                                                 currentAttackList[i].MYCOLOR = Common.red; ;
                                                             }
-                                                            myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                            GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                            myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                            GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                             if (griddy)
                                                             {
                                                                 if (griddy.GetComponent<LivingObject>())
@@ -918,8 +932,8 @@ public class ManagerScript : EventRunner
                                                             currentAttackList[i].MYCOLOR = Common.red; ;
 
                                                         }
-                                                        myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                        GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                        myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                        GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                         if (griddy)
                                                         {
                                                             if (griddy.GetComponent<LivingObject>())
@@ -997,9 +1011,9 @@ public class ManagerScript : EventRunner
                                                 outer = i;
                                                 innner = j;
                                                 currentAttackList = attackableTiles[i];
-                                                if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                                if (tempGridObj.currentTile == hitTile)
                                                 {
-                                                    myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                    myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
                                                     alreadySelected = true;
                                                     break;
 
@@ -1021,7 +1035,7 @@ public class ManagerScript : EventRunner
 
                                             showAttackableTiles();
                                             tempObject.transform.position = hitTile.transform.position;
-                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+                                            ComfirmMoveGridObject(tempGridObj, hitTile);
 
                                             myCamera.potentialDamage = 0;
                                             myCamera.UpdateCamera();
@@ -1044,8 +1058,8 @@ public class ManagerScript : EventRunner
                                                     {
                                                         currentAttackList[i].MYCOLOR = Common.red; ;
                                                     }
-                                                    myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                    GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                    myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                    GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                     if (griddy)
                                                     {
                                                         if (griddy.GetComponent<LivingObject>())
@@ -1108,8 +1122,8 @@ public class ManagerScript : EventRunner
                                                     currentAttackList[i].MYCOLOR = Common.red; ;
 
                                                 }
-                                                myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                 if (griddy)
                                                 {
                                                     if (griddy.GetComponent<LivingObject>())
@@ -1220,7 +1234,7 @@ public class ManagerScript : EventRunner
                                         {
                                             inex = i;
 
-                                            if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                            if (tempGridObj.currentTile == hitTile)
                                             {
                                                 alreadySelected = true;
                                                 break;
@@ -1290,7 +1304,7 @@ public class ManagerScript : EventRunner
 
                                             showOppAdjTiles();
                                             tempObject.transform.position = hitTile.transform.position;
-                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+                                            ComfirmMoveGridObject(tempGridObj, hitTile);
 
                                             hitTile.MYCOLOR = Color.red;
                                         }
@@ -1507,9 +1521,9 @@ public class ManagerScript : EventRunner
                                                 outer = i;
                                                 innner = j;
                                                 currentAttackList = attackableTiles[i];
-                                                if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                                if (tempGridObj.currentTile == hitTile)
                                                 {
-                                                    myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                    myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
                                                     alreadySelected = true;
                                                     break;
 
@@ -1550,7 +1564,7 @@ public class ManagerScript : EventRunner
 
                                             showAttackableTiles();
                                             tempObject.transform.position = hitTile.transform.position;
-                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
+                                            ComfirmMoveGridObject(tempGridObj, hitTile);
 
                                             myCamera.potentialDamage = 0;
                                             myCamera.UpdateCamera();
@@ -1573,8 +1587,8 @@ public class ManagerScript : EventRunner
                                                     {
                                                         currentAttackList[i].MYCOLOR = Common.red; ;
                                                     }
-                                                    myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                    GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                    myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                    GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                     if (griddy)
                                                     {
                                                         if (griddy.GetComponent<LivingObject>())
@@ -1616,8 +1630,8 @@ public class ManagerScript : EventRunner
                                                 {
                                                     currentAttackList[i].MYCOLOR = Common.lime;
                                                 }
-                                                myCamera.infoObject = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
-                                                GridObject griddy = GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile);
+                                                myCamera.infoObject = GetObjectAtTile(tempGridObj.currentTile);
+                                                GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
                                                 if (griddy)
                                                 {
                                                     if (griddy.GetComponent<LivingObject>())
@@ -1677,76 +1691,7 @@ public class ManagerScript : EventRunner
                     }
                     break;
                 case State.FreeCamera:
-                    if (options != null)
-                    {
-                        if (options.hoverSelect == true)
-                        {
-                            {
 
-
-                                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                                if (Physics.Raycast(ray, out hit))
-                                {
-                                    Vector3 w = hit.point;
-                                    w.x = Mathf.Round(w.x);
-                                    w.y = Mathf.Round(w.y);
-                                    w.z = Mathf.Round(w.z);
-                                    GameObject hitObj = hit.transform.gameObject;
-
-                                    if (hitObj.GetComponent<TileScript>())
-                                    {
-                                        TileScript hitTile = hitObj.GetComponent<TileScript>();
-                                        bool alreadySelected = false;
-
-                                        if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
-                                        {
-                                            alreadySelected = true;
-
-                                        }
-
-                                        if (alreadySelected)
-                                        {
-
-                                        }
-                                        else
-                                        {
-                                            ShowWhite();
-                                            for (int i = 0; i < gridObjects.Count; i++)
-                                            {
-                                                ShowSelectedTile(gridObjects[i], Common.GetFactionColor(gridObjects[i].FACTION));
-                                            }
-
-                                            tempObject.transform.position = hitTile.transform.position;
-                                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile, true);
-                                            if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                                            {
-                                                ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile), false);
-                                                //if (iconManager)
-                                                //{
-                                                //    iconManager.loadIconPanel(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile).GetComponent<LivingObject>());
-                                                //}
-                                            }
-                                            ShowSelectedTile(tempObject.GetComponent<GridObject>());
-                                            myCamera.UpdateCamera();
-                                            updateConditionals();
-                                        }
-                                    }
-                                }
-                            }
-                            {
-                                if (myCamera.currentTile != myCamera.selectedTile)
-                                {
-                                    if (Vector3.Distance(myCamera.currentTile.transform.position, myCamera.selectedTile.transform.position) >= 6.0f)
-                                    {
-                                        myCamera.currentTile = myCamera.selectedTile;
-                                        myCamera.UpdateCamera();
-                                    }
-
-
-                                }
-                            }
-                        }
-                    }
                     if (Input.GetMouseButtonDown(1))
                     {
                         if (myCamera.infoObject)
@@ -1797,7 +1742,7 @@ public class ManagerScript : EventRunner
                                 TileScript hitTile = hitObj.GetComponent<TileScript>(); //GetTileAtIndex(GetTileIndex(w));
                                 bool alreadySelected = false;
 
-                                if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                                if (tempGridObj.currentTile == hitTile)
                                 {
                                     alreadySelected = true;
 
@@ -1832,8 +1777,29 @@ public class ManagerScript : EventRunner
                                         {
                                             if (menuManager.hiddenCanvas)
                                             {
-                                                StackNewSelection(State.PlayerInput, currentMenu.none);
-                                                menuManager.ShowHiddenCanvas();
+                                                if (GetObjectAtTile(hitTile) != null)
+                                                {
+
+                                                    LivingObject livvy = GetObjectAtTile(hitTile).GetComponent<LivingObject>();
+                                                    if (livvy != null)
+                                                    {
+                                                        if (markedEnemies.Contains(livvy))
+                                                        {
+                                                            markedEnemies.Remove(livvy);
+                                                            livvy.RENDERER.color = Color.white;
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                            markedEnemies.Add(livvy);
+                                                            livvy.RENDERER.color = Color.magenta;
+                                                        }
+                                                        UpdateMarkedArea();
+                                                    }
+                                                }
+                                                //StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                //menuManager.ShowHiddenCanvas();
                                             }
                                         }
                                     }
@@ -1850,16 +1816,16 @@ public class ManagerScript : EventRunner
                                     }
 
                                     tempObject.transform.position = hitTile.transform.position;
-                                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), hitTile);
-                                    if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
+                                    ComfirmMoveGridObject(tempGridObj, hitTile);
+                                    if (GetObjectAtTile(tempGridObj.currentTile) != null)
                                     {
-                                        ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
+                                        ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
                                         if (iconManager)
                                         {
-                                            iconManager.loadIconPanel(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile).GetComponent<LivingObject>());
+                                            iconManager.loadIconPanel(GetObjectAtTile(tempGridObj.currentTile).GetComponent<LivingObject>());
                                         }
                                     }
-                                    ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                                    ShowSelectedTile(tempGridObj);
                                     myCamera.UpdateCamera();
                                     updateConditionals();
                                 }
@@ -1878,11 +1844,11 @@ public class ManagerScript : EventRunner
                             ShowSelectedTile(turnOrder[i], Common.orange);
 
                         }
-                        MoveGridObject(tempObject.GetComponent<GridObject>(), new Vector3(0, 0, 1));
-                        ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                        if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                            ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
-                        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                        MoveGridObject(tempGridObj, new Vector3(0, 0, 1));
+                        ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
+                        if (GetObjectAtTile(tempGridObj.currentTile) != null)
+                            ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
+                        ShowSelectedTile(tempGridObj);
                     }
                     if (Input.GetKeyDown(KeyCode.A))
                     {
@@ -1892,11 +1858,11 @@ public class ManagerScript : EventRunner
                             ShowSelectedTile(turnOrder[i], Common.orange);
 
                         }
-                        MoveGridObject(tempObject.GetComponent<GridObject>(), new Vector3(-1, 0, 0));
-                        ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                        if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                            ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
-                        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                        MoveGridObject(tempGridObj, new Vector3(-1, 0, 0));
+                        ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
+                        if (GetObjectAtTile(tempGridObj.currentTile) != null)
+                            ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
+                        ShowSelectedTile(tempGridObj);
                     }
                     if (Input.GetKeyDown(KeyCode.S))
                     {
@@ -1906,11 +1872,11 @@ public class ManagerScript : EventRunner
                             ShowSelectedTile(turnOrder[i], Common.orange);
 
                         }
-                        MoveGridObject(tempObject.GetComponent<GridObject>(), new Vector3(0, 0, -1));
-                        ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                        if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                            ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
-                        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                        MoveGridObject(tempGridObj, new Vector3(0, 0, -1));
+                        ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
+                        if (GetObjectAtTile(tempGridObj.currentTile) != null)
+                            ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
+                        ShowSelectedTile(tempGridObj);
                     }
                     if (Input.GetKeyDown(KeyCode.D))
                     {
@@ -1921,12 +1887,28 @@ public class ManagerScript : EventRunner
                             ShowSelectedTile(turnOrder[i], Common.orange);
 
                         }
-                        MoveGridObject(tempObject.GetComponent<GridObject>(), new Vector3(1, 0, 0));
-                        ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
-                        if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                            ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
-                        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                        MoveGridObject(tempGridObj, new Vector3(1, 0, 0));
+                        ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
+                        if (GetObjectAtTile(tempGridObj.currentTile) != null)
+                            ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
+                        ShowSelectedTile(tempGridObj);
                     }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") == 0.1f)
+                    {
+                        if (myCamera.mainCam.orthographicSize < 11)
+                        {
+                            myCamera.mainCam.orthographicSize += 0.1f;
+                        }
+                    }
+                    if (Input.GetAxis("Mouse ScrollWheel") == -0.1f)
+                    {
+                        if (myCamera.mainCam.orthographicSize > 5)
+                        {
+                            myCamera.mainCam.orthographicSize -= 0.1f;
+                        }
+                    }
+
                     //if (Input.GetKeyDown(KeyCode.Space))
                     //{
                     //    if ((int)descriptionState + 1 <= 5)
@@ -1955,7 +1937,7 @@ public class ManagerScript : EventRunner
                         int playerIndx = -1;
                         for (int i = 0; i < turnOrder.Count; i++)
                         {
-                            if (tempObject.GetComponent<GridObject>().currentTile == turnOrder[i].currentTile)
+                            if (tempGridObj.currentTile == turnOrder[i].currentTile)
                             {
                                 playerIndx = i;
                                 if (turnOrder[i].ACTIONS > 0)
@@ -2449,6 +2431,96 @@ public class ManagerScript : EventRunner
         }
 
     }
+
+    private IEnumerator performChecks()
+    {
+        while (true)
+        {
+
+            isperforming = true;
+            if (currentState == State.FreeCamera)
+            {
+                if (options != null)
+                {
+                    if (options.hoverSelect == true)
+                    {
+                        {
+
+
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            if (Physics.Raycast(ray, out hit))
+                            {
+
+                                GameObject hitObj = hit.transform.gameObject;
+
+                                if (hitObj.GetComponent<TileScript>())
+                                {
+                                    TileScript hitTile = hitObj.GetComponent<TileScript>();
+                                    bool alreadySelected = false;
+
+                                    if (tempGridObj.currentTile == hitTile)
+                                    {
+                                        alreadySelected = true;
+
+                                    }
+
+                                    if (alreadySelected)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        if (tempObject.transform.position != hitTile.transform.position)
+                                        {
+                                            ShowWhite();
+                                            for (int i = 0; i < gridObjects.Count; i++)
+                                            {
+                                                ShowSelectedTile(gridObjects[i], Common.GetFactionColor(gridObjects[i].FACTION));
+                                            }
+
+                                            tempObject.transform.position = hitTile.transform.position;
+                                            ComfirmMoveGridObject(tempGridObj, hitTile, true);
+                                            GridObject griddy = GetObjectAtTile(tempGridObj.currentTile);
+                                            if (griddy != null)
+                                            {
+                                                ShowGridObjectAffectArea(griddy, false);
+                                                // ShowGridObjectAttackArea(griddy);
+                                                //if (iconManager)
+                                                //{
+                                                //    iconManager.loadIconPanel(GetObjectAtTile(tempGridObj.currentTile).GetComponent<LivingObject>());
+                                                //}
+                                            }
+                                            //  ShowSelectedTile(tempGridObj);
+                                            ShowSelectedTile(tempGridObj.currentTile, Common.selcted);
+
+                                            myCamera.UpdateCamera();
+                                            updateConditionals();
+                                        }
+                                    }
+                                }
+                                if (myCamera.currentTile != myCamera.selectedTile)
+                                {
+                                    if (Vector3.Distance(myCamera.currentTile.transform.position, myCamera.selectedTile.transform.position) >= 6.0f)
+                                    {
+                                        myCamera.currentTile = myCamera.selectedTile;
+                                        myCamera.UpdateCamera();
+                                    }
+
+
+                                }
+                            }
+                        }
+                        {
+
+                        }
+                    }
+                }
+            }
+            isperforming = false;
+            yield return null;
+        }
+
+    }
     public State GetState()
     {
         if (currentState == State.FairyPhase)
@@ -2565,9 +2637,9 @@ public class ManagerScript : EventRunner
             if (GetObjectAtTile(currentAttackList[i]) != null)
             {
                 foundSomething = true;
-                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[i].transform.position) == true)
+                if (SetGridObjectPosition(tempGridObj, currentAttackList[i].transform.position) == true)
                 {
-                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                    ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
 
                 }
 
@@ -2609,9 +2681,9 @@ public class ManagerScript : EventRunner
         }
         if (foundSomething == false)
         {
-            if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), currentAttackList[0].transform.position) == true)
+            if (SetGridObjectPosition(tempGridObj, currentAttackList[0].transform.position) == true)
             {
-                ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
 
             }
 
@@ -2765,15 +2837,17 @@ public class ManagerScript : EventRunner
         currentState = entry.state;
 
 
-        TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
-        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
+        // TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
+        //TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
 
         menuStack.Add(entry);
         invManager.currentIndex = 0;
         if (GetState() == State.PlayerMove)
         {
             if (currentObject.GetComponent<LivingObject>())
+            {
                 ShowGridObjectMoveArea(currentObject.GetComponent<LivingObject>(), true);
+            }
             if (player)
             {
                 if (player.current)
@@ -2906,8 +2980,8 @@ public class ManagerScript : EventRunner
             currentState = State.PlayerTransition;
             updateConditionals();
 
-            TextObjectHandler.UpdateText(textHolder.subphaseTracker, "Resulting");
-            TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "Resulting");
+            //TextObjectHandler.UpdateText(textHolder.subphaseTracker, "Resulting");
+            //TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "Resulting");
 
             myCamera.UpdateCamera();
             myCamera.SetCameraPosFar();
@@ -3007,7 +3081,7 @@ public class ManagerScript : EventRunner
                             currentState = State.PlayerInput;
 
                             menuManager.ShowCommandCanvas();
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                             if (currentObject)
                                 ShowGridObjectAffectArea(currentObject);
                         }
@@ -3018,7 +3092,7 @@ public class ManagerScript : EventRunner
                             if (currentObject)
                                 ShowGridObjectAffectArea(currentObject);
                             menuManager.ShowActCanvas();
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                         }
                         break;
                     case currentMenu.invMain:
@@ -3102,7 +3176,7 @@ public class ManagerScript : EventRunner
                 {
 
                     tempObject.transform.position = currentObject.transform.position;
-                    tempObject.GetComponent<GridObject>().currentTile = currentObject.currentTile;
+                    tempGridObj.currentTile = currentObject.currentTile;
                 }
             }
             player.current = null;
@@ -3183,8 +3257,8 @@ public class ManagerScript : EventRunner
         newSkillEvent.caller = null;
 
 
-        TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
-        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
+        // TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentState.ToString());
+        //TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentState.ToString());
 
     }
 
@@ -3229,7 +3303,7 @@ public class ManagerScript : EventRunner
                         menuManager.ShowCommandCanvas();
                         ShowGridObjectAffectArea(currentObject);
                         if (player.current)
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                     }
                     break;
                 case currentMenu.act:
@@ -3239,7 +3313,7 @@ public class ManagerScript : EventRunner
                         ShowGridObjectAffectArea(currentObject);
                         menuManager.ShowActCanvas();
                         if (player.current)
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                     }
                     break;
                 case currentMenu.invMain:
@@ -3346,7 +3420,7 @@ public class ManagerScript : EventRunner
                             menuManager.ShowCommandCanvas();
                             if (currentObject)
                                 ShowGridObjectAffectArea(currentObject);
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                         }
 
                         else if (menuStack.Count > 1)
@@ -3355,7 +3429,7 @@ public class ManagerScript : EventRunner
                             if (currentObject)
                                 ShowGridObjectAffectArea(currentObject);
                             menuManager.ShowActCanvas();
-                            ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(player.current));
+                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                         }
                     }
                     break;
@@ -3573,7 +3647,7 @@ public class ManagerScript : EventRunner
             {
                 TileScript hitTile = hitoobject.GetComponent<TileScript>();
                 bool alreadySelected = false;
-                if (tempObject.GetComponent<GridObject>().currentTile == hitTile)
+                if (tempGridObj.currentTile == hitTile)
                 {
                     alreadySelected = true;
 
@@ -3604,6 +3678,7 @@ public class ManagerScript : EventRunner
                                                 anim.LoadList(anim.idlePath);
                                             }
                                             player.current.TakeAction();
+                                            DidCompleteTutorialStep();
                                         }
                                         // CleanMenuStack();
                                     }
@@ -3620,8 +3695,8 @@ public class ManagerScript : EventRunner
                             }
                             else
                             {
-                                Debug.Log("ERROR, Could not find menu item");
-                                bool res = commandItems[0].ComfirmAction(movedObj, MenuItemType.Move);
+
+                                bool res = commandItems[0].ComfirmAction(movedObj, MenuItemType.Move, currentTutorial);
                                 if (res)
                                 {
 
@@ -3642,10 +3717,11 @@ public class ManagerScript : EventRunner
                                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                                     }
+                                    DidCompleteTutorialStep();
                                 }
                                 else
                                 {
-                                    Debug.Log("We got problems");
+
                                 }
                             }
                         }
@@ -3679,7 +3755,7 @@ public class ManagerScript : EventRunner
                         {
 
                             tempObject.transform.position = hitTile.transform.position;
-                            tempObject.GetComponent<GridObject>().currentTile = hitTile;
+                            tempGridObj.currentTile = hitTile;
                             // movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
                             //myCamera.currentTile = hitTile;
                             if (!movingObj)
@@ -3705,7 +3781,7 @@ public class ManagerScript : EventRunner
                     else
                     {
                         tempObject.transform.position = hitTile.transform.position;
-                        tempObject.GetComponent<GridObject>().currentTile = hitTile;
+                        tempGridObj.currentTile = hitTile;
 
                         if (!movingObj)
                         {
@@ -4161,6 +4237,33 @@ public class ManagerScript : EventRunner
                 turnOrder.Add(liveZeff);
 
             }
+            else if (defaultSceneEntry == 26)
+            {
+                GameObject jax = Instantiate(PlayerObject, Vector3.zero, Quaternion.identity);
+                jax.SetActive(true);
+                jax.transform.position = tileMap[6].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
+                ActorSetup asetup = jax.GetComponent<ActorSetup>();
+                asetup.characterId = 0;
+                LivingObject liveJax = jax.GetComponent<LivingObject>();
+                liveJax.Setup();
+                //liveJax.TEXT.text = "";
+                gridObjects.Add(liveJax);
+                turnOrder.Add(liveJax);
+                ComfirmMoveGridObject(liveJax, 6);
+                MoveCameraAndShow(liveJax);
+
+
+                GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+                zeffron.SetActive(true);
+                zeffron.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
+                ActorSetup asetup2 = zeffron.GetComponent<ActorSetup>();
+                asetup2.characterId = 1;
+                LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
+                liveZeff.Setup();
+                gridObjects.Add(liveZeff);
+                turnOrder.Add(liveZeff);
+                ComfirmMoveGridObject(liveZeff, 5);
+            }
             else
             {
                 GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
@@ -4180,6 +4283,7 @@ public class ManagerScript : EventRunner
         if (turnOrder.Count > 0)
         {
             CreateEvent(this, turnOrder[0], "Phase Announce Event", PhaseAnnounce, null, -1, PhaseAnnounceStart);
+
         }
         CreateEvent(this, null, "return state event", BufferedStateChange);
         turnImgManger.LoadTurnImg(turnOrder);
@@ -4222,7 +4326,7 @@ public class ManagerScript : EventRunner
         //if (turnOrder.Count > 0)
         //    currentObject = turnOrder[0];
 
-        //tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
+        //tempGridObj.currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
         //GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
         //attackableTiles = new List<List<TileScript>>();
         //ShowWhite();
@@ -4239,9 +4343,9 @@ public class ManagerScript : EventRunner
         //}
         //currentState = State.FreeCamera;
 
-        //ShowGridObjectAffectArea(tempObject.GetComponent<GridObject>(), true);
+        //ShowGridObjectAffectArea(tempGridObj, true);
 
-        //ShowSelectedTile(tempObject.GetComponent<GridObject>());
+        //ShowSelectedTile(tempGridObj);
         //for (int i = 0; i < turnOrder.Count; i++)
         //{
         //    ShowSelectedTile(turnOrder[i], Common.orange);
@@ -4654,7 +4758,7 @@ public class ManagerScript : EventRunner
         //}
 
 
-        tempObject.GetComponent<GridObject>().currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
+        tempGridObj.currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
         attackableTiles = new List<List<TileScript>>();
         ShowWhite();
         GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
@@ -4698,11 +4802,11 @@ public class ManagerScript : EventRunner
         //CleanMenuStack(true);
         //currentState = State.FreeCamera;
         // tempObject.transform.position = Vector3.zero;
-        //tempObject.GetComponent<GridObject>().currentTile = tileMap[0];
+        //tempGridObj.currentTile = tileMap[0];
         // myCamera.currentTile = tileMap[0];
-        //ShowGridObjectAffectArea(tempObject.GetComponent<GridObject>(), true);
+        //ShowGridObjectAffectArea(tempGridObj, true);
 
-        ShowSelectedTile(tempObject.GetComponent<GridObject>());
+        ShowSelectedTile(tempGridObj);
 
         myCamera.UpdateCamera();
 
@@ -5383,8 +5487,8 @@ public class ManagerScript : EventRunner
         if (gridobjs.Count > 0)
         {
 
-            tempObject.GetComponent<GridObject>().currentTile = gridobjs[0].currentTile;
-            ShowSelectedTile(tempObject.GetComponent<GridObject>());
+            tempGridObj.currentTile = gridobjs[0].currentTile;
+            ShowSelectedTile(tempGridObj);
         }
 
         myCamera.UpdateCamera();
@@ -5751,6 +5855,7 @@ public class ManagerScript : EventRunner
                         HazardScript hazard = turnOrder[i].GetComponent<HazardScript>();
                         CreateEvent(this, hazard, "Hazard Event", HazardEvent, null, -1, SetHazardEvent);
                     }
+                    UpdateMarkedArea();
                     nextRoundCalled = false;
                 }
 
@@ -6122,6 +6227,7 @@ public class ManagerScript : EventRunner
                         HazardScript hazard = turnOrder[i].GetComponent<HazardScript>();
                         CreateEvent(this, hazard, "Hazard Event", HazardEvent, null, -1, SetHazardEvent);
                     }
+                    UpdateMarkedArea();
                 }
             }
         }
@@ -6299,16 +6405,37 @@ public class ManagerScript : EventRunner
         }
     }
 
-    public void ShowMarkedArea()
+    public void UpdateMarkedArea()
     {
+        for (int j = 0; j < tileMap.Count; j++)
+        {
+            TileScript temp = tileMap[j];
+            if (temp.isMarked == true)
+            {
+                if (temp.MYCOLOR != Common.orange)
+                {
+                    temp.isMarked = false;
+                }
+            }
+        }
         for (int i = 0; i < markedEnemies.Count; i++)
         {
             LivingObject aliveObj = markedEnemies[i];
+            if (aliveObj != null)
+            {
+                if (aliveObj.DEAD == false)
+                {
+                    ShowGridObjectAffectArea(aliveObj, false, true);
+                }
+            }
         }
     }
+    [SerializeField]
+    List<TileScript> atkbles = new List<TileScript>();
 
-    public void ShowGridObjectAffectArea(GridObject obj, bool cameraLock = true)
+    public void ShowGridObjectAffectArea(GridObject obj, bool cameraLock = true, bool mark = false)
     {
+        atkbles.Clear();
 
         LivingObject aliveObj = null;
         if (obj == null)
@@ -6335,7 +6462,6 @@ public class ManagerScript : EventRunner
             }
         }
         // LivingObject liveObj = obj.GetComponent<LivingObject>();
-        List<TileScript> atkbles = new List<TileScript>();
         if (aliveObj)
         {
             if (!aliveObj.isSetup)
@@ -6397,57 +6523,104 @@ public class ManagerScript : EventRunner
 
                 if (aliveObj)
                 {
-
-                    if (StartCanMoveCheck(aliveObj, aliveObj.currentTile, temp))
+                    if (liveEnemies.Count > 0)
                     {
-                        for (int jk = 0; jk < aliveObj.INVENTORY.WEAPONS.Count; jk++)
-                        {
-                            WeaponScript wep = aliveObj.INVENTORY.WEAPONS[jk];
-                            if (wep.CanUse(wep.USER.STATS.HPCOSTCHANGE))
-                            {
 
-                                List<TileScript> tlist = GetWeaponAttackableTilesOneList(temp, aliveObj.INVENTORY.WEAPONS[jk]);
-                                for (int t = 0; t < tlist.Count; t++)
+                        if (StartCanMoveCheck(aliveObj, aliveObj.currentTile, temp))
+                        {
+                            for (int jk = 0; jk < aliveObj.INVENTORY.WEAPONS.Count; jk++)
+                            {
+                                WeaponScript wep = aliveObj.INVENTORY.WEAPONS[jk];
+                                if (wep.CanUse(wep.USER.STATS.HPCOSTCHANGE))
                                 {
-                                    if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
-                                        atkbles.Add(tlist[t]);
+
+                                    List<TileScript> tlist = GetWeaponAttackableTilesOneList(temp, aliveObj.INVENTORY.WEAPONS[jk]);
+                                    for (int t = 0; t < tlist.Count; t++)
+                                    {
+                                        if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
+                                            atkbles.Add(tlist[t]);
+                                    }
                                 }
+                            }
+                            for (int jk = 0; jk < aliveObj.INVENTORY.CSKILLS.Count; jk++)
+                            {
+                                CommandSkill cmd = aliveObj.INVENTORY.CSKILLS[jk];
+                                float modification = 1.0f;
+                                if (cmd.ETYPE == EType.magical)
+                                    modification = aliveObj.STATS.MANACHANGE;
+                                if (cmd.ETYPE == EType.physical)
+                                {
+                                    if (cmd.COST > 0)
+                                    {
+                                        modification = aliveObj.STATS.FTCHARGECHANGE;
+                                    }
+                                    else
+                                    {
+                                        modification = aliveObj.STATS.FTCOSTCHANGE;
+                                    }
+                                }
+                                if (cmd.CanUse(modification))
+                                {
+
+                                    List<TileScript> tlist = GetSkillAttackableTilesOneList(temp, cmd);
+                                    for (int t = 0; t < tlist.Count; t++)
+                                    {
+                                        if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
+                                            atkbles.Add(tlist[t]);
+                                    }
+                                }
+                            }
+                            temp.MYCOLOR = Color.cyan;
+                            if (aliveObj != null)
+                            {
+                                if (aliveObj.FACTION != Faction.ally)
+                                {
+                                    temp.MYCOLOR = Color.blue;
+                                }
+                            }
+                            if (mark == true)
+                            {
+                                temp.isMarked = true;
                             }
                         }
-                        for (int jk = 0; jk < aliveObj.INVENTORY.CSKILLS.Count; jk++)
+                        else
                         {
-                            CommandSkill cmd = aliveObj.INVENTORY.CSKILLS[jk];
-                            float modification = 1.0f;
-                            if (cmd.ETYPE == EType.magical)
-                                modification = aliveObj.STATS.MANACHANGE;
-                            if (cmd.ETYPE == EType.physical)
-                            {
-                                if (cmd.COST > 0)
-                                {
-                                    modification = aliveObj.STATS.FTCHARGECHANGE;
-                                }
-                                else
-                                {
-                                    modification = aliveObj.STATS.FTCOSTCHANGE;
-                                }
-                            }
-                            if (cmd.CanUse(modification))
-                            {
-
-                                List<TileScript> tlist = GetSkillAttackableTilesOneList(temp, cmd);
-                                for (int t = 0; t < tlist.Count; t++)
-                                {
-                                    if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
-                                        atkbles.Add(tlist[t]);
-                                }
-                            }
+                            temp.MYCOLOR = Color.white;
                         }
-                        temp.MYCOLOR = Color.cyan;
-
                     }
                     else
                     {
-                        temp.MYCOLOR = Color.white;
+                        if (temp.isOccupied)
+                        {
+                            temp.MYCOLOR = Color.red;
+                            if (aliveObj != null)
+                            {
+                                if (aliveObj.FACTION != Faction.ally)
+                                {
+                                    temp.MYCOLOR = Color.magenta;
+                                }
+                            }
+                            if (mark == true)
+                            {
+                                temp.isMarked = true;
+                            }
+                        }
+                        else
+                        {
+
+                            temp.MYCOLOR = Color.cyan;
+                            if (aliveObj != null)
+                            {
+                                if (aliveObj.FACTION != Faction.ally)
+                                {
+                                    temp.MYCOLOR = Color.blue;
+                                }
+                            }
+                            if (mark == true)
+                            {
+                                temp.isMarked = true;
+                            }
+                        }
                     }
 
                 }
@@ -6469,11 +6642,31 @@ public class ManagerScript : EventRunner
 
         //    }
         //}
+
         for (int i = 0; i < atkbles.Count; i++)
         {
-            if (atkbles[i].MYCOLOR != Color.cyan)
+            if (aliveObj != null)
             {
-                atkbles[i].MYCOLOR = Color.red;
+                if (aliveObj.FACTION != Faction.ally)
+                {
+                    if (atkbles[i].MYCOLOR != Color.blue && atkbles[i].MYCOLOR != new Color(0, 0, 1 * 0.25f, 1))
+                    {
+                        atkbles[i].MYCOLOR = Color.magenta;
+                    }
+
+                }
+            }
+            else
+            {
+
+                if (atkbles[i].MYCOLOR != Color.cyan && atkbles[i].MYCOLOR != new Color(0, 1 * 0.25f, 1 * 0.25f, 1))
+                {
+                    atkbles[i].MYCOLOR = Color.red;
+                }
+            }
+            if (mark == true)
+            {
+                atkbles[i].isMarked = true;
             }
         }
         myCamera.UpdateCamera();
@@ -6535,7 +6728,7 @@ public class ManagerScript : EventRunner
     private List<TileScript> visitedTiles = new List<TileScript>();
     public bool StartCanMoveCheck(LivingObject target, TileScript startTile, TileScript targetTile)
     {
-        if (target == tempObject.GetComponent<GridObject>())
+        if (target == tempGridObj)
         {
             if (targetTile.canBeOccupied == false)
                 return false;
@@ -6969,52 +7162,79 @@ public class ManagerScript : EventRunner
     {
         if (obj == null)
             return;
-        for (int i = 0; i < tileMap.Count; i++)
+        atkbles.Clear();
+        LivingObject aliveObj = null;
+        if (obj.GetComponent<LivingObject>())
         {
-            TileScript temp = tileMap[i];
+            aliveObj = obj.GetComponent<LivingObject>();
+            // attackDist = liveObj.WEAPON.DIST;
         }
-        for (int i = 0; i < MapWidth; i++)
+        if (aliveObj != null)
         {
-            for (int j = 0; j < MapHeight; j++)
+
+            for (int i = 0; i < tileMap.Count; i++)
             {
-                TileScript temp = tileMap[TwoToOneD(j, MapWidth, i)];
-                float tempX = temp.transform.position.x;
-                float tempY = temp.transform.position.z;
-
-                float objX = obj.currentTile.transform.position.x;
-                float objY = obj.currentTile.transform.position.z;
-
-                //  int attackDist = 0;
-
-                if (obj.GetComponent<LivingObject>())
+                TileScript temp = tileMap[i];
+                for (int jk = 0; jk < aliveObj.INVENTORY.WEAPONS.Count; jk++)
                 {
-                    LivingObject liveObj = obj.GetComponent<LivingObject>();
-                    // attackDist = liveObj.WEAPON.DIST;
+                    WeaponScript wep = aliveObj.INVENTORY.WEAPONS[jk];
+                    if (wep.CanUse(wep.USER.STATS.HPCOSTCHANGE))
+                    {
+
+                        List<TileScript> tlist = GetWeaponAttackableTilesOneList(aliveObj.currentTile, aliveObj.INVENTORY.WEAPONS[jk]);
+                        Debug.Log("weapon " + aliveObj.INVENTORY.WEAPONS[jk].NAME + " count = " + tlist.Count);
+                        for (int t = 0; t < tlist.Count; t++)
+                        {
+                            if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
+                            {
+                                atkbles.Add(tlist[t]);
+                            }
+                        }
+                    }
                 }
 
-                xDist = Mathf.Abs(tempX - objX);
-                yDist = Mathf.Abs(tempY - objY);
-
-                xDist /= 2;
-                yDist /= 2;
-
-                if (xDist == 0 && yDist == 0)
+            }
+            for (int jk = 0; jk < aliveObj.INVENTORY.CSKILLS.Count; jk++)
+            {
+                CommandSkill cmd = aliveObj.INVENTORY.CSKILLS[jk];
+                float modification = 1.0f;
+                if (cmd.ETYPE == EType.magical)
+                    modification = aliveObj.STATS.MANACHANGE;
+                if (cmd.ETYPE == EType.physical)
                 {
-                    myCamera.currentTile = temp.GetComponent<TileScript>();
-                    myCamera.infoObject = GetObjectAtTile(temp.GetComponent<TileScript>());
-                    temp.GetComponent<TileScript>().MYCOLOR = Color.white;
+                    if (cmd.COST > 0)
+                    {
+                        modification = aliveObj.STATS.FTCHARGECHANGE;
+                    }
+                    else
+                    {
+                        modification = aliveObj.STATS.FTCOSTCHANGE;
+                    }
                 }
-                //    else if (xDist + yDist <= attackDist)
-                //  {
-                //       temp.GetComponent<TileScript>().myColor = Common.red;
-                //}
-                else
+                if (cmd.CanUse(modification))
                 {
-                    temp.GetComponent<TileScript>().MYCOLOR = Color.white;
+
+                    List<TileScript> tlist = GetSkillAttackableTilesOneList(aliveObj.currentTile, cmd);
+                    Debug.Log("skill " + cmd.NAME + " count = " + tlist.Count);
+                    for (int t = 0; t < tlist.Count; t++)
+                    {
+                        if (!atkbles.Contains(tlist[t]) && tlist[t] != obj.currentTile)
+                        {
+
+                            atkbles.Add(tlist[t]);
+                        }
+                    }
                 }
             }
+            for (int i = 0; i < atkbles.Count; i++)
+            {
+                if (atkbles[i].MYCOLOR != Color.cyan)
+                {
+                    atkbles[i].MYCOLOR = Color.red;
+                }
+            }
+            myCamera.UpdateCamera();
         }
-        myCamera.UpdateCamera();
     }
     public bool SetGridObjectPosition(GridObject obj, Vector3 newLocation)
     {
@@ -9629,26 +9849,14 @@ public class ManagerScript : EventRunner
         //    {
         //    }
         //}
-        res = currentMenuitem.ComfirmAction(invokingObject);
-        return res;
+        res = currentMenuitem.ComfirmAction(invokingObject, currentTutorial);
 
-        for (int i = 0; i < commandItems.Length; i++)
-        {
 
-            if (commandItems[i].itemType == (int)MenuItemType.Move)
-            {
-                res = commandItems[i].ComfirmAction(invokingObject);
-                return res;
-            }
 
-        }
-        MenuItem savedItem = commandItems[0];
-        int savedType = savedItem.itemType;
-
-        // savedItem.itemType = currentMenuitem;
-        res = savedItem.ComfirmAction(invokingObject);
 
         return res;
+
+
     }
     public void CancelMenuAction(GridObject invokingObject)
     {
@@ -13437,7 +13645,7 @@ public class ManagerScript : EventRunner
                             if (firstResponder == null)
                                 firstResponder = GetObjectAtTile(doubleAdjOppTiles[0]) as LivingObject;
                             // tempObject.transform.position = doubleAdjOppTiles[0].transform.position;
-                            //ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), doubleAdjOppTiles[0]);
+                            //ComfirmMoveGridObject(tempGridObj, doubleAdjOppTiles[0]);
                             if (GetState() != State.EnemyTurn && GetState() != State.HazardTurn)
                             {
                                 oppEvent.caller = this;
@@ -14110,10 +14318,10 @@ public class ManagerScript : EventRunner
             if (obj.currentTile != null)
             {
                 tempObject.transform.position = obj.currentTile.transform.position;
-                ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), obj.currentTile);
-                if (GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile) != null)
-                    ShowGridObjectAffectArea(GetObjectAtTile(tempObject.GetComponent<GridObject>().currentTile));
-                ShowSelectedTile(tempObject.GetComponent<GridObject>());
+                ComfirmMoveGridObject(tempGridObj, obj.currentTile);
+                //if (GetObjectAtTile(tempGridObj.currentTile) != null)
+                //    ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
+                ShowSelectedTile(tempGridObj);
                 //  Debug.Log(tempObject.transform.position);
             }
         }
@@ -14153,14 +14361,23 @@ public class ManagerScript : EventRunner
                     case Faction.ally:
                         theColor = Color.blue;
                         turnText = "Player Phase";
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Player Phase");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Player Phase");
+                        textHolder.phaseTracker.SetColor(Color.blue);
                         break;
                     case Faction.enemy:
                         theColor = Color.red;
                         turnText = "Enemy Phase";
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Enemy Phase");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Enemy Phase");
+                        textHolder.phaseTracker.SetColor(Color.red);
                         break;
                     case Faction.hazard:
                         theColor = Color.yellow;
                         turnText = "Glyph Phase";
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Glyph Phase");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Glyph Phase");
+                        textHolder.phaseTracker.SetColor(Color.yellow);
                         break;
                     case Faction.ordinary:
                         theColor = Common.orange;
@@ -14173,6 +14390,9 @@ public class ManagerScript : EventRunner
                     case Faction.fairy:
                         theColor = Color.magenta;
                         turnText = "Fairy Phase";
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Enemy Phase");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Enemy Phase");
+                        textHolder.phaseTracker.SetColor(Color.red);
                         break;
                     default:
                         Debug.Log("Ya done goofed");
@@ -14278,9 +14498,9 @@ public class ManagerScript : EventRunner
         {
             if (turnOrder[i].ACTIONS > 0)
             {
-                if (SetGridObjectPosition(tempObject.GetComponent<GridObject>(), turnOrder[i].transform.position) == true)
+                if (SetGridObjectPosition(tempGridObj, turnOrder[i].transform.position) == true)
                 {
-                    ComfirmMoveGridObject(tempObject.GetComponent<GridObject>(), GetTileIndex(tempObject.GetComponent<GridObject>()));
+                    ComfirmMoveGridObject(tempGridObj, GetTileIndex(tempGridObj));
 
                 }
                 nextround = false;
@@ -14931,6 +15151,96 @@ public class ManagerScript : EventRunner
 
 
     }
+
+    private void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity)
+    {
+        currentTutorial.isActive = true;
+        currentTutorial.steps.Clear();
+        currentTutorial.clarifications.Clear();
+        currentTutorial.steps.AddRange(newSteps);
+        currentTutorial.clarifications.AddRange(newClarity);
+
+        for (int i = 0; i < currentTutorial.steps.Count; i++)
+        {
+            if (currentTutorial.steps[i] == tutorialStep.moveToPosition)
+            {
+                TileScript selectedtile = tileMap[currentTutorial.clarifications[i]];
+                selectedtile.MYCOLOR = Common.orange;
+                selectedtile.isMarked = true;
+            }
+        }
+
+
+        TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
+        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
+    }
+
+    public bool DidCompleteTutorialStep()
+    {
+
+        bool returnedBool = false;
+        if (currentTutorial.isActive == false)
+        {
+            return true;
+        }
+        if (currentTutorial.steps.Count == currentTutorial.clarifications.Count)
+        {
+            if (currentTutorial.currentStep < currentTutorial.steps.Count && currentTutorial.currentStep > -1)
+            {
+                tutorialStep checkStep = currentTutorial.steps[currentTutorial.currentStep];
+                switch (checkStep)
+                {
+                    case tutorialStep.moveToPosition:
+                        {
+                            if (player.current)
+                            {
+                                if (player.current.currentTile == tileMap[currentTutorial.clarifications[currentTutorial.currentStep]])
+                                {
+                                    tileMap[currentTutorial.clarifications[currentTutorial.currentStep]].isMarked = false;
+                                    returnedBool = true;
+                                }
+                            }
+                        }
+                        break;
+                    case tutorialStep.useStrike:
+                        break;
+                    case tutorialStep.useSkill:
+                        break;
+                    case tutorialStep.useSpell:
+                        break;
+                    case tutorialStep.useBarrier:
+                        break;
+                    case tutorialStep.useItem:
+                        break;
+                    case tutorialStep.defeatEnemy:
+                        break;
+                    case tutorialStep.hackGlyph:
+                        break;
+                }
+            }
+        }
+
+        if (returnedBool == true)
+        {
+            currentTutorial.currentStep++;
+            if (currentTutorial.currentStep >= currentTutorial.steps.Count)
+            {
+                currentTutorial.isActive = false;
+                TextObjectHandler.UpdateText(textHolder.subphaseTracker, "");
+                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "");
+            }
+            else
+            {
+                TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
+                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
+
+            }
+        }
+
+
+        return returnedBool;
+    }
+
     private bool isObjectiveMet()
     {
         if (currentObjective == null)

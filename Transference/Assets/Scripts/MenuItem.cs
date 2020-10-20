@@ -211,7 +211,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         }
                         else
                         {
-                              Debug.Log("Looking for weapons?");
+                            Debug.Log("Looking for weapons?");
                             myManager.CreateTextEvent(this, "No weapon equipped for " + invokingObject.NAME, "no weapon", myManager.CheckText, myManager.TextStart);
                         }
 
@@ -485,17 +485,17 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                 break;
             case MenuItemType.prevMenu:
-              if(myManager.eventManager.activeEvents == 0)
+                if (myManager.eventManager.activeEvents == 0)
                 {
-             //   Debug.Log("prev, " + myManager.GetState());
+                    //   Debug.Log("prev, " + myManager.GetState());
                     myManager.returnState();
                 }
-              else
+                else
                 {
-                Debug.Log("nah, " + myManager.GetState());
+                    Debug.Log("nah, " + myManager.GetState());
 
-                myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
-                myManager.currentState = State.PlayerTransition;
+                    myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
+                    myManager.currentState = State.PlayerTransition;
                 }
                 break;
             case MenuItemType.generated:
@@ -557,7 +557,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         myManager.detailsScreen.anotherObj = invokingObject.GetComponent<GridObject>();
                         myManager.StackDetails();
                     }
-                   
+
                 }
                 break;
             case MenuItemType.Shop:
@@ -665,7 +665,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     if (invokingObject.GetComponent<LivingObject>())
                     {
                         LivingObject living = invokingObject.GetComponent<LivingObject>();
-           
+
                         if (myManager)
                         {
 
@@ -673,9 +673,9 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                             if (enemy)
                             {
-                              string response =  enemy.CheckTalkRequirements(living);
+                                string response = enemy.CheckTalkRequirements(living);
                                 DatabaseManager database = Common.GetDatabase();
-                                if(database)
+                                if (database)
                                 {
                                     SceneContainer scene = database.GenerateScene(enemy.NAME, response, enemy.FACE);
                                     myManager.SetScene(scene);
@@ -690,6 +690,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             default:
                 break;
         }
+        myManager.DidCompleteTutorialStep();
     }
 
     public void PlayerUseOrAtk(LivingObject invokingObject)
@@ -707,7 +708,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             myManager.player.useOrEquip();
         }
     }
-    public bool ComfirmAction(GridObject invokingObject, MenuItemType itemType)
+    public bool ComfirmAction(GridObject invokingObject, MenuItemType itemType, Tutorial tutorial)
     {
         MenuItemType item = itemType;
         MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
@@ -716,12 +717,31 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.Move:
                 {
                     TileScript checkTile = myManager.GetTile(invokingObject);
+                    if (tutorial.isActive == true)
+                    {
+
+                        if (tutorial.steps.Count == tutorial.clarifications.Count)
+                        {
+                            if (tutorial.currentStep < tutorial.steps.Count && tutorial.currentStep > -1)
+                            {
+                                if (tutorial.steps[tutorial.currentStep] == tutorialStep.moveToPosition)
+                                {
+                                    if (tutorial.clarifications[tutorial.currentStep] != checkTile.listindex)
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
                     if (checkTile.isOccupied == false)
                     {
 
                         myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                         // myManager.currentState = State.PlayerInput;
                         // myManager.returnState();
+
                         myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
                         return true;
                     }
@@ -742,7 +762,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
         }
     }
-    public bool ComfirmAction(GridObject invokingObject)
+    public bool ComfirmAction(GridObject invokingObject, Tutorial tutorial)
     {
         MenuItemType item = (MenuItemType)itemType;
         MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
@@ -751,6 +771,26 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.Move:
                 {
                     TileScript checkTile = myManager.GetTile(invokingObject);
+
+                    if (tutorial.isActive == true)
+                    {
+
+                        if (tutorial.steps.Count == tutorial.clarifications.Count)
+                        {
+                            if (tutorial.currentStep < tutorial.steps.Count && tutorial.currentStep > -1)
+                            {
+                                if (tutorial.steps[tutorial.currentStep] == tutorialStep.moveToPosition)
+                                {
+                                    if (tutorial.clarifications[tutorial.currentStep] != checkTile.listindex)
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
                     if (checkTile.isOccupied == false)
                     {
 
@@ -770,6 +810,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                             {
                                 myManager.ComfirmMoveGridObject(invokingObject, myManager.GetTileIndex(invokingObject));
                                 myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                                myManager.DidCompleteTutorialStep();
                                 return true;
                             }
                             return false;
@@ -791,6 +832,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             default:
                 // myManager.returnState();// myManager.currentState = State.PlayerInput;
                 myManager.CreateEvent(this, null, "return state event", myManager.BufferedReturnEvent);
+                myManager.DidCompleteTutorialStep();
 
                 return true;
                 break;

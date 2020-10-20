@@ -718,6 +718,30 @@ public struct BoolConatainerWTileList
     public string name;
     public List<TileScript> tiles;
 }
+
+
+public struct Tutorial
+{
+    public bool isActive;
+    public List<tutorialStep> steps;
+    public int currentStep;
+    public List<int> clarifications;
+}
+
+public enum tutorialStep
+{
+    moveToPosition,
+    useStrike,
+    useSkill,
+    useSpell,
+    useBarrier,
+    useItem,
+    allocate,
+    defeatEnemy,
+    hackGlyph
+
+}
+
 public enum currentMenu
 {
     command,
@@ -734,6 +758,17 @@ public enum currentMenu
     Strikes,
     none
 }
+
+public enum Action
+{
+    strike,
+    spell,
+    skill,
+    allocate,
+    move,
+    none
+}
+
 public enum Faction
 {
     ally,
@@ -996,7 +1031,7 @@ public class Common : ScriptableObject
     public static Color lime = new Color(0.802f, 1, 0.825f);
     public static Color green = new Color(0.220f, 1, 0.230f);
     public static Color cyan = new Color(0.1647f, 0.8215f, 1f);
-   // public static Color red = new Color(0.693f, 0.0f, 0.230f);
+    // public static Color red = new Color(0.693f, 0.0f, 0.230f);
     public static Color red = new Color(1, 0.0f, 0.230f);
     public static Color semi = new Color(1.0f, 1.0f, 1.0f, 0.183f);
     public static Color moresemi = new Color(1.0f, 1.0f, 1.0f, 0.083f);
@@ -1173,7 +1208,7 @@ public class Common : ScriptableObject
         {
             case Element.Water:
                 {
-                indx = 0;
+                    indx = 0;
                 }
                 break;
             case Element.Pyro:
@@ -1604,7 +1639,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.paralyzed:
                     {
-                        if (liveAffect == SideEffect.freeze )
+                        if (liveAffect == SideEffect.freeze)
                         {
                             return false;
                         }
@@ -1612,7 +1647,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.sleep:
                     {
-                        if ( liveAffect == SideEffect.freeze)
+                        if (liveAffect == SideEffect.freeze)
                         {
                             return false;
                         }
@@ -1620,7 +1655,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.frozen:
                     {
-                        if (liveAffect != SideEffect.none )
+                        if (liveAffect != SideEffect.none)
                         {
                             return false;
                         }
@@ -1636,7 +1671,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.poisoned:
                     {
-                        if (liveAffect == SideEffect.freeze )
+                        if (liveAffect == SideEffect.freeze)
                         {
                             return false;
                         }
@@ -1644,7 +1679,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.bleeding:
                     {
-                        if (liveAffect == SideEffect.freeze )
+                        if (liveAffect == SideEffect.freeze)
                         {
                             return false;
                         }
@@ -1652,7 +1687,7 @@ public class Common : ScriptableObject
                     break;
                 case StatusEffect.confused:
                     {
-                        if (liveAffect == SideEffect.freeze )
+                        if (liveAffect == SideEffect.freeze)
                         {
                             return false;
                         }
@@ -1668,18 +1703,18 @@ public class Common : ScriptableObject
     {
         switch (testFaction)
         {
-      
+
             case Faction.enemy:
                 return true;
                 break;
             case Faction.hazard:
                 return true;
                 break;
-        
+
             case Faction.fairy:
                 return true;
                 break;
-       
+
         }
         return false;
     }
@@ -2429,7 +2464,48 @@ public class Common : ScriptableObject
         }
         return 0;
     }
-    public static string  GetHelpText(int helpnum)
+    public static string GetTutorialText(tutorialStep someStep)
+    {
+        string returnedString = "";
+
+        switch (someStep)
+        {
+            case tutorialStep.moveToPosition:
+                returnedString = "Move to position";
+                break;
+            case tutorialStep.useStrike:
+                returnedString = "Use a strike";
+                break;
+            case tutorialStep.useSkill:
+                returnedString = "Use a skill";
+                break;
+            case tutorialStep.useSpell:
+                returnedString = "Use a spell";
+                break;
+            case tutorialStep.useBarrier:
+                returnedString = "Use a barrier";
+                break;
+            case tutorialStep.useItem:
+                returnedString = "Use an item";
+                break;
+            case tutorialStep.allocate:
+                returnedString = "Allocate your Action Points";
+                break;
+            case tutorialStep.defeatEnemy:
+                returnedString = "Defeat the enemy";
+                break;
+            case tutorialStep.hackGlyph:
+                returnedString = "Hack the Glyph";
+                break;
+            default:
+                Debug.Log("Couldn't find tutorial text");
+                break;
+        }
+
+        return returnedString;
+    }
+
+    public static string GetHelpText(int helpnum)
     {
         string returnedString = "";
 
@@ -2629,7 +2705,7 @@ public class Common : ScriptableObject
 
         switch (buff)
         {
-   
+
             case BuffType.Str:
                 mod = ModifiedStat.Str;
                 break;

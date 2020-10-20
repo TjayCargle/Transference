@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TileScript : MonoBehaviour, IComparable
 {
-    public Color myColor;
+    private Color myColor;
     private Color previousColor;
     public bool isOccupied;
     public bool canBeOccupied = true;
@@ -50,30 +50,49 @@ public class TileScript : MonoBehaviour, IComparable
         {
             if (value == Color.white)
             {
-                if (isMarked == true)
-                {
-                    myColor = previousColor;
-                }
-                else
+                if (isMarked == false)
                 {
                     previousColor = myColor;
                     myColor = value;
                     if (isInShadow)
                     {
-                        myColor = value * 0.75f;
+                        if(value != Common.orange)
+                        {
+                        myColor = value * 0.25f;
+                        myColor.a = 1;
+                        }
+                        else
+                        {
+                            myColor = value * 0.75f;
+                            myColor.a = 1;
+                        }
                     }
                 }
+               
             }
             else
             {
-                previousColor = myColor;
-                myColor = value;
-                if (isInShadow)
+                if (isMarked == false)
                 {
-                    myColor = value * 0.75f;
+                    previousColor = myColor;
+                    myColor = value;
+                    if (isInShadow)
+                    {
+                        if (value != Common.orange)
+                        {
+                            myColor = value * 0.25f;
+                            myColor.a = 1;
+                        }
+                        else
+                        {
+                            myColor = value * 0.75f;
+                            myColor.a = 1;
+                        }
+                    }
                 }
+             
             }
-          
+
         }
     }
 

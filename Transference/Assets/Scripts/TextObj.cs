@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TextObj : MonoBehaviour {
+public class TextObj : MonoBehaviour
+{
 
     public Text text;
     public TextMeshProUGUI textmeshpro;
@@ -42,18 +43,20 @@ public class TextObj : MonoBehaviour {
     {
         time = 0;
         isShowing = false;
-      transform.parent.gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
 
 
     }
     public void SetText(string sometext)
     {
-        if(text)
+        if (!isSetup)
+            Setup();
+        if (text)
         {
             text.text = sometext;
         }
 
-        if(textmeshpro)
+        if (textmeshpro)
         {
             textmeshpro.text = sometext;
         }
