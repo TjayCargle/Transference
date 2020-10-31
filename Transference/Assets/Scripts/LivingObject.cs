@@ -47,7 +47,6 @@ public class LivingObject : GridObject
     protected List<SpriteObject> lastUsedSprites = new List<SpriteObject>();
     protected SpriteObject highestDamage;
     protected List<SpriteObject> ailments;
-
     private ArmorScript defaultArmor;
     public List<TileScript> moveableTiles = new List<TileScript>();
 
@@ -59,6 +58,11 @@ public class LivingObject : GridObject
 
     [SerializeField]
     protected TextMeshPro generatedCounterText;
+
+    protected int shields = 0;
+
+    [SerializeField]
+    protected UnityEngine.UI.Slider myWorldHealthBar = null;
 
     public TextMeshPro TEXT
     {
@@ -243,6 +247,12 @@ public class LivingObject : GridObject
         set { generatedActions = value; }
     }
 
+    public int SHIELDS
+    {
+        get { return shields; }
+        set { shields = value; }
+    }
+
     //public int Atk_DIST
     //{
     //    get { return equippedWeapon.DIST; }
@@ -299,7 +309,7 @@ public class LivingObject : GridObject
     }
     public int LEVEL
     {
-        get { return physLevel + magLevel + dexLevel; }
+        get { return BASE_STATS.LEVEL; }
     }
     public int PHYSLEVEL
     {
@@ -319,6 +329,39 @@ public class LivingObject : GridObject
     //    get { return isEnenmy; }
     //    set { isEnenmy = value; }
     //}
+    protected UnityEngine.UI.Image healthFill = null;
+    public void UpdateHealthbar()
+    {
+        if (myWorldHealthBar != null)
+        {
+            if (healthFill == null)
+            {
+                healthFill = myWorldHealthBar.fillRect.GetComponent<UnityEngine.UI.Image>();
+            }
+            float trueMax = MAX_HEALTH;
+            myWorldHealthBar.wholeNumbers = false;
+            myWorldHealthBar.maxValue = trueMax;
+            float fakeMax = trueMax * 0.5f;
+            float fakeValue = (float)HEALTH * 0.5f;
+            myWorldHealthBar.value = fakeValue;
+            if (healthFill != null)
+            {
+                float middle = fakeMax * 0.5f;
+         
+                if (fakeValue >= middle)
+                {
+        
+                    healthFill.color = Color.Lerp(Color.yellow, Color.green, fakeValue / middle);
+
+                }
+                else
+                {
+                    healthFill.color = Color.Lerp(Color.red, Color.yellow, fakeValue / fakeMax);
+
+                }
+            }
+        }
+    }
 
     public bool ChangeHealth(int val, bool showchange = true)
     {
@@ -369,7 +412,7 @@ public class LivingObject : GridObject
                 // Debug.Log("lost health");
             }
         }
-
+        UpdateHealthbar();
         return true;
     }
     public bool ChangeMana(int val)
@@ -713,7 +756,7 @@ public class LivingObject : GridObject
                 barrier = new GameObject().AddComponent<SpriteObject>();
                 barrier.name = " Barrier ";
                 barrier.transform.parent = this.transform;
-                barrier.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
+                barrier.transform.localScale = new Vector3(-0.216f, 0.25f, 1.0f);
                 barrier.transform.localPosition = new Vector3(0.25f, 0.25f, 0.1f);
                 barrier.gameObject.AddComponent<SpriteRenderer>();
             }
@@ -723,10 +766,10 @@ public class LivingObject : GridObject
             if (actionCounterText == null)
             {
                 actionCounterText = new GameObject().AddComponent<TextMeshPro>();
-            actionCounterText.name = "Action Counter";
+                actionCounterText.name = "Action Counter";
             }
 
-            actionCounterText.transform.SetParent( this.transform);
+            actionCounterText.transform.SetParent(this.transform);
             actionCounterText.transform.localScale = new Vector3(0.2f, 0.2f, -0.1f);
             actionCounterText.transform.localPosition = new Vector3(0.85f, 0.25f, -0.1f);
             // tmp.text = "10";
@@ -736,25 +779,25 @@ public class LivingObject : GridObject
 
 
             LAST_SPRITES.Clear();
-            float startingX = -0.35f;
+            float startingY = -0.2f;
             for (int i = 0; i < 3; i++)
             {
-              
-            
-           
+
+
+
                 SpriteObject sprObj = new GameObject().AddComponent<SpriteObject>();
                 sprObj.name = FullName + " Last Sprite " + i;
                 sprObj.transform.parent = this.transform;
-                sprObj.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f);
-                sprObj.transform.localPosition = new Vector3(startingX, -0.65f, -0.1f);
+                sprObj.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
+                sprObj.transform.localPosition = new Vector3(0.5f, startingY, -0.1f);
                 SpriteRenderer worstSprite = sprObj.gameObject.AddComponent<SpriteRenderer>();
                 worstSprite.color = new Color(1, 1, 1, 0.8f);
                 sprObj.Setup();
 
                 LAST_SPRITES.Add(sprObj);
-                startingX += 0.55f;
+                startingY -= 0.2f;
             }
-         
+
             //if (WEAKNESS == null)
             //{
             //    worstWeakness = new GameObject().AddComponent<SpriteObject>();
@@ -797,6 +840,14 @@ public class LivingObject : GridObject
             //    highestDamage.AddComponent<SpriteRenderer>();
             //    // updateDmgIcon();
             //}
+
+            Canvas myHealthCanvas = GetComponentInChildren<Canvas>();
+            if (myHealthCanvas != null)
+            {
+                myHealthCanvas.worldCamera = Camera.main;
+                myWorldHealthBar = GetComponentInChildren<UnityEngine.UI.Slider>();
+
+            }
 
 
             if (!ARMOR.SCRIPT)
@@ -844,27 +895,27 @@ public class LivingObject : GridObject
 
     public void updateLastSprites()
     {
-        
+
         if (LAST_SPRITES != null)
         {
             InventoryMangager invmger = GameObject.FindObjectOfType<InventoryMangager>();
             for (int i = 0; i < LAST_SPRITES.Count; i++)
             {
                 SpriteObject spriteObject = LAST_SPRITES[i];
-                if(LAST_USED.Count > i)
+                if (LAST_USED.Count > i)
                 {
-                //Debug.Log("yonx");
+                    //Debug.Log("yonx");
                     int indx = Common.GetElementIndex(LAST_USED[i]);
-               // Debug.Log(" " + indx);
-                spriteObject.sr.sprite = invmger.ELEMENTS[indx];
+                    // Debug.Log(" " + indx);
+                    spriteObject.sr.sprite = invmger.ELEMENTS[indx];
                 }
                 else
                 {
-               // Debug.Log("yon");
+                    // Debug.Log("yon");
                     spriteObject.sr.sprite = null;
                 }
             }
-         
+
         }
     }
 
@@ -885,10 +936,18 @@ public class LivingObject : GridObject
                     AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Crippled];
                     almentIndex++;
                 }
-                if (PSTATUS == PrimaryStatus.guarding)
+                //if (PSTATUS == PrimaryStatus.guarding)
+                //{
+                //    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
+                //    almentIndex++;
+                //}
+                for (int i = 0; i < SHIELDS; i++)
                 {
-                    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
-                    almentIndex++;
+                    if (almentIndex < 6)
+                    {
+                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
+                        almentIndex++;
+                    }
                 }
                 for (int i = 0; i < INVENTORY.EFFECTS.Count; i++)
                 {
@@ -1035,6 +1094,52 @@ public class LivingObject : GridObject
         myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
         return true;
     }
+    public virtual bool HealEvent(Object data)
+    {
+        TrueHeal();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
+    public virtual bool RestoreEvent(Object data)
+    {
+        TrueRestore();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
+
+    public virtual bool ChargeEvent(Object data)
+    {
+        TrueCharge();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
+    public virtual bool DrainEvent(Object data)
+    {
+        TrueDrain();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
+
+    public virtual bool ShieldEvent(Object data)
+    {
+        TrueShield();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
+
+    public virtual bool OverloadEvent(Object data)
+    {
+        //lose health but gain additional action next turn
+        TrueOverload();
+        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        TakeAction();
+        return true;
+    }
 
     public virtual bool WaitEvent(Object data)
     {
@@ -1044,13 +1149,6 @@ public class LivingObject : GridObject
         return true;
     }
 
-    public virtual bool ChargeEvent(Object data)
-    {
-        TrueCharge();
-        //  myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
-        TakeRealAction();
-        return true;
-    }
     public void Refresh()
     {
         tookAction = false;
@@ -1058,6 +1156,133 @@ public class LivingObject : GridObject
         refreshState = 0;
         updateAilmentIcons();
     }
+    public virtual void Heal()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -3;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, " Heal Health", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> decided to heal!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", HealEvent);
+
+    }
+    public virtual void Restore()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -3;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Restore Mana", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> decided to restore!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", RestoreEvent);
+
+    }
+    public virtual void Charge()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Charge", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> gained fatigue!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ChargeEvent);
+
+    }
+    public virtual void Drain()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Drain", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> reduced fatigue!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", DrainEvent);
+
+    }
+    public virtual void Shield()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Shield", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> gained a shield!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ShieldEvent);
+
+    }
+    public virtual void Overload()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Overload", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> stored an action point!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", OverloadEvent);
+
+    }
+
     public void Wait()
     {
         GridAnimationObj gao = null;
@@ -1101,7 +1326,38 @@ public class LivingObject : GridObject
         myManager.CreateEvent(this, gao, "Neo guard action", ChargeEvent);
 
     }
+    public void TrueHeal()
+    {
+        ChangeHealth((int)((0.20f * MAX_HEALTH)));
+        UpdateHealthbar();
 
+    }
+    public void TrueRestore()
+    {
+        ChangeMana((int)((0.20f * MAX_MANA)));
+
+    }
+    public void TrueCharge()
+    {
+        ChangeFatigue(-1 * (int)((0.20f * MAX_FATIGUE)));
+
+    }
+    public void TrueDrain()
+    {
+        ChangeFatigue((int)((0.20f * MAX_FATIGUE)));
+
+    }
+    public void TrueShield()
+    {
+        SHIELDS++;
+        PSTATUS = PrimaryStatus.guarding;
+        updateAilmentIcons();
+    }
+    public void TrueOverload()
+    {
+        ChangeHealth(-1 * (int)((0.30f * MAX_HEALTH)));
+        GENERATED++;
+    }
     public void TrueWait()
     {
         ChangeHealth((int)((0.10f * MAX_HEALTH) * (actions + 1)));
@@ -1122,6 +1378,7 @@ public class LivingObject : GridObject
         spd = (int)(spd / 10);
 
         //   if (actions == spd || actions == (spd + 2))
+
         if (tookAction == false)
         {
             GENERATED += 2;
@@ -1149,37 +1406,37 @@ public class LivingObject : GridObject
         }
     }
 
-    public void TrueCharge()
-    {
-        ChangeFatigue(-1 * ((int)((0.80f * MAX_FATIGUE) * (actions + 1))));
-        //int amtft = ((int)(0.30f * (float)MAX_FATIGUE) * (actions + 1));
-        ////Debug.Log(amtft);
-        //STATS.FATIGUE += amtft;
-        //if (FATIGUE > MAX_FATIGUE)
-        //{
-        //    STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
-        //    BASE_STATS.FATIGUE = 0;
-        //}
-        float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
-        spd = (int)(spd / 10);
+    //public void TrueCharge()
+    //{
+    //    ChangeFatigue(-1 * ((int)((0.80f * MAX_FATIGUE) * (actions + 1))));
+    //    //int amtft = ((int)(0.30f * (float)MAX_FATIGUE) * (actions + 1));
+    //    ////Debug.Log(amtft);
+    //    //STATS.FATIGUE += amtft;
+    //    //if (FATIGUE > MAX_FATIGUE)
+    //    //{
+    //    //    STATS.FATIGUE = BASE_STATS.MAX_FATIGUE;
+    //    //    BASE_STATS.FATIGUE = 0;
+    //    //}
+    //    float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
+    //    spd = (int)(spd / 10);
 
-        //   if (actions == spd || actions == (spd + 2))
-        if (tookAction == false)
-        {
-            GENERATED += 2;
+    //    //   if (actions == spd || actions == (spd + 2))
+    //    if (tookAction == false)
+    //    {
+    //        GENERATED += 2;
 
 
-        }
+    //    }
 
-        PSTATUS = PrimaryStatus.guarding;
-        ACTIONS = 0;
-        updateAilmentIcons();
-        tookAction = false;
+    //    PSTATUS = PrimaryStatus.guarding;
+    //    ACTIONS = 0;
+    //    updateAilmentIcons();
+    //    tookAction = false;
 
-    }
+    //}
     public void LevelUp()
     {
-        if (false)// (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
+        if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
         {
             BASE_STATS.LEVEL++;
             BASE_STATS.MAX_HEALTH += dexLevel;
@@ -1369,7 +1626,7 @@ public class LivingObject : GridObject
             yield return null;
         }
         isdoneDying = true;
-        Debug.Log("livr fade end");
+        //Debug.Log("livr fade end");
     }
     public override bool DieEvent(Object data)
     {
@@ -1377,7 +1634,7 @@ public class LivingObject : GridObject
         return isdoneDying;
     }
 
-    public bool SummonBarrier(Object data)
+    public virtual bool SummonBarrier(Object data)
     {
         ArmorScript newArmor = data as ArmorScript;
         if (newArmor != ARMOR.SCRIPT)
@@ -1392,7 +1649,7 @@ public class LivingObject : GridObject
     }
 
 
-    public bool PrepareBarrier(Object data)
+    public virtual bool PrepareBarrier(Object data)
     {
         ArmorScript newArmor = data as ArmorScript;
         GridAnimationObj gao = null;
@@ -1704,29 +1961,19 @@ public class LivingObject : GridObject
 
             if (prev != actionCounterText.rectTransform.sizeDelta)
             {
-                if (FACTION == Faction.ally)
+
+                if (prev == Vector2.zero)
                 {
-
-                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
-                    if (manager)
-                    {
-                        //                 Debug.Log(manager.currentState + " " + tmp.rectTransform.sizeDelta);
-                    }
-
-                    // Get calling method name
-                    //Console.WriteLine(stackTrace.GetFrame(1).GetMethod().Name);
-                    if (prev == Vector2.zero)
-                    {
-                        actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
-                        prev = actionCounterText.rectTransform.sizeDelta;
-                    }
-                    else
-                    {
-                        actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
-                        prev = actionCounterText.rectTransform.sizeDelta;
-
-                    }
+                    actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                    prev = actionCounterText.rectTransform.sizeDelta;
                 }
+                else
+                {
+                    actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                    prev = actionCounterText.rectTransform.sizeDelta;
+
+                }
+
             }
         }
     }

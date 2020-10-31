@@ -57,3 +57,12 @@ id, name, description,attack, attack_type,affinity, range, accurracy, crit,boost
 48, Energy Dance,El:  2, 2, physical, Force, line, 100, 0, Str, 2
 -
 49, Bubble Blast,El:  2, 2, magical, Water, adjacent, 100, 0, Str, 0
+-
+-
+50, Static ,El:  2, 2, physical, Electric, adjacent, 100, 0, Str, 2
+51, Static Tome,El:  2, 2, physical, Electric, pinWheel, 100, 0, Str, 2
+52, Static Shot,El:  2, 2, physical, Electric, detached, 100, 0, Str, 2
+53, Static Breath,El:  2, 2, physical, Electric, spear, 100, 0, Str, 2
+54, Static Wheel,El:  2, 2, physical, Electric, rotator, 100, 0, Str, 2
+55, Static Lance,El:  2, 2, physical, Electric, lance, 100, 0, Str, 2
+56, Static Dance,El:  2, 2, physical, Electric, line, 100, 0, Str, 2

@@ -34,6 +34,8 @@ public class EnemyScript : LivingObject
     private Element talkElement;
     private List<TileScript> personalAttackList = new List<TileScript>();
     public List<LivingObject> sightedTargets = new List<LivingObject>();
+    public BossScript specialProfile = null;
+    BossCommand chosenCommand = BossCommand.strike;
     public TalkStage TALK
     {
         get { return talk; }
@@ -47,6 +49,7 @@ public class EnemyScript : LivingObject
 
         internalTimer = 1.0f;
         myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
+        myManager.ShowWhite();
         myManager.ShowSelectedTile(currentPath.realTarget, Color.magenta);
         myManager.myCamera.UpdateCamera();
 
@@ -60,7 +63,7 @@ public class EnemyScript : LivingObject
     }
     public void ItemStart()
     {
-        internalTimer = 1.0f;
+        internalTimer = 1.25f;
         myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
         myManager.myCamera.UpdateCamera();
 
@@ -113,7 +116,7 @@ public class EnemyScript : LivingObject
         float dist = Vector3.Distance(nextTile.transform.position, transform.position);
         if (dist > 0.5f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.09f);
+            transform.position = Vector3.Lerp(transform.position, nextTile.transform.position, 5 * Time.fixedDeltaTime); //Vector3.MoveTowards(transform.position, nextTile.transform.position, 0.09f);
             //transform.Translate(directionVector * 0.5f);
         }
         else
@@ -394,7 +397,7 @@ public class EnemyScript : LivingObject
     }
     public Queue<TileScript> DeterminePath(path pathTarget)
     {
-        float timer = Time.deltaTime;
+        float timer = Time.fixedDeltaTime;
 
         if (pathTarget.currentPath.Count == 0)
         {
@@ -477,6 +480,233 @@ public class EnemyScript : LivingObject
 
         return pathTarget.currentPath;
     }
+    private bool ExecuteEvent(Object data)
+    {
+        if (internalTimer >= 0)
+        {
+            internalTimer -= 0.02f;
+            return false;
+        }
+        GridAnimationObj gao = data as GridAnimationObj;
+        switch (gao.extra)
+        {
+            case 0:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Healed Health", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color> decided to heal!");
+                    }
+
+                    myManager.CreateEvent(this, gao, "Neo wait action", HealEvent, null, 0);
+                }
+                break;
+
+            case 1:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Restore Mana", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color> decided to restore!");
+                    }
+
+                    myManager.CreateEvent(this, gao, "Neo wait action", RestoreEvent, null, 0);
+                }
+                break;
+
+            case 2:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Charge FT", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color> gained fatigue!");
+                    }
+                    myManager.CreateEvent(this, gao, "Neo wait action", ChargeEvent, null, 0);
+                }
+                break;
+
+            case 3:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Drain FT", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color> reduced fatigue!");
+                    }
+
+                    myManager.CreateEvent(this, gao, "Neo wait action", DrainEvent, null, 0);
+                }
+                break;
+
+            case 4:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Shield", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color> gained a shield!");
+                    }
+
+                    myManager.CreateEvent(this, gao, "Neo wait action", ShieldEvent, null, 0);
+                }
+                break;
+
+            case 5:
+                {
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+                    myManager.CreateTextEvent(this, "Overload", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color>  stored an action point!");
+                    }
+                    myManager.CreateEvent(this, gao, "Neo wait action", OverloadEvent, null, 0);
+                }
+                break;
+
+        }
+        return true;
+    }
+    public override bool SummonBarrier(Object data)
+    {
+
+        ArmorScript newArmor = data as ArmorScript;
+        if (newArmor != ARMOR.SCRIPT)
+        {
+            ARMOR.Equip(newArmor);
+            newArmor.Use();
+            myManager.CreateEvent(this, null, "waiting for sfx", myManager.WaitForSFXEvent);
+        }
+        if (myManager.GetState() != State.EnemyTurn)
+            myManager.currentObject = myManager.player.current;
+        return true;
+    }
+    public override bool PrepareBarrier(Object data)
+    {
+        ArmorScript newArmor = data as ArmorScript;
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+
+        myManager.menuManager.ShowNone();
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, newArmor.NAME, "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> summoned a " + newArmor.NAME);
+        }
+
+        myManager.CreateEvent(this, newArmor, "Neo barrier equip", SummonBarrier);
+
+        return true;
+    }
+    public override void Heal()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -3;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 0;
+
+        myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        myManager.CreateTextEvent(this, "Healed Health", "wait event", myManager.CheckText, myManager.TextStart);
+        if (myManager.log)
+        {
+            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+            myManager.log.Log(coloroption + NAME + "</color> decided to heal!");
+        }
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+    public override void Restore()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -3;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 1;
+
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+    public override void Charge()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 2;
+
+
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+    public override void Drain()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 3;
+
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+    public override void Shield()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 4;
+
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+    public override void Overload()
+    {
+        GridAnimationObj gao = null;
+        gao = myManager.PrepareGridAnimation(null, this);
+        gao.type = -4;
+        gao.magnitute = 0;
+        gao.LoadGridAnimation();
+        gao.extra = 5;
+
+
+
+        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
+
+    }
+
     public bool FindEnemiesInRangeOfAttacks(Vector3 location)
     {
         bool foundEnemy = false;
@@ -753,8 +983,10 @@ public class EnemyScript : LivingObject
         bool found = false;
         if (LEVEL < 7)
         {
+           // Debug.Log("level less than 7");
             return false;
         }
+        GridObject[] objects = GameObject.FindObjectsOfType<GridObject>();
         for (int i = 0; i < INVENTORY.ITEMS.Count; i++)
         {
 
@@ -880,7 +1112,7 @@ public class EnemyScript : LivingObject
                                 {
                                     ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
                                     container.item = INVENTORY.ITEMS[i];
-                                    container.target = this;
+                                    container.target = fellowEnemy;
                                     possibleItems.Add(container);
                                     found = true;
                                 }
@@ -907,7 +1139,7 @@ public class EnemyScript : LivingObject
                                 {
                                     ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
                                     container.item = INVENTORY.ITEMS[i];
-                                    container.target = this;
+                                    container.target = fellowEnemy;
                                     possibleItems.Add(container);
                                     found = true;
                                 }
@@ -915,7 +1147,26 @@ public class EnemyScript : LivingObject
                         }
                     }
                     break;
+                case ItemType.summon:
+                    break;
+                case ItemType.dart:
+                    {
+                        List<GridObject> dartables = DoubleAdjectObjects();
+                        for (int j = 0; j < dartables.Count; j++)
+                        {
+                            if (dartables[j].FACTION == Faction.ally)
+                            {
+                                LivingObject livvy = dartables[j] as LivingObject;
+                                ItemContainer container = ScriptableObject.CreateInstance<ItemContainer>();
+                                container.item = INVENTORY.ITEMS[i];
+                                container.target = livvy;
+                                possibleItems.Add(container);
+                                found = true;
 
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -996,7 +1247,7 @@ public class EnemyScript : LivingObject
             //if(objects[i].GetComponent<LivingObject>())
             {
                 GridObject living = objects[i];//.GetComponent<LivingObject>();
-       
+
                 if (living.FACTION != this.FACTION && living != this && !living.GetComponent<TempObject>())
                 {
 
@@ -1058,11 +1309,32 @@ public class EnemyScript : LivingObject
         List<int> attackOptions = new List<int>();
         for (int i = 0; i < possibleAttacks.Count; i++)
         {
+            if (id < 100)
+            {
+                attackOptions.Add(i);
 
-            attackOptions.Add(i);
+            }
+            else
+            {
+
+
+                if (possibleAttacks[i].strike != null && chosenCommand == BossCommand.strike)
+                {
+                    attackOptions.Add(i);
+                }
+                else if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                {
+                    attackOptions.Add(i);
+                }
+                else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                {
+                    attackOptions.Add(i);
+                }
+            }
+
             if (possibleAttacks[i].strike != null)
             {
-                WEAPON.Equip(possibleAttacks[i].strike);
+                //WEAPON.Equip(possibleAttacks[i].strike);
                 if (possibleAttacks[i].strike.CanUse() == false)
                 {
                     Debug.Log("problemo");
@@ -1080,6 +1352,27 @@ public class EnemyScript : LivingObject
             DmgReaction aReaction = myManager.CalcDamage(possibleAttacks[i], false);
             if (aReaction.reaction <= Reaction.weak && aReaction.reaction >= Reaction.leathal)
             {
+                if (id < 100)
+                {
+                    attackOptions.Add(i);
+
+                }
+                else
+                {
+                    if (possibleAttacks[i].strike != null && chosenCommand == BossCommand.strike)
+                    {
+                        attackOptions.Add(i);
+                    }
+                    else if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                    {
+                        attackOptions.Add(i);
+                    }
+                    else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                    {
+                        attackOptions.Add(i);
+                    }
+                }
+
                 attackOptions.Add(i);
             }
             if (possibleAttacks[i].command != null)
@@ -1087,17 +1380,61 @@ public class EnemyScript : LivingObject
                 CommandSkill usableskill = possibleAttacks[i].command;
                 if (usableskill.HITS > 1 || usableskill.MAX_HIT > 1)
                 {
-                    attackOptions.Add(i);
+                    if (id < 100)
+                    {
+                        attackOptions.Add(i);
+
+                    }
+                    else
+                    {
+                        if (possibleAttacks[i].strike != null && chosenCommand == BossCommand.strike)
+                        {
+                            attackOptions.Add(i);
+                        }
+                        else if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                        {
+                            attackOptions.Add(i);
+                        }
+                        else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                        {
+                            attackOptions.Add(i);
+                        }
+                    }
+
                 }
                 if (usableskill.ETYPE == EType.magical)
                 {
                     if (MAGIC > STRENGTH)
                     {
-                        attackOptions.Add(i);
+                        if (id < 100)
+                        {
+                            attackOptions.Add(i);
+
+                        }
+                        else
+                        {
+                            if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                            {
+                                attackOptions.Add(i);
+                            }
+                        }
+
                     }
                     if (MAGIC > possibleAttacks[i].dmgObject.BASE_STATS.RESIESTANCE)
                     {
-                        attackOptions.Add(i);
+                        if (id < 100)
+                        {
+                            attackOptions.Add(i);
+
+                        }
+                        else
+                        {
+                            if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                            {
+                                attackOptions.Add(i);
+                            }
+                        }
+
                     }
 
                 }
@@ -1105,11 +1442,36 @@ public class EnemyScript : LivingObject
                 {
                     if (STRENGTH > MAGIC)
                     {
-                        attackOptions.Add(i);
+                        if (id < 100)
+                        {
+                            attackOptions.Add(i);
+
+                        }
+                        else
+                        {
+                            if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                            {
+                                attackOptions.Add(i);
+                            }
+
+                        }
+
                     }
                     if (STRENGTH > possibleAttacks[i].dmgObject.BASE_STATS.DEFENSE)
                     {
-                        attackOptions.Add(i);
+                        if (id < 100)
+                        {
+                            attackOptions.Add(i);
+
+                        }
+                        else
+                        {
+                            if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                            {
+                                attackOptions.Add(i);
+                            }
+
+                        }
                     }
                 }
             }
@@ -1196,6 +1558,26 @@ public class EnemyScript : LivingObject
             }
         }
     }
+    private List<GridObject> DoubleAdjectObjects()
+    {
+        List<GridObject> doubleAdj = new List<GridObject>();
+        List<TileScript> pinwheelTiles = myManager.GetDartAttackableTilesOneList(currentTile);
+
+        for (int i = 0; i < pinwheelTiles.Count; i++)
+        {
+
+            if (pinwheelTiles[i].isOccupied)
+            {
+                GridObject griddy = null;
+
+                if (griddy = myManager.GetObjectAtTile(myManager.tileMap[pinwheelTiles[i].listindex]))
+                {
+                    doubleAdj.Add(griddy);
+                }
+            }
+        }
+        return doubleAdj;
+    }
     private void PrepareMoveEvent(TileScript targetTile)
     {
 
@@ -1254,29 +1636,121 @@ public class EnemyScript : LivingObject
         }
         if (liveObj)
         {
-            if (personality == EPType.scared)
+            if (id > 100)
             {
-                TileScript targetTile = FindNearestDoorTile();
-                if (currentTile != targetTile)
+                // Debug.Log("boss incoming");
+                if (specialProfile.commands != null)
                 {
-                    targetTile = DetermineMoveLocation(targetTile);
-                    PrepareMoveEvent(targetTile);
+                    if (specialProfile.commands.Count > 0)
+                    {
+                        chosenCommand = specialProfile.commands[Random.Range(0, specialProfile.commands.Count)];
+                        Debug.Log("Boss should: " + chosenCommand);
+                        switch (chosenCommand)
+                        {
+                            case BossCommand.strike:
+                                {
+                                    bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                                    if (found == true)
+                                    {
+
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                    }
+                                    else
+                                    {
+                                        currentEnemy = liveObj;
+                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+
+                                }
+                                break;
+                            case BossCommand.skill:
+                                {
+                                    bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                                    if (found == true)
+                                    {
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                    }
+                                    else
+                                    {
+                                        currentEnemy = liveObj;
+                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                                break;
+                            case BossCommand.spell:
+                                {
+                                    bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                                    if (found == true)
+                                    {
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                    }
+                                    else
+                                    {
+                                        currentEnemy = liveObj;
+                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                                break;
+                            case BossCommand.barrier:
+
+                                break;
+                            case BossCommand.item:
+                                {
+                                    bool foundItems = FoundItemsCanUse();
+                                    if (foundItems == true)
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                    else
+                                    {
+                                        chosenCommand = BossCommand.heal;
+                                        Heal();
+                                    }
+                                }
+                                break;
+                            case BossCommand.heal:
+                                Heal();
+                                break;
+                            case BossCommand.restore:
+                                Restore();
+                                break;
+                            case BossCommand.drain:
+                                Drain();
+                                break;
+                            case BossCommand.charge:
+                                Charge();
+                                break;
+                            case BossCommand.shield:
+                                Shield();
+                                break;
+                            case BossCommand.overload:
+                                Overload();
+                                break;
+                            default:
+                                {
+                                    Debug.Log("defaultAction, waiting");
+                                    waiting = true;
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        waiting = true;
+                        myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                    }
                 }
                 else
                 {
-                    myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
+                    waiting = true;
+                    myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                 }
-                return true;
             }
-            bool found = FindEnemiesInRangeOfAttacks(transform.position);
-            bool foundItems = FoundItemsCanUse();
-            if (found == false)
+            else
             {
 
-                if (reflectedSkills.Count >= ((float)(INVENTORY.WEAPONS.Count + INVENTORY.CSKILLS.Count) + 1.0f) * 0.5f && personality != EPType.scared)
-                {
-                    personality = EPType.scared;
-                }
                 if (personality == EPType.scared)
                 {
                     TileScript targetTile = FindNearestDoorTile();
@@ -1289,83 +1763,140 @@ public class EnemyScript : LivingObject
                     {
                         myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
                     }
+                    return true;
+                }
+                bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                bool foundItems = FoundItemsCanUse();
+
+                if (found == false)
+                {
+
+                    if (reflectedSkills.Count >= ((float)(INVENTORY.WEAPONS.Count + INVENTORY.CSKILLS.Count) + 1.0f) * 0.5f && personality != EPType.scared)
+                    {
+                        personality = EPType.scared;
+                    }
+                    if (personality == EPType.scared)
+                    {
+                        TileScript targetTile = FindNearestDoorTile();
+                        if (currentTile != targetTile)
+                        {
+                            targetTile = DetermineMoveLocation(targetTile);
+                            PrepareMoveEvent(targetTile);
+                        }
+                        else
+                        {
+                            myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
+                        }
+                    }
+                    else
+                    {
+
+
+                        //move
+
+                        switch (Common.GetEPCluster(personality))
+                        {
+                            case EPCluster.physical:
+                                {
+                                    if (FATIGUE >= MAX_FATIGUE - 4)
+                                    {
+                                        waiting = true;
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                                    }
+                                    else
+                                    {
+                                        currentEnemy = liveObj;
+                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                                break;
+                            case EPCluster.magical:
+                                {
+                                    if (MANA <= 5)
+                                    {
+                                        waiting = true;
+                                        myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                                    }
+                                    else
+                                    {
+
+
+                                        currentEnemy = liveObj;
+                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                                break;
+                            case EPCluster.logical:
+                                {
+
+
+                                    currentEnemy = liveObj;
+                                    TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                    PrepareMoveEvent(targetTile);
+
+                                }
+                                break;
+                            case EPCluster.natural:
+                                {
+
+                                    currentEnemy = liveObj;
+                                    TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                    PrepareMoveEvent(targetTile);
+                                }
+                                break;
+                        }
+
+
+                    }
                 }
                 else
                 {
 
 
-                    //move
-
-                    switch (Common.GetEPCluster(personality))
+                    switch (personality)
                     {
-                        case EPCluster.physical:
+                        case EPType.aggro:
                             {
-                                if (FATIGUE >= MAX_FATIGUE - 4)
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                            }
+                            break;
+
+                        case EPType.skillful:
+                            {
+                                if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
+                                {
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                }
+                                else if (foundItems == true)
+                                {
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                }
+                                else
                                 {
                                     waiting = true;
                                     myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                                 }
-                                else
-                                {
-                                    currentEnemy = liveObj;
-                                    TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
-                                    PrepareMoveEvent(targetTile);
-                                }
                             }
                             break;
-                        case EPCluster.magical:
+                        case EPType.mystical:
+                            if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
                             {
-                                if (MANA <= 5)
-                                {
-                                    waiting = true;
-                                    myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                                }
-                                else
-                                {
-
-
-                                    currentEnemy = liveObj;
-                                    TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
-                                    PrepareMoveEvent(targetTile);
-                                }
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                             }
-                            break;
-                        case EPCluster.logical:
+                            else if (foundItems == true)
                             {
-
-
-                                currentEnemy = liveObj;
-                                TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
-                                PrepareMoveEvent(targetTile);
-
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
                             }
-                            break;
-                        case EPCluster.natural:
+                            else
                             {
-
-                                currentEnemy = liveObj;
-                                TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
-                                PrepareMoveEvent(targetTile);
+                                waiting = true;
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                             }
                             break;
-                    }
+                        case EPType.forceful:
 
-
-                }
-            }
-            else
-            {
-
-                switch (personality)
-                {
-                    case EPType.aggro:
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        break;
-
-                    case EPType.skillful:
-                        {
                             if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
                             {
                                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
@@ -1379,66 +1910,85 @@ public class EnemyScript : LivingObject
                                 waiting = true;
                                 myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                             }
-                        }
-                        break;
-                    case EPType.mystical:
-                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        else if (foundItems == true)
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                        }
-                        else
-                        {
-                            waiting = true;
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                        }
-                        break;
-                    case EPType.forceful:
+                            break;
+                        case EPType.itemist:
 
-                        if (HEALTH > ((20.0f / 100.0f) * MAX_HEALTH))
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        else if (foundItems == true)
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                        }
-                        else
-                        {
-                            waiting = true;
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                        }
-                        break;
-                    case EPType.itemist:
-                        if (foundItems == true)
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                        }
-                        else
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        break;
-                    case EPType.optimal:
-                        {
-                            if (adjacentObjects.Count > 0)
+                            if (foundItems == true)
+                            {
+
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                            }
+                            else
                             {
                                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                             }
-                            else if (myManager.liveEnemies.Count > 1)
+                            break;
+                        case EPType.optimal:
                             {
-                                for (int i = 0; i < myManager.liveEnemies.Count; i++)
+                                if (adjacentObjects.Count > 0)
                                 {
-                                    if (myManager.liveEnemies[i] != this)
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                }
+                                else if (myManager.liveEnemies.Count > 1)
+                                {
+                                    for (int i = 0; i < myManager.liveEnemies.Count; i++)
                                     {
-                                        TileScript targetAllyTile = myManager.liveEnemies[i].currentTile;
-                                        PrepareMoveEvent(targetAllyTile);
-                                        break;
+                                        if (myManager.liveEnemies[i] != this)
+                                        {
+                                            TileScript targetAllyTile = myManager.liveEnemies[i].currentTile;
+                                            PrepareMoveEvent(targetAllyTile);
+                                            break;
+                                        }
                                     }
                                 }
+                                else if (foundItems == true)
+                                {
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                }
+                                else
+                                {
+
+                                    personality = EPType.scared;
+
+                                    if (personality == EPType.scared)
+                                    {
+                                        TileScript targetTile = FindNearestDoorTile();
+                                        if (currentTile != targetTile)
+                                        {
+                                            targetTile = DetermineMoveLocation(targetTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
+                                        else
+                                        {
+                                            myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case EPType.finisher:
+                            {
+                                if (foundItems == true)
+                                {
+                                    for (int i = 0; i < possibleItems.Count; i++)
+                                    {
+                                        if (possibleItems[i].item.ITYPE == ItemType.dmg)
+                                        {
+                                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                }
+
+                            }
+                            break;
+                        case EPType.biologist:
+                            if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                             }
                             else if (foundItems == true)
                             {
@@ -1446,95 +1996,48 @@ public class EnemyScript : LivingObject
                             }
                             else
                             {
-
-                                personality = EPType.scared;
-
-                                if (personality == EPType.scared)
-                                {
-                                    TileScript targetTile = FindNearestDoorTile();
-                                    if (currentTile != targetTile)
-                                    {
-                                        targetTile = DetermineMoveLocation(targetTile);
-                                        PrepareMoveEvent(targetTile);
-                                    }
-                                    else
-                                    {
-                                        myManager.CreateEvent(this, null, "" + FullName + "run away event ", RunAwayEvent, null, 0);
-                                    }
-                                }
+                                waiting = true;
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                             }
-                        }
-                        break;
-                    case EPType.finisher:
-                        {
-                            if (foundItems == true)
-                            {
-                                for (int i = 0; i < possibleItems.Count; i++)
-                                {
-                                    if (possibleItems[i].item.ITYPE == ItemType.dmg)
-                                    {
-                                        myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                                    }
-                                }
-                            }
-                            else
+                            break;
+                        case EPType.support:
+                            if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
                             {
                                 myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
                             }
-
-                        }
-                        break;
-                    case EPType.biologist:
-                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        else if (foundItems == true)
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                        }
-                        else
-                        {
-                            waiting = true;
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                        }
-                        break;
-                    case EPType.support:
-                        if (MANA >= ((20.0f / 100.0f) * MAX_MANA))
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        else if (foundItems == true)
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                        }
-                        else
-                        {
-                            waiting = true;
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                        }
-                        break;
+                            else if (foundItems == true)
+                            {
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                            }
+                            else
+                            {
+                                waiting = true;
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                            }
+                            break;
 
 
-                    default:
-                        {
-                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                        }
-                        break;
+                        default:
+                            {
+                                Debug.Log("default");
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                            }
+                            break;
+
+                    }
 
                 }
-
             }
         }
         else
         {
 
-            if (HEALTH < MAX_HEALTH )
+            if (HEALTH < MAX_HEALTH)
             {
 
 
-            waiting = true;
-            myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                waiting = true;
+                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
             }
             else if (Common.GetEPCluster(personality) == EPCluster.magical && MANA != MAX_MANA)
             {
@@ -1552,13 +2055,13 @@ public class EnemyScript : LivingObject
                 int depth = 0;
                 while (true)
                 {
-                    if(depth > 100)
+                    if (depth > 100)
                     {
                         break;
                     }
                     List<TileScript> possibleTiles = manager.GetDoubleAdjecentTiles(this);
-                    targetTile = possibleTiles[Random.Range(0,possibleTiles.Count -1)];
-                    if(!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
+                    targetTile = possibleTiles[Random.Range(0, possibleTiles.Count - 1)];
+                    if (!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
                     {
                         break;
                     }
@@ -1568,7 +2071,7 @@ public class EnemyScript : LivingObject
                     }
                     depth++;
                 }
-               
+
                 if (currentTile != targetTile && targetTile != null && targetTile.canBeOccupied == true)
                 {
 
@@ -1586,6 +2089,9 @@ public class EnemyScript : LivingObject
 
         return true;
     }
+
+
+
     public void DetermineActions()
     {
         if (DEAD)
@@ -1917,11 +2423,106 @@ public class EnemyScript : LivingObject
 
         return returnedString;
     }
+
+    private bool triggeredNextPhase = false;
+    public override bool CheckIfDead()
+    {
+
+        if (HEALTH <= 0)
+        {
+            if (id < 100)
+            {
+                return true;
+            }
+            else
+            {
+
+                if (specialProfile.healthbars <= 1)
+                {
+                    if (triggeredNextPhase == false)
+                    {
+                        triggeredNextPhase = true;
+                        DatabaseManager database = Common.GetDatabase();
+                        if (database)
+                        {
+                            string response = "Fine! Take my treasure, but I stil demand payment!";
+                            SceneContainer scene = database.GenerateScene(NAME, response, FACE);
+                            myManager.SetScene(scene);
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+
+                    if (triggeredNextPhase == false)
+                    {
+                        triggeredNextPhase = true;
+                        myManager.CreateEvent(this, null, "Next Boss Phase for" + FullName, NextPhaseEvent);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool NextPhaseEvent(Object data)
+    {
+        NextPhase();
+        return true;
+    }
+
+    private void NextPhase()
+    {
+
+        specialProfile.healthbars--;
+        switch (specialProfile.currentPhase)
+        {
+            case BossPhase.inital:
+                specialProfile.currentPhase = BossPhase.angry;
+                if (INVENTORY.ARMOR.Count >= 2)
+                {
+                    ArmorScript angryArmor = INVENTORY.ARMOR[1];
+                    myManager.CreateEvent(this, angryArmor, "Neo wait action", PrepareBarrier, ItemStart, 0);
+
+                    DatabaseManager database = Common.GetDatabase();
+                    if (database)
+                    {
+                        string response = "I won't be beaten so easily! Not when my wares are at stake";
+                        SceneContainer scene = database.GenerateScene(NAME, response, FACE);
+                        myManager.SetScene(scene);
+                    }
+
+                }
+                break;
+            case BossPhase.angry:
+                specialProfile.currentPhase = BossPhase.desperate;
+                if (INVENTORY.ARMOR.Count >= 1)
+                {
+                    ArmorScript desparteArmor = INVENTORY.ARMOR[0];
+                    myManager.CreateEvent(this, desparteArmor, "Neo wait action", PrepareBarrier, ItemStart, 0);
+
+                    DatabaseManager database = Common.GetDatabase();
+                    if (database)
+                    {
+                        string response = "Not yet, I will not be beaten yet!";
+                        SceneContainer scene = database.GenerateScene(NAME, response, FACE);
+                        myManager.SetScene(scene);
+                    }
+                }
+                break;
+            case BossPhase.desperate:
+                Debug.Log("boss healthbars not equal to phases");
+                break;
+        }
+        SoftUnset();
+        triggeredNextPhase = false;
+    }
     public void Unset()
     {
         if (isSetup == true)
         {
-
+            triggeredNextPhase = false;
             isSetup = false;
             DEAD = false;
             STATS.Reset(true);
@@ -1970,7 +2571,23 @@ public class EnemyScript : LivingObject
         }
     }
 
+    private void SoftUnset()
+    {
+        if (isSetup == true)
+        {
 
+            //isSetup = false;
+            DEAD = false;
+            STATS.Reset(true);
+     
+            BASE_STATS.MAX_HEALTH += (int)((float)BASE_STATS.MAX_HEALTH * 0.5f);
+            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
+
+            PSTATUS = PrimaryStatus.normal;
+
+        }
+    }
 
 
 }

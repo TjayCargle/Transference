@@ -1636,11 +1636,18 @@ public class DatabaseManager : MonoBehaviour
                     int numofItems = Int32.Parse(parsed[fileIndex]);
                     fileIndex++;
 
+                    EPCluster cluster = EPCluster.natural;
+                    if (Enum.TryParse<EPCluster>(parsed[fileIndex], out cluster))
+                    {
+                        newEnemy.personality = Common.GetRandomType(cluster);
+                    }
+                    else
+                    {
+                        Enum.TryParse<EPType>(parsed[fileIndex], out newEnemy.personality);
+                    }
 
-                    EPCluster cluster = (EPCluster)Enum.Parse(typeof(EPCluster), parsed[fileIndex]);
                     fileIndex++;
 
-                    newEnemy.personality = Common.GetRandomType(cluster);
                     for (int i = 0; i < numofskills; i++)
                     {
                         LearnSkill(Int32.Parse(parsed[fileIndex]), newEnemy, true);
@@ -2308,7 +2315,25 @@ public class DatabaseManager : MonoBehaviour
         }
         return data;
     }
+    public SceneContainer AddInterruptToScene(SceneContainer scene, int interrupt, SceneEvent sevent, int edata)
+    {     
+        scene.eventIndexs.Add(interrupt);
+        SceneEventContainer SEC = new SceneEventContainer();
+        SEC.intercept = interrupt;
+        SEC.scene = sevent;
+        SEC.data = edata;
+        scene.sceneEvents.Add(SEC);
 
+        return scene;
+    }
+    public SceneContainer AddDataToScene(SceneContainer scene, string name, string text, Sprite face)
+    {
+        scene.speakerNames.Add(name);
+        scene.speakertext.Add(text);
+        scene.speakerFace.Add(face);
+
+        return scene;
+    }
     public SceneContainer GenerateScene(string name, string text, Sprite face)
     {
         scene.speakertext.Clear();
@@ -2316,6 +2341,7 @@ public class DatabaseManager : MonoBehaviour
         scene.speakerFace.Clear();
         scene.sceneEvents.Clear();
         scene.eventIndexs.Clear();
+        scene.index = 0;
 
         scene.speakerNames.Add(name);
         scene.speakertext.Add(text);

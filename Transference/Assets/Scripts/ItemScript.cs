@@ -67,6 +67,9 @@ public class ItemScript : UsableScript
         get { return possibleDMG; }
         set { possibleDMG = value; }
     }
+
+    private LivingObject lastTarget = null;
+
     public bool useItem(LivingObject target, LivingObject user, TileScript targetTile = null)
     {
         bool usedEffect = false;
@@ -699,21 +702,39 @@ public class ItemScript : UsableScript
 
             case ItemType.dart:
                 {
-                    if(!target.GetComponent<LivingObject>())
+                    if (!target.GetComponent<LivingObject>())
                     {
                         return false;
                     }
+
                     LivingObject liveTarget = target.GetComponent<LivingObject>();
                     ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
                     CommandSkill itemskill = Common.GenericSkill;
-                    itemskill.ACCURACY = 100;              
-                    itemskill.EFFECT = EFFECT;               
+                    itemskill.ACCURACY = 100;
+                    itemskill.EFFECT = EFFECT;
                     itemskill.SUBTYPE = SubSkillType.Ailment;
                     itemskill.OWNER = user;
                     itemskill.NAME = NAME;
                     if (manager)
                     {
-                        manager.ApplyEffect(liveTarget, EFFECT, 100, itemskill);
+                        GridAnimationObj gao = null;
+                        gao = manager.PrepareGridAnimation(null, target);
+                        gao.type = 5;
+                        gao.magnitute = 0;
+                        gao.LoadGridAnimation();
+
+                        manager.menuManager.ShowNone();
+                        manager.CreateEvent(this, gao, "Animation request: " + manager.AnimationRequests + "", manager.CheckAnimation, gao.StartCountDown, 0);
+
+                        manager.CreateTextEvent(this, "", "wait event", manager.CheckText, manager.TextStart);
+                        if (manager.log)
+                        {
+                            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(owner.FACTION)) + ">";
+                            manager.log.Log(coloroption + NAME + "</color> used " + myName);
+                        }
+
+                        lastTarget = liveTarget;
+                        manager.CreateEvent(this, gao, "Neo wait action", ExecuteEffect,null,0);
                         usedEffect = true;
                     }
                 }
@@ -727,7 +748,13 @@ public class ItemScript : UsableScript
         }
         return usedEffect;
     }
-
+    public bool ExecuteEffect(Object data)
+    {
+        CommandSkill itemskill = data as CommandSkill;
+        ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+        manager.ApplyEffect(lastTarget, EFFECT, 100, itemskill);
+        return true;
+    }
     public override void UpdateDesc()
     {
         base.UpdateDesc();

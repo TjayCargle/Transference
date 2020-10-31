@@ -33,14 +33,14 @@ public class EnemyManager : MonoBehaviour {
                 enemySetup.Unset();
                 enemySetup.enemyId = Random.Range(0, 6);
                 enemies[i].Setup();
-                if(enemySetup.enemyId == 2)
-                {
-                    enemies[i].FACTION = Faction.fairy;
-                }
-                else
-                {
-                    enemies[i].FACTION = Faction.enemy;
-                }
+                //if(enemySetup.enemyId == 2)
+                //{
+                //    enemies[i].FACTION = Faction.fairy;
+                //}
+                //else
+                //{
+                //    enemies[i].FACTION = Faction.enemy;
+                //}
                 subenemies.Add(enemies[i]);
             }
         }
@@ -55,14 +55,7 @@ public class EnemyManager : MonoBehaviour {
 
                 enemySetup.enemyId = Random.Range(0, 4);
                 enemies[i].Setup();
-                if (enemySetup.enemyId == 2)
-                {
-                    enemies[i].FACTION = Faction.fairy;
-                }
-                else
-                {
-                    enemies[i].FACTION = Faction.enemy;
-                }
+             
                 subenemies.Add(enemies[i]);
             }
             while (enemies.Count < num)
@@ -149,6 +142,7 @@ public class EnemyManager : MonoBehaviour {
                 if (indx < data.EnemyIds.Count)
                 {
                     enemySetup.enemyId = data.EnemyIds[indx];
+                
                 }
                 else
                 {
@@ -156,7 +150,10 @@ public class EnemyManager : MonoBehaviour {
                 }
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
-
+                if (enemySetup.enemyId >= 100)
+                {
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemy);
+                }
                 enemies.Add(enemy);
                 subenemies.Add(enemy);
 

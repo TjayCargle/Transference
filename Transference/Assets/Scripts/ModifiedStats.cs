@@ -24,6 +24,7 @@ public class ModifiedStats : StatScript {
                 myHealth = 0;
             }
 
+
         }
     }
 

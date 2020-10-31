@@ -157,8 +157,13 @@ public class ArmorEquip : Equipable
             {
                 if (ARMORID < 200)
                 {
-
-                    owner.BARRIER.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("Shields/")[ARMORID];
+                    int aID = 9;
+                    Sprite[] shields = Resources.LoadAll<Sprite>("Shields/");
+                    if(ARMORID < shields.Length)
+                    {
+                        aID = ARMORID;
+                    }
+                    owner.BARRIER.GetComponent<SpriteRenderer>().sprite = shields[aID];
                     owner.BARRIER.GetComponent<SpriteRenderer>().color = Color.white;
                 }
             }

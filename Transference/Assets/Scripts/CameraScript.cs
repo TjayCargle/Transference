@@ -25,7 +25,7 @@ public class CameraScript : MonoBehaviour
     public bool showActions = true;
     public int x = 0;
     public int y = -5;
-    public int z = 7;
+    public int z = 0;
 
     public int potentialDamage = 0;
     public bool attackingCheck = false;
@@ -59,6 +59,15 @@ public class CameraScript : MonoBehaviour
     public float targetOrthoSize = 8.0f;
     private float editedOthoSize = 8.0f;
     private bool updateOrtho = false;
+
+    public Slider enemyhealthSlider;
+    public Slider enemymansSlider;
+    public Slider enemyfatigueSlider;
+    public Text enemyhealthText;
+    public Text enemymanaText;
+    public Text enemyfatigueText;
+    public ArmorSet enemyarmorSet;
+    public Text enemyactionText;
     void Start()
     {
         Setup();
@@ -105,10 +114,10 @@ public class CameraScript : MonoBehaviour
         {
             UpdatePosition();
         }
-        if(updateOrtho == true)
+        if (updateOrtho == true)
         {
-            mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, editedOthoSize,smoothSpd * Time.fixedDeltaTime);
-            if(mainCam.orthographicSize == editedOthoSize)
+            mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, editedOthoSize, smoothSpd * Time.fixedDeltaTime);
+            if (mainCam.orthographicSize == editedOthoSize)
             {
                 updateOrtho = false;
             }
@@ -160,7 +169,7 @@ public class CameraScript : MonoBehaviour
 
     public void SetCameraPosDefault()
     {
-  
+
         if (mainCam)
         {
             editedOthoSize = targetOrthoSize;
@@ -378,84 +387,108 @@ public class CameraScript : MonoBehaviour
                                 }
                                 if (infoObject.GetComponent<LivingObject>())
                                 {
-
-                                    LivingObject liver = infoObject.GetComponent<LivingObject>();
-                                    manager.iconManager.loadIconPanel(liver);
-
-                                    if (armorSet)
+                                    LivingObject liver = null;
+                                    if (manager.player.current || infoObject.FACTION == Faction.ally)
                                     {
-                                        armorSet.currentObj = liver;
-                                        if (manager)
+                                        if (manager.player.current)
+                                            liver = manager.player.current;
+                                        else
+                                            liver = infoObject.GetComponent<LivingObject>();
+                                        if (manager.liveEnemies.Count > 0)
+                                            actionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                        if (armorSet)
                                         {
-                                            if (manager.currentState != State.PlayerEquipping)
+                                            armorSet.currentObj = liver;
+                                            if (manager)
                                             {
-                                                armorSet.selectedArmor = null;
+                                                if (manager.currentState != State.PlayerEquipping)
+                                                {
+                                                    armorSet.selectedArmor = null;
+                                                }
+                                            }
+                                            armorSet.updateDetails();
+                                        }
+                                        if (healthSlider)
+                                        {
+                                            healthSlider.value = (float)(liver.HEALTH) / (float)liver.MAX_HEALTH;
+
+                                            healthText.text = (liver.HEALTH).ToString() + "/" + liver.MAX_HEALTH.ToString();
+
+
+
+                                        }
+                                        if (mansSlider)
+                                        {
+                                            if (liver.MAX_MANA > 0)
+                                                mansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
+                                            else
+                                                mansSlider.value = 0;
+                                            manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
+                                        }
+                                        if (fatigueSlider)
+                                        {
+                                            if (liver.MAX_FATIGUE > 0)
+                                                fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
+                                            else
+                                                fatigueSlider.value = 0;
+                                            fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
+                                        }
+                                    }
+                                    if (infoObject.FACTION != Faction.ally)
+                                    {
+                                        liver = infoObject.GetComponent<LivingObject>();
+
+                                        if (enemyactionText != null)
+                                            enemyactionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                        if (enemyarmorSet)
+                                        {
+                                            enemyarmorSet.currentObj = liver;
+
+                                            enemyarmorSet.updateDetails();
+                                        }
+                                        if (enemyhealthSlider)
+                                        {
+                                            enemyhealthSlider.value = (float)(liver.HEALTH - potentialDamage) / (float)liver.MAX_HEALTH;
+                                            if (attackingCheck == false)
+                                            {
+                                                enemyhealthText.text = (liver.HEALTH).ToString() + "/" + liver.MAX_HEALTH.ToString();
+
+                                            }
+                                            else
+                                            {
+                                                enemyhealthText.text = liver.HEALTH + " - " + potentialDamage;
                                             }
                                         }
-                                        armorSet.updateDetails();
+                                        if (enemymansSlider)
+                                        {
+                                            if (liver.MAX_MANA > 0)
+                                                enemymansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
+                                            else
+                                                enemymansSlider.value = 0;
+                                            manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
+                                        }
+                                        if (fatigueSlider)
+                                        {
+                                            if (liver.MAX_FATIGUE > 0)
+                                                enemyfatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
+                                            else
+                                                enemyfatigueSlider.value = 0;
+                                            enemyfatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
+                                        }
                                     }
+
+                                    manager.iconManager.loadIconPanel(liver);
+
 
                                     infoText.text = liver.FullName + " - " + liver.GetClassType();//LEVEL.ToString();
                                     if (!actionText.IsActive())
                                     {
                                         //  actionText.transform.parent.gameObject.SetActive(true);
                                     }
-                                    if (manager.liveEnemies.Count > 0)
-                                        actionText.text = "Actions: " + liver.ACTIONS;
-                                    else
-                                        actionText.text = "Actions: unlimited";
 
 
 
-                                    if (manager.liveEnemies.Count > 0)
-                                    {
-                                        if (liver.ACTIONS == 1)
-                                        {
-                                            actionText.color = Color.red;
-                                            actionText.fontStyle = FontStyle.BoldAndItalic;
-                                        }
-                                        else
-                                        {
 
-                                            actionText.color = Color.white;
-                                            actionText.fontStyle = FontStyle.Normal;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        actionText.color = Color.blue;
-                                        actionText.fontStyle = FontStyle.BoldAndItalic;
-                                    }
-
-                                    if (healthSlider)
-                                    {
-                                        healthSlider.value = (float)(liver.HEALTH - potentialDamage) / (float)liver.MAX_HEALTH;
-                                        if (attackingCheck == false)
-                                        {
-                                            healthText.text = (liver.HEALTH).ToString() + "/" + liver.MAX_HEALTH.ToString();
-
-                                        }
-                                        else
-                                        {
-                                            healthText.text = liver.HEALTH + " - " + potentialDamage;
-                                        }
-                                    }
-                                    if (mansSlider)
-                                    {
-                                        if (liver.MAX_MANA > 0)
-                                            mansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
-                                        else
-                                            mansSlider.value = 0;
-                                        manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
-                                    }
-                                    if (fatigueSlider)
-                                    {
-                                        if (liver.MAX_FATIGUE > 0)
-                                            fatigueSlider.value = (float)liver.FATIGUE / (float)liver.MAX_FATIGUE;
-                                        else
-                                            fatigueSlider.value = 0;
-                                        fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
-                                    }
 
                                     if (manager.GetState() == State.PlayerEquipping)
                                     {
@@ -591,59 +624,59 @@ public class CameraScript : MonoBehaviour
                             case TileType.door:
                                 {
 
-                                    infoText.text = "Door to " + updateTile.MAP;
-                                    actionText.text = "";
+                                    actionText.text = "" + updateTile.MAP;
+                                    infoText.text = "";
                                 }
                                 break;
                             case TileType.shop:
                                 {
 
-                                    infoText.text = "Shop Tile ";
-                                    actionText.text = "";
+                                    actionText.text = "Shop Tile ";
+                                    infoText.text = "";
                                 }
                                 break;
                             case TileType.help:
                                 {
-                                    infoText.text = "Tip";
+                                    actionText.text = "Tip";
                                     string[] extraParse = updateTile.EXTRA.Split(';');
                                     if (extraParse.Length > 1)
                                     {
-                                        infoText.text += ": " + extraParse[1];
+                                        actionText.text += ": " + extraParse[1];
                                     }
 
 
-                                    actionText.text = "";
+                                    infoText.text = "";
 
                                 }
                                 break;
                             case TileType.tevent:
                                 {
-                                    infoText.text = "Event Tile ";
-                                    actionText.text = "";
+                                    actionText.text = "Event Tile ";
+                                    infoText.text = "";
                                 }
                                 break;
                             case TileType.knockback:
                                 {
-                                    infoText.text = "Knockback Tile ";
-                                    actionText.text = "Push target 1 tile";
+                                    actionText.text = "Knockback Tile ";
+                                    infoText.text = "Push target 1 tile";
                                 }
                                 break;
                             case TileType.pullin:
                                 {
-                                    infoText.text = "Pullback Tile ";
-                                    actionText.text = "Pull target 1 tile";
+                                    actionText.text = "Pullback Tile ";
+                                    infoText.text = "Pull target 1 tile";
                                 }
                                 break;
                             case TileType.swap:
                                 {
-                                    infoText.text = "Swap Tile ";
-                                    actionText.text = "Swaps target and attacker";
+                                    actionText.text = "Swap Tile ";
+                                    infoText.text = "Swaps target and attacker";
                                 }
                                 break;
                             case TileType.reposition:
                                 {
-                                    infoText.text = "Reposition Tile ";
-                                    actionText.text = "Attacker jumps to opposite side of target";
+                                    actionText.text = "Reposition Tile ";
+                                    infoText.text = "Attacker jumps to opposite side of target";
                                 }
                                 break;
                         }

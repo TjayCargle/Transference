@@ -16,7 +16,7 @@ public class GridAnimationObj : GridObject
     public string path;
     public bool prepared = false;
     //  private float time = 2;
-
+    public int extra = -1;
     public override void Setup()
     {
         if (!isSetup)
@@ -68,6 +68,8 @@ public class GridAnimationObj : GridObject
         else
         {
             path = "Animations/" + ((Element)type).ToString().ToLower() + "/";
+            if (subtype == -1)
+                subtype = 1;
             if(subtype != -1)
             {
                 if(subtype == 2)

@@ -137,6 +137,27 @@ public class InventoryMangager : MonoBehaviour
 
 
                     break;
+                case State.PlayerAllocate:
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        IncreaseScroll();
+                    }
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        IncreaseScroll();
+                    }
+
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        DecreaseScroll();
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        DecreaseScroll();
+                    }
+
+
+                    break;
                 case State.PlayerEquippingMenu:
                     if (Input.GetKeyDown(KeyCode.W))
                     {
@@ -2134,8 +2155,10 @@ public class InventoryMangager : MonoBehaviour
         {
             if (currentContent)
             {
-                if (currentContent.transform.childCount > 0)
+                if (currentIndex < ActiveChildCount())
                     selectedMenuItem = currentContent.transform.GetChild(currentIndex).GetComponent<MenuItem>();
+                else
+                    ForceSelect();
             }
         }
         if (menuManager)

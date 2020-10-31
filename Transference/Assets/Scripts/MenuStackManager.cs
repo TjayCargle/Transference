@@ -42,7 +42,7 @@ public class MenuStackManager : MonoBehaviour {
             skillsMain.state = State.PlayerEquippingMenu;
             skillsMain.menu = currentMenu.invMain;
 
-            inventoryMain.state = State.PlayerEquippingMenu;
+            inventoryMain.state = State.PlayerAllocate;
             inventoryMain.menu = currentMenu.command;
 
             playerOptions.state = State.ChangeOptions;

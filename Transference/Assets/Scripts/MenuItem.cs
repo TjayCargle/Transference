@@ -686,7 +686,76 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     }
                 }
                 break;
+            case MenuItemType.heal:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        invokingObject.GetComponent<LivingObject>().Heal();
+                    }
 
+                }
+                break;
+            case MenuItemType.restore:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        invokingObject.GetComponent<LivingObject>().Restore();
+                    }
+
+                }
+                break;
+            case MenuItemType.charge:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        invokingObject.GetComponent<LivingObject>().Charge();
+                    }
+
+                }
+                break;
+            case MenuItemType.drain:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        invokingObject.GetComponent<LivingObject>().Drain();
+                    }
+
+                }
+                break;
+            case MenuItemType.overload:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        LivingObject livvy = invokingObject.GetComponent<LivingObject>();
+                    if(livvy.HEALTH > (int)(0.30f * livvy.MAX_HEALTH))
+                        {
+                        invokingObject.GetComponent<LivingObject>().Overload();
+                        }
+                    else
+                        {
+                            myManager.ShowCantUseText("Not enough health to overload");
+                        }
+                    }
+
+                }
+                break;
+            case MenuItemType.shield:
+                {
+                    if (invokingObject.GetComponent<LivingObject>())
+                    {
+                        invokingObject.GetComponent<LivingObject>().Shield();
+                    }
+
+                }
+                break;
+            case MenuItemType.allocate:
+                {
+
+                    myManager.StackInventory();
+
+                 
+                }
+                break;
             default:
                 break;
         }
@@ -978,6 +1047,41 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             case MenuItemType.Interact:
                 {
                     desc = "Interact with object";
+                }
+                break;
+            case MenuItemType.heal:
+                {
+                    desc = "Recover some Health.";
+                }
+                break;
+            case MenuItemType.restore:
+                {
+                    desc = "Restore some Mana";
+                }
+                break;
+            case MenuItemType.charge:
+                {
+                    desc = "Increase Fatigue slightly";
+                }
+                break;
+            case MenuItemType.drain:
+                {
+                    desc = "Reduce Fatigue slightly";
+                }
+                break;
+            case MenuItemType.overload:
+                {
+                    desc = "Give up health to gain an additional action next turn.";
+                }
+                break;
+            case MenuItemType.shield:
+                {
+                    desc = "Generate a shield to half next attack and prevent crippling.";
+                }
+                break;
+            case MenuItemType.allocate:
+                {
+                    desc = "Spend AP on healing, guarding, or more";
                 }
                 break;
         }

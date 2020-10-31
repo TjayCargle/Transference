@@ -2,65 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossScript : EnemyScript
+public class BossScript : ScriptableObject
 {
-    private int healthbars;
-
+    public int healthbars;
+    public BossPhase currentPhase = BossPhase.inital;
+    public BossPhase previousPhase = BossPhase.inital;
+    public List<BossCommand> commands;
     public int HEALTHBARS
     {
         get { return healthbars; }
         set { healthbars = value; }
     }
-
-    private void NextPhase()
+    public BossPhase PHASE
     {
-        SoftUnset();
+        get { return currentPhase; }
     }
+    
 
-    public override bool CheckIfDead()
-    {
-        if (HEALTH <= 0)
-        {
-            if (HEALTHBARS <= 1)
-            {
-                return true;
-            }
-            else
-            {
-                NextPhase();
-            }
-        }
-        return false;
-    }
+   
 
-    private void SoftUnset()
-    {
-        if (isSetup == true)
-        {
+    //private void SoftUnset()
+    //{
+    //    if (isSetup == true)
+    //    {
 
-            isSetup = false;
-            DEAD = false;
-            STATS.Reset(true);
-            BASE_STATS.Reset();
-            BASE_STATS.MAX_HEALTH += (int)((float)BASE_STATS.MAX_HEALTH * 0.5f);
-            STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+    //        isSetup = false;
+    //        DEAD = false;
+    //        STATS.Reset(true);
+    //        BASE_STATS.Reset();
+    //        BASE_STATS.MAX_HEALTH += (int)((float)BASE_STATS.MAX_HEALTH * 0.5f);
+    //        STATS.HEALTH = BASE_STATS.MAX_HEALTH;
+
  
-            if (DEFAULT_ARMOR)
-            {
-                ARMOR.unEquip();
-                DEFAULT_ARMOR = null;
-            }
-            PSTATUS = PrimaryStatus.normal;
-  
-       
-            if (GetComponent<BuffScript>())
-            {
-                Destroy(GetComponent<BuffScript>());
-            }
-            if (GetComponent<DebuffScript>())
-            {
-                Destroy(GetComponent<DebuffScript>());
-            }
-        }
-    }
+    //        PSTATUS = PrimaryStatus.normal;
+
+    //    }
+    //}
 }

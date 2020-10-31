@@ -32,7 +32,8 @@ public enum State
     SceneRunning,
     FairyPhase,
     PlayerAct,
-    PlayerDead
+    PlayerDead,
+    PlayerAllocate
 
 
 
@@ -352,6 +353,13 @@ public enum WepSkillType
 
 
 }
+public enum BossPhase
+{
+    none,
+    inital,
+    angry,
+    desperate
+}
 public enum MenuItemType
 {
     Move = 0,
@@ -388,7 +396,14 @@ public enum MenuItemType
     Guard,
     Talk,
     Tip,
-    Interact
+    Interact,
+    heal,
+    restore,
+    charge,
+    drain,
+    overload,
+    shield,
+    allocate
 
 }
 
@@ -633,6 +648,20 @@ public enum EPCluster
     logical,
     natural
 }
+public enum BossCommand
+{
+    strike,
+    skill,
+    spell,
+    barrier,
+    item,
+    heal,
+    restore,
+    drain,
+    charge,
+    shield,
+    overload
+}
 public class MassAtkConatiner : ScriptableObject
 {
     public List<AtkContainer> atkContainers;
@@ -643,7 +672,13 @@ public struct ScriptableContainer
     public bool inUse;
     public ScriptableObject scriptable;
 }
-
+public struct BossProfile
+{
+    public BossPhase currentPhase;
+    public BossPhase previousPhase;
+    public int healthbars;
+    public List<BossCommand> commands;
+}
 public class AtkContainer : ScriptableObject
 {
     public LivingObject attackingObject;
@@ -2160,6 +2195,74 @@ public class Common : ScriptableObject
         }
         return returnText;
     }
+
+    public static void UpdateBossProfile(int index, EnemyScript enemy)
+    {
+
+        if (index == 101)
+        {
+            BossScript someProfile = enemy.specialProfile;
+            if(someProfile == null)
+            {
+                someProfile = enemy.specialProfile = ScriptableObject.CreateInstance<BossScript>();
+                someProfile.currentPhase = BossPhase.none;
+                someProfile.healthbars = 3;
+            }
+            switch (enemy.specialProfile.currentPhase)
+            {
+                case BossPhase.none:
+                    {
+                        someProfile.currentPhase = BossPhase.inital;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.heal);
+                    }
+                    break;
+                case BossPhase.inital:
+                    {
+                    someProfile.currentPhase = BossPhase.angry;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        else
+                            someProfile.commands.Clear();
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.shield);
+                    }
+                    break;
+                case BossPhase.angry:
+                    {
+                    someProfile.currentPhase = BossPhase.desperate;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        else
+                            someProfile.commands.Clear();
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.shield);
+                        someProfile.commands.Add(BossCommand.shield);
+                    }
+                    break;
+                case BossPhase.desperate:
+                    Debug.Log("boss healthbars not equal to phases");
+                    break;
+
+            }
+        }
+    }
+
     public static int GetIconType(UsableScript useable)
     {
         if (useable.GetType() == typeof(WeaponScript))

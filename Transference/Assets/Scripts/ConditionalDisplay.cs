@@ -10,7 +10,8 @@ public class ConditionalDisplay : MonoBehaviour
     public bool isAffectDisplay = false;
     public bool requiresDoorTile = false;
     public bool requiresShopTile = false;
-    public bool requriesSelectedLiving = false;
+    public bool requriesSelectedPlayer = false;
+    public bool requriesSelectedEnemy = false;
     public bool checksForEvent = false;
     public bool requiresSelectedorSpecialTile = false;
     ManagerScript manager;
@@ -105,7 +106,36 @@ public class ConditionalDisplay : MonoBehaviour
 
 
 
-        if (requriesSelectedLiving == true)
+        if (requriesSelectedPlayer == true)
+        {
+
+            if (manager.player.current == null)
+            {
+                if (manager.myCamera.infoObject == null)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                else if(manager.myCamera.infoObject.FACTION != Faction.ally)
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
+            }
+            //if (manager.myCamera.infoObject == null)
+            //{
+
+            //    gameObject.SetActive(false);
+            //    return;
+            //}
+            //else if (!manager.myCamera.infoObject.GetComponent<LivingObject>())
+            //{
+
+            //    gameObject.SetActive(false);
+            //    return;
+            //}
+        }
+        if (requriesSelectedEnemy)
         {
             if (manager.myCamera.infoObject == null)
             {
@@ -119,8 +149,12 @@ public class ConditionalDisplay : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
+            else if (manager.myCamera.infoObject.FACTION == Faction.ally)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
         }
-
 
         if (manager)
         {
@@ -130,162 +164,159 @@ public class ConditionalDisplay : MonoBehaviour
                 return;
             }
 
-            if (manager.player)
+
+            if (playerHasSkills == true)
             {
-                if (manager.player.current)
+                if (livvy)
                 {
-                    if (playerHasSkills == true)
-                    {
-                        if (livvy)
-                        {
 
-                            if (livvy.PHYSICAL_SLOTS.SKILLS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-                    if (playerHasSpells == true)
+                    if (livvy.PHYSICAL_SLOTS.SKILLS.Count == 0)
                     {
-                        if (livvy)
-                        {
-                            if (livvy.MAGICAL_SLOTS.SKILLS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-                    if (playerHasStrikes == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.WEAPONS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-                    if (playerHasBarriers == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.ARMOR.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-                    if (playerHasItems == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.ITEMS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-
-                    if (playerHasOpps == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.OPPS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-
-                    if (playerHasCombos == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.COMBOS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-
-                    if (playerHasAutos == true)
-                    {
-                        if (livvy)
-                        {
-                            if (livvy.INVENTORY.AUTOS.Count == 0)
-                            {
-                                gameObject.SetActive(false);
-                                return;
-                            }
-                        }
-                    }
-
-                    if (manager.currentTutorial.steps.Count > 0)
-                    {
-                        if (manager.currentTutorial.currentStep < manager.currentTutorial.steps.Count)
-                        {
-
-                            switch (manager.currentTutorial.steps[manager.currentTutorial.currentStep])
-                            {
-                                case tutorialStep.moveToPosition:
-                                    {
-                                        if (dontShowForMovementTutorial == true)
-                                        {
-                                            gameObject.SetActive(false);
-                                            return;
-                                        }
-                                    }
-                                    break;
-                                case tutorialStep.useStrike:
-                                    {
-                                        if (dontShowForStrikeTutorial == true)
-                                        {
-                                            gameObject.SetActive(false);
-                                            return;
-                                        }
-                                    }
-                                    break;
-                                case tutorialStep.useSkill:
-                                    {
-                                        if (dontShowForSkillTutorial == true)
-                                        {
-                                            gameObject.SetActive(false);
-                                            return;
-                                        }
-                                    }
-                                    break;
-                                case tutorialStep.useSpell:
-                                    {
-                                        if (dontShowForSpellTutorial == true)
-                                        {
-                                            gameObject.SetActive(false);
-                                            return;
-                                        }
-                                    }
-                                    break;
-                                case tutorialStep.useBarrier:
-                                    break;
-                                case tutorialStep.useItem:
-                                    break;
-                                case tutorialStep.allocate:
-                                    break;
-                                case tutorialStep.defeatEnemy:
-                                    break;
-                                case tutorialStep.hackGlyph:
-                                    break;
-                            }
-                        }
+                        gameObject.SetActive(false);
+                        return;
                     }
                 }
-
             }
+            if (playerHasSpells == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.MAGICAL_SLOTS.SKILLS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+            if (playerHasStrikes == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.WEAPONS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+            if (playerHasBarriers == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.ARMOR.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+            if (playerHasItems == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.ITEMS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+
+            if (playerHasOpps == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.OPPS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+
+            if (playerHasCombos == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.COMBOS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+
+            if (playerHasAutos == true)
+            {
+                if (livvy)
+                {
+                    if (livvy.INVENTORY.AUTOS.Count == 0)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+
+            if (manager.currentTutorial.steps.Count > 0)
+            {
+                if (manager.currentTutorial.currentStep < manager.currentTutorial.steps.Count)
+                {
+
+                    switch (manager.currentTutorial.steps[manager.currentTutorial.currentStep])
+                    {
+                        case tutorialStep.moveToPosition:
+                            {
+                                if (dontShowForMovementTutorial == true)
+                                {
+                                    gameObject.SetActive(false);
+                                    return;
+                                }
+                            }
+                            break;
+                        case tutorialStep.useStrike:
+                            {
+                                if (dontShowForStrikeTutorial == true)
+                                {
+                                    gameObject.SetActive(false);
+                                    return;
+                                }
+                            }
+                            break;
+                        case tutorialStep.useSkill:
+                            {
+                                if (dontShowForSkillTutorial == true)
+                                {
+                                    gameObject.SetActive(false);
+                                    return;
+                                }
+                            }
+                            break;
+                        case tutorialStep.useSpell:
+                            {
+                                if (dontShowForSpellTutorial == true)
+                                {
+                                    gameObject.SetActive(false);
+                                    return;
+                                }
+                            }
+                            break;
+                        case tutorialStep.useBarrier:
+                            break;
+                        case tutorialStep.useItem:
+                            break;
+                        case tutorialStep.allocate:
+                            break;
+                        case tutorialStep.defeatEnemy:
+                            break;
+                        case tutorialStep.hackGlyph:
+                            break;
+                    }
+                }
+            }
+
+
+
 
             if (requiresDoorTile == true)
             {

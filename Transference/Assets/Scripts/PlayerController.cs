@@ -84,6 +84,14 @@ public class PlayerController : MonoBehaviour
 
 
                     break;
+                case State.PlayerAllocate:
+
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        myManager.SelectMenuItem(current);
+                    }
+
+                    break;
                 case State.PlayerMove:
                     if (Input.GetKeyDown(KeyCode.W))
                     {
@@ -447,6 +455,8 @@ public class PlayerController : MonoBehaviour
                         GridAnimationObj gao = null;
                         gao = myManager.PrepareGridAnimation(null, current);
                         gao.type = -2;
+                        if (currentItem.ITYPE == ItemType.dart)
+                            gao.type = 2;
                         gao.magnitute = 0;
                         gao.LoadGridAnimation();
 
@@ -532,7 +542,7 @@ public class PlayerController : MonoBehaviour
                                         }
                                         else
                                         {
-
+                                            //todo, call prepare barrier instead
                                             GridAnimationObj gao = null;
                                             gao = myManager.PrepareGridAnimation(null, current);
                                             gao.type = -4;
@@ -2093,7 +2103,7 @@ public class PlayerController : MonoBehaviour
             {
                 myManager.CleanMenuStack(true);
             }
-           // myManager.MoveCameraAndShow(current);
+            // myManager.MoveCameraAndShow(current);
 
         }
         else

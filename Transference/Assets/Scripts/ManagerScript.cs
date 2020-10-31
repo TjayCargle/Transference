@@ -140,7 +140,11 @@ public class ManagerScript : EventRunner
             hazardManager = GetComponent<HazardManager>();
             objManager = GetComponent<ObjManager>();
             displays = GameObject.FindObjectsOfType<ConditionalDisplay>();
-            potential = GameObject.FindObjectOfType<PotentialSlider>();
+            if (potential == null)
+            {
+                potential = GameObject.FindObjectOfType<PotentialSlider>();
+
+            }
             iconManager = GameObject.FindObjectOfType<StatusIconManager>();
             stackManager = GameObject.FindObjectOfType<MenuStackManager>();
             options = GameObject.FindObjectOfType<OptionsManager>();
@@ -321,7 +325,7 @@ public class ManagerScript : EventRunner
 
 
             updateConditionals();
-            PrepareTutorial(tSteps, tClar);
+            //PrepareTutorial(tSteps, tClar);
 
             StartCoroutine(performChecks());
         }
@@ -400,7 +404,7 @@ public class ManagerScript : EventRunner
                                 turnImgManger.UpdateSelection(order);
 
                             }
-                        
+
                             showCurrentState();
                         }
                         else if (liveActioners > 1)
@@ -467,7 +471,7 @@ public class ManagerScript : EventRunner
                             currentObject = turnOrder[order];
                             player.current = turnOrder[order];
                             myCamera.currentTile = player.current.currentTile;
-                        
+
                             showCurrentState();
                         }
                         else if (liveActioners > 1)
@@ -601,6 +605,34 @@ public class ManagerScript : EventRunner
                         YesPrompt();
                     }
                     break;
+                case State.PlayerAllocate:
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        returnState();
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+
+                        returnState();
+                    }
+
+
+
+                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    {
+                        SelectMenuItem(player.current);
+
+                    }
+
+
+
+                    if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    {
+                        returnState();
+
+                    }
+                    break;
+
                 case State.PlayerInput:
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
@@ -612,40 +644,22 @@ public class ManagerScript : EventRunner
                         returnState();
                     }
 
-                    if (Input.GetKeyDown(KeyCode.D))
+
+
+                    if (Input.GetKeyDown(KeyCode.RightArrow))
                     {
                         SelectMenuItem(player.current);
 
                     }
-                    if (Input.GetKeyDown(KeyCode.A))
+
+
+
+                    if (Input.GetKeyDown(KeyCode.LeftArrow))
                     {
                         returnState();
 
                     }
-                    if (Input.GetKeyDown(KeyCode.UpArrow))
-                    {
-                        invManager.SetNumAndSelect(0);
-
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.RightArrow))
-                    {
-                        invManager.SetNumAndSelect(1);
-
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.DownArrow))
-                    {
-                        invManager.SetNumAndSelect(2);
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.LeftArrow))
-                    {
-                        invManager.SetNumAndSelect(3);
-
-                    }
                     break;
-
 
                 case State.PlayerMove:
                     {
@@ -1798,8 +1812,11 @@ public class ManagerScript : EventRunner
                                                         UpdateMarkedArea();
                                                     }
                                                 }
-                                                //StackNewSelection(State.PlayerInput, currentMenu.none);
-                                                //menuManager.ShowHiddenCanvas();
+                                                else
+                                                {
+                                                    StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                    menuManager.ShowHiddenCanvas();
+                                                }
                                             }
                                         }
                                     }
@@ -1896,18 +1913,20 @@ public class ManagerScript : EventRunner
 
                     if (Input.GetAxis("Mouse ScrollWheel") == 0.1f)
                     {
-                        if (myCamera.mainCam.orthographicSize < 11)
+                        if (myCamera.targetOrthoSize < 11)
                         {
                             myCamera.mainCam.orthographicSize += 0.1f;
-                            myCamera.targetOrthoSize = myCamera.mainCam.orthographicSize;
+                            myCamera.targetOrthoSize += 0.1f;
+                            myCamera.SetCameraPosDefault();
                         }
                     }
                     if (Input.GetAxis("Mouse ScrollWheel") == -0.1f)
                     {
-                        if (myCamera.mainCam.orthographicSize > 5)
+                        if (myCamera.targetOrthoSize > 5)
                         {
                             myCamera.mainCam.orthographicSize -= 0.1f;
-                            myCamera.targetOrthoSize = myCamera.mainCam.orthographicSize;
+                            myCamera.targetOrthoSize -= 0.1f;
+                            myCamera.SetCameraPosDefault();
                         }
                     }
 
@@ -2778,6 +2797,10 @@ public class ManagerScript : EventRunner
 
 
     }
+    public void ShowCantUseText(string showText)
+    {
+        CreateTextEvent(this, showText, "error text event", CheckText, TextStart);
+    }
     public void ShowCantUseText(WeaponScript skill)
     {
         CreateTextEvent(this, "Not enough health to use " + skill.NAME, "error text event", CheckText, TextStart);
@@ -2953,6 +2976,9 @@ public class ManagerScript : EventRunner
                         myCamera.SetCameraPosZoom();
                 }
                 break;
+            case State.PlayerAllocate:
+                myCamera.SetCameraPosOffsetZoom();
+                break;
             case State.FreeCamera:
                 myCamera.SetCameraPosDefault();
                 break;
@@ -3057,7 +3083,7 @@ public class ManagerScript : EventRunner
         {
             currentState = prevState;
             showCurrentState();
-     
+
             prevState = State.PlayerTransition;
             return;
         }
@@ -3103,7 +3129,7 @@ public class ManagerScript : EventRunner
                         break;
                     case currentMenu.invMain:
                         {
-
+                            currentState = State.PlayerAllocate;
                             menuManager.ShowInventoryCanvas();
                         }
                         break;
@@ -3232,6 +3258,10 @@ public class ManagerScript : EventRunner
                 myCamera.SetCameraPosOffsetZoom();
             }
         }
+        if (GetState() == State.PlayerAllocate)
+        {
+            myCamera.SetCameraPosOffsetZoom();
+        }
         if (GetState() == State.PlayerAttacking)
         {
             myCamera.attackingCheck = true;
@@ -3284,10 +3314,11 @@ public class ManagerScript : EventRunner
     public void showCurrentState()
     {
         ShowWhite();
-        if (menuStack.Count == 2)
-        {
-            currentState = State.PlayerInput;
-        }
+        //if (menuStack.Count == 2)
+        //{
+        //    if ()
+        //        currentState = State.PlayerInput;
+        //}
         if (prevState == State.PlayerTransition)
         {
 
@@ -3326,7 +3357,7 @@ public class ManagerScript : EventRunner
                     break;
                 case currentMenu.invMain:
                     {
-
+                        currentState = State.PlayerAllocate;
                         menuManager.ShowInventoryCanvas();
                     }
                     break;
@@ -3439,6 +3470,15 @@ public class ManagerScript : EventRunner
                             menuManager.ShowActCanvas();
                             ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                         }
+                    }
+                    break;
+                case State.PlayerAllocate:
+                    {
+                        currentState = State.PlayerAllocate;
+                        menuManager.ShowInventoryCanvas();
+                        if (currentObject)
+                            ShowGridObjectAffectArea(currentObject);
+                        ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                     }
                     break;
                 case State.PlayerMove:
@@ -3993,7 +4033,9 @@ public class ManagerScript : EventRunner
 
         if (eventManager.activeEvents > 0)
         {
-            enterStateTransition();
+
+            // enterStateTransition();
+            returnState();
         }
         else
         {
@@ -4562,7 +4604,7 @@ public class ManagerScript : EventRunner
                 else
                     lvtimes = Common.MaxLevel;
             }
-            anEnemy.BASE_STATS.LEVEL = largestLevel;
+            anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
 
             for (int j = 0; j < lvtimes; j++)
@@ -4571,6 +4613,7 @@ public class ManagerScript : EventRunner
                 {
                     // anEnemy.LevelUp();
                     rand = Random.Range(0, 3);
+                    // Debug.Log("r is " + rand);
                     switch (rand)
                     {
                         case 0:
@@ -5155,14 +5198,14 @@ public class ManagerScript : EventRunner
                 else
                     lvtimes = Common.MaxLevel;
             }
-            anEnemy.BASE_STATS.LEVEL = largestLevel;
+            anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
 
             for (int j = 0; j < lvtimes; j++)
             {
-
                 // anEnemy.LevelUp();
                 rand = Random.Range(0, 3);
+                // Debug.Log("r=" + rand);
                 switch (rand)
                 {
                     case 0:
@@ -5659,7 +5702,7 @@ public class ManagerScript : EventRunner
             int acts = (int)(turnOrder[i].SPEED / 10);
 
             //            Debug.Log(turnOrder[i].NAME + ", gen: " + turnOrder[i].GENERATED + " , phase:" + currentState);
-            if (turnOrder[i].GENERATED <= 0)
+            if (turnOrder[i].GENERATED < 0)
             {
                 if ((-1 * turnOrder[i].GENERATED) >= acts)
                 {
@@ -5668,9 +5711,9 @@ public class ManagerScript : EventRunner
             }
             else
             {
-
                 acts += turnOrder[i].GENERATED;
                 acts += 3;
+
             }
 
 
@@ -6289,23 +6332,32 @@ public class ManagerScript : EventRunner
     {
         bool result = false;
         GridObject obj = (GridObject)data;
-
-        if (obj.isSetup)
+        if (obj != null)
         {
-            //   ShowGridObjectAffectArea(obj);
-            if (myCamera)
+
+            if (obj.isSetup)
             {
-                currentObject = obj;
-                myCamera.currentTile = obj.currentTile;
-                myCamera.infoObject = obj;
+                //   ShowGridObjectAffectArea(obj);
+                if (myCamera)
+                {
+                    currentObject = obj;
+                    myCamera.currentTile = obj.currentTile;
+                    myCamera.infoObject = obj;
+                }
+                result = true;
+                //if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
+                //{
+                //    menuManager.ShowCommandCanvas();
+                //}
+                MoveCameraAndShow(obj);
+                myCamera.UpdateCamera();
             }
-            result = true;
-            //if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
-            //{
-            //    menuManager.ShowCommandCanvas();
-            //}
-            MoveCameraAndShow(obj);
-            myCamera.UpdateCamera();
+            else
+            {
+                Debug.Log("obj not setup");
+                obj.Setup();
+                result = true;
+            }
         }
         return result;
     }
@@ -8327,7 +8379,11 @@ public class ManagerScript : EventRunner
         }
         return tiles;
     }
+    public List<TileScript> GetDartAttackableTilesOneList(TileScript origin)
+    {
+        return tileManager.GetPinWheelTiles(origin);
 
+    }
 
     public List<TileScript> GetSkillAttackableTilesOneList(TileScript origin, CommandSkill skill)
     {
@@ -9402,6 +9458,8 @@ public class ManagerScript : EventRunner
 
         return returnList;
     }
+
+
     public void ShowSkillAttackbleTiles(LivingObject obj, CommandSkill skill, GridObject target = null)
     {
         ShowWhite();
@@ -9955,6 +10013,7 @@ public class ManagerScript : EventRunner
         }
 
         dmgObject.STATS.HEALTH -= dmg;
+
         if (log)
         {
             string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(dmgObject.FACTION)) + ">";
@@ -9964,12 +10023,12 @@ public class ManagerScript : EventRunner
         if (dmgObject.GetComponent<LivingObject>())
         {
             LivingObject livedmgObbj = dmgObject.GetComponent<LivingObject>();
-
-            if (options.battleAnims)
+            livedmgObbj.UpdateHealthbar();
+            if (livedmgObbj.ARMOR.DamageArmor(dmg))
             {
-                if (livedmgObbj.ARMOR.DamageArmor(dmg))
-                {
 
+                if (options.battleAnims)
+                {
                     GridAnimationObj gao = null;
                     gao = PrepareGridAnimation(null, livedmgObbj);
                     gao.type = -1;
@@ -9977,23 +10036,35 @@ public class ManagerScript : EventRunner
                     gao.LoadGridAnimation();
 
                     CreateEvent(this, gao, "Animation request: " + AnimationRequests + "", CheckAnimation, gao.StartCountDown, 0);
-                    if (livedmgObbj.ARMOR != livedmgObbj.DEFAULT_ARMOR)
-                    {
+                }
+                if (livedmgObbj.ARMOR != livedmgObbj.DEFAULT_ARMOR)
+                {
 
-                        CreateTextEvent(this, dmgObject.NAME + " Barrier broke!", "Barrier break event", CheckText, TextStart);
-                        if (log)
-                        {
-                            string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(dmgObject.FACTION)) + ">";
-                            log.Log(coloroption + dmgObject.NAME + "</color> Barrier broke!");
-                        }
+                    CreateTextEvent(this, dmgObject.NAME + " Barrier broke!", "Barrier break event", CheckText, TextStart);
+                    if (log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(dmgObject.FACTION)) + ">";
+                        log.Log(coloroption + dmgObject.NAME + "</color> Barrier broke!");
                     }
                 }
             }
-            //if (livedmgObbj.PSTATUS != PrimaryStatus.guarding)
-            //{
-            //    livedmgObbj.ACTIONS--;
-            //}
+            if (livedmgObbj.SHIELDS > 0)
+            {
+                livedmgObbj.SHIELDS--;
+                if (livedmgObbj.SHIELDS <= 0)
+                {
+                    if (livedmgObbj.PSTATUS == PrimaryStatus.guarding)
+                    {
+                        livedmgObbj.PSTATUS = PrimaryStatus.normal;
+                    }
+                }
+                livedmgObbj.updateAilmentIcons();
+            }
         }
+        //if (livedmgObbj.PSTATUS != PrimaryStatus.guarding)
+        //{
+        //    livedmgObbj.ACTIONS--;
+        //}
 
 
     }
@@ -11165,7 +11236,7 @@ public class ManagerScript : EventRunner
                     if (log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
-                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=cyan>RESISTED</color> damage");
+                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=cyan> RESISTED </color> damage");
                     }
                 }
                 break;
@@ -11417,7 +11488,7 @@ public class ManagerScript : EventRunner
         if (target.GetComponent<LivingObject>())
         {
             LivingObject livetarget = target.GetComponent<LivingObject>();
-            if (livetarget.HEALTH <= 0)
+            if (livetarget.CheckIfDead() == true)
             {
                 if (!livetarget.DEAD)
                 {
@@ -11577,6 +11648,7 @@ public class ManagerScript : EventRunner
 
                 //  Debug.Log("current state: " + currentState);
             }
+
         }
         else
         {
@@ -14830,6 +14902,7 @@ public class ManagerScript : EventRunner
             Debug.Log("No stack manager");
         }
 
+        updateConditionals();
     }
     public void StackOppSelection()
     {

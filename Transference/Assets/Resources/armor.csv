@@ -12,6 +12,7 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 10,Wolf Barrier,Fire, 4, 4, 2, normal, lethal, normal, resists, nulls, savage, normal,resists
 11,Neutral Barrier,Purely Neutral, 3, 3, 4, normal,normal,normal,normal,normal,normal, normal,normal
 12,Speed Barrier,Purely Neutral, 0, 0, 10, cripples,normal,normal,nulls,normal,savage, resists,resists
+13,Lucky Barrier,ghost,4,2,4,nulls,nulls,nulls,nulls,weak,savage,cripples,absorbs
 200,Glyph Barrier,Purely Neutral, 2, 2, 0, resists,resists,resists,resists,resists,resists, resists,resists
 201,Black Wings,Purely Neutral, 0, 0, 0, resists,normal,normal,normal,normal,cripples, resists,weak
 202,Green Wings,Purely Neutral, 0, 0, 0, cripples,resists,normal,weak,resists,normal,normal ,normal
@@ -22,5 +23,6 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 207,fuzzy Robes,Purely Neutral, 0, 0, 0, resists,cripples,weak,resists,normal,normal, normal,resists
 208,Tutorial,Purely Neutral, 0, 0, 0, normal,normal,weak,weak,normal,normal, normal,resists
 209,Tutorial2,Purely Neutral, 0, 0, 0, normal,normal,weak,cripples,normal,resists, normal,resists
+210,TutorialBoss,Purely Neutral, 0, 0, 0, weak,weak,weak,weak,normal,normal, normal,normal
 -204,Royal Barrier,Purely Neutral, 0, 0, 0, absorbs,resists,resists,resists,resists,resists, cripples,normal
 -204,Queen Barrier,Purely Neutral, 0, 0, 0, cripples,nulls,reflects,nulls,resists,weak, reflects,resists

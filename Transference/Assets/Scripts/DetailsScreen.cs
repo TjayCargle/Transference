@@ -353,8 +353,8 @@ public class DetailsScreen : MonoBehaviour
                 finalText = "Barriers have strength. Once a Barrier's str reaches 0, it will break. This strength will charge by 20% at the begining of the phase.";
                 break;
 
-            case 29:
-                finalText = "This is your overall level. This is the combined level of your Physical, Mystical, and Mental levels.";// This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
+            case 29: //This is the combined level of your Physical, Mystical, and Mental levels.";
+                finalText = "This is your overall level.  This is increased by <color=yellow>attacking </color>and <color=yellow>killing enemies</color>. Leveling this up increases <color=#00ade0>all stats</color> including <color=#00FF00>Health</color>,<color=#e400e9> SP</color>, and <color=orange>FT</color>.";
                 break;
             case 30:
                 finalText = "This is your Physical level. This is increased by using <color=yellow>Skills</color>. Leveling this up reduces the cost of <color=yellow>Skills</color> and increases <color=#ffbf00>Strength</color> and <color=orange>Defense</color>.";
