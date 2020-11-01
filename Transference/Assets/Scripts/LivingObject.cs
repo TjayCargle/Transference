@@ -756,8 +756,8 @@ public class LivingObject : GridObject
                 barrier = new GameObject().AddComponent<SpriteObject>();
                 barrier.name = " Barrier ";
                 barrier.transform.parent = this.transform;
-                barrier.transform.localScale = new Vector3(-0.216f, 0.25f, 1.0f);
-                barrier.transform.localPosition = new Vector3(0.25f, 0.25f, 0.1f);
+                barrier.transform.localScale = new Vector3(-0.25f, 0.25f, 1.0f);
+                barrier.transform.localPosition = new Vector3(-0.216f, 0.25f, 0.1f);
                 barrier.gameObject.AddComponent<SpriteRenderer>();
             }
             barrier.Setup();

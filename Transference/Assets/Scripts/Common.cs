@@ -1109,6 +1109,8 @@ public class Common : ScriptableObject
     public static EventDetails eventdetail = new EventDetails();
     public static bool summonedJax = false;
     public static bool summonedZeffron = false;
+    public static bool enemiesCompletedPhase = false;
+    public static bool haveBeenCrippled = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
@@ -2638,7 +2640,7 @@ public class Common : ScriptableObject
                 break;
             case 2:
                 {
-                    returnedString = "Crippling; The 'Crippled' status is applied for 1 turn when a character takes 'Crippling' or 'Leathal' damage (As noted by the character's weakness chart in the bottom left). While crippled the character deals half damage and takes double the damage they would take in addtion to only being able to move 1 tile.";
+                    returnedString = "Crippling; The 'Crippled' status is applied for 1 turn when a character takes <color=yellow>Crippling</color> or <color=yellow>Leathal</color> damage. While crippled, the character <color=yellow>deals half damage</color>, <color=yellow>takes double the damage</color>, and can <color=yellow>only move 1 tile at a time</color>.";
                 }
                 break;
             case 3:
@@ -2713,7 +2715,7 @@ public class Common : ScriptableObject
                 break;
             case 12:
                 {
-                    returnedString = "Action Points; Action Points or AP determines how many times a character can perform an action in a turn. \n At the begining of the phase, characters are given 3 AP to use. Additional AP is given for every 10 speed that character has.";
+                    returnedString = "Action Points; Action Points or AP determines how many times a character can perform an action in a turn. \n At the begining of the phase, <color=yellow>characters are given 3 AP to use</color>. Additional <color=yellow>AP is given for every 10 speed</color> that character has.";
                 }
                 break;
             case 15:
@@ -2728,7 +2730,7 @@ public class Common : ScriptableObject
                 break;
             case 17:
                 {
-                    returnedString = "Weaknesses and Resistances; There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Cripling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                    returnedString = "Weaknesses and Resistances;There are 4 types of weaknesses (displayed in<color=red> red</color>) and 4 types of resistances (displayed in<color=blue> blue</color>).\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn. However characters who<color=yellow> hit a target's resistance will gain AP</color> for next turn."; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Cripling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
                 }
                 break;
             case 21:
@@ -2743,7 +2745,7 @@ public class Common : ScriptableObject
                 break;
             case 23:
                 {
-                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in. \n While on a shadow tile, enemies cannot see a player unless they have already exchanged attacks with that character.";
+                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\n While on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already exchanged attacks with that character.";
                 }
                 break;
             default:

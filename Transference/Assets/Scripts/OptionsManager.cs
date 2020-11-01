@@ -38,7 +38,7 @@ public class OptionsManager : MonoBehaviour
     public float voicevolume;
 
     public float displayMsgSpeed = 0.2f;
-    public float cameraSpeed = 0.2f;
+    public float cameraSpeed = 0.8f;
 
     public Slider displaySlider;
     public Slider cameraSlider;

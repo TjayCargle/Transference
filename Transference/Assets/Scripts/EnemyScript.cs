@@ -201,6 +201,7 @@ public class EnemyScript : LivingObject
 
         if (lastReaction.usedStrike)
         {
+            Debug.Log("" + NAME + " is using " + lastReaction.usedStrike.NAME);
             WEAPON.Equip(lastReaction.usedStrike);
             //GridObject possibleObject = null;
             myManager.attackableTiles = myManager.GetWeaponAttackableTiles(this);
@@ -223,7 +224,8 @@ public class EnemyScript : LivingObject
 
         if (lastReaction.usedSkill)
         {
-            WEAPON.Equip(lastReaction.usedStrike);
+          //  Debug.Log("" + NAME + " is using " + lastReaction.usedSkill.NAME);
+           // WEAPON.Equip(lastReaction.usedStrike);
             myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, lastReaction.usedSkill);
             // GridObject possibleObject = null;
             myManager.currentAttackList.Clear();
@@ -1634,7 +1636,7 @@ public class EnemyScript : LivingObject
         {
             myManager.requestTurnImgUpdate(this);
         }
-        if (liveObj)
+        if (liveObj != null)
         {
             if (id > 100)
             {

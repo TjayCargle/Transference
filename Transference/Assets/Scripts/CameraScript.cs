@@ -125,7 +125,7 @@ public class CameraScript : MonoBehaviour
             }
         }
     }
-
+    private float hoverTime = 0.0f;
     public void UpdatePosition()
     {
         if (currentTile)
@@ -138,13 +138,28 @@ public class CameraScript : MonoBehaviour
             //Vector3 targetLocation = tilePos - camPos;
             if (Vector3.Distance(transform.position, tilePos) > 0.5f)
             {
-                moving = true;
+                hoverTime += 2 * Time.deltaTime;
 
-                Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
-                transform.position = smooth;
+                if (manager.GetState() != State.SceneRunning && manager.prevState  != State.PlayerMove && manager.GetState() != State.PlayerMove)
+                {
+                    if (hoverTime >= 3)
+                    {
+
+                        moving = true;
+                        Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                        transform.position = smooth;
+                    }
+                }
+                else
+                {
+                    moving = true;
+                    Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                    transform.position = smooth;
+                }
             }
             else
             {
+                hoverTime = 0.0f;
                 moving = false;
             }
 
@@ -387,7 +402,7 @@ public class CameraScript : MonoBehaviour
                                             liver = infoObject.GetComponent<LivingObject>();
                                         if (manager.liveEnemies.Count > 0)
                                             actionText.text = "AP next turn: " + (3 + liver.GENERATED);
-                                        infoText.text = liver.FullName + liver.LEVEL.ToString();
+                                        infoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
                                         if (faceImage)
                                         {
                                             faceImage.sprite = liver.FACE;

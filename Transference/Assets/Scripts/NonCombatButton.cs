@@ -10,7 +10,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public int type;
     public NonCombatController controller;
-
+    public GameObject loadingCanvas = null;
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -78,15 +78,19 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void playJax()
     {
-        PlayerPrefs.SetInt("defaultSceneEntry", 15);
-        SceneManager.LoadSceneAsync("DemoMap4");
+        PlayerPrefs.SetInt("defaultSceneEntry", 26);
+        SceneManager.LoadSceneAsync("DemoMap5");
+        if(loadingCanvas != null)
+        {
+            loadingCanvas.SetActive(true);
+        }
     }
 
 
     public void playZeffron()
     {
         PlayerPrefs.SetInt("defaultSceneEntry", 4);
-        SceneManager.LoadSceneAsync("DemoMap4");
+        SceneManager.LoadSceneAsync("DemoMap45");
     }
 
 

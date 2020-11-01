@@ -3227,9 +3227,16 @@ public class ManagerScript : EventRunner
         }
         else
         {
-
+            if(currentState == State.EventRunning && prevState == State.FreeCamera)
+            {
+                menuManager.ShowNone();
+                currentState = State.FreeCamera;
+            }
+            else
+            {
             currentState = State.ChangeOptions;
             menuManager.ShowOptions();
+            }
         }
 
         if (doubleAdjOppTiles.Count <= 0)
@@ -3722,8 +3729,8 @@ public class ManagerScript : EventRunner
 
                                                 anim.LoadList(anim.idlePath);
                                             }
-                                            player.current.TakeAction();
                                             DidCompleteTutorialStep();
+                                            player.current.TakeAction();
                                         }
                                         // CleanMenuStack();
                                     }
@@ -4284,7 +4291,7 @@ public class ManagerScript : EventRunner
                             menuManager.ShowNone();
                             CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
                         }
-                        
+
                     }
                     if (checkMap.mapIndex == 15)
                     {
@@ -4376,15 +4383,21 @@ public class ManagerScript : EventRunner
 
                 List<tutorialStep> tSteps = new List<tutorialStep>();
                 List<int> tClar = new List<int>();
-                
-             
-               
+
+
+
                 tSteps.Add(tutorialStep.moveToPosition);
                 tClar.Add(20);
                 tSteps.Add(tutorialStep.showTutorial);
-                tClar.Add(23);
+               tClar.Add(12);
+               // tClar.Add(23);
                 tSteps.Add(tutorialStep.useStrike);
                 tClar.Add(-1);
+                tSteps.Add(tutorialStep.showTutorial);
+                tClar.Add(17);
+                tSteps.Add(tutorialStep.useSpell);
+                tClar.Add(-1);
+            
                 PrepareTutorial(tSteps, tClar);
                 //GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 //zeffron.SetActive(true);
@@ -4832,7 +4845,7 @@ public class ManagerScript : EventRunner
             anEnemy.STATS.MANA = anEnemy.BASE_STATS.MAX_MANA;
             anEnemy.STATS.FATIGUE = 0;
             anEnemy.MapIndex = map.enemyIndexes[i];
-
+            anEnemy.UpdateHealthbar();
         }
 
         List<GridObject> gridobjs = objManager.getObjects(map.objMapIndexes.Count);
@@ -5495,7 +5508,7 @@ public class ManagerScript : EventRunner
             anEnemy.STATS.MANA = anEnemy.BASE_STATS.MAX_MANA;
             anEnemy.STATS.FATIGUE = 0;
             anEnemy.MapIndex = data.enemyIndexes[i];
-
+            anEnemy.UpdateHealthbar();
         }
 
         List<GridObject> gridobjs = objManager.getObjects(data);
@@ -5800,8 +5813,21 @@ public class ManagerScript : EventRunner
         switch (currentState)
         {
             case State.HazardTurn:
+
                 currentState = State.FreeCamera;
                 prevState = State.FreeCamera;
+
+                if(Common.enemiesCompletedPhase == false)
+                {
+
+                    List<tutorialStep> tSteps = new List<tutorialStep>();
+                    List<int> tClar = new List<int>();
+
+                    tSteps.Add(tutorialStep.showTutorial);
+                    tClar.Add(23);
+                    PrepareTutorial(tSteps, tClar);
+                    Common.enemiesCompletedPhase = true;
+                }
                 break;
             case State.FairyPhase:
                 currentState = State.EnemyTurn;
@@ -11057,6 +11083,16 @@ public class ManagerScript : EventRunner
                         liveTarget.PSTATUS = PrimaryStatus.crippled;
                         liveTarget.updateAilmentIcons();
                         liveTarget.ACTIONS--;
+                        if(Common.haveBeenCrippled == false)
+                        {
+                            Common.haveBeenCrippled = true;
+                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                            List<int> tClar = new List<int>();
+
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(2);
+                            PrepareTutorial(tSteps, tClar);
+                        }
                     }
                     CreateTextEvent(this, "" + attackingObject.FullName + " did CRIPPLING damage", "enemy atk", CheckText, TextStart);
                     if (log)
@@ -14115,7 +14151,7 @@ public class ManagerScript : EventRunner
         newSkillEvent.data = livvy;
     }
 
-   
+
     public void TutorialStart(Object data)
     {
         SkillEventContainer tutorialExtra = data as SkillEventContainer;
@@ -15376,34 +15412,35 @@ public class ManagerScript : EventRunner
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
         currentTutorial.clarifications.Clear();
+        currentTutorial.currentStep = 0;
         currentTutorial.steps.AddRange(newSteps);
         currentTutorial.clarifications.AddRange(newClarity);
 
-       // for (int i = 0; i < currentTutorial.steps.Count; i++)
+        // for (int i = 0; i < currentTutorial.steps.Count; i++)
         //{
-        switch(currentTutorial.steps[0])
+        switch (currentTutorial.steps[0])
         {
             case tutorialStep.moveToPosition:
                 {
-       
-                TileScript selectedtile = tileMap[currentTutorial.clarifications[0]];
-                selectedtile.MYCOLOR = Common.orange;
-                selectedtile.isMarked = true;
-            
+
+                    TileScript selectedtile = tileMap[currentTutorial.clarifications[0]];
+                    selectedtile.MYCOLOR = Common.orange;
+                    selectedtile.isMarked = true;
+
 
                 }
                 break;
             case tutorialStep.showTutorial:
                 {
-                    
-                        CheckTutorialPrompt(currentTutorial.clarifications[currentTutorial.currentStep]);
-                    
+
+                    CheckTutorialPrompt(currentTutorial.clarifications[currentTutorial.currentStep]);
+
                 }
                 break;
         }
-       // }
+        // }
 
-      
+
         TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
         TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
     }
@@ -15454,8 +15491,48 @@ public class ManagerScript : EventRunner
                         }
                         break;
                     case tutorialStep.useSkill:
+                        {
+                            if (player.current)
+                            {
+                                if (player.current.INVENTORY.CSKILLS.Count > 0)
+                                {
+                                    for (int i = 0; i < player.current.INVENTORY.CSKILLS.Count; i++)
+                                    {
+                                        if (player.current.INVENTORY.CSKILLS[i].ETYPE == EType.physical)
+                                        {
+
+                                            if (player.current.INVENTORY.CSKILLS[i].USECOUNT > 0)
+                                            {
+                                                returnedBool = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case tutorialStep.useSpell:
+                        {
+                            if (player.current)
+                            {
+                                if (player.current.INVENTORY.CSKILLS.Count > 0)
+                                {
+                                    for (int i = 0; i < player.current.INVENTORY.CSKILLS.Count; i++)
+                                    {
+                                        if (player.current.INVENTORY.CSKILLS[i].ETYPE == EType.magical)
+                                        {
+
+                                            if (player.current.INVENTORY.CSKILLS[i].USECOUNT > 0)
+                                            {
+                                                returnedBool = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case tutorialStep.useBarrier:
                         break;
@@ -15487,7 +15564,7 @@ public class ManagerScript : EventRunner
             {
                 TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
                 TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
-                if(currentTutorial.steps[currentTutorial.currentStep] == tutorialStep.showTutorial)
+                if (currentTutorial.steps[currentTutorial.currentStep] == tutorialStep.showTutorial)
                 {
                     CheckTutorialPrompt(currentTutorial.clarifications[currentTutorial.currentStep]);
                 }

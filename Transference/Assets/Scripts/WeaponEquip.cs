@@ -39,7 +39,7 @@ public class WeaponEquip : Equipable
     }
     public Element ELEMENT
     {
-        get { return equipped.ELEMENT; }
+        get { return (equipped != null ? (equipped.ELEMENT) : Element.Support); }
       
     }
     public EType ATTACK_TYPE

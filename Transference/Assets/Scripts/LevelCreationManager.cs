@@ -170,6 +170,7 @@ public class LevelCreationManager : MonoBehaviour
 
     public void OpenFilePicker()
     {
+#if UNITY_EDITOR
         string path = EditorUtility.OpenFilePanel("Select Level to load", "", "csv");
         if (path.Length > 0)
         {
@@ -339,6 +340,7 @@ public class LevelCreationManager : MonoBehaviour
                 }
             }
         }
+#endif
     }
 
     public List<LevelCreationTiles> getTiles(int num)
