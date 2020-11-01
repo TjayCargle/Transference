@@ -157,13 +157,6 @@ public class ManagerScript : EventRunner
             currentTutorial.steps = new List<tutorialStep>();
             currentTutorial.clarifications = new List<int>();
 
-            List<tutorialStep> tSteps = new List<tutorialStep>();
-            List<int> tClar = new List<int>();
-
-            tSteps.Add(tutorialStep.moveToPosition);
-            tSteps.Add(tutorialStep.useStrike);
-            tClar.Add(20);
-            tClar.Add(-1);
 
 
             if (eventImage)
@@ -325,7 +318,10 @@ public class ManagerScript : EventRunner
 
 
             updateConditionals();
-            //PrepareTutorial(tSteps, tClar);
+
+
+
+
 
             StartCoroutine(performChecks());
         }
@@ -3964,6 +3960,12 @@ public class ManagerScript : EventRunner
                                 }
                             }
                             break;
+                        case SceneEvent.moveToTarget:
+                            {
+                                tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
+                                ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
+                            }
+                            break;
                         case SceneEvent.hideimage:
                             {
                                 if (eventImage)
@@ -4004,7 +4006,20 @@ public class ManagerScript : EventRunner
                                 }
                             }
                             break;
+                        case SceneEvent.clear:
+                            {
+                                if (eventImage)
+                                {
+                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                                    if (img)
+                                    {
+                                        img.color = new Color(0, 0, 0, 0.0f);
+                                    }
+                                }
+                            }
+                            break;
                     }
+
                 }
             }
         }
@@ -4034,8 +4049,14 @@ public class ManagerScript : EventRunner
         if (eventManager.activeEvents > 0)
         {
 
-            // enterStateTransition();
-            returnState();
+            if (prevState == State.FreeCamera)
+            {
+                enterStateTransition();
+            }
+            else
+            {
+                returnState();
+            }
         }
         else
         {
@@ -4243,6 +4264,48 @@ public class ManagerScript : EventRunner
                     }
                 }
                 break;
+
+            case 26:
+                {
+                    if (checkMap.mapIndex == 26)
+                    {
+                        myCamera.PlaySoundTrack(10);
+                        myCamera.previousClip = myCamera.musicClips[13];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("JaxPrologue");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                        }
+                        
+                    }
+                    if (checkMap.mapIndex == 15)
+                    {
+                        myCamera.PlaySoundTrack(3);
+                        myCamera.previousClip = myCamera.musicClips[13];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("Scene1");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                        }
+                    }
+                }
+                break;
         }
     }
 
@@ -4311,7 +4374,18 @@ public class ManagerScript : EventRunner
                 ComfirmMoveGridObject(liveJax, 6);
                 MoveCameraAndShow(liveJax);
 
-
+                List<tutorialStep> tSteps = new List<tutorialStep>();
+                List<int> tClar = new List<int>();
+                
+             
+               
+                tSteps.Add(tutorialStep.moveToPosition);
+                tClar.Add(20);
+                tSteps.Add(tutorialStep.showTutorial);
+                tClar.Add(23);
+                tSteps.Add(tutorialStep.useStrike);
+                tClar.Add(-1);
+                PrepareTutorial(tSteps, tClar);
                 //GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 //zeffron.SetActive(true);
                 //zeffron.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
@@ -7619,13 +7693,25 @@ public class ManagerScript : EventRunner
                     menuManager.ShowNone();
                     newSkillEvent.caller = this;
                     newSkillEvent.data = player.current;
-                    CreateEvent(this, player.current, "door event", CheckNewSKillEvent, null, -1, HelpStart);
+                    CreateEvent(this, player.current, "help event", CheckNewSKillEvent, null, -1, HelpStart);
                 }
             }
         }
 
     }
+    public void CheckTutorialPrompt(int checkText)
+    {
 
+        if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
+        {
+            menuManager.ShowNone();
+            newSkillEvent.caller = this;
+            newSkillEvent.data = player.current;
+            SkillEventContainer sec = new SkillEventContainer();
+            sec.name = "?;" + Common.GetHelpText(checkText);
+            CreateEvent(this, sec, "help event", CheckNewSKillEvent, null, -1, TutorialStart);
+        }
+    }
     public void ComfirmMoveGridObject(GridObject obj, TileScript tile, bool hover = false)
     {
         if (obj.gameObject != tempObject)
@@ -14028,6 +14114,33 @@ public class ManagerScript : EventRunner
         currentState = State.EventRunning;
         newSkillEvent.data = livvy;
     }
+
+   
+    public void TutorialStart(Object data)
+    {
+        SkillEventContainer tutorialExtra = data as SkillEventContainer;
+
+        string[] helpParsed = tutorialExtra.name.Split(';');
+
+        if (helpParsed.Length < 3)
+        {
+            if (CheckAdjecentTilesGlyphs(player.current))
+            {
+                helpParsed = ("10;" + Common.GetHelpText(10)).Split(';');
+            }
+        }
+
+        prompt.TitleText.text = helpParsed[1];
+        prompt.BodyText.text = helpParsed[2];
+        //prompt.choice1.text = "Cool";
+        //prompt.choice2.text = "Watever";
+
+        menuManager.ShowNewSkillPrompt();
+        menuManager.ShowEventCanvas(1);
+
+        currentState = State.EventRunning;
+        newSkillEvent.data = tutorialExtra;
+    }
     public void EventStart(Object data)
     {
         GridObject griddy = data as GridObject;
@@ -14466,15 +14579,15 @@ public class ManagerScript : EventRunner
                     case Faction.ally:
                         theColor = Color.blue;
                         turnText = "Player Phase";
-                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Player Phase");
-                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Player Phase");
-                        textHolder.phaseTracker.SetColor(Color.blue);
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, " Goal");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, " Goal");
+                        textHolder.phaseTracker.SetColor(Color.cyan);
                         break;
                     case Faction.enemy:
                         theColor = Color.red;
                         turnText = "Enemy Phase";
-                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "Enemy Phase");
-                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Enemy Phase");
+                        TextObjectHandler.UpdateText(textHolder.phaseTracker, "");
+                        TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "");
                         textHolder.phaseTracker.SetColor(Color.red);
                         break;
                     case Faction.hazard:
@@ -15266,17 +15379,31 @@ public class ManagerScript : EventRunner
         currentTutorial.steps.AddRange(newSteps);
         currentTutorial.clarifications.AddRange(newClarity);
 
-        for (int i = 0; i < currentTutorial.steps.Count; i++)
+       // for (int i = 0; i < currentTutorial.steps.Count; i++)
+        //{
+        switch(currentTutorial.steps[0])
         {
-            if (currentTutorial.steps[i] == tutorialStep.moveToPosition)
-            {
-                TileScript selectedtile = tileMap[currentTutorial.clarifications[i]];
+            case tutorialStep.moveToPosition:
+                {
+       
+                TileScript selectedtile = tileMap[currentTutorial.clarifications[0]];
                 selectedtile.MYCOLOR = Common.orange;
                 selectedtile.isMarked = true;
-            }
+            
+
+                }
+                break;
+            case tutorialStep.showTutorial:
+                {
+                    
+                        CheckTutorialPrompt(currentTutorial.clarifications[currentTutorial.currentStep]);
+                    
+                }
+                break;
         }
+       // }
 
-
+      
         TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
         TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
     }
@@ -15338,6 +15465,11 @@ public class ManagerScript : EventRunner
                         break;
                     case tutorialStep.hackGlyph:
                         break;
+                    case tutorialStep.allocate:
+                        break;
+                    case tutorialStep.showTutorial:
+                        returnedBool = true;
+                        break;
                 }
             }
         }
@@ -15355,7 +15487,16 @@ public class ManagerScript : EventRunner
             {
                 TextObjectHandler.UpdateText(textHolder.subphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
                 TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep]));
-
+                if(currentTutorial.steps[currentTutorial.currentStep] == tutorialStep.showTutorial)
+                {
+                    CheckTutorialPrompt(currentTutorial.clarifications[currentTutorial.currentStep]);
+                }
+                if (currentTutorial.steps[currentTutorial.currentStep] == tutorialStep.moveToPosition)
+                {
+                    TileScript selectedtile = tileMap[currentTutorial.clarifications[currentTutorial.currentStep]];
+                    selectedtile.MYCOLOR = Common.orange;
+                    selectedtile.isMarked = true;
+                }
             }
         }
 

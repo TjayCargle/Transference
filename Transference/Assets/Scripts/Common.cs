@@ -662,6 +662,10 @@ public enum BossCommand
     shield,
     overload
 }
+public struct StringContainer
+{
+   public string dataString;
+}
 public class MassAtkConatiner : ScriptableObject
 {
     public List<AtkContainer> atkContainers;
@@ -773,7 +777,8 @@ public enum tutorialStep
     useItem,
     allocate,
     defeatEnemy,
-    hackGlyph
+    hackGlyph,
+    showTutorial
 
 }
 
@@ -889,7 +894,9 @@ public enum SceneEvent
     scaleimage,
     shake,
     blackout,
-    dim
+    dim,
+    moveToTarget,
+    clear
 }
 public struct SceneEventContainer
 {
@@ -2600,6 +2607,11 @@ public class Common : ScriptableObject
             case tutorialStep.hackGlyph:
                 returnedString = "Hack the Glyph";
                 break;
+            case tutorialStep.showTutorial:
+                {
+                    returnedString = "";
+                }
+                break;
             default:
                 Debug.Log("Couldn't find tutorial text");
                 break;
@@ -2701,7 +2713,7 @@ public class Common : ScriptableObject
                 break;
             case 12:
                 {
-                    returnedString = "Action Points; At the begining of the phase 2 Action Points are distributed to each of the characters. Attacking, Moving, using items, and other things take 1 action point. Additional action points are given for every 10 speed a character has. If there are no enemies in the room however, no action points are used. ";
+                    returnedString = "Action Points; Action Points or AP determines how many times a character can perform an action in a turn. \n At the begining of the phase, characters are given 3 AP to use. Additional AP is given for every 10 speed that character has.";
                 }
                 break;
             case 15:
@@ -2727,6 +2739,11 @@ public class Common : ScriptableObject
             case 22:
                 {
                     returnedString = "Wait & Heal; Choosing to Wait & Heal will recover Health, Mana, and lower Fatigue. It is reccommended to wait and heal before moving on to new rooms.";
+                }
+                break;
+            case 23:
+                {
+                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in. \n While on a shadow tile, enemies cannot see a player unless they have already exchanged attacks with that character.";
                 }
                 break;
             default:

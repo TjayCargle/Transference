@@ -2585,7 +2585,7 @@ public class EnemyScript : LivingObject
 
 
             PSTATUS = PrimaryStatus.normal;
-
+            UpdateHealthbar();
         }
     }
 

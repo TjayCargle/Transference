@@ -12,6 +12,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool requiresShopTile = false;
     public bool requriesSelectedPlayer = false;
     public bool requriesSelectedEnemy = false;
+    public bool mustBeLiving = false;
     public bool checksForEvent = false;
     public bool requiresSelectedorSpecialTile = false;
     ManagerScript manager;
@@ -143,17 +144,17 @@ public class ConditionalDisplay : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
-            else if (!manager.myCamera.infoObject.GetComponent<LivingObject>())
-            {
-
-                gameObject.SetActive(false);
-                return;
-            }
             else if (manager.myCamera.infoObject.FACTION == Faction.ally)
             {
                 gameObject.SetActive(false);
                 return;
             }
+           else if (mustBeLiving == true && !manager.myCamera.infoObject.GetComponent<LivingObject>())
+           {
+
+               gameObject.SetActive(false);
+               return;
+           }
         }
 
         if (manager)

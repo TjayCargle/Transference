@@ -489,6 +489,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 {
                     //   Debug.Log("prev, " + myManager.GetState());
                     myManager.returnState();
+                    myManager.DidCompleteTutorialStep();
                 }
                 else
                 {

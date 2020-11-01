@@ -231,6 +231,7 @@ MonoBehaviour:
   usedSkills: 
   actionCounterText: {fileID: 0}
   generatedCounterText: {fileID: 0}
+  myWorldHealthBar: {fileID: 0}
 --- !u!1 &751431115679142846
 GameObject:
   m_ObjectHideFlags: 0

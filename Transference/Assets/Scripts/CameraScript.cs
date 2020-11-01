@@ -68,6 +68,8 @@ public class CameraScript : MonoBehaviour
     public Text enemyfatigueText;
     public ArmorSet enemyarmorSet;
     public Text enemyactionText;
+    public Image enemyfaceImage;
+    public Text enemyinfoText;
     void Start()
     {
         Setup();
@@ -373,18 +375,7 @@ public class CameraScript : MonoBehaviour
                                 {
                                     // actionText.gameObject.SetActive(true);
                                 }
-                                if (faceImage)
-                                {
-                                    faceImage.sprite = infoObject.FACE;
-                                    if (faceImage.sprite == null)
-                                    {
-                                        faceImage.color = Common.trans;
-                                    }
-                                    else
-                                    {
-                                        faceImage.color = Color.white;
-                                    }
-                                }
+
                                 if (infoObject.GetComponent<LivingObject>())
                                 {
                                     LivingObject liver = null;
@@ -396,6 +387,20 @@ public class CameraScript : MonoBehaviour
                                             liver = infoObject.GetComponent<LivingObject>();
                                         if (manager.liveEnemies.Count > 0)
                                             actionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                        infoText.text = liver.FullName + liver.LEVEL.ToString();
+                                        if (faceImage)
+                                        {
+                                            faceImage.sprite = liver.FACE;
+                                            if (faceImage.sprite == null)
+                                            {
+                                                faceImage.color = Common.trans;
+                                            }
+                                            else
+                                            {
+                                                faceImage.color = Color.white;
+                                            }
+                                        }
+
                                         if (armorSet)
                                         {
                                             armorSet.currentObj = liver;
@@ -437,12 +442,33 @@ public class CameraScript : MonoBehaviour
                                     if (infoObject.FACTION != Faction.ally)
                                     {
                                         liver = infoObject.GetComponent<LivingObject>();
-
+                                        enemyinfoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
                                         if (enemyactionText != null)
-                                            enemyactionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                        {
+                                            if (manager.GetState() == State.EnemyTurn)
+                                                enemyactionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                            else
+                                                enemyactionText.text = "AP next turn: " + (liver.ACTIONS);
+                                        }
+
+                                        if (enemyfaceImage)
+                                        {
+                                            enemyfaceImage.sprite = liver.FACE;
+                                            if (enemyfaceImage.sprite == null)
+                                            {
+                                                enemyfaceImage.color = Common.trans;
+                                            }
+                                            else
+                                            {
+                                                enemyfaceImage.color = Color.white;
+                                            }
+                                        }
+
                                         if (enemyarmorSet)
                                         {
                                             enemyarmorSet.currentObj = liver;
+                                            enemyarmorSet.selectedArmor = liver.ARMOR.SCRIPT;
+
 
                                             enemyarmorSet.updateDetails();
                                         }
@@ -477,10 +503,11 @@ public class CameraScript : MonoBehaviour
                                         }
                                     }
 
-                                    manager.iconManager.loadIconPanel(liver);
+                                    if (manager.iconManager)
+                                        manager.iconManager.loadIconPanel(liver);
 
 
-                                    infoText.text = liver.FullName + " - " + liver.GetClassType();//LEVEL.ToString();
+                                    // " - " + liver.GetClassType();//
                                     if (!actionText.IsActive())
                                     {
                                         //  actionText.transform.parent.gameObject.SetActive(true);
@@ -531,45 +558,60 @@ public class CameraScript : MonoBehaviour
                                 }
                                 else if (infoObject.GetComponent<BaseStats>())
                                 {
-
-                                    if (healthSlider)
+                                    if (enemyfaceImage)
                                     {
-                                        infoText.text = infoObject.FullName;
-                                        if (infoText.text == "Passive Coffin" || infoText.text == "PassiveCoffin")
+                                        enemyfaceImage.sprite = infoObject.FACE;
+                                        if (enemyfaceImage.sprite == null)
                                         {
-                                            infoText.text = "Combo Coffin";
+                                            enemyfaceImage.color = Common.trans;
                                         }
-                                        healthText.text = infoObject.STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+                                        else
+                                        {
+                                            enemyfaceImage.color = Color.white;
+                                        }
+                                    }
+                                    if (enemyhealthSlider)
+                                    {
+                                        enemyinfoText.text = infoObject.FullName;
+                                        if (enemyinfoText.text == "Passive Coffin" || enemyinfoText.text == "PassiveCoffin")
+                                        {
+                                            enemyinfoText.text = "Combo Coffin";
+                                        }
+                                        else
+                                        {
+                                            enemyinfoText.text = infoObject.FullName;
+                                        }
+                                        enemyhealthText.text = infoObject.STATS.HEALTH.ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
 
                                         if (attackingCheck == false)
                                         {
-                                            healthSlider.value = (float)infoObject.STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
-                                            healthText.text = (infoObject.STATS.HEALTH).ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
+                                            enemyhealthSlider.value = (float)infoObject.STATS.HEALTH / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            enemyhealthText.text = (infoObject.STATS.HEALTH).ToString() + "/" + infoObject.BASE_STATS.MAX_HEALTH.ToString();
 
                                         }
                                         else
                                         {
-                                            healthSlider.value = (float)(infoObject.STATS.HEALTH - potentialDamage) / (float)infoObject.BASE_STATS.MAX_HEALTH;
-                                            healthText.text = infoObject.STATS.HEALTH + " - " + potentialDamage;
+                                            enemyhealthSlider.value = (float)(infoObject.STATS.HEALTH - potentialDamage) / (float)infoObject.BASE_STATS.MAX_HEALTH;
+                                            enemyhealthText.text = infoObject.STATS.HEALTH + " - " + potentialDamage;
                                         }
                                     }
-                                    if (mansSlider)
+                                    if (enemymansSlider)
                                     {
-                                        mansSlider.value = 0;
-                                        manaText.text = "0/0";
+                                        enemymansSlider.value = 0;
+                                        enemymanaText.text = "0/0";
                                     }
-                                    if (fatigueSlider)
+                                    if (enemyfatigueSlider)
                                     {
-                                        fatigueSlider.value = 0;
-                                        fatigueText.text = "0/0";
+                                        enemyfatigueSlider.value = 0;
+                                        enemyfatigueText.text = "0/0";
                                     }
-                                    infoText.text = infoObject.FullName + " LV:" + infoObject.GetComponent<BaseStats>().LEVEL.ToString();
+                                    // + " LV:" + infoObject.BASE_STATS.LEVEL.ToString();
 
 
-                                    if (armorSet)
+                                    if (enemyarmorSet)
                                     {
-                                        armorSet.currentGridObj = infoObject;
-                                        armorSet.updateGridDetails();
+                                        enemyarmorSet.currentGridObj = infoObject;
+                                        enemyarmorSet.updateGridDetails();
                                     }
                                     if (infoObject.FACTION == Faction.eventObj)
                                     {

@@ -14,8 +14,9 @@ public class ArmorEquip : Equipable
     private int mySpeed;
 
     [SerializeField]
-    private List<EHitType> hitList;
+    private List<EHitType> hitList = new List<EHitType>();
     private LivingObject owner;
+    [SerializeField]
     private ArmorScript equipped;
     [SerializeField]
     private float healthPercent;
@@ -150,7 +151,8 @@ public class ArmorEquip : Equipable
         maxHealthPercent = armor.MAX_HEALTH;
         healthPercent = armor.HEALTH;
         equipped = armor;
-
+        hitList.Clear();
+        hitList.AddRange(equipped.HITLIST);
         if (owner)
         {
             if (owner.BARRIER)

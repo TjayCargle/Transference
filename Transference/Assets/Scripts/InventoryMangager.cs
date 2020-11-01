@@ -1478,6 +1478,10 @@ public class InventoryMangager : MonoBehaviour
             if (currentContent)
             {
                 int childCount = ActiveChildCount();
+                for (int i = 0; i < childCount; i++)
+                {
+                    GetActiveChild(i).eulerAngles = Vector3.zero;// new Vector3(0, 0, startingDegree);
+                }
                 switch (childCount)
                 {
                     case 1:
@@ -1487,8 +1491,11 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     case 2:
                         {
-                            GetActiveChild(0).eulerAngles = new Vector3(0, 0, -10);
-                            GetActiveChild(1).eulerAngles = new Vector3(0, 0, 10);
+                            //GetActiveChild(0).eulerAngles = new Vector3(0, 0, -10);
+                            //GetActiveChild(1).eulerAngles = new Vector3(0, 0, 10);
+                            GetActiveChild(0).eulerAngles = Vector3.zero;
+                            GetActiveChild(1).eulerAngles = Vector3.zero;
+
                         }
                         break;
                     default:
@@ -1496,7 +1503,14 @@ public class InventoryMangager : MonoBehaviour
                             startingDegree = -childCount * childCount;
                             for (int i = 0; i < childCount; i++)
                             {
-                                GetActiveChild(i).eulerAngles = new Vector3(0, 0, startingDegree);
+                                if(i == 0 || i == childCount -1)
+                                {
+                                    GetActiveChild(i).eulerAngles = new Vector3(0, 0, startingDegree);
+                                }
+                                else
+                                {
+                                GetActiveChild(i).eulerAngles = Vector3.zero;// new Vector3(0, 0, startingDegree);
+                                }
                                 startingDegree += childCount * 2;
                             }
 

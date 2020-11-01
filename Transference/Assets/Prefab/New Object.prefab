@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6932130532345411272}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -102,7 +102,12 @@ MonoBehaviour:
   obj: {fileID: 0}
   index: 0
   isSetup: 0
+  me: {fileID: 0}
   anim: {fileID: 0}
+  idlePath: 
+  movePath: 
+  hasMove: 0
+  runAnyway: 0
 --- !u!95 &6932130532345411275
 Animator:
   serializedVersion: 3
@@ -156,7 +161,6 @@ MonoBehaviour:
   otherMe: {fileID: 0}
   dm: {fileID: 0}
   manager: {fileID: 0}
-  DataFaction: 0
 --- !u!114 &6932130532345411279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,3 +180,7 @@ MonoBehaviour:
   isDead: 0
   baseStats: {fileID: 0}
   modifiedStats: {fileID: 0}
+  faceSprite: {fileID: 0}
+  MapIndex: -1
+  id: -1
+  currentTileIndex: 0
