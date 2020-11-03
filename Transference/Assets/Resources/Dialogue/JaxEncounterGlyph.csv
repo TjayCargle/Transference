@@ -1,0 +1,21 @@
+-folder,facdnum, name, text
+a,0,Vampretti Manor...
+a,0,I get that an underground auction isn't supposed to attract attention but...
+a,0,Getting in here was way too easy.
+a,0,You would think the security would be a bit better.
+a,0,
+a,0,
+a,0,
+a,0,
+a,0,Now that's more like it!
+a,0,But why would scorpiees be guarding Vampretti Manor?
+a,0,I guess it doesn't matter as long as I find that book.
+i,0,showimage,0 
+i,3,hideimage,0
+i,2,blackout,0
+i,4,clear,0
+i,8,dim,0
+i,4,moveToTarget,32
+i,5,moveToTarget,87
+i,6,moveToTarget,109
+i,7,moveToTarget,7

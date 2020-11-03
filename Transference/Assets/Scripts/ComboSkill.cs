@@ -159,8 +159,7 @@ public class ComboSkill : SkillScript
                 {
                     if (OWNER)
                     {
-                        OWNER.PSTATUS = PrimaryStatus.guarding;
-                        OWNER.updateAilmentIcons();
+                        OWNER.Shield();
                     }
                     else
                     {

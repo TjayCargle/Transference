@@ -333,8 +333,7 @@ public class CommandSkill : SkillScript
                 {
                     if (OWNER)
                     {
-                        OWNER.PSTATUS = PrimaryStatus.guarding;
-                        OWNER.updateAilmentIcons();
+                        OWNER.Shield();
                     }
                     else
                     {

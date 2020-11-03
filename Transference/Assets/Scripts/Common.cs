@@ -1438,7 +1438,7 @@ public class Common : ScriptableObject
                 break;
             case SkillReaction.enterGuardState:
                 {
-                    returnedString += " Character enters guard staate ";
+                    returnedString += " Character gains a shield ";
                 }
                 break;
             case SkillReaction.increaseCrit:

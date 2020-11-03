@@ -14,7 +14,7 @@
 -num of shops/shop index = s [location], [location] 
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
-r,0,1,11,12,15,16,18,19,22,23,29,30,32,33,39,40,42,43,47,48
+r,0,1,11,12,15,16,18,19,22,23,29,30,32,33,39,40,42,43,47
 n,false
 i,17
 t,0
@@ -30,4 +30,4 @@ oi,8,0,6
 stt,help
 sti,6
 ex,12
-st,2,6,46
+st,2,6,46,48
