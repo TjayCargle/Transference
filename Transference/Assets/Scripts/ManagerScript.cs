@@ -4398,7 +4398,7 @@ public class ManagerScript : EventRunner
                 tSteps.Add(tutorialStep.useSpell);
                 tClar.Add(-1);
             
-                PrepareTutorial(tSteps, tClar);
+                //PrepareTutorial(tSteps, tClar);
                 //GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 //zeffron.SetActive(true);
                 //zeffron.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
@@ -12053,7 +12053,7 @@ public class ManagerScript : EventRunner
         {
             return 0;
         }
-        int diff = target.BASE_STATS.LEVEL - atker.LEVEL + 1;
+        int diff = target.BASE_STATS.LEVEL - atker.LEVEL + (int)((100 - atker.LEVEL)*0.25f);
         //   Debug.Log("res = " + diff);
         int amount = diff + 4;
         //   Debug.Log("Killed = " + killed);
@@ -12069,7 +12069,7 @@ public class ManagerScript : EventRunner
         }
         //  Debug.Log("amt2 = " + amount);
 
-        //    atker.GainExp(amount);
+          atker.GainExp(amount);
         if (expbar)
         {
 
@@ -12100,11 +12100,11 @@ public class ManagerScript : EventRunner
         //    expbar.currentUser = atker;
         //    expbar.slider.value = atker.BASE_STATS.EXP;
         //}
-        int realnum = dmg;//(int) (dmg * 0.5f);
+       // int realnum = dmg;//(int) (dmg * 0.5f);
         int diff = 0;
         if (target != null & atker != null)
         {
-            diff = target.BASE_STATS.LEVEL - atker.LEVEL + realnum;
+            diff = target.BASE_STATS.LEVEL - atker.LEVEL; //+ realnum;
         }
         int amount = diff + 4;
 
@@ -12114,18 +12114,18 @@ public class ManagerScript : EventRunner
         }
         if (basic)
         {
-            atker.GainDexExp(amount);
+            atker.GainDexExp(amount + (int)((100 - atker.DEXLEVEL) * 0.35f));
         }
 
         if (skill)
         {
             if (skill.ETYPE == EType.physical)
             {
-                atker.GainPhysExp(amount);
+                atker.GainPhysExp(amount + (int)((100 - atker.PHYSLEVEL) * 0.35f));
             }
             if (skill.ETYPE == EType.magical)
             {
-                atker.GainMagExp(amount);
+                atker.GainMagExp(amount + (int)((100 - atker.MAGLEVEL) * 0.35f));
             }
         }
 

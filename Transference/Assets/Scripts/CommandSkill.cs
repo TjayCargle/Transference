@@ -1112,7 +1112,7 @@ public class CommandSkill : SkillScript
                 case Element.Water:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
@@ -1137,7 +1137,7 @@ public class CommandSkill : SkillScript
                 case Element.Pyro:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
@@ -1171,7 +1171,7 @@ public class CommandSkill : SkillScript
                 case Element.Ice:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
@@ -1209,7 +1209,7 @@ public class CommandSkill : SkillScript
 
                         if (level % 2 == 0)
                         {
-                            if (DAMAGE != DMG.collassal)
+                            if (DAMAGE != DMG.colossal)
                             {
                                 returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                             }
@@ -1243,7 +1243,7 @@ public class CommandSkill : SkillScript
 
                         if ((level + 1) % 2 == 0)
                         {
-                            if (DAMAGE != DMG.collassal)
+                            if (DAMAGE != DMG.colossal)
                             {
                                 returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                             }
@@ -1264,7 +1264,7 @@ public class CommandSkill : SkillScript
                 case Element.Pierce:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
@@ -1296,7 +1296,7 @@ public class CommandSkill : SkillScript
                 case Element.Blunt:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }
@@ -1329,7 +1329,7 @@ public class CommandSkill : SkillScript
                 case Element.Force:
                     {
 
-                        if (DAMAGE != DMG.collassal)
+                        if (DAMAGE != DMG.colossal)
                         {
                             returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(DAMAGE).ToString() + "</color>";
                         }

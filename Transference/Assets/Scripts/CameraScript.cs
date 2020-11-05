@@ -140,7 +140,7 @@ public class CameraScript : MonoBehaviour
             {
                 hoverTime += 2 * Time.deltaTime;
 
-                if (manager.GetState() != State.SceneRunning && manager.prevState  != State.PlayerMove && manager.GetState() != State.PlayerMove)
+                if (manager.GetState() != State.SceneRunning && manager.prevState != State.PlayerMove && manager.GetState() != State.PlayerMove)
                 {
                     if (hoverTime >= 3)
                     {
@@ -394,12 +394,17 @@ public class CameraScript : MonoBehaviour
                                 if (infoObject.GetComponent<LivingObject>())
                                 {
                                     LivingObject liver = null;
-                                    if (manager.player.current || infoObject.FACTION == Faction.ally)
+                                    if (infoObject.FACTION == Faction.ally)
                                     {
-                                        if (manager.player.current)
-                                            liver = manager.player.current;
-                                        else
+                                        if (infoObject.FACTION == Faction.ally)
+                                        {
                                             liver = infoObject.GetComponent<LivingObject>();
+                                        }
+                                        if (manager.player.current)
+                                        {
+
+                                            liver = manager.player.current;
+                                        }
                                         if (manager.liveEnemies.Count > 0)
                                             actionText.text = "AP next turn: " + (3 + liver.GENERATED);
                                         infoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
@@ -454,7 +459,7 @@ public class CameraScript : MonoBehaviour
                                             fatigueText.text = liver.FATIGUE.ToString() + "/" + liver.MAX_FATIGUE.ToString();
                                         }
                                     }
-                                    if (infoObject.FACTION != Faction.ally)
+                                    else if (infoObject.FACTION != Faction.ally)
                                     {
                                         liver = infoObject.GetComponent<LivingObject>();
                                         enemyinfoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
@@ -506,7 +511,7 @@ public class CameraScript : MonoBehaviour
                                                 enemymansSlider.value = (float)liver.MANA / (float)liver.MAX_MANA;
                                             else
                                                 enemymansSlider.value = 0;
-                                            manaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
+                                            enemymanaText.text = liver.MANA.ToString() + "/" + liver.MAX_MANA.ToString();
                                         }
                                         if (fatigueSlider)
                                         {

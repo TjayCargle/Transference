@@ -176,9 +176,9 @@ public class WeaponScript : UsableScript
             }
             if (level % 2 == 0)
                 ATTACK = Common.GetNextDmg(ATTACK);
-            if (ATTACK > DMG.collassal)
+            if (ATTACK > DMG.colossal)
             {
-                ATTACK = DMG.collassal;
+                ATTACK = DMG.colossal;
             }
             ACCURACY++;
             if (ACCURACY > 100)
@@ -223,7 +223,7 @@ public class WeaponScript : UsableScript
         }
         if (level + 1 % 2 == 0)
         {
-            if (ATTACK != DMG.collassal)
+            if (ATTACK != DMG.colossal)
             {
                 returnedString += "\n <color=green>Damage: " + Common.GetNextDmg(ATTACK).ToString() + "</color>";
             }

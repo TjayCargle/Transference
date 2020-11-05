@@ -347,10 +347,10 @@ public class LivingObject : GridObject
             if (healthFill != null)
             {
                 float middle = fakeMax * 0.5f;
-         
+
                 if (fakeValue >= middle)
                 {
-        
+
                     healthFill.color = Color.Lerp(Color.yellow, Color.green, fakeValue / middle);
 
                 }
@@ -1441,17 +1441,17 @@ public class LivingObject : GridObject
             BASE_STATS.LEVEL++;
             BASE_STATS.MAX_HEALTH += dexLevel;
             STATS.HEALTH = BASE_STATS.MAX_HEALTH;
-            BASE_STATS.MAX_MANA += magLevel;
-            BASE_STATS.MAX_MANA = BASE_STATS.MAX_MANA;
-            BASE_STATS.MAX_FATIGUE += physLevel;
+            //  BASE_STATS.MAX_MANA += magLevel;
+            // BASE_STATS.MAX_MANA = BASE_STATS.MAX_MANA;
+            // BASE_STATS.MAX_FATIGUE += physLevel;
 
             BASE_STATS.EXP -= 100;
-            BASE_STATS.STRENGTH++;
-            BASE_STATS.DEFENSE++;
-            BASE_STATS.MAGIC++;
-            BASE_STATS.RESIESTANCE++;
-            BASE_STATS.SPEED++;
-            BASE_STATS.DEX++;
+            BASE_STATS.STRENGTH += Random.Range(0, physLevel);
+            BASE_STATS.DEFENSE += Random.Range(0, physLevel);
+            BASE_STATS.MAGIC += Random.Range(0, magLevel);
+            BASE_STATS.RESIESTANCE += Random.Range(0, magLevel);
+            BASE_STATS.SPEED += Random.Range(0, dexLevel);
+            BASE_STATS.DEX += Random.Range(0, dexLevel);
         }
 
     }
@@ -1459,7 +1459,11 @@ public class LivingObject : GridObject
     public void GainExp(int val)
     {
         BASE_STATS.EXP += val;
+        if (BASE_STATS.EXP >= 100)
+        {
+            LevelUp();
 
+        }
     }
     public void GainPhysExp(int val, bool show = true)
     {
@@ -1474,12 +1478,12 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-            BASE_STATS.STRENGTH += 2 + physLevel;
-            BASE_STATS.DEFENSE += 2 + physLevel;
-            BASE_STATS.MAGIC += 1 + magLevel;
-            BASE_STATS.RESIESTANCE += 1 + magLevel;
-            BASE_STATS.SPEED += 1 + dexLevel;
-            BASE_STATS.DEX += 1 + dexLevel;
+            BASE_STATS.STRENGTH += Random.Range(1, physLevel + 1);
+            BASE_STATS.DEFENSE += Random.Range(1, physLevel + 1);
+            //           BASE_STATS.MAGIC += 1 + magLevel;
+            //            BASE_STATS.RESIESTANCE += 1 + magLevel;
+            //            BASE_STATS.SPEED += 1 + dexLevel;
+            //            BASE_STATS.DEX += 1 + dexLevel;
 
             BASE_STATS.PHYSEXP = 0;
             physLevel++;
@@ -1516,12 +1520,12 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-            BASE_STATS.STRENGTH += 1 + physLevel;
-            BASE_STATS.DEFENSE += 1 + physLevel;
-            BASE_STATS.MAGIC += 2 + magLevel;
-            BASE_STATS.RESIESTANCE += 2 + magLevel;
-            BASE_STATS.SPEED += 1 + dexLevel;
-            BASE_STATS.DEX += 1 + dexLevel;
+          //  BASE_STATS.STRENGTH += 1 + physLevel;
+           // BASE_STATS.DEFENSE += 1 + physLevel;
+            BASE_STATS.MAGIC += Random.Range(1, magLevel + 1);
+            BASE_STATS.RESIESTANCE += Random.Range(1, magLevel + 1);
+            //   BASE_STATS.SPEED += 1 + dexLevel;
+            //   BASE_STATS.DEX += 1 + dexLevel;
 
             BASE_STATS.MAGEXP = 0;
             magLevel++;
@@ -1549,12 +1553,12 @@ public class LivingObject : GridObject
         if (BASE_STATS.SKILLEXP > 100)
         {
 
-            BASE_STATS.STRENGTH += 1 + physLevel;
-            BASE_STATS.DEFENSE += 1 + physLevel;
-            BASE_STATS.MAGIC += 2 + magLevel;
-            BASE_STATS.RESIESTANCE += 2 + magLevel;
-            BASE_STATS.SPEED += 1 + dexLevel;
-            BASE_STATS.DEX += 1 + dexLevel;
+          // BASE_STATS.STRENGTH += 1 + physLevel;
+          // BASE_STATS.DEFENSE += 1 + physLevel;
+          // BASE_STATS.MAGIC += 2 + magLevel;
+          // BASE_STATS.RESIESTANCE += 2 + magLevel;
+            BASE_STATS.SPEED += Random.Range(1, dexLevel + 1);
+            BASE_STATS.DEX += Random.Range(1, dexLevel + 1);
 
             BASE_STATS.SKILLEXP = 0;
             dexLevel++;

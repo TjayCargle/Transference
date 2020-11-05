@@ -294,7 +294,7 @@ public enum DMG
     medium = 8,
     heavy = 16,
     severe = 32,
-    collassal = 64
+    colossal = 64
 }
 public enum ItemType
 {
@@ -1838,7 +1838,7 @@ public class Common : ScriptableObject
             case DMG.severe:
                 returnInt = 5;
                 break;
-            case DMG.collassal:
+            case DMG.colossal:
                 returnInt = 6;
                 break;
         }
@@ -1862,10 +1862,10 @@ public class Common : ScriptableObject
                 return DMG.severe;
                 break;
             case DMG.severe:
-                return DMG.collassal;
+                return DMG.colossal;
                 break;
-            case DMG.collassal:
-                return DMG.collassal;
+            case DMG.colossal:
+                return DMG.colossal;
                 break;
         }
         return DMG.tiny;
