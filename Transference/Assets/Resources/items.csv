@@ -24,6 +24,7 @@
 22, Slashbolt (Heavy), adjacent,dmg,enemy,10,Slash,none,none,heavy 
 23, Piercebolt (Heavy), adjacent,dmg,enemy,10,Pierce,none,none,heavy 
 24, Bluntbolt (Heavy), adjacent,dmg,enemy,10,Blunt,none,none,heavy
+25, Forcebolt (Heavy), adjacent,dmg,enemy,10,Force,none,none,heavy
 90, Crippling Dart, pinWheel,dart,enemy,10,Ailment,none,cripple,tiny 
 91, Poison Dart, pinWheel,dart,enemy,10,Ailment,none,poison,tiny 
 92, Sleepy Dart, pinWheel,dart,enemy,10,Ailment,none,sleep,tiny 
