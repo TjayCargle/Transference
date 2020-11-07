@@ -105,6 +105,7 @@ public class ManagerScript : EventRunner
     GridObject tempGridObj = null;
     public Objective currentObjective = null;
     public Tutorial currentTutorial = new Tutorial();
+    public bool inTutorialMenu = false;
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -313,6 +314,8 @@ public class ManagerScript : EventRunner
             {
                 defaultSceneEntry = 26;// PlayerPrefs.GetInt("defaultSceneEntry");
             }
+            Common.summonedJax = false;
+            Common.summonedZeffron = false;
 
             LoadDefaultScene();
 
@@ -3227,15 +3230,15 @@ public class ManagerScript : EventRunner
         }
         else
         {
-            if(currentState == State.EventRunning && prevState == State.FreeCamera)
+            if (currentState == State.EventRunning && prevState == State.FreeCamera)
             {
                 menuManager.ShowNone();
                 currentState = State.FreeCamera;
             }
             else
             {
-            currentState = State.ChangeOptions;
-            menuManager.ShowOptions();
+                currentState = State.ChangeOptions;
+                menuManager.ShowOptions();
             }
         }
 
@@ -4105,21 +4108,10 @@ public class ManagerScript : EventRunner
                         if (Common.summonedJax == false)
                         {
 
-                            myCamera.PlaySoundTrack(3);
-                            myCamera.previousClip = myCamera.musicClips[13];
-                            GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
-                            jax.SetActive(true);
-                            ActorSetup asetup = jax.GetComponent<ActorSetup>();
-                            asetup.characterId = 0;
-                            LivingObject liveJax = jax.GetComponent<LivingObject>();
-                            liveJax.FACTION = Faction.ally;
-                            liveJax.Setup();
-                            gridObjects.Add(liveJax);
-                            turnOrder.Add(liveJax);
-                            Common.summonedJax = true;
+
                             if (talkPanel)
                             {
-                                MoveCameraAndShow(liveJax);
+
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = database.GetSceneData("Scene0");
                                 currentState = State.SceneRunning;
@@ -4221,23 +4213,10 @@ public class ManagerScript : EventRunner
 
                         if (Common.summonedZeffron == false)
                         {
-                            myCamera.PlaySoundTrack(3);
-                            myCamera.previousClip = myCamera.musicClips[9];
-                            GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
-                            zeffron.SetActive(true);
-                            ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
-                            asetup.characterId = 1;
-                            LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
-                            liveZeff.FACTION = Faction.ally;
-                            liveZeff.Setup();
-                            liveZeff.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
-                            ComfirmMoveGridObject(liveZeff, 5);
-                            gridObjects.Add(liveZeff);
-                            turnOrder.Add(liveZeff);
-                            Common.summonedZeffron = true;
+
                             if (talkPanel)
                             {
-                                MoveCameraAndShow(liveZeff);
+
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = database.GetSceneData("JaxFindZeff");
                                 currentState = State.SceneRunning;
@@ -4280,7 +4259,26 @@ public class ManagerScript : EventRunner
                         myCamera.previousClip = myCamera.musicClips[13];
                         if (talkPanel)
                         {
+                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                            List<int> tClar = new List<int>();
 
+
+
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(27);
+                            tSteps.Add(tutorialStep.moveToPosition);
+                            tClar.Add(20);
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(12);
+                            // tClar.Add(23);
+                            tSteps.Add(tutorialStep.useStrike);
+                            tClar.Add(-1);
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(17);
+                            tSteps.Add(tutorialStep.useSpell);
+                            tClar.Add(-1);
+
+                            PrepareTutorial(tSteps, tClar);
                             talkPanel.gameObject.SetActive(true);
                             currentScene = database.GetSceneData("JaxPrologue");
                             currentState = State.SceneRunning;
@@ -4291,6 +4289,9 @@ public class ManagerScript : EventRunner
                             menuManager.ShowNone();
                             CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
                         }
+
+
+
 
                     }
                     if (checkMap.mapIndex == 15)
@@ -4311,11 +4312,169 @@ public class ManagerScript : EventRunner
                             CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
                         }
                     }
+                    if (checkMap.mapIndex == 17)
+                    {
+
+                        if (Common.summonedZeffron == false)
+                        {
+                            myCamera.PlaySoundTrack(6);
+                            myCamera.previousClip = myCamera.musicClips[10];
+
+                            if (talkPanel)
+                            {
+                                //MoveCameraAndShow(liveZeff);
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("JaxFindZeff");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                UpdateScene();
+                                currentScene.isRunning = true;
+                                menuManager.ShowNone();
+                                CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                            }
+                        }
+                    }
+                    if (checkMap.mapIndex == 8)
+                    {
+                        myCamera.PlaySoundTrack(4);
+                        myCamera.previousClip = myCamera.musicClips[4];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("JaxEncounterGlyph");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                        }
+                    }
+                    if (checkMap.mapIndex == 14)
+                    {
+                        myCamera.PlaySoundTrack(4);
+                        myCamera.previousClip = myCamera.musicClips[16];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = database.GetSceneData("Scene4");
+                            currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            UpdateScene();
+                            currentScene.isRunning = true;
+                            menuManager.ShowNone();
+                            CreateEvent(this, null, "scene4 event", CheckSceneRunning, null, 0);
+                        }
+                    }
                 }
                 break;
         }
     }
 
+    public void insertNewCharMapEvent(MapDetail checkMap)
+    {
+        switch (defaultSceneEntry)
+        {
+            case 4:
+                {
+
+
+                    if (checkMap.mapIndex == 8)
+                    {
+                        if (Common.summonedJax == false)
+                        {
+
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[13];
+                            GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+                            jax.SetActive(true);
+                            ActorSetup asetup = jax.GetComponent<ActorSetup>();
+                            asetup.characterId = 0;
+                            LivingObject liveJax = jax.GetComponent<LivingObject>();
+                            liveJax.FACTION = Faction.ally;
+                            liveJax.Setup();
+                            gridObjects.Add(liveJax);
+                            turnOrder.Add(liveJax);
+                            Common.summonedJax = true;
+
+                        }
+
+
+                    }
+
+
+
+
+
+                }
+                break;
+
+            case 15:
+                {
+
+
+                    if (checkMap.mapIndex == 8)
+                    {
+
+                        if (Common.summonedZeffron == false)
+                        {
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[9];
+                            GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+                            zeffron.SetActive(true);
+                            ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
+                            asetup.characterId = 1;
+                            LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
+                            liveZeff.FACTION = Faction.ally;
+                            liveZeff.Setup();
+                            liveZeff.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
+                            ComfirmMoveGridObject(liveZeff, 5);
+                            gridObjects.Add(liveZeff);
+                            turnOrder.Add(liveZeff);
+                            Common.summonedZeffron = true;
+
+                        }
+                    }
+
+
+                }
+                break;
+
+            case 26:
+                {
+
+
+                    if (checkMap.mapIndex == 17)
+                    {
+
+                        if (Common.summonedZeffron == false)
+                        {
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[10];
+                            GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+                            zeffron.SetActive(true);
+                            zeffron.transform.position = tileMap[37].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
+                            ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
+                            asetup.characterId = 1;
+                            LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
+                            liveZeff.FACTION = Faction.ally;
+                            liveZeff.Setup();
+                            gridObjects.Add(liveZeff);
+                            turnOrder.Add(liveZeff);
+                            ComfirmMoveGridObject(liveZeff, 37);
+                            Common.summonedZeffron = true;
+
+                        }
+                    }
+                }
+                break;
+        }
+    }
     public void LoadDefaultScene()
     {
         database.Setup();
@@ -4381,24 +4540,6 @@ public class ManagerScript : EventRunner
                 ComfirmMoveGridObject(liveJax, 6);
                 MoveCameraAndShow(liveJax);
 
-                List<tutorialStep> tSteps = new List<tutorialStep>();
-                List<int> tClar = new List<int>();
-
-
-
-                tSteps.Add(tutorialStep.moveToPosition);
-                tClar.Add(20);
-                tSteps.Add(tutorialStep.showTutorial);
-               tClar.Add(12);
-               // tClar.Add(23);
-                tSteps.Add(tutorialStep.useStrike);
-                tClar.Add(-1);
-                tSteps.Add(tutorialStep.showTutorial);
-                tClar.Add(17);
-                tSteps.Add(tutorialStep.useSpell);
-                tClar.Add(-1);
-            
-                //PrepareTutorial(tSteps, tClar);
                 //GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 //zeffron.SetActive(true);
                 //zeffron.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 0.0f); //new Vector3(2.0f, 0.5f, 0.0f);
@@ -4554,7 +4695,7 @@ public class ManagerScript : EventRunner
         }
         if (visited == false)
         {
-
+            insertNewCharMapEvent(map);
             visitedMaps.Add(map);
         }
         SoftReset();
@@ -5817,14 +5958,22 @@ public class ManagerScript : EventRunner
                 currentState = State.FreeCamera;
                 prevState = State.FreeCamera;
 
-                if(Common.enemiesCompletedPhase == false)
+                if (Common.enemiesCompletedPhase == false)
                 {
 
                     List<tutorialStep> tSteps = new List<tutorialStep>();
                     List<int> tClar = new List<int>();
 
                     tSteps.Add(tutorialStep.showTutorial);
+                    tSteps.Add(tutorialStep.moveToPosition);
+                    tSteps.Add(tutorialStep.showTutorial);
+                    tSteps.Add(tutorialStep.allocate);
+                    tSteps.Add(tutorialStep.showTutorial);
                     tClar.Add(23);
+                    tClar.Add(35);
+                    tClar.Add(24);
+                    tClar.Add(-1);
+                    tClar.Add(26);
                     PrepareTutorial(tSteps, tClar);
                     Common.enemiesCompletedPhase = true;
                 }
@@ -6102,15 +6251,10 @@ public class ManagerScript : EventRunner
                     playable.INVENTORY.USEABLES.Remove(barrier);
                     playable.INVENTORY.ARMOR.Remove(barrier);
                 }
-                if (playable.currentTile.isInShadow)
-                {
-                    AttemptToGoIntoShadows(playable);
-                }
-                else
-                {
 
-                    playable.RENDERER.color = Color.white;
-                }
+
+                playable.RENDERER.color = Color.white;
+
                 //   playable.updateLastSprites();
                 for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
                 {
@@ -7728,14 +7872,15 @@ public class ManagerScript : EventRunner
     public void CheckTutorialPrompt(int checkText)
     {
 
-        if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
+        // if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
         {
             menuManager.ShowNone();
             newSkillEvent.caller = this;
             newSkillEvent.data = player.current;
             SkillEventContainer sec = new SkillEventContainer();
             sec.name = "?;" + Common.GetHelpText(checkText);
-            CreateEvent(this, sec, "help event", CheckNewSKillEvent, null, -1, TutorialStart);
+            inTutorialMenu = true;
+            CreateEvent(this, sec, "help event", CheckIfIntutorialMenu, null, 0, TutorialStart);
         }
     }
     public void ComfirmMoveGridObject(GridObject obj, TileScript tile, bool hover = false)
@@ -11083,7 +11228,7 @@ public class ManagerScript : EventRunner
                         liveTarget.PSTATUS = PrimaryStatus.crippled;
                         liveTarget.updateAilmentIcons();
                         liveTarget.ACTIONS--;
-                        if(Common.haveBeenCrippled == false)
+                        if (Common.haveBeenCrippled == false)
                         {
                             Common.haveBeenCrippled = true;
                             List<tutorialStep> tSteps = new List<tutorialStep>();
@@ -11640,7 +11785,21 @@ public class ManagerScript : EventRunner
 
                                 if (attackingObject.FACTION == Faction.ally)
                                 {
+                                    if (useable != null)
+                                    {
 
+                                        if (Common.hasLearnedFromEnemy == false)
+                                        {
+                                            Debug.Log("calling");
+                                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                                            List<int> tClar = new List<int>();
+                                            tSteps.Add(tutorialStep.showTutorial);
+                                            tClar.Add(25);
+                                            PrepareTutorial(tSteps, tClar);
+                                            Common.hasLearnedFromEnemy = true;
+                                        }
+
+                                    }
 
                                     CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
                                     CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
@@ -11702,17 +11861,35 @@ public class ManagerScript : EventRunner
                         EnemyScript enemy = target.GetComponent<EnemyScript>();
                         if (enemy.CheckIfDead() == true)
                         {
-
                             if (enemy.INVENTORY.USEABLES.Count > 0)
                             {
+
 
                                 float chance = 100.0f;
                                 float result = Random.value * 100;
                                 if (result <= chance)
                                 {
 
-                                    enemy.TransferSkill(attackingObject);
+                                    UsableScript someUse = enemy.TransferSkill(attackingObject);
+                                    if (someUse != null)
+                                    {
 
+                                        if (Common.hasLearnedFromEnemy == false)
+                                        {
+                                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                                            List<int> tClar = new List<int>();
+                                            tSteps.Add(tutorialStep.showTutorial);
+                                            tClar.Add(25);
+                                            PrepareTutorial(tSteps, tClar);
+                                            Common.hasLearnedFromEnemy = true;
+                                        }
+
+                                    }
+                                    else
+                                    {
+
+                                        Debug.Log("is.... wahyyssyy");
+                                    }
 
                                 }
 
@@ -11987,7 +12164,7 @@ public class ManagerScript : EventRunner
                                 {
 
                                     int itemNum = 0;
-                                    itemNum = Random.Range(201, 214);
+                                    itemNum = Random.Range(201, 224);
                                     UsableScript useable = database.LearnSkill(itemNum, attackingObject);
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
@@ -11997,7 +12174,7 @@ public class ManagerScript : EventRunner
                                 else
                                 {
                                     int itemNum = 0;
-                                    itemNum = Random.Range(201, 214);
+                                    itemNum = Random.Range(201, 224);
                                     UsableScript useable = database.GetSkill(itemNum);
 
                                     LearnContainer learnContainer = ScriptableObject.CreateInstance<LearnContainer>();
@@ -12053,13 +12230,16 @@ public class ManagerScript : EventRunner
         {
             return 0;
         }
-        int diff = target.BASE_STATS.LEVEL - atker.LEVEL + (int)((100 - atker.LEVEL)*0.25f);
+        float subtractVal = Mathf.Min(atker.LEVEL * 15, 100.0f);
+        int diff = target.BASE_STATS.LEVEL - atker.LEVEL + (int)((float)(subtractVal - atker.LEVEL) * 0.25f);
         //   Debug.Log("res = " + diff);
         int amount = diff + 4;
+        if (diff <= 0)
+            diff = 4;
         //   Debug.Log("Killed = " + killed);
         if (killed == true)
         {
-            amount += (20 * diff) + 20;
+            amount += (2 * diff) + 10;
 
         }
         //  Debug.Log("amt = " + amount);
@@ -12069,7 +12249,7 @@ public class ManagerScript : EventRunner
         }
         //  Debug.Log("amt2 = " + amount);
 
-          atker.GainExp(amount);
+        atker.GainExp(amount);
         if (expbar)
         {
 
@@ -12078,7 +12258,7 @@ public class ManagerScript : EventRunner
         return amount;
     }
 
-    public void DetermineAtkExp(LivingObject atker, GridObject target, CommandSkill skill, bool basic, int dmg)
+    public void DetermineAtkExp(LivingObject atker, GridObject target, CommandSkill skill, bool basic, int dmg, bool show)
     {
 
 
@@ -12100,7 +12280,7 @@ public class ManagerScript : EventRunner
         //    expbar.currentUser = atker;
         //    expbar.slider.value = atker.BASE_STATS.EXP;
         //}
-       // int realnum = dmg;//(int) (dmg * 0.5f);
+        // int realnum = dmg;//(int) (dmg * 0.5f);
         int diff = 0;
         if (target != null & atker != null)
         {
@@ -12112,20 +12292,24 @@ public class ManagerScript : EventRunner
         {
             amount = 0;
         }
+        float subtractVal = 100;
         if (basic)
         {
-            atker.GainDexExp(amount + (int)((100 - atker.DEXLEVEL) * 0.35f));
+            subtractVal = Mathf.Min(atker.DEXLEVEL + atker.LEVEL * 15, 100.0f);
+            atker.GainDexExp(amount + (int)((float)(subtractVal - atker.DEXLEVEL) * 0.35f), show);
         }
 
         if (skill)
         {
             if (skill.ETYPE == EType.physical)
             {
-                atker.GainPhysExp(amount + (int)((100 - atker.PHYSLEVEL) * 0.35f));
+                subtractVal = Mathf.Min(atker.PHYSLEVEL + atker.LEVEL * 15, 100.0f);
+                atker.GainPhysExp(amount + (int)((float)(subtractVal - atker.PHYSLEVEL) * 0.35f), show);
             }
             if (skill.ETYPE == EType.magical)
             {
-                atker.GainMagExp(amount + (int)((100 - atker.MAGLEVEL) * 0.35f));
+                subtractVal = Mathf.Min(atker.MAGLEVEL + atker.LEVEL * 15, 100.0f);
+                atker.GainMagExp(amount + (int)((float)(subtractVal - atker.MAGLEVEL) * 0.35f), show);
             }
         }
 
@@ -12989,7 +13173,8 @@ public class ManagerScript : EventRunner
                             CreateGridAnimationEvent(calcAnimationLocation, skill, totalDmg);
 
                         }
-                        DetermineAtkExp(invokingObject, GetObjectAtTile(currentAttackList[targetIndicies[0]]), skill, false, (int)skill.DAMAGE);
+                        bool show = ((GetState() == State.EnemyTurn) ? false : true);
+                        DetermineAtkExp(invokingObject, GetObjectAtTile(currentAttackList[targetIndicies[0]]), skill, false, (int)skill.DAMAGE, show);
                         if (totalDmg > 0)
                         {
                             if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
@@ -13470,6 +13655,10 @@ public class ManagerScript : EventRunner
 
 
         }
+        if (currentTutorial.steps.Count > 0)
+        {
+            realChance = 100;
+        }
         if (valres <= realChance)
         {
 
@@ -13574,13 +13763,17 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.poisoned, target))
                         {
+                            EffectScript ef = PoolManager.GetManager().GetEffect();
+                            ef.EFFECT = SideEffect.poison;
+                            if (target.INVENTORY.EFFECTS.Contains(ef))
+                            {
+                                //target.INVENTORY.EFFECTS[target.INVENTORY.EFFECTS.IndexOf(ef)].coun
+                            }
                             CreateTextEvent(this, target.FullName + " has been inflicted with poison", "auto atk", CheckText, TextStart);
                             if (log)
                             {
                                 log.Log(target.FullName + " has been inflicted with poison");
                             }
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.poison;
                             target.INVENTORY.EFFECTS.Add(ef);
 
                             if (!target.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
@@ -13956,7 +14149,11 @@ public class ManagerScript : EventRunner
         //  ApplyReaction(container.attackingObject, container.dmgObject, react, container.attackingElement);
         CreateEvent(this, container, "apply reaction event", ApplyReactionEvent, null, 0);
         if (container.react.reaction < Reaction.nulled && container.react.reaction != Reaction.missed)
-            DetermineAtkExp(container.attackingObject, container.dmgObject, null, true, container.react.damage);
+        {
+            bool show = ((GetState() == State.EnemyTurn) ? false : true);
+
+            DetermineAtkExp(container.attackingObject, container.dmgObject, null, true, container.react.damage, show);
+        }
 
 
         //currentState = State.PlayerTransition;
@@ -14392,82 +14589,90 @@ public class ManagerScript : EventRunner
         UsableScript usable = data as UsableScript;
         Canvas canvas = menuManager.GetNewSkillCanvas();
         bool other = false;
-        if (canvas)
+        if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
         {
-            if (canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>())
-            {
-                TMPro.TextMeshProUGUI tmp = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                string spritestr = "<sprite=";
-                if (usable.GetType() == typeof(WeaponScript))
-                    spritestr += "4>";
-                else if (usable.GetType() == typeof(ArmorScript))
-                    spritestr += "3>";
-                else if (usable.GetType() == typeof(ItemScript))
-                    spritestr += "19>";
-                else if (usable.GetType().IsSubclassOf(typeof(SkillScript)) || usable.GetType() == typeof(SkillScript))
-                {
-                    SkillScript skill = usable as SkillScript;
-                    switch (skill.ELEMENT)
-                    {
-                        case Element.Passive:
-                            spritestr += "6>";
-                            break;
-                        case Element.Opp:
-                            spritestr += "8>";
-                            break;
-                        case Element.Auto:
-                            spritestr += "7>";
-                            break;
-                        case Element.none:
-                            break;
-                        default:
-                            spritestr += "5>";
-                            break;
-                    }
-                }
 
-                else
+            if (canvas)
+            {
+                if (canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>())
                 {
-                    other = true;
-                }
-                PlayOppSnd();
-                if (other == false)
-                {
-                    if (usable.LEVEL > 1)
+                    TMPro.TextMeshProUGUI tmp = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                    string spritestr = "<sprite=";
+                    if (usable.GetType() == typeof(WeaponScript))
+                        spritestr += "4>";
+                    else if (usable.GetType() == typeof(ArmorScript))
+                        spritestr += "3>";
+                    else if (usable.GetType() == typeof(ItemScript))
+                        spritestr += "19>";
+                    else if (usable.GetType().IsSubclassOf(typeof(SkillScript)) || usable.GetType() == typeof(SkillScript))
                     {
-                        tmp.text = "";
-                        tmp.text = usable.NAME;
-                        LivingObject living = usable.USER;
-                        if (living != null)
+                        SkillScript skill = usable as SkillScript;
+                        switch (skill.ELEMENT)
                         {
-                            string test = living.NAME;
-                            tmp.text = test;
-                            tmp.text = "" + usable.USER.NAME + " 's " + spritestr;
-                            tmp.text = "" + usable.USER.NAME + " 's " + spritestr + usable.NAME + " has leveled up!";
+                            case Element.Passive:
+                                spritestr += "6>";
+                                break;
+                            case Element.Opp:
+                                spritestr += "8>";
+                                break;
+                            case Element.Auto:
+                                spritestr += "7>";
+                                break;
+                            case Element.none:
+                                break;
+                            default:
+                                spritestr += "5>";
+                                break;
+                        }
+                    }
+
+                    else
+                    {
+                        other = true;
+                    }
+                    PlayOppSnd();
+                    if (other == false)
+                    {
+                        if (usable.LEVEL > 1)
+                        {
+                            tmp.text = "";
+                            tmp.text = usable.NAME;
+                            LivingObject living = usable.USER;
+                            if (living != null)
+                            {
+                                string test = living.NAME;
+                                tmp.text = test;
+                                tmp.text = "" + usable.USER.NAME + " 's " + spritestr;
+                                tmp.text = "" + usable.USER.NAME + " 's " + spritestr + usable.NAME + " has leveled up!";
+                            }
+                        }
+                        else
+                        {
+
+                            tmp.text = "" + usable.USER.NAME + " learned " + spritestr + usable.NAME;
+                            if (usable.GetType() == typeof(ItemScript))
+                                tmp.text = "" + usable.USER.NAME + " gained " + spritestr + usable.NAME;
+                        }
+
+                        if (currentState != State.ShopCanvas)
+                        {
+
+                            enterStateTransition();
+                            menuManager.ShowNone();
                         }
                     }
                     else
                     {
-
-                        tmp.text = "" + usable.USER.NAME + " learned " + spritestr + usable.NAME;
-                        if (usable.GetType() == typeof(ItemScript))
-                            tmp.text = "" + usable.USER.NAME + " gained " + spritestr + usable.NAME;
+                        tmp.text = usable.DESC;
+                        enterStateTransition();
+                        menuManager.ShowNone();
                     }
-
-                    enterStateTransition();
-                    menuManager.ShowNone();
+                    usable.UpdateDesc();
+                    menuManager.ShowNewSkillAnnouncement();
                 }
-                else
-                {
-                    tmp.text = usable.DESC;
-                    enterStateTransition();
-                    menuManager.ShowNone();
-                }
-                usable.UpdateDesc();
-                menuManager.ShowNewSkillAnnouncement();
             }
-        }
 
+        }
         timer = 1.2f;
     }
     public bool CheckCount(Object data)
@@ -14699,6 +14904,11 @@ public class ManagerScript : EventRunner
         return true;
     }
 
+    public bool CheckIfIntutorialMenu(Object data)
+    {
+        return !inTutorialMenu;
+    }
+
     public bool NewRoomRoundBegin(Object data)
     {
         //considering this is the only time used
@@ -14810,6 +15020,14 @@ public class ManagerScript : EventRunner
 
         currentState = prevState;
         myCamera.UpdateCamera();
+        updateConditionals();
+        return true;
+    }
+
+    public bool BufferedNextRound(Object data)
+    {
+
+        NextRound();
         updateConditionals();
         return true;
     }
@@ -15407,7 +15625,7 @@ public class ManagerScript : EventRunner
 
     }
 
-    private void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity)
+    public void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity)
     {
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
@@ -15543,6 +15761,15 @@ public class ManagerScript : EventRunner
                     case tutorialStep.hackGlyph:
                         break;
                     case tutorialStep.allocate:
+                        {
+                            if (Common.hasAllocated == true)
+                            {
+
+                                returnedBool = true;
+                                break;
+
+                            }
+                        }
                         break;
                     case tutorialStep.showTutorial:
                         returnedBool = true;
@@ -15557,8 +15784,8 @@ public class ManagerScript : EventRunner
             if (currentTutorial.currentStep >= currentTutorial.steps.Count)
             {
                 currentTutorial.isActive = false;
-                TextObjectHandler.UpdateText(textHolder.subphaseTracker, "");
-                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "");
+                TextObjectHandler.UpdateText(textHolder.subphaseTracker, "Explore the mansion");
+                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "Explore the mansion");
             }
             else
             {
@@ -15964,7 +16191,16 @@ public class ManagerScript : EventRunner
                     {
 
                         player.current.INVENTORY.USEABLES.Remove(shopScreen.REMOVING.refItem);
-
+                        int atkCount = player.current.INVENTORY.WEAPONS.Count;
+                        atkCount += player.current.INVENTORY.CSKILLS.Count;
+                        if (atkCount <= 1)
+                        {
+                            if (inventoryType == 0 || inventoryType == 2 || inventoryType == 3)
+                            {
+                                ShowCantUseText("Can't get rid of only attack");
+                                return;
+                            }
+                        }
                         switch (inventoryType)
                         {
                             case 0:
@@ -16023,7 +16259,7 @@ public class ManagerScript : EventRunner
                                 break;
                         }
 
-                        UsableScript useable = database.GetItem(Random.Range(0, 17), player.current);
+                        UsableScript useable = database.GetItem(Random.Range(90, 99), player.current);
 
 
                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);

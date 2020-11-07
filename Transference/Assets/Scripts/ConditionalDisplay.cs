@@ -35,6 +35,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool dontShowForStrikeTutorial = false;
     public bool dontShowForSkillTutorial = false;
     public bool dontShowForSpellTutorial = false;
+	 public bool dontShowForAllocateTutorial = false;
 
     // Use this for initialization
     void Start()
@@ -307,6 +308,13 @@ public class ConditionalDisplay : MonoBehaviour
                         case tutorialStep.useItem:
                             break;
                         case tutorialStep.allocate:
+						{
+							if(dontShowForAllocateTutorial == true)
+							{
+								gameObject.SetActive(false);
+                                    return;
+							}
+						}
                             break;
                         case tutorialStep.defeatEnemy:
                             break;

@@ -1111,6 +1111,9 @@ public class Common : ScriptableObject
     public static bool summonedZeffron = false;
     public static bool enemiesCompletedPhase = false;
     public static bool haveBeenCrippled = false;
+	public static bool hasAllocated = false;
+    public static bool hasGainedSkill = false;
+	public static bool hasLearnedFromEnemy = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
@@ -2583,7 +2586,7 @@ public class Common : ScriptableObject
         switch (someStep)
         {
             case tutorialStep.moveToPosition:
-                returnedString = "Move to position";
+                returnedString = "Move to the orange tile";
                 break;
             case tutorialStep.useStrike:
                 returnedString = "Attack with a strike";
@@ -2635,7 +2638,7 @@ public class Common : ScriptableObject
                 break;
             case 1:
                 {
-                    returnedString = "Attacking; There are 3 ways of attacking: Physical Skills, Magical Spells, and Spiritual Strikes. Each use different resources and are the primary way to deal damage to enemies and objects.";
+                    returnedString = "Attacking; There are 3 types of attacks: Strikes which require health to use, Spells which use mana, and Skills which manipulates Fatigue. Each use different resources and are the primary way to deal damage to enemies and objects.";
                 }
                 break;
             case 2:
@@ -2665,7 +2668,7 @@ public class Common : ScriptableObject
                 break;
             case 13:
                 {
-                    returnedString = "Movement Glyphs; Movement Glyphs can slow intruders down and cause them to move only 1 tile at a time! However if someone destroys it or hacks it by matching its genetic code sequence, then it will cease to function.";
+                    returnedString = "Movement Glyphs; Movement Glyphs can slow intruders down and cause them to <color=yellow>move only 1 tile at a time</color>!\n\nHowever if someone destroys it or hacks it by matching its genetic code sequence, then it will cease to function.";
                 }
                 break;
             case 14:
@@ -2746,6 +2749,31 @@ public class Common : ScriptableObject
             case 23:
                 {
                     returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\n While on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already exchanged attacks with that character.";
+                }
+                break;
+			case 24:
+                {
+                    returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n<color=yellow>Strikes</color> reuquire a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
+                }
+                break;
+			case 25:
+                {
+                    returnedString = "Learn from Enemies; When you defeat an enemy, you have a chance of <color=yellow>learning one of the enemy's attacks</color> if they have any attacks that you haven't learned.\n\nFor the purposes of this demo, you will have <color=yellow>100% chance to learn a new attack</color> from an enemy.";
+                }
+                break;
+            case 26:
+                {
+                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own desicions</color>.\nIn addition to prompts, more information will be availble on tiles marked with a <color=yellow>question mark</color>.\nGood luck and remeber: <color=yellow>the choice is yours.</color>";
+                }
+                break;
+            case 27:
+                {
+                    returnedString = "Welcome to the demo;Thank you for taking the time to play this demo! Your feedback is very important and will be used to enhance the experience of the final game.\n\nIf this is your first time playing please play with a mouse. Use the left click to <color=yellow>confirm</color> any selection, and the right click to <color=yellow>cancel</color> any selection. Start by moving to the <color=yellow>Orange</color> tile. ";
+                }
+                break;
+            case 28:
+                {
+                    returnedString = "Factions & Races;All charcaters belong to a specific faction. By default the faction you belong to directly tied to your race. However, anyone is free to leave their faction for another if allowed.\n\n Enemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
                 }
                 break;
             default:

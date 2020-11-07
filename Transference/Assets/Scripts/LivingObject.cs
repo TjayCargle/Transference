@@ -1331,32 +1331,64 @@ public class LivingObject : GridObject
         ChangeHealth((int)((0.20f * MAX_HEALTH)));
         UpdateHealthbar();
 
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueRestore()
     {
         ChangeMana((int)((0.20f * MAX_MANA)));
 
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueCharge()
     {
         ChangeFatigue(-1 * (int)((0.20f * MAX_FATIGUE)));
 
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueDrain()
     {
         ChangeFatigue((int)((0.20f * MAX_FATIGUE)));
 
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueShield()
     {
         SHIELDS++;
         PSTATUS = PrimaryStatus.guarding;
         updateAilmentIcons();
+
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueOverload()
     {
         ChangeHealth(-1 * (int)((0.30f * MAX_HEALTH)));
         GENERATED++;
+
+        if (Common.hasAllocated == false)
+        {
+            Common.hasAllocated = true;
+            myManager.DidCompleteTutorialStep();
+        }
     }
     public void TrueWait()
     {
@@ -1388,7 +1420,7 @@ public class LivingObject : GridObject
 
         ACTIONS = 0;
         tookAction = false;
-
+   
     }
 
     public void turnUpdate(int bonus = 0)
@@ -1434,7 +1466,7 @@ public class LivingObject : GridObject
     //    tookAction = false;
 
     //}
-    public void LevelUp()
+    public void LevelUp(bool show = true)
     {
         if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
         {
@@ -1452,6 +1484,11 @@ public class LivingObject : GridObject
             BASE_STATS.RESIESTANCE += Random.Range(0, magLevel);
             BASE_STATS.SPEED += Random.Range(0, dexLevel);
             BASE_STATS.DEX += Random.Range(0, dexLevel);
+
+            if (show)
+            {          
+                myManager.CreateDmgTextEvent("LV UP ", Color.yellow, this, 1.2f);
+            }
         }
 
     }
@@ -1497,14 +1534,14 @@ public class LivingObject : GridObject
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
-                myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+               // myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
                 //myManager.CreateDmgTextEvent("<sprite=0>  + " + (5 + physLevel), Color.yellow, this);
                 //myManager.CreateDmgTextEvent("DEF + " + 2, Color.yellow, this);
                 //myManager.CreateDmgTextEvent("STR + " + 2, Color.yellow, this);
-                myManager.CreateDmgTextEvent("PHYS LV + " + 1, Color.yellow, this, 1.2f);
+                myManager.CreateDmgTextEvent("PHYS LV UP " + 1, Color.yellow, this, 1.2f);
             }
 
-
+            UpdateHealthbar();
         }
     }
     public void GainMagExp(int val, bool show = true)
@@ -1539,12 +1576,13 @@ public class LivingObject : GridObject
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
-                myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+              //  myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
                 //  myManager.CreateDmgTextEvent("<sprite=1>  + " + (5 +magLevel), Color.magenta, this);
                 //myManager.CreateDmgTextEvent("RES + " + 2, Color.magenta, this);
                 //myManager.CreateDmgTextEvent("MAG + " + 2, Color.magenta, this);
-                myManager.CreateDmgTextEvent("MYST LV + " + 1, Color.magenta, this, 1.2f);
+                myManager.CreateDmgTextEvent("MYST LV UP ", Color.magenta, this, 1.2f);
             }
+            UpdateHealthbar();
         }
     }
     public void GainDexExp(int val, bool show = true)
@@ -1573,11 +1611,12 @@ public class LivingObject : GridObject
             {
                 //   myManager.CreateDmgTextEvent("<sprite=0>  + " + (2+physLevel), Color.yellow, this);
                 //   myManager.CreateDmgTextEvent("<sprite=1>  + " + (2+magLevel), Color.magenta, this);
-                myManager.CreateDmgTextEvent("<sprite=2> + " + (5 + dexLevel), Color.green, this);
+                //myManager.CreateDmgTextEvent("<sprite=2> + " + (5 + dexLevel), Color.green, this);
                 //myManager.CreateDmgTextEvent("Spd + " + 2, Color.green, this);
                 //myManager.CreateDmgTextEvent("Dex + " + 2, Color.green, this);
-                myManager.CreateDmgTextEvent("SPRT LV + " + 1, Color.green, this, 1.2f);
+                myManager.CreateDmgTextEvent("SPRT LV UP", Color.green, this, 1.2f);
             }
+            UpdateHealthbar();
         }
     }
 
@@ -1679,7 +1718,7 @@ public class LivingObject : GridObject
 
     public virtual UsableScript TransferSkill(LivingObject attackingObject)
     {
-        UsableScript usable = null;
+        UsableScript useable = null;
         LivingObject enemy = this;
         DatabaseManager database = Common.GetDatabase();
         List<UsableScript> possibleUseables = new List<UsableScript>();
@@ -1712,7 +1751,7 @@ public class LivingObject : GridObject
                 cmdnum = 0;
             }
 
-            UsableScript useable = possibleUseables[cmdnum];
+            useable = possibleUseables[cmdnum];
             bool overFlow = false;
             if (useable != null)
             {
@@ -1837,7 +1876,8 @@ public class LivingObject : GridObject
                 }
             }
         }
-        return usable;
+     
+        return useable;
     }
 
     public void snapToCurrentTile()

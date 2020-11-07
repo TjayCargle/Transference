@@ -152,6 +152,7 @@ public class EnemyManager : MonoBehaviour {
                 enemy.Setup();
                 if (enemySetup.enemyId >= 100)
                 {
+                    enemy.FACTION = Faction.fairy;
                     Common.UpdateBossProfile(enemySetup.enemyId, enemy);
                 }
                 enemies.Add(enemy);

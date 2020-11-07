@@ -651,24 +651,38 @@ public class ShopScreen : MonoBehaviour
         {
             case 0:
                 skillCount = buyer.INVENTORY.WEAPONS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Strikes";
                 break;
             case 1:
                 skillCount = buyer.INVENTORY.ARMOR.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Barriers";
                 break;
             case 2:
                 skillCount = buyer.PHYSICAL_SLOTS.SKILLS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Physical Skills";
                 break;
             case 3:
                 skillCount = buyer.MAGICAL_SLOTS.SKILLS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Magical Spells";
                 break;
             case 4:
                 skillCount = buyer.COMBO_SLOTS.SKILLS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Combo Skills";
                 break;
             case 5:
                 skillCount = buyer.AUTO_SLOTS.SKILLS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Auto SKills";
                 break;
             case 6:
                 skillCount = buyer.INVENTORY.OPPS.Count;
+                if (currentTypeText)
+                    currentTypeText.text = "Opportunitty Skills";
                 break;
         }
         if (buyerNameText)
@@ -689,44 +703,37 @@ public class ShopScreen : MonoBehaviour
                         case 0:
                             refUseable = buyer.INVENTORY.WEAPONS[i];
                             selectedType = 0;
-                            if (currentTypeText)
-                                currentTypeText.text = "Strikes";
+                         
                             break;
                         case 1:
                             refUseable = buyer.INVENTORY.ARMOR[i];
                             selectedType = 1;
-                            if (currentTypeText)
-                                currentTypeText.text = "Barriers";
+                          
                             break;
                         case 2:
                             refUseable = buyer.PHYSICAL_SLOTS.SKILLS[i];
                             selectedType = 2;
-                            if (currentTypeText)
-                                currentTypeText.text = "Physical Skills";
+                         
                             break;
                         case 3:
                             refUseable = buyer.MAGICAL_SLOTS.SKILLS[i];
                             selectedType = 3;
-                            if (currentTypeText)
-                                currentTypeText.text = "Magical Spells";
+                           
                             break;
                         case 4:
                             refUseable = buyer.COMBO_SLOTS.SKILLS[i];
                             selectedType = 4;
-                            if (currentTypeText)
-                                currentTypeText.text = "Passive Skills";
+                          
                             break;
                         case 5:
                             refUseable = buyer.AUTO_SLOTS.SKILLS[i];
                             selectedType = 5;
-                            if (currentTypeText)
-                                currentTypeText.text = "Auto SKills";
+                         
                             break;
                         case 6:
                             refUseable = buyer.INVENTORY.OPPS[i];
                             selectedType = 5;
-                            if (currentTypeText)
-                                currentTypeText.text = "Opportunitty Skills";
+                          
                             break;
                     }
                     if (buyerSkills[i].transform.parent.GetComponent<shopBtn>())

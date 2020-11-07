@@ -485,6 +485,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                 break;
             case MenuItemType.prevMenu:
+                myManager.inTutorialMenu = false;
                 if (myManager.eventManager.activeEvents == 0)
                 {
                     //   Debug.Log("prev, " + myManager.GetState());
@@ -493,10 +494,24 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 }
                 else
                 {
-                    Debug.Log("nah, " + myManager.GetState());
+                    if (myManager.prevState == State.EnemyTurn || myManager.prevState == State.HazardTurn)
+                    {
+                        myManager.menuManager.ShowNone();
+                        myManager.currentState = State.EnemyTurn;
+                    }
+                    else if (myManager.currentState == State.EventRunning)
+                    {
+                        myManager.DidCompleteTutorialStep();
+                        myManager.returnState();
+                    }
+                    else
+                    {
+                        Debug.Log("nah, " + myManager.GetState());
 
-                    myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
-                    myManager.currentState = State.PlayerTransition;
+                        myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
+                        myManager.DidCompleteTutorialStep();
+                        myManager.currentState = State.PlayerTransition;
+                    }
                 }
                 break;
             case MenuItemType.generated:
@@ -728,11 +743,11 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     if (invokingObject.GetComponent<LivingObject>())
                     {
                         LivingObject livvy = invokingObject.GetComponent<LivingObject>();
-                    if(livvy.HEALTH > (int)(0.30f * livvy.MAX_HEALTH))
+                        if (livvy.HEALTH > (int)(0.30f * livvy.MAX_HEALTH))
                         {
-                        invokingObject.GetComponent<LivingObject>().Overload();
+                            invokingObject.GetComponent<LivingObject>().Overload();
                         }
-                    else
+                        else
                         {
                             myManager.ShowCantUseText("Not enough health to overload");
                         }
@@ -754,7 +769,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
                     myManager.StackInventory();
 
-                 
+
                 }
                 break;
             default:

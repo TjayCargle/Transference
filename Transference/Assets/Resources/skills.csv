@@ -96,9 +96,9 @@
 71,Alt Zap,Electric,RngAtk,none,12,physical,rotator,1,2,70,tiny,1,0,0
 72,Mega Zap,Electric,RngAtk,none,-20,physical,clover,1,4,65,tiny,1,0,0
 73,Ultra Zap,Electric,RngAtk,none,-40,physical,cone,2,3,65,tiny,1,0,0
-74,Arcane Zap,Electric,RngAtk,none,30,magical,rotator,1,2,65,tiny,1,0,0
+74,Arcane Zap,Electric,RngAtk,none,30,magical,rotator,1,2,85,tiny,1,0,0
 75,Etherial Zap,Electric,RngAtk,none,28,magical,detached,1,3,65,tiny,2,0,0
-76,Mystic Zap,Electric,RngAtk,pullin,32,magical,adjacent,1,2,85,tiny,2,0,0
+76,Mystic Zap,Electric,RngAtk,pullin,32,magical,adjacent,1,2,75,tiny,2,0,0
 77,Hidden Zap,Electric,RngAtk,knockback,30,physical,adjacent,1,2,70,tiny,1,0,0
 78,High Voltage,Electric,Cost,none,20,physical,clover,1,1,100,tiny,1,0,1,onKill,increaseDex
 -

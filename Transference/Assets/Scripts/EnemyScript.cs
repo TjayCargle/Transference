@@ -201,7 +201,7 @@ public class EnemyScript : LivingObject
 
         if (lastReaction.usedStrike)
         {
-            Debug.Log("" + NAME + " is using " + lastReaction.usedStrike.NAME);
+            //Debug.Log("" + NAME + " is using " + lastReaction.usedStrike.NAME);
             WEAPON.Equip(lastReaction.usedStrike);
             //GridObject possibleObject = null;
             myManager.attackableTiles = myManager.GetWeaponAttackableTiles(this);
@@ -224,8 +224,8 @@ public class EnemyScript : LivingObject
 
         if (lastReaction.usedSkill)
         {
-          //  Debug.Log("" + NAME + " is using " + lastReaction.usedSkill.NAME);
-           // WEAPON.Equip(lastReaction.usedStrike);
+            //  Debug.Log("" + NAME + " is using " + lastReaction.usedSkill.NAME);
+            // WEAPON.Equip(lastReaction.usedStrike);
             myManager.attackableTiles = myManager.GetSkillsAttackableTiles(this, lastReaction.usedSkill);
             // GridObject possibleObject = null;
             myManager.currentAttackList.Clear();
@@ -753,230 +753,258 @@ public class EnemyScript : LivingObject
             {
                 continue;
             }
-            if (personality == EPType.finisher)
-            {
-                if (atkTarget)
-                {
-                    if (atkTarget.DEAD != true)
-                    {
-
-                        if (objects[i] != atkTarget)
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-            if (objects[i].FACTION != this.FACTION)
+            if (objects[i] != null)
             {
                 if (!objects[i].DEAD)
                 {
-                    if (personality == EPType.mystical || personality == EPType.skillful || personality == EPType.support)
+
+                    if (objects[i].currentTile != null)
                     {
-                        consider = Random.Range(0, 3);
-                        if (consider != 0)
-                        {
-                            skip = 0;
-                            // Debug.Log("should skip basic");
-                        }
-                    }
-                    if (reflectedSkills.Contains(null))
-                    {
-                        skip = 0;
-                    }
-                    if (skip != 0)
-                    {
-                        // if (Vector3.Distance(location, objects[i].transform.position) == Atk_DIST)
-                        for (int j = 0; j < INVENTORY.WEAPONS.Count; j++)
-                        {
-                            WeaponScript possibleSkill = INVENTORY.WEAPONS[j];
-                            if (!possibleSkill.USER)
-                            {
-                                Debug.Log("got no user");
-                                possibleSkill.USER = this;
-                            }
-                            if (possibleSkill.CanUse())
-                            {
-                                bool reflected = false;
-                                for (int r = 0; r < reflectedSkills.Count; r++)
-                                {
-                                    if (reflectedSkills[r].ELEMENT == possibleSkill.ELEMENT)
-                                    {
-                                        reflected = true;
-                                        break;
-                                    }
-                                }
-                                if (reflected == true)
-                                {
-                                    continue;
-                                }
-                                //  Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH + " hp, " + MANA + " mp, " + FATIGUE + "ft");
-
-                                List<TileScript> skilltiles = myManager.GetWeaponAttackableTilesOneList(currentTile, possibleSkill);
-
-                                if (skilltiles.Contains(objects[i].currentTile))
-                                {
-                                    foundEnemy = true;
-                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
-                                    conatiner.dmgObject = objects[i];
-                                    conatiner.command = null;
-
-
-                                    conatiner.alteration = Reaction.none; //atkReaction;
-                                    conatiner.attackingElement = INVENTORY.WEAPONS[j].ELEMENT;
-                                    conatiner.attackType = INVENTORY.WEAPONS[j].ATTACK_TYPE;
-                                    conatiner.attackingObject = this;
-                                    //WEAPON.Equip(INVENTORY.WEAPONS[j]);
-                                    conatiner.dmg = (int)INVENTORY.WEAPONS[j].ATTACK + INVENTORY.WEAPONS[j].LEVEL;// WEAPON.ATTACK;
-                                    conatiner.strike = INVENTORY.WEAPONS[j];
-
-
-                                    possibleAttacks.Add(conatiner);
-                                    atkNames.Add(INVENTORY.WEAPONS[j].NAME + " " + objects[i].NAME);
-                                }
-                                // potentialTargets.Add(objects[i]);
-                            }
-                        }
-                    }
-                    for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
-                    {
-                        CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
-                        if (!possibleSkill.USER)
-                        {
-                            Debug.Log("got no user");
-                            possibleSkill.USER = this;
-                        }
-                        if (possibleSkill.CanUse())
+                        if (objects[i].currentTile.isInShadow)
                         {
                             if (objects[i].GetComponent<LivingObject>())
                             {
-                                LivingObject livvyo = objects[i].GetComponent<LivingObject>();
-                                //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
-                                if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                LivingObject live = objects[i].GetComponent<LivingObject>();
+                                if (!sightedTargets.Contains(live))
                                 {
-                                    continue;
-                                }
-                                if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
-                                {
-                                    continue;
-                                }
-                                if (reflectedSkills.Contains(possibleSkill))
-                                {
-                                    continue;
-                                }
-                            }
 
-                            if (objects[i].GetComponent<HazardScript>())
-                            {
-                                if (possibleSkill.ELEMENT == Element.Buff)
-                                {
                                     continue;
-                                }
-                            }
-                            if (personality == EPType.support)
-                            {
-                                if (possibleSkill.SUBTYPE == SubSkillType.Buff)
-                                {
-                                    continue;
-                                }
-
-                                if (possibleSkill.ELEMENT != Element.Buff)
-                                {
-                                    consider = Random.Range(0, 3);
-                                    if (consider != 0)
-                                    {
-
-                                        continue;
-                                    }
-                                }
-                                else
-                                {
-                                    if (objects[i].GetComponent<LivingObject>())
-                                    {
-                                        LivingObject livvyo = objects[i].GetComponent<LivingObject>();
-
-                                        if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
-                                        {
-                                            continue;
-                                        }
-                                        if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
-                                        {
-                                            continue;
-                                        }
-                                    }
-
-                                }
-                            }
-                            else if (possibleSkill.ETYPE == EType.magical)
-                            {
-                                if (personality == EPType.forceful || personality == EPType.skillful)
-                                {
-                                    consider = Random.Range(0, 3);
-                                    if (consider != 0)
-                                    {
-                                        //Debug.Log("should skip magic");
-                                        continue;
-                                    }
                                 }
                             }
                             else
                             {
-                                if (personality == EPType.forceful || personality == EPType.mystical)
+
+                                Debug.Log("you son of a" + objects[i].NAME);
+                            }
+                        }
+                        if (personality == EPType.finisher)
+                        {
+                            if (atkTarget)
+                            {
+                                if (atkTarget.DEAD != true)
                                 {
-                                    consider = Random.Range(0, 3);
-                                    if (consider != 0)
+
+                                    if (objects[i] != atkTarget)
                                     {
-                                        //Debug.Log("should skip skill");
                                         continue;
                                     }
                                 }
                             }
-                            if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                        }
+                        if (objects[i].FACTION != this.FACTION)
+                        {
+                            if (!objects[i].DEAD)
                             {
-                                if (!INVENTORY.BUFFS.Contains(possibleSkill))
+                                if (personality == EPType.mystical || personality == EPType.skillful || personality == EPType.support)
                                 {
-                                    foundEnemy = true;
-                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
-                                    conatiner.alteration = possibleSkill.REACTION;
-                                    conatiner.attackingElement = possibleSkill.ELEMENT;
-                                    conatiner.attackType = possibleSkill.ETYPE;
-                                    conatiner.attackingObject = this;
-                                    conatiner.dmgObject = this;
-                                    conatiner.command = possibleSkill;
-                                    conatiner.dmg = (int)possibleSkill.DAMAGE;
+                                    consider = Random.Range(0, 3);
+                                    if (consider != 0)
+                                    {
+                                        skip = 0;
+                                        // Debug.Log("should skip basic");
+                                    }
+                                }
+                                if (reflectedSkills.Contains(null))
+                                {
+                                    skip = 0;
+                                }
+                                if (skip != 0)
+                                {
+                                    // if (Vector3.Distance(location, objects[i].transform.position) == Atk_DIST)
+                                    for (int j = 0; j < INVENTORY.WEAPONS.Count; j++)
+                                    {
+                                        WeaponScript possibleSkill = INVENTORY.WEAPONS[j];
+                                        if (!possibleSkill.USER)
+                                        {
+                                            Debug.Log("got no user");
+                                            possibleSkill.USER = this;
+                                        }
+                                        if (possibleSkill.CanUse())
+                                        {
+                                            bool reflected = false;
+                                            for (int r = 0; r < reflectedSkills.Count; r++)
+                                            {
+                                                if (reflectedSkills[r].ELEMENT == possibleSkill.ELEMENT)
+                                                {
+                                                    reflected = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (reflected == true)
+                                            {
+                                                continue;
+                                            }
+                                            //  Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH + " hp, " + MANA + " mp, " + FATIGUE + "ft");
 
-                                    possibleAttacks.Add(conatiner);
-                                    atkNames.Add(possibleSkill.NAME + " " + this.NAME);
+                                            List<TileScript> skilltiles = myManager.GetWeaponAttackableTilesOneList(currentTile, possibleSkill);
 
+                                            if (skilltiles.Contains(objects[i].currentTile))
+                                            {
+                                                foundEnemy = true;
+                                                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                                conatiner.dmgObject = objects[i];
+                                                conatiner.command = null;
+
+
+                                                conatiner.alteration = Reaction.none; //atkReaction;
+                                                conatiner.attackingElement = INVENTORY.WEAPONS[j].ELEMENT;
+                                                conatiner.attackType = INVENTORY.WEAPONS[j].ATTACK_TYPE;
+                                                conatiner.attackingObject = this;
+                                                //WEAPON.Equip(INVENTORY.WEAPONS[j]);
+                                                conatiner.dmg = (int)INVENTORY.WEAPONS[j].ATTACK + INVENTORY.WEAPONS[j].LEVEL;// WEAPON.ATTACK;
+                                                conatiner.strike = INVENTORY.WEAPONS[j];
+
+
+                                                possibleAttacks.Add(conatiner);
+                                                atkNames.Add(INVENTORY.WEAPONS[j].NAME + " " + objects[i].NAME);
+                                            }
+                                            // potentialTargets.Add(objects[i]);
+                                        }
+                                    }
+                                }
+                                for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
+                                {
+                                    CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                                    if (!possibleSkill.USER)
+                                    {
+                                        Debug.Log("got no user");
+                                        possibleSkill.USER = this;
+                                    }
+                                    if (possibleSkill.CanUse())
+                                    {
+                                        if (objects[i].GetComponent<LivingObject>())
+                                        {
+                                            LivingObject livvyo = objects[i].GetComponent<LivingObject>();
+                                            //    Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH+ " hp, "+ MANA+ " mp, "+  FATIGUE + "ft") ;
+                                            if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                            {
+                                                continue;
+                                            }
+                                            if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                            {
+                                                continue;
+                                            }
+                                            if (reflectedSkills.Contains(possibleSkill))
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        if (objects[i].GetComponent<HazardScript>())
+                                        {
+                                            if (possibleSkill.ELEMENT == Element.Buff)
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                        if (personality == EPType.support)
+                                        {
+                                            if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                                            {
+                                                continue;
+                                            }
+
+                                            if (possibleSkill.ELEMENT != Element.Buff)
+                                            {
+                                                consider = Random.Range(0, 3);
+                                                if (consider != 0)
+                                                {
+
+                                                    continue;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (objects[i].GetComponent<LivingObject>())
+                                                {
+                                                    LivingObject livvyo = objects[i].GetComponent<LivingObject>();
+
+                                                    if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                                    {
+                                                        continue;
+                                                    }
+                                                    if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                                    {
+                                                        continue;
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        else if (possibleSkill.ETYPE == EType.magical)
+                                        {
+                                            if (personality == EPType.forceful || personality == EPType.skillful)
+                                            {
+                                                consider = Random.Range(0, 3);
+                                                if (consider != 0)
+                                                {
+                                                    //Debug.Log("should skip magic");
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (personality == EPType.forceful || personality == EPType.mystical)
+                                            {
+                                                consider = Random.Range(0, 3);
+                                                if (consider != 0)
+                                                {
+                                                    //Debug.Log("should skip skill");
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                        if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                                        {
+                                            if (!INVENTORY.BUFFS.Contains(possibleSkill))
+                                            {
+                                                foundEnemy = true;
+                                                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                                conatiner.alteration = possibleSkill.REACTION;
+                                                conatiner.attackingElement = possibleSkill.ELEMENT;
+                                                conatiner.attackType = possibleSkill.ETYPE;
+                                                conatiner.attackingObject = this;
+                                                conatiner.dmgObject = this;
+                                                conatiner.command = possibleSkill;
+                                                conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                                                possibleAttacks.Add(conatiner);
+                                                atkNames.Add(possibleSkill.NAME + " " + this.NAME);
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            List<TileScript> skilltiles = myManager.GetSkillAttackableTilesOneList(currentTile, possibleSkill);
+
+                                            if (skilltiles.Contains(objects[i].currentTile))
+                                            {
+
+                                                foundEnemy = true;
+                                                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                                conatiner.alteration = possibleSkill.REACTION;
+                                                conatiner.attackingElement = possibleSkill.ELEMENT;
+                                                conatiner.attackType = possibleSkill.ETYPE;
+                                                conatiner.attackingObject = this;
+                                                conatiner.dmgObject = objects[i];
+                                                conatiner.command = possibleSkill;
+                                                conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                                                possibleAttacks.Add(conatiner);
+                                                atkNames.Add(possibleSkill.NAME + " " + objects[i].NAME);
+
+                                            }
+                                        }
+
+                                    }
                                 }
                             }
-                            else
-                            {
-                                List<TileScript> skilltiles = myManager.GetSkillAttackableTilesOneList(currentTile, possibleSkill);
-
-                                if (skilltiles.Contains(objects[i].currentTile))
-                                {
-
-                                    foundEnemy = true;
-                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
-                                    conatiner.alteration = possibleSkill.REACTION;
-                                    conatiner.attackingElement = possibleSkill.ELEMENT;
-                                    conatiner.attackType = possibleSkill.ETYPE;
-                                    conatiner.attackingObject = this;
-                                    conatiner.dmgObject = objects[i];
-                                    conatiner.command = possibleSkill;
-                                    conatiner.dmg = (int)possibleSkill.DAMAGE;
-
-                                    possibleAttacks.Add(conatiner);
-                                    atkNames.Add(possibleSkill.NAME + " " + objects[i].NAME);
-
-                                }
-                            }
-
                         }
                     }
                 }
             }
+
         }
         return foundEnemy;
     }
@@ -985,7 +1013,7 @@ public class EnemyScript : LivingObject
         bool found = false;
         if (LEVEL < 7)
         {
-           // Debug.Log("level less than 7");
+            // Debug.Log("level less than 7");
             return false;
         }
         GridObject[] objects = GameObject.FindObjectsOfType<GridObject>();
@@ -1260,15 +1288,19 @@ public class EnemyScript : LivingObject
                         {
                             if (living.currentTile.isInShadow)
                             {
-                                if (living == currentEnemy)
-                                {
-                                    newTarget = living;
-                                }
+                                //if (living == currentEnemy)
+                                //{
+                                //    newTarget = living;
+                                //}
                                 //else if(manager.GetAdjecentTiles(living).Contains(currentTile))
                                 //{
                                 //    newTarget = living;
                                 //}
-                                else if (living.GetComponent<LivingObject>() && sightedTargets.Contains(living as LivingObject))
+                                if (living.GetComponent<LivingObject>() && sightedTargets.Contains(living as LivingObject))
+                                {
+                                    newTarget = living;
+                                }
+                                else if (living == currentEnemy)
                                 {
                                     newTarget = living;
                                 }
@@ -1286,10 +1318,7 @@ public class EnemyScript : LivingObject
                             {
                                 if (living.currentTile.isInShadow)
                                 {
-                                    if (living == currentEnemy)
-                                    {
-                                        newTarget = living;
-                                    }
+                                    continue;
                                 }
                                 else
                                 {
@@ -1555,7 +1584,8 @@ public class EnemyScript : LivingObject
 
                 if (griddy = myManager.GetObjectAtTile(myManager.tileMap[index]))
                 {
-                    adjacentObjects.Add(griddy);
+                    if (griddy.currentTile.isInShadow == false)
+                        adjacentObjects.Add(griddy);
                 }
             }
         }
@@ -2522,8 +2552,16 @@ public class EnemyScript : LivingObject
     }
     public void Unset()
     {
+        {
+            currentEnemy = null;
+            adjacentObjects.Clear();
+            possibleItems.Clear();
+            possibleAttacks.Clear();
+            atkNames.Clear();
+        }
         if (isSetup == true)
         {
+
             triggeredNextPhase = false;
             isSetup = false;
             DEAD = false;
@@ -2581,7 +2619,7 @@ public class EnemyScript : LivingObject
             //isSetup = false;
             DEAD = false;
             STATS.Reset(true);
-     
+
             BASE_STATS.MAX_HEALTH += (int)((float)BASE_STATS.MAX_HEALTH * 0.5f);
             STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 

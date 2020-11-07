@@ -4,11 +4,14 @@ a,1, ...,2
 a,0,If you want to say something
 a,0,Say it.
 a,1,This place looks like a trap
-a,0,That's because JTREV is making this a boss room
-a,1,Who is JTREV?,1
+a,0,That's because this is the final room of the demo.
+a,1,Demo?,1
 a,0,Oh yeah... you wouldn't know..
 a,0, Don't worry about it.
-a,0,There are goodies in the solarium and an event to reset the maps.
+a,0,After we get past these enemies we are done. 
+a,0,The solarium has some neat items and an event to reset the maps.
+a,1,And then what?
+a,0, I dunno... maybe write a review... give some feedback. Or just restart and play again.
 a,1,You haven't changed. 
 a,1,You know that.
 a,0,Shut up!

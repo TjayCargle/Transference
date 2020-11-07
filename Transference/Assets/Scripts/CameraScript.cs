@@ -140,9 +140,9 @@ public class CameraScript : MonoBehaviour
             {
                 hoverTime += 2 * Time.deltaTime;
 
-                if (manager.GetState() != State.SceneRunning && manager.prevState != State.PlayerMove && manager.GetState() != State.PlayerMove)
+                if (manager.GetState() == State.FreeCamera)
                 {
-                    if (hoverTime >= 3)
+                    if (hoverTime >= 2.5f)
                     {
 
                         moving = true;

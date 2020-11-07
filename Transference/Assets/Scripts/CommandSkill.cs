@@ -733,16 +733,16 @@ public class CommandSkill : SkillScript
         {
             if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " + GetCost(OWNER) + ".";
+                potentialDesc += " Must Charge Fatigue by " +(cost * -1) + ".";
             }
             else
             {
-                potentialDesc += " Costs " + ((cost * 10)) + " Fatigue.";
+                potentialDesc += " Costs " + ((cost)) + " Fatigue.";
             }
         }
         else
         {
-            potentialDesc += "Costs " + ((cost * 10)) + " Mana.";
+            potentialDesc += "Costs " + ((cost)) + " Mana.";
         }
 
         if (SPECIAL_EVENTS.Count > 0)
