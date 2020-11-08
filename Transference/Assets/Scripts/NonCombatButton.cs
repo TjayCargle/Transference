@@ -17,30 +17,30 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(controller)
+        if (controller)
         {
 
-        controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
-        controller.selectedButton = this;
-        controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
-       // if(type < 3)
-        {
-            controller.buttonIndex = type;
-            controller.currTarget = controller.targets[type];
-        }
+            controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
+            controller.selectedButton = this;
+            controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+            // if(type < 3)
+            {
+                controller.buttonIndex = type;
+                controller.currTarget = controller.targets[type];
+            }
 
-        if (type == 4 || type == 5)
-        {
-            if(controller.currNeoTarget)
-            controller.currNeoTarget.color = Common.blackened;
-            controller.currNeoTarget = controller.neotargets[type - 4];
-            controller.currNeoTarget.color = Color.white;
-        }
-        else
-        {
-            if (controller.currNeoTarget)
-                controller.currNeoTarget.color = Common.blackened;
-        }
+            if (type == 4 || type == 5)
+            {
+                if (controller.currNeoTarget)
+                    controller.currNeoTarget.color = Common.blackened;
+                controller.currNeoTarget = controller.neotargets[type - 4];
+                controller.currNeoTarget.color = Color.white;
+            }
+            else
+            {
+                if (controller.currNeoTarget)
+                    controller.currNeoTarget.color = Common.blackened;
+            }
 
 
         }
@@ -50,37 +50,37 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         //    controller.currTarget = controller.targets[type - 1];
         //}
     }
-  //  public void OnPointerDown(PointerEventData eventData)
-  //  {
-   //     controller.HitButton();
-   // }
-   public void PressStart()
-   {
+    //  public void OnPointerDown(PointerEventData eventData)
+    //  {
+    //     controller.HitButton();
+    // }
+    public void PressStart()
+    {
 
         //SceneManager.LoadSceneAsync("DemoMap4");
 
         controller.SetPlay();
     }
 
-   public void PressControls()
-   {
+    public void PressControls()
+    {
 
-   }
+    }
 
-   public void PressQuit()
-   {
-       Application.Quit();
-   }
-   public void pressMain()
-   {
-       SceneManager.LoadScene("start");
-   }
+    public void PressQuit()
+    {
+        Application.Quit();
+    }
+    public void pressMain()
+    {
+        SceneManager.LoadScene("start");
+    }
 
     public void playJax()
     {
         PlayerPrefs.SetInt("defaultSceneEntry", 26);
         SceneManager.LoadSceneAsync("DemoMap5");
-        if(loadingCanvas != null)
+        if (loadingCanvas != null)
         {
             loadingCanvas.SetActive(true);
         }
@@ -96,6 +96,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        controller.HitButton();
+        if (controller != null)
+            controller.HitButton();
     }
 }

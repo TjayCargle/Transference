@@ -1329,6 +1329,14 @@ public class LivingObject : GridObject
     public void TrueHeal()
     {
         ChangeHealth((int)((0.20f * MAX_HEALTH)));
+        if(myManager != null)
+        {
+            if(myManager.liveEnemies.Count == 0)
+            {
+                ChangeHealth(100);
+
+            }
+        }
         UpdateHealthbar();
 
         if (Common.hasAllocated == false)
@@ -1340,7 +1348,14 @@ public class LivingObject : GridObject
     public void TrueRestore()
     {
         ChangeMana((int)((0.20f * MAX_MANA)));
+        if (myManager != null)
+        {
+            if (myManager.liveEnemies.Count == 0)
+            {
+                ChangeMana(100);
 
+            }
+        }
         if (Common.hasAllocated == false)
         {
             Common.hasAllocated = true;
@@ -1350,7 +1365,14 @@ public class LivingObject : GridObject
     public void TrueCharge()
     {
         ChangeFatigue(-1 * (int)((0.20f * MAX_FATIGUE)));
+        if (myManager != null)
+        {
+            if (myManager.liveEnemies.Count == 0)
+            {
+                ChangeFatigue(-100);
 
+            }
+        }
         if (Common.hasAllocated == false)
         {
             Common.hasAllocated = true;
@@ -1360,7 +1382,14 @@ public class LivingObject : GridObject
     public void TrueDrain()
     {
         ChangeFatigue((int)((0.20f * MAX_FATIGUE)));
+        if (myManager != null)
+        {
+            if (myManager.liveEnemies.Count == 0)
+            {
+                ChangeFatigue(100);
 
+            }
+        }
         if (Common.hasAllocated == false)
         {
             Common.hasAllocated = true;
@@ -1478,10 +1507,10 @@ public class LivingObject : GridObject
             // BASE_STATS.MAX_FATIGUE += physLevel;
 
             BASE_STATS.EXP -= 100;
-            BASE_STATS.STRENGTH += Random.Range(0, physLevel);
-            BASE_STATS.DEFENSE += Random.Range(0, physLevel);
-            BASE_STATS.MAGIC += Random.Range(0, magLevel);
-            BASE_STATS.RESIESTANCE += Random.Range(0, magLevel);
+            BASE_STATS.STRENGTH += Random.Range(0, physLevel + 1);
+            BASE_STATS.DEFENSE += Random.Range(0, physLevel + 1);
+            BASE_STATS.MAGIC += Random.Range(0, magLevel + 1);
+            BASE_STATS.RESIESTANCE += Random.Range(0, magLevel + 1);
             BASE_STATS.SPEED += Random.Range(0, dexLevel);
             BASE_STATS.DEX += Random.Range(0, dexLevel);
 
@@ -1489,6 +1518,7 @@ public class LivingObject : GridObject
             {          
                 myManager.CreateDmgTextEvent("LV UP ", Color.yellow, this, 1.2f);
             }
+            UpdateHealthbar();
         }
 
     }

@@ -1768,7 +1768,7 @@ public class ManagerScript : EventRunner
                                     {
                                         if (turnOrder[i] == myCamera.infoObject)
                                         {
-                                            if (turnOrder[i].ACTIONS > 0)
+                                            if (turnOrder[i].ACTIONS > 0 || liveEnemies.Count == 0)
                                             {
                                                 turnImgManger.UpdateSelection(i);
                                                 currentObject = myCamera.infoObject;
@@ -4317,8 +4317,15 @@ public class ManagerScript : EventRunner
 
                         if (Common.summonedZeffron == false)
                         {
+                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                            List<int> tClar = new List<int>();
+
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(29);
+                            PrepareTutorial(tSteps, tClar);
+
                             myCamera.PlaySoundTrack(6);
-                            myCamera.previousClip = myCamera.musicClips[10];
+                            myCamera.previousClip = myCamera.musicClips[16];
 
                             if (talkPanel)
                             {
@@ -4356,7 +4363,7 @@ public class ManagerScript : EventRunner
                     if (checkMap.mapIndex == 14)
                     {
                         myCamera.PlaySoundTrack(4);
-                        myCamera.previousClip = myCamera.musicClips[16];
+                        myCamera.previousClip = myCamera.musicClips[10];
                         if (talkPanel)
                         {
 
@@ -4828,7 +4835,7 @@ public class ManagerScript : EventRunner
             if (largestLevel > 3)
             {
                 if (largestLevel + lvtimes < Common.MaxLevel)
-                    lvtimes = Random.Range(largestLevel - 2, largestLevel + lvtimes);
+                    lvtimes = Random.Range(largestLevel - 2, largestLevel + lvtimes) - anEnemy.LEVEL;
                 else
                     lvtimes = Common.MaxLevel;
             }
@@ -4846,17 +4853,17 @@ public class ManagerScript : EventRunner
                     {
                         case 0:
                             {
-                                anEnemy.GainPhysExp(80, false);
+                                anEnemy.GainPhysExp(20, false);
                             }
                             break;
                         case 1:
                             {
-                                anEnemy.GainMagExp(80, false);
+                                anEnemy.GainMagExp(20, false);
                             }
                             break;
                         case 2:
                             {
-                                anEnemy.GainDexExp(80, false);
+                                anEnemy.GainDexExp(20, false);
                             }
                             break;
                         default:
@@ -4923,7 +4930,7 @@ public class ManagerScript : EventRunner
                         }
                     }
                 }
-                if (j % 2 == 0)
+                else if (j % 2 == 0)
                 {
                     rand = Random.Range(0, 4);
                     switch (rand)
@@ -5438,17 +5445,17 @@ public class ManagerScript : EventRunner
                 {
                     case 0:
                         {
-                            anEnemy.GainPhysExp(100, false);
+                            anEnemy.GainPhysExp(30, false);
                         }
                         break;
                     case 1:
                         {
-                            anEnemy.GainMagExp(100, false);
+                            anEnemy.GainMagExp(30, false);
                         }
                         break;
                     case 2:
                         {
-                            anEnemy.GainDexExp(100, false);
+                            anEnemy.GainDexExp(30, false);
                         }
                         break;
                 }
@@ -5521,7 +5528,7 @@ public class ManagerScript : EventRunner
                                 if (anEnemy.INVENTORY.CSKILLS.Count > 0)
                                 {
                                     rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
-                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(lvtimes);
+                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(lvtimes, false);
                                 }
                             }
                             break;
@@ -5531,7 +5538,7 @@ public class ManagerScript : EventRunner
                                 if (anEnemy.INVENTORY.WEAPONS.Count > 0)
                                 {
                                     rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
-                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(lvtimes);
+                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(lvtimes, false);
                                 }
                             }
                             break;
@@ -5544,7 +5551,7 @@ public class ManagerScript : EventRunner
                                     UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
                                     if (useable.GetType() != typeof(ItemScript))
                                     {
-                                        useable.GrantXP(lvtimes);
+                                        useable.GrantXP(lvtimes, false);
                                     }
                                 }
                             }
@@ -14591,87 +14598,94 @@ public class ManagerScript : EventRunner
         bool other = false;
         if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
         {
-
-            if (canvas)
+            if (usable.USER != null)
             {
-                if (canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>())
+
+                if (usable.USER.FACTION == Faction.ally)
                 {
-                    TMPro.TextMeshProUGUI tmp = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                    string spritestr = "<sprite=";
-                    if (usable.GetType() == typeof(WeaponScript))
-                        spritestr += "4>";
-                    else if (usable.GetType() == typeof(ArmorScript))
-                        spritestr += "3>";
-                    else if (usable.GetType() == typeof(ItemScript))
-                        spritestr += "19>";
-                    else if (usable.GetType().IsSubclassOf(typeof(SkillScript)) || usable.GetType() == typeof(SkillScript))
-                    {
-                        SkillScript skill = usable as SkillScript;
-                        switch (skill.ELEMENT)
-                        {
-                            case Element.Passive:
-                                spritestr += "6>";
-                                break;
-                            case Element.Opp:
-                                spritestr += "8>";
-                                break;
-                            case Element.Auto:
-                                spritestr += "7>";
-                                break;
-                            case Element.none:
-                                break;
-                            default:
-                                spritestr += "5>";
-                                break;
-                        }
-                    }
 
-                    else
+                    if (canvas)
                     {
-                        other = true;
-                    }
-                    PlayOppSnd();
-                    if (other == false)
-                    {
-                        if (usable.LEVEL > 1)
+                        if (canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>())
                         {
-                            tmp.text = "";
-                            tmp.text = usable.NAME;
-                            LivingObject living = usable.USER;
-                            if (living != null)
+                            TMPro.TextMeshProUGUI tmp = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                            string spritestr = "<sprite=";
+                            if (usable.GetType() == typeof(WeaponScript))
+                                spritestr += "4>";
+                            else if (usable.GetType() == typeof(ArmorScript))
+                                spritestr += "3>";
+                            else if (usable.GetType() == typeof(ItemScript))
+                                spritestr += "19>";
+                            else if (usable.GetType().IsSubclassOf(typeof(SkillScript)) || usable.GetType() == typeof(SkillScript))
                             {
-                                string test = living.NAME;
-                                tmp.text = test;
-                                tmp.text = "" + usable.USER.NAME + " 's " + spritestr;
-                                tmp.text = "" + usable.USER.NAME + " 's " + spritestr + usable.NAME + " has leveled up!";
+                                SkillScript skill = usable as SkillScript;
+                                switch (skill.ELEMENT)
+                                {
+                                    case Element.Passive:
+                                        spritestr += "6>";
+                                        break;
+                                    case Element.Opp:
+                                        spritestr += "8>";
+                                        break;
+                                    case Element.Auto:
+                                        spritestr += "7>";
+                                        break;
+                                    case Element.none:
+                                        break;
+                                    default:
+                                        spritestr += "5>";
+                                        break;
+                                }
                             }
-                        }
-                        else
-                        {
 
-                            tmp.text = "" + usable.USER.NAME + " learned " + spritestr + usable.NAME;
-                            if (usable.GetType() == typeof(ItemScript))
-                                tmp.text = "" + usable.USER.NAME + " gained " + spritestr + usable.NAME;
-                        }
+                            else
+                            {
+                                other = true;
+                            }
+                            PlayOppSnd();
+                            if (other == false)
+                            {
+                                if (usable.LEVEL > 1)
+                                {
+                                    tmp.text = "";
+                                    tmp.text = usable.NAME;
+                                    LivingObject living = usable.USER;
+                                    if (living != null)
+                                    {
+                                        string test = living.NAME;
+                                        tmp.text = test;
+                                        tmp.text = "" + usable.USER.NAME + " 's " + spritestr;
+                                        tmp.text = "" + usable.USER.NAME + " 's " + spritestr + usable.NAME + " has leveled up!";
+                                    }
+                                }
+                                else
+                                {
 
-                        if (currentState != State.ShopCanvas)
-                        {
+                                    tmp.text = "" + usable.USER.NAME + " learned " + spritestr + usable.NAME;
+                                    if (usable.GetType() == typeof(ItemScript))
+                                        tmp.text = "" + usable.USER.NAME + " gained " + spritestr + usable.NAME;
+                                }
 
-                            enterStateTransition();
-                            menuManager.ShowNone();
+                                if (currentState != State.ShopCanvas)
+                                {
+
+                                    enterStateTransition();
+                                    menuManager.ShowNone();
+                                }
+                            }
+                            else
+                            {
+                                tmp.text = usable.DESC;
+                                enterStateTransition();
+                                menuManager.ShowNone();
+                            }
+                            usable.UpdateDesc();
+                            menuManager.ShowNewSkillAnnouncement();
                         }
                     }
-                    else
-                    {
-                        tmp.text = usable.DESC;
-                        enterStateTransition();
-                        menuManager.ShowNone();
-                    }
-                    usable.UpdateDesc();
-                    menuManager.ShowNewSkillAnnouncement();
+
                 }
             }
-
         }
         timer = 1.2f;
     }
@@ -14937,7 +14951,7 @@ public class ManagerScript : EventRunner
     public bool NextTurnEvent(Object data)
     {
 
-        //                 Debug.Log(" is done with their turn, moving on ");
+        //                Debug.Log(" is done with their turn, moving on ");
         //currOppList.Clear();
 
         if (currentState != State.PlayerTransition)
@@ -14960,12 +14974,18 @@ public class ManagerScript : EventRunner
         bool nextround = true;
         for (int i = 0; i < turnOrder.Count; i++)
         {
+           // Debug.Log("checking: " + turnOrder[i].FullName + " with ap: " + turnOrder[i].ACTIONS);
             if (turnOrder[i].ACTIONS > 0)
             {
-                if (SetGridObjectPosition(tempGridObj, turnOrder[i].currentTile.transform.position) == true)
+
+                //if (SetGridObjectPosition(tempGridObj, turnOrder[i].currentTile.transform.position) == true)
                 {
+                    tempGridObj.transform.position = turnOrder[i].currentTile.transform.position;
                     ComfirmMoveGridObject(tempGridObj, turnOrder[i].currentTile.listindex);
-                    //                    Debug.Log("going to next in turn: " + turnOrder[i].FullName);
+                    myCamera.currentTile = turnOrder[i].currentTile;
+                    myCamera.UpdatePosition(true);
+                    //Debug.Log("going to next in turn: " + turnOrder[i].FullName);
+                    // break;
                 }
                 nextround = false;
                 //break;
@@ -14975,6 +14995,7 @@ public class ManagerScript : EventRunner
                 turnImgManger.UpdateInteractivity(i);
             }
         }
+        //     Debug.Log(" turn count: " + turnOrder.Count);
         if (nextround == true)
         {
             //  Debug.Log("next round from end turn in " + currentState + "  by?: " + currentObject.NAME);

@@ -126,8 +126,9 @@ public class CameraScript : MonoBehaviour
         }
     }
     private float hoverTime = 0.0f;
-    public void UpdatePosition()
+    public void UpdatePosition(bool goNow = false)
     {
+
         if (currentTile)
         {
             Vector3 tilePos = currentTile.transform.position;
@@ -136,13 +137,20 @@ public class CameraScript : MonoBehaviour
             tilePos.y += y;
             tilePos.z += z;
             //Vector3 targetLocation = tilePos - camPos;
-            if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            if (goNow == true)
             {
-                hoverTime += 2 * Time.deltaTime;
-
-                if (manager.GetState() == State.FreeCamera)
+                moving = true;
+                Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                transform.position = smooth;
+            }
+           else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            {
+              
+                 if (manager.GetState() == State.FreeCamera)
                 {
-                    if (hoverTime >= 2.5f)
+                    hoverTime += 2 * Time.deltaTime;
+
+                    if (hoverTime >= 1.5f)
                     {
 
                         moving = true;
@@ -171,7 +179,13 @@ public class CameraScript : MonoBehaviour
             tilePos.y += y;
             tilePos.z += z;
             //Vector3 targetLocation = tilePos - camPos;
-            if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            if (goNow == true)
+            {
+                moving = true;
+                Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
+                transform.position = smooth;
+            }
+           else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
             {
                 moving = true;
                 Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);

@@ -1676,7 +1676,7 @@ public class EnemyScript : LivingObject
                     if (specialProfile.commands.Count > 0)
                     {
                         chosenCommand = specialProfile.commands[Random.Range(0, specialProfile.commands.Count)];
-                        Debug.Log("Boss should: " + chosenCommand);
+                       // Debug.Log("Boss should: " + chosenCommand);
                         switch (chosenCommand)
                         {
                             case BossCommand.strike:

@@ -2776,6 +2776,11 @@ public class Common : ScriptableObject
                     returnedString = "Factions & Races;All charcaters belong to a specific faction. By default the faction you belong to directly tied to your race. However, anyone is free to leave their faction for another if allowed.\n\n Enemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
                 }
                 break;
+            case 29:
+                {
+                    returnedString = "Skills;While Jax started with magical spells and mental strikes, Zeffron starts with physical skills.\n\nSkills utilize the <color=yellow>fatigue meter</color>. Some skills must <color=yellow>charge the FT meter</color> by a specific amount, while others must <color=yellow>drain the FT meter</color> by a specific amount.\nBe mindful of your fatigue and which skills you can use.";
+                }
+                break;
             default:
                 break;
         }
