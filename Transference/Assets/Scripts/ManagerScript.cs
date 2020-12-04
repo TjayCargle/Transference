@@ -1712,30 +1712,16 @@ public class ManagerScript : EventRunner
                             if (myCamera.infoObject)
                             {
 
-                                if (detailsScreen)
-                                {
-                                    if (myCamera.infoObject.GetComponent<LivingObject>())
-                                    {
-                                        detailsScreen.anotherObj = null;
-                                        detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
-                                        StackDetails();
-                                    }
-                                    else
-                                    {
-                                        detailsScreen.currentObj = null;
-                                        detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
-                                        StackDetails();
-                                    }
-                                }
+
                             }
                             else
                             {
-                                StackOptions();
+                                // StackOptions();
                             }
                         }
                         else
                         {
-                            StackOptions();
+                            // StackOptions();
                         }
                     }
                     if (Input.GetMouseButtonDown(0))
@@ -1792,29 +1778,46 @@ public class ManagerScript : EventRunner
                                             {
                                                 if (GetObjectAtTile(hitTile) != null)
                                                 {
-
-                                                    LivingObject livvy = GetObjectAtTile(hitTile).GetComponent<LivingObject>();
-                                                    if (livvy != null)
+                                                    if (detailsScreen)
                                                     {
-                                                        if (markedEnemies.Contains(livvy))
+                                                        if (myCamera.infoObject.GetComponent<LivingObject>())
                                                         {
-                                                            markedEnemies.Remove(livvy);
-                                                            livvy.RENDERER.color = Color.white;
-
+                                                            detailsScreen.anotherObj = null;
+                                                            detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
+                                                            StackDetails();
                                                         }
                                                         else
                                                         {
-
-                                                            markedEnemies.Add(livvy);
-                                                            livvy.RENDERER.color = Color.magenta;
+                                                            detailsScreen.currentObj = null;
+                                                            detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
+                                                            StackDetails();
                                                         }
-                                                        UpdateMarkedArea();
                                                     }
+                                                    //LivingObject livvy = GetObjectAtTile(hitTile).GetComponent<LivingObject>();
+                                                    //if (livvy != null)
+                                                    //{
+                                                    //    if (markedEnemies.Contains(livvy))
+                                                    //    {
+                                                    //        markedEnemies.Remove(livvy);
+                                                    //        livvy.RENDERER.color = Color.white;
+
+                                                    //    }
+                                                    //    else
+                                                    //    {
+
+                                                    //        markedEnemies.Add(livvy);
+                                                    //        livvy.RENDERER.color = Color.magenta;
+                                                    //    }
+                                                    //    UpdateMarkedArea();
+                                                    //}
                                                 }
                                                 else
                                                 {
-                                                    StackNewSelection(State.PlayerInput, currentMenu.none);
-                                                    menuManager.ShowHiddenCanvas();
+                                                    if (currentTutorial.steps.Count == 0)
+                                                    {
+                                                        StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                        menuManager.ShowHiddenCanvas();
+                                                    }
                                                 }
                                             }
                                         }
@@ -3237,8 +3240,8 @@ public class ManagerScript : EventRunner
             }
             else
             {
-                currentState = State.ChangeOptions;
-                menuManager.ShowOptions();
+                //  currentState = State.ChangeOptions;
+                // menuManager.ShowOptions();
             }
         }
 
@@ -3685,7 +3688,10 @@ public class ManagerScript : EventRunner
 
     public void MovetoMousePos(LivingObject movedObj)
     {
-
+        if(movingObj == null)
+        {
+            returnState();
+        }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -3918,6 +3924,10 @@ public class ManagerScript : EventRunner
 
     public void SetScene(SceneContainer scene)
     {
+        if (eventImage)
+        {
+            eventImage.gameObject.SetActive(false);
+        }
         talkPanel.gameObject.SetActive(true);
         currentScene = scene;
         currentState = State.SceneRunning;
@@ -6543,6 +6553,10 @@ public class ManagerScript : EventRunner
             }
         }
 
+    }
+    public void UpdateTurns()
+    {
+        turnImgManger.UpdateTurnImgActionCount(turnOrder);
     }
     public bool WaitForSFXEvent(Object data)
     {
@@ -10808,7 +10822,7 @@ public class ManagerScript : EventRunner
                 {
                     int chance = skill.ACCURACY;
                     int result = (int)Random.Range(0.0f, 100.0f);
-                    if (applyAccuraccy == false)
+                    if (applyAccuraccy == false || currentTutorial.isActive)
                         chance = 100;
                     if (result <= chance)
                     {
@@ -12908,18 +12922,20 @@ public class ManagerScript : EventRunner
                                     }
 
 
-
-
-                                    dmgHealth -= react.damage;
-                                    totalDmg += react.damage;
-
-                                    dmgAmount = DetermineExp(invokingObject, conatiner.dmgObject, dmgHealth <= 0 ? true : false);
-                                    opptargets.Add(conatiner.dmgObject);
-                                    conatiners.atkContainers.Add(conatiner);
-                                    CreateEvent(this, conatiner, "Skill use event", AttackEvent, null, 0);
-                                    if (react.reaction >= Reaction.nulled && react.reaction <= Reaction.absorb)
+                                    if (dmgHealth > 0)
                                     {
-                                        break;
+
+                                        dmgHealth -= react.damage;
+                                        totalDmg += react.damage;
+
+                                        dmgAmount = DetermineExp(invokingObject, conatiner.dmgObject, dmgHealth <= 0 ? true : false);
+                                        opptargets.Add(conatiner.dmgObject);
+                                        conatiners.atkContainers.Add(conatiner);
+                                        CreateEvent(this, conatiner, "Skill use event", AttackEvent, null, 0);
+                                        if (react.reaction >= Reaction.nulled && react.reaction <= Reaction.absorb)
+                                        {
+                                            break;
+                                        }
                                     }
 
                                     if (dmgHealth <= 0)
@@ -13770,39 +13786,57 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.poisoned, target))
                         {
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.poison;
-                            if (target.INVENTORY.EFFECTS.Contains(ef))
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
                             {
-                                //target.INVENTORY.EFFECTS[target.INVENTORY.EFFECTS.IndexOf(ef)].coun
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.poison)
+                                {
+                                    CreateTextEvent(this, target.FullName + " poison got worse", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
                             }
-                            CreateTextEvent(this, target.FullName + " has been inflicted with poison", "auto atk", CheckText, TextStart);
-                            if (log)
+
+                            if (foundOne == false)
                             {
-                                log.Log(target.FullName + " has been inflicted with poison");
-                            }
-                            target.INVENTORY.EFFECTS.Add(ef);
 
-                            if (!target.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
-                            {
-                                CommandSkill strDebuff = Common.CommonDebuffStr;
-                                strDebuff.EFFECT = SideEffect.debuff;
-                                strDebuff.BUFF = BuffType.Str;
-                                strDebuff.BUFFVAL = -10f;
-                                strDebuff.ELEMENT = Element.Buff;
-                                strDebuff.SUBTYPE = SubSkillType.Debuff;
-                                strDebuff.OWNER = target;
-                                strDebuff.NAME = "Str Poison";
-                                target.INVENTORY.DEBUFFS.Add(strDebuff);
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.EFFECT = SideEffect.poison;
+                                ef.TURNS = 2;
+                                if (target.INVENTORY.EFFECTS.Contains(ef))
+                                {
+                                    //target.INVENTORY.EFFECTS[target.INVENTORY.EFFECTS.IndexOf(ef)].coun
+                                }
+                                CreateTextEvent(this, target.FullName + " has been inflicted with poison", "auto atk", CheckText, TextStart);
+                                if (log)
+                                {
+                                    log.Log(target.FullName + " has been inflicted with poison");
+                                }
+                                target.INVENTORY.EFFECTS.Add(ef);
+
+                                if (!target.INVENTORY.DEBUFFS.Contains(Common.CommonDebuffStr))
+                                {
+                                    CommandSkill strDebuff = Common.CommonDebuffStr;
+                                    strDebuff.EFFECT = SideEffect.debuff;
+                                    strDebuff.BUFF = BuffType.Str;
+                                    strDebuff.BUFFVAL = -10f;
+                                    strDebuff.ELEMENT = Element.Buff;
+                                    strDebuff.SUBTYPE = SubSkillType.Debuff;
+                                    strDebuff.OWNER = target;
+                                    strDebuff.NAME = "Str Poison";
+                                    target.INVENTORY.DEBUFFS.Add(strDebuff);
 
 
-                                DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
-                                buff.SKILL = strDebuff;
-                                buff.BUFF = strDebuff.BUFF;
-                                buff.COUNT = 2;
-                                target.UpdateBuffsAndDebuffs();
-                                usedEffect = true;
-                                target.updateAilmentIcons();
+                                    DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+                                    buff.SKILL = strDebuff;
+                                    buff.BUFF = strDebuff.BUFF;
+                                    buff.COUNT = 2;
+                                    target.UpdateBuffsAndDebuffs();
+                                    usedEffect = true;
+                                    target.updateAilmentIcons();
+                                }
                             }
                         }
                     }
@@ -13811,17 +13845,34 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.confused, target))
                         {
-                            CreateTextEvent(this, target.FullName + " has been inflicted with confusion", "auto atk", CheckText, TextStart);
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                            {
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.confusion)
+                                {
+                                    CreateTextEvent(this, target.FullName + " confusion got worse", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
+                            }
 
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.confusion;
-                            target.INVENTORY.EFFECTS.Add(ef);
+                            if (foundOne == true)
+                            {
 
-                            target.SSTATUS = SecondaryStatus.confusion;
-                            SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
-                            sf.COUNTDOWN = 3;
-                            sf.STATUS = SecondaryStatus.confusion;
-                            usedEffect = true;
+                                CreateTextEvent(this, target.FullName + " has been inflicted with confusion", "auto atk", CheckText, TextStart);
+
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.EFFECT = SideEffect.confusion;
+                                target.INVENTORY.EFFECTS.Add(ef);
+
+                                target.SSTATUS = SecondaryStatus.confusion;
+                                SecondStatusScript sf = target.gameObject.AddComponent<SecondStatusScript>();
+                                sf.COUNTDOWN = 2;
+                                sf.STATUS = SecondaryStatus.confusion;
+                                usedEffect = true;
+                            }
                         }
                     }
                     break;
@@ -13829,12 +13880,29 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.paralyzed, target))
                         {
-                            CreateTextEvent(this, target.FullName + " has been paralyzed", "auto atk", CheckText, TextStart);
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                            {
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.paralyze)
+                                {
+                                    CreateTextEvent(this, target.FullName + " paralysis got worse", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
+                            }
+                            if (foundOne == false)
+                            {
 
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.paralyze;
-                            target.INVENTORY.EFFECTS.Add(ef);
-                            usedEffect = true;
+                                CreateTextEvent(this, target.FullName + " has been paralyzed", "auto atk", CheckText, TextStart);
+
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.EFFECT = SideEffect.paralyze;
+                                ef.TURNS = 2;
+                                target.INVENTORY.EFFECTS.Add(ef);
+                                usedEffect = true;
+                            }
                         }
                     }
                     break;
@@ -13842,12 +13910,28 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.sleep, target))
                         {
-                            CreateTextEvent(this, target.FullName + " has been inflicted with sleep", "auto atk", CheckText, TextStart);
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                            {
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.sleep)
+                                {
+                                    CreateTextEvent(this, target.FullName + " is sleeping longer", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
+                            }
+                            if (foundOne == false)
+                            {
+                                CreateTextEvent(this, target.FullName + " has been inflicted with sleep", "auto atk", CheckText, TextStart);
 
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.sleep;
-                            target.INVENTORY.EFFECTS.Add(ef);
-                            usedEffect = true;
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.EFFECT = SideEffect.sleep;
+                                ef.TURNS = 1;
+                                target.INVENTORY.EFFECTS.Add(ef);
+                                usedEffect = true;
+                            }
                         }
                     }
                     break;
@@ -13855,12 +13939,29 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.frozen, target))
                         {
-                            CreateTextEvent(this, target.FullName + " has been frozen", "auto atk", CheckText, TextStart);
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                            {
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.freeze)
+                                {
+                                    CreateTextEvent(this, target.FullName + " is freezing longer", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
+                            }
+                            if (foundOne == false)
+                            {
 
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.freeze;
-                            target.INVENTORY.EFFECTS.Add(ef);
-                            usedEffect = true;
+                                CreateTextEvent(this, target.FullName + " has been frozen", "auto atk", CheckText, TextStart);
+
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.EFFECT = SideEffect.freeze;
+                                ef.TURNS = 1;
+                                target.INVENTORY.EFFECTS.Add(ef);
+                                usedEffect = true;
+                            }
                         }
                     }
                     break;
@@ -13868,12 +13969,28 @@ public class ManagerScript : EventRunner
                     {
                         if (Common.LogicCheckStatus(StatusEffect.burned, target))
                         {
-                            CreateTextEvent(this, target.FullName + " has been burned", "auto atk", CheckText, TextStart);
+                            bool foundOne = false;
+                            for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                            {
+                                EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                                if (someEffect.EFFECT == SideEffect.burn)
+                                {
+                                    CreateTextEvent(this, target.FullName + " burn got worse", "auto atk", CheckText, TextStart);
+                                    someEffect.TURNS += 1;
+                                    foundOne = true;
+                                    break;
+                                }
+                            }
+                            if (foundOne == false)
+                            {
+                                CreateTextEvent(this, target.FullName + " has been burned", "auto atk", CheckText, TextStart);
 
-                            EffectScript ef = PoolManager.GetManager().GetEffect();
-                            ef.EFFECT = SideEffect.burn;
-                            target.INVENTORY.EFFECTS.Add(ef);
-                            usedEffect = true;
+                                EffectScript ef = PoolManager.GetManager().GetEffect();
+                                ef.TURNS = 2;
+                                ef.EFFECT = SideEffect.burn;
+                                target.INVENTORY.EFFECTS.Add(ef);
+                                usedEffect = true;
+                            }
                         }
                     }
                     break;
@@ -13881,12 +13998,29 @@ public class ManagerScript : EventRunner
                 case SideEffect.bleed:
                     if (Common.LogicCheckStatus(StatusEffect.bleeding, target))
                     {
-                        CreateTextEvent(this, target.FullName + " started bleeding", "auto atk", CheckText, TextStart);
+                        bool foundOne = false;
+                        for (int i = 0; i < target.INVENTORY.EFFECTS.Count; i++)
+                        {
+                            EffectScript someEffect = target.INVENTORY.EFFECTS[i];
+                            if (someEffect.EFFECT == SideEffect.bleed)
+                            {
+                                CreateTextEvent(this, target.FullName + " bleeding got worse", "auto atk", CheckText, TextStart);
+                                someEffect.TURNS += 1;
+                                foundOne = true;
+                                break;
+                            }
+                        }
+                        if (foundOne == false)
+                        {
 
-                        EffectScript ef = PoolManager.GetManager().GetEffect();
-                        ef.EFFECT = SideEffect.bleed;
-                        target.INVENTORY.EFFECTS.Add(ef);
-                        usedEffect = true;
+                            CreateTextEvent(this, target.FullName + " started bleeding", "auto atk", CheckText, TextStart);
+
+                            EffectScript ef = PoolManager.GetManager().GetEffect();
+                            ef.EFFECT = SideEffect.bleed;
+                            ef.TURNS = 2;
+                            target.INVENTORY.EFFECTS.Add(ef);
+                            usedEffect = true;
+                        }
                     }
                     break;
                 case SideEffect.debuff:
@@ -14358,6 +14492,8 @@ public class ManagerScript : EventRunner
 
     public void TutorialStart(Object data)
     {
+        if (defaultSceneEntry == 20)
+            return;
         SkillEventContainer tutorialExtra = data as SkillEventContainer;
 
         string[] helpParsed = tutorialExtra.name.Split(';');
@@ -14974,7 +15110,7 @@ public class ManagerScript : EventRunner
         bool nextround = true;
         for (int i = 0; i < turnOrder.Count; i++)
         {
-           // Debug.Log("checking: " + turnOrder[i].FullName + " with ap: " + turnOrder[i].ACTIONS);
+            // Debug.Log("checking: " + turnOrder[i].FullName + " with ap: " + turnOrder[i].ACTIONS);
             if (turnOrder[i].ACTIONS > 0)
             {
 

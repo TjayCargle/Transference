@@ -28,7 +28,7 @@ oi,6,7
 stt,help,help
 sti,5,8
 ex,0,10
-st,1,2,8
+st,16,23,24
 -e,10
 g,23
 gi,1

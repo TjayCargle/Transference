@@ -150,7 +150,7 @@ public class CameraScript : MonoBehaviour
                 {
                     hoverTime += 2 * Time.deltaTime;
 
-                    if (hoverTime >= 1.5f)
+                    if (hoverTime >= 2.5f)
                     {
 
                         moving = true;

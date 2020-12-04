@@ -62,6 +62,20 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         controller.SetPlay();
     }
 
+    public void PressMusix()
+    {
+
+        controller.SetMusic();
+    }
+
+
+    public void PressCam()
+    {
+
+        controller.SetCamera();
+    }
+
+
     public void PressControls()
     {
 

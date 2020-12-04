@@ -111,13 +111,12 @@ public class OptionsManager : MonoBehaviour
             isSetup = true;
         }
     }
-    private void Start()
+  
+    private void OnEnable()
     {
         Setup();
-    }
-    private void Awake()
-    {
-        Setup();
+        loadSettings();
+        ForceUpdate();
     }
     void ChangeBattleAnim(Toggle change)
     {

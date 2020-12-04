@@ -27,6 +27,8 @@ public class NonCombatController : MonoBehaviour
     public Canvas patchCnvs;
     public Canvas mainCanvas;
     public Canvas playCanvas;
+    public GameObject musicCanvas;
+    public GameObject cameraCanvas;
     public Animator[] animators;
     private AudioSource source;
     public AudioClip[] clips;
@@ -79,6 +81,16 @@ public class NonCombatController : MonoBehaviour
         {
             mainCanvas.gameObject.SetActive(false);
         }
+
+        if (musicCanvas)
+        {
+            musicCanvas.gameObject.SetActive(false);
+        }
+
+        if (cameraCanvas)
+        {
+            cameraCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void SetUnPlay()
@@ -105,8 +117,51 @@ public class NonCombatController : MonoBehaviour
             mainCanvas.gameObject.SetActive(true);
         }
 
+        if (musicCanvas)
+        {
+            musicCanvas.gameObject.SetActive(false);
+        }
+
+        if (cameraCanvas)
+        {
+            cameraCanvas.gameObject.SetActive(false);
+        }
+    }
+    public void TurnOff(GameObject someObj)
+    {
+        someObj.gameObject.SetActive(false);
+    }
+
+    public void SetMusic()
+    {
+    
+        if (musicCanvas)
+        {
+            musicCanvas.gameObject.SetActive(true);
+        }
+
+        if (cameraCanvas)
+        {
+            cameraCanvas.gameObject.SetActive(false);
+        }
 
     }
+
+    public void SetCamera()
+    {
+
+        if (musicCanvas)
+        {
+            musicCanvas.gameObject.SetActive(false);
+        }
+
+        if (cameraCanvas)
+        {
+            cameraCanvas.gameObject.SetActive(true);
+        }
+
+    }
+
     public void HitButton()
     {
         if(!loading)
@@ -119,6 +174,16 @@ public class NonCombatController : MonoBehaviour
                 {
                     case 0:
                         selectedButton.PressStart();
+
+                        break;
+
+                    case 7:
+                        selectedButton.PressMusix();
+
+                        break;
+
+                    case 8:
+                        selectedButton.PressCam();
 
                         break;
 

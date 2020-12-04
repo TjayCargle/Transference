@@ -1085,6 +1085,9 @@ public class LivingObject : GridObject
                 myManager.currOppList.Remove(this);//Clear();
             }
         }
+
+        myManager.UpdateTurns();
+
     }
     public bool TakeActionEvent(Object data)
     {

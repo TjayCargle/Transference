@@ -90,6 +90,9 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         }
         MenuItemType item = (MenuItemType)itemType;
         // Debug.Log("Menu item :" + item);
+        LeanTween.rotateX(gameObject, 180.0f, 0.2f ).setOnComplete(x => { 
+        gameObject.transform.rotation = Quaternion.Euler( Vector3.zero);
+
         switch (item)
         {
             case MenuItemType.Move:
@@ -103,7 +106,6 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     //entry.index = myManager.invManager.currentIndex;
                     //entry.menu = currentMenu.command;
                     //myManager.enterState(entry);
-
                     myManager.StackNewSelection(State.PlayerMove, currentMenu.command);
 
                     if (invokingObject.GetComponent<AnimationScript>())
@@ -776,6 +778,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 break;
         }
         myManager.DidCompleteTutorialStep();
+        });
     }
 
     public void PlayerUseOrAtk(LivingObject invokingObject)

@@ -664,7 +664,7 @@ public enum BossCommand
 }
 public struct StringContainer
 {
-   public string dataString;
+    public string dataString;
 }
 public class MassAtkConatiner : ScriptableObject
 {
@@ -780,6 +780,34 @@ public enum tutorialStep
     hackGlyph,
     showTutorial
 
+}
+
+public enum StorySection
+{
+    Jax1,
+    Jax2,
+    Jax3,
+    Jax4,
+    Zeff1,
+    Zeff2,
+    Zeff3,
+    Zeff4,
+    Pryina1,
+    Pryina2,
+    Pryina3,
+    Pryina4,
+    Flara1,
+    Flara2,
+    Flara3,
+    Flara4,
+    Sapphire1,
+    Sapphire2,
+    Sapphire3,
+    Sapphire4,
+    Lukon1,
+    Lukon2,
+    Lukon3,
+    Lukon4
 }
 
 public enum currentMenu
@@ -1093,6 +1121,7 @@ public class Common : ScriptableObject
     public static CommandSkill CommonDebuffSpd = CreateInstance<CommandSkill>();
     public static UsableScript GenericUsable = CreateInstance<UsableScript>();
     public static CommandSkill GenericSkill = CreateInstance<CommandSkill>();
+    public static bool newGame = true;
     //public static WeaponScript noWeapon = CreateInstance<WeaponScript>();
     // public static readonly ArmorScript noArmor = new ArmorScript();
 
@@ -1111,9 +1140,9 @@ public class Common : ScriptableObject
     public static bool summonedZeffron = false;
     public static bool enemiesCompletedPhase = false;
     public static bool haveBeenCrippled = false;
-	public static bool hasAllocated = false;
+    public static bool hasAllocated = false;
     public static bool hasGainedSkill = false;
-	public static bool hasLearnedFromEnemy = false;
+    public static bool hasLearnedFromEnemy = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
@@ -2214,7 +2243,7 @@ public class Common : ScriptableObject
         if (index == 101)
         {
             BossScript someProfile = enemy.specialProfile;
-            if(someProfile == null)
+            if (someProfile == null)
             {
                 someProfile = enemy.specialProfile = ScriptableObject.CreateInstance<BossScript>();
                 someProfile.currentPhase = BossPhase.none;
@@ -2236,7 +2265,7 @@ public class Common : ScriptableObject
                     break;
                 case BossPhase.inital:
                     {
-                    someProfile.currentPhase = BossPhase.angry;
+                        someProfile.currentPhase = BossPhase.angry;
                         if (someProfile.commands == null)
                             someProfile.commands = new List<BossCommand>();
                         else
@@ -2252,7 +2281,7 @@ public class Common : ScriptableObject
                     break;
                 case BossPhase.angry:
                     {
-                    someProfile.currentPhase = BossPhase.desperate;
+                        someProfile.currentPhase = BossPhase.desperate;
                         if (someProfile.commands == null)
                             someProfile.commands = new List<BossCommand>();
                         else
@@ -2643,7 +2672,7 @@ public class Common : ScriptableObject
                 break;
             case 2:
                 {
-                    returnedString = "Crippling; The 'Crippled' status is applied for 1 turn when a character takes <color=yellow>Crippling</color> or <color=yellow>Leathal</color> damage. While crippled, the character <color=yellow>deals half damage</color>, <color=yellow>takes double the damage</color>, and can <color=yellow>only move 1 tile at a time</color>.";
+                    returnedString = "Crippling; The 'Crippled' status is applied for 1 turn when a character takes <color=yellow>Crippling</color> or <color=yellow>Lethal</color> damage. While crippled, the character <color=yellow>deals half damage</color>, <color=yellow>takes double the damage</color>, and can <color=yellow>only move 1 tile at a time</color>.";
                 }
                 break;
             case 3:
@@ -2658,7 +2687,7 @@ public class Common : ScriptableObject
                 break;
             case 5:
                 {
-                    returnedString = "Glyphs; Glyph technology is the latest advancemenet in home security. Though Glyphs cannot move, they have many features that will be a hindrance to intruders. Movement Glyphs for example restrict movement, preventing intruders from getting in or out too quickly. ";
+                    returnedString = "Glyphs; Glyph technology is the latest advancement in home security. Though Glyphs cannot move, they have many features that will be a hindrance to intruders. Movement Glyphs for example restrict movement, preventing intruders from getting in or out too quickly. ";
                 }
                 break;
             case 6:
@@ -2673,7 +2702,7 @@ public class Common : ScriptableObject
                 break;
             case 14:
                 {
-                    returnedString = "Swap Tiles; Swap Tiles are a type of movement tile that causes the attacker to echange places with the target of their attack. The swap does not occur if the attack misses or an item is used.";
+                    returnedString = "Swap Tiles; Swap Tiles are a type of movement tile that causes the attacker to exchange places with the target of their attack. The swap does not occur if the attack misses or an item is used.";
                 }
                 break;
             case 18:
@@ -2693,7 +2722,7 @@ public class Common : ScriptableObject
                 break;
             case 7:
                 {
-                    returnedString = "Scorpiees; Thanks to the Great Cataclysm, Bees and Scorpions have now fused into the Scorpiee: a tough inscect that now have a 50% chance to resist fire or be weak to it! To think back in the day people thought roaches would be the bugs to survive anything!";
+                    returnedString = "Scorpiees; Thanks to the Great Cataclysm, Bees and Scorpions have now fused into the Scorpiee: a tough insect that now have a 50% chance to resist fire or be weak to it! To think back in the day people thought roaches would be the bugs to survive anything!";
                 }
                 break;
             case 8:
@@ -2708,32 +2737,32 @@ public class Common : ScriptableObject
                 break;
             case 10:
                 {
-                    returnedString = "Hacking; Glyph Technology is relatively new and while they are hard to destroy by attacking, they are highly subseptible to hacking if you can get close enough. By putting in the self destruct sequence you may even be able to find a Glyph Core which some may find useful. ";
+                    returnedString = "Hacking;Glyph Technology is relatively new and while they are hard to destroy by attacking, they are highly susceptible to hacking if you can get close enough. \nEvery Glyph has a <color=yellow>9 sequence</color> pattern that will cause it to cease function.  Pay attention to which <color=yellow>color unlocks an entry</color>";
                 }
                 break;
             case 11:
                 {
-                    returnedString = "Movement; Characters can move freely while there are no enemies in the room, otherwise their movement space is reduced based on the character.";
+                    returnedString = "Movement;Characters can move freely while there are no enemies in the room, otherwise their movement space is reduced based on the character.";
                 }
                 break;
             case 12:
                 {
-                    returnedString = "Action Points; Action Points or AP determines how many times a character can perform an action in a turn. \n At the begining of the phase, <color=yellow>characters are given 3 AP to use</color>. Additional <color=yellow>AP is given for every 10 speed</color> that character has.";
+                    returnedString = "Action Points;Action Points or AP determines how many times a character can perform an action in a turn. \nAt the beginning of the phase, <color=yellow>characters are given 3 AP to use</color>. Additional <color=yellow>AP is given for every 10 speed</color> that character has.";
                 }
                 break;
             case 15:
                 {
-                    returnedString = "Extra Action Points; Choosing either Wait or Guard as the only action for a character's turn will grant that character +2 action points for the next phase. Since action points are distributed at the begining of the phase, this will not stack with itself. ";
+                    returnedString = "Extra Action Points; Choosing either Wait or Guard as the only action for a character's turn will grant that character +2 action points for the next phase. Since action points are distributed at the beginning of the phase, this will not stack with itself. ";
                 }
                 break;
             case 16:
                 {
-                    returnedString = "Barriers; Summoning a Barrier will change the resistances of the character that summonned it for a set period of time. They also give bonus Def/Res/Spd stats while active. However, a barrier can only take damage up to 40% of the user's max Health which is showcased by the barrier's 'Strength'. ";
+                    returnedString = "Barriers; Summoning a Barrier will change the resistances of the character that summoned it for a set period of time. They also give bonus Def/Res/Spd stats while active. However, a barrier can only take damage up to 40% of the user's max Health which is showcased by the barrier's 'Strength'. ";
                 }
                 break;
             case 17:
                 {
-                    returnedString = "Weaknesses and Resistances;There are 4 types of weaknesses (displayed in<color=red> red</color>) and 4 types of resistances (displayed in<color=blue> blue</color>).\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn. However characters who<color=yellow> hit a target's resistance will gain AP</color> for next turn."; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Cripling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                    returnedString = "Weaknesses and Resistances; There are 4 types of weaknesses (displayed in<color=yellow> red</color>) and 4 types of resistances (displayed in<color=yellow> blue</color>).\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn. However characters who<color=yellow> hit a target's resistance will gain AP</color> for next turn."; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Crippling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
                 }
                 break;
             case 21:
@@ -2743,27 +2772,27 @@ public class Common : ScriptableObject
                 break;
             case 22:
                 {
-                    returnedString = "Wait & Heal; Choosing to Wait & Heal will recover Health, Mana, and lower Fatigue. It is reccommended to wait and heal before moving on to new rooms.";
+                    returnedString = "Swap Tiles; Swap Tiles are a type of movement tile that causes the attacker to exchange places with the target of their attack. The swap does not occur if the attack misses or an item is used.";
                 }
                 break;
             case 23:
                 {
-                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\n While on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already exchanged attacks with that character.";
+                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\nWhile on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already exchanged attacks with that character.";
                 }
                 break;
-			case 24:
+            case 24:
                 {
                     returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n<color=yellow>Strikes</color> reuquire a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
                 }
                 break;
-			case 25:
+            case 25:
                 {
                     returnedString = "Learn from Enemies; When you defeat an enemy, you have a chance of <color=yellow>learning one of the enemy's attacks</color> if they have any attacks that you haven't learned.\n\nFor the purposes of this demo, you will have <color=yellow>100% chance to learn a new attack</color> from an enemy.";
                 }
                 break;
             case 26:
                 {
-                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own desicions</color>.\nIn addition to prompts, more information will be availble on tiles marked with a <color=yellow>question mark</color>.\nGood luck and remeber: <color=yellow>the choice is yours.</color>";
+                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own decisions</color>.\nIn addition to prompts, more information will be available on tiles marked with a <color=yellow>question mark</color>.\nGood luck and remember: <color=yellow>the choice is yours.</color>";
                 }
                 break;
             case 27:
@@ -2773,16 +2802,17 @@ public class Common : ScriptableObject
                 break;
             case 28:
                 {
-                    returnedString = "Factions & Races;All charcaters belong to a specific faction. By default the faction you belong to directly tied to your race. However, anyone is free to leave their faction for another if allowed.\n\n Enemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
+                    returnedString = "Factions & Races;All charcaters belong to a specific faction. By default the faction you belong to directly tied to your race. However, anyone is free to leave their faction for another if allowed.\n\nEnemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
                 }
                 break;
             case 29:
                 {
-                    returnedString = "Skills;While Jax started with magical spells and mental strikes, Zeffron starts with physical skills.\n\nSkills utilize the <color=yellow>fatigue meter</color>. Some skills must <color=yellow>charge the FT meter</color> by a specific amount, while others must <color=yellow>drain the FT meter</color> by a specific amount.\nBe mindful of your fatigue and which skills you can use.";
+                    returnedString = "Skills;While Jax started with magical spells and mental strikes, Zeffron starts with physical skills.\n\nSkills utilize the <color=yellow>fatigue meter</color>. Some skills must <color=yellow>charge the FT meter</color> by a specific amount, while others must <color=yellow>drain the FT meter</color> by a specific amount.";
                 }
                 break;
             default:
                 break;
+
         }
 
         return returnedString;
