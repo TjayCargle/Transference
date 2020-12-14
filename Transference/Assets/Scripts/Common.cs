@@ -662,6 +662,14 @@ public enum BossCommand
     shield,
     overload
 }
+public enum NonCombatButtonAction
+{
+    none,
+    openChapterSelect,
+    setChapter,
+    newGame,
+    continueGame
+}
 public struct StringContainer
 {
     public string dataString;
@@ -3348,5 +3356,107 @@ public class Common : ScriptableObject
         detail.StartingPosition = data.StartingPosition;
 
         return detail;
+    }
+    public static string GetMapDetailAsString(MapDetail data)
+    {
+        string details = "";
+
+        details += data.mapIndex + ",";
+        details+= data.mapName + ",";
+        details+= data.width + ",";
+        details += data.height + ",";
+        
+        details += data.doorIndexes.Count + "";     
+        for (int i = 0; i < data.doorIndexes.Count; i++)
+        {
+            details += "," + data.doorIndexes[i];
+        }
+
+        details += data.roomNames.Count + "";
+        for (int i = 0; i < data.roomNames.Count; i++)
+        {
+            details += "," + data.roomNames[i];
+        }
+
+        details += data.roomIndexes.Count + "";
+        for (int i = 0; i < data.roomIndexes.Count; i++)
+        {
+            details += "," + data.roomIndexes[i];
+        }
+
+        details += data.enemyIndexes.Count + "";
+        for (int i = 0; i < data.enemyIndexes.Count; i++)
+        {
+            details += "," + data.enemyIndexes[i];
+        }
+
+        details += data.hazardIndexes.Count + "";
+        for (int i = 0; i < data.hazardIndexes.Count; i++)
+        {
+            details += "," + data.hazardIndexes[i];
+        }
+
+        details += data.hazardIds.Count + "";
+        for (int i = 0; i < data.hazardIds.Count; i++)
+        {
+            details += "," + data.hazardIds[i];
+        }
+
+        details += data.shopIndexes.Count + "";
+        for (int i = 0; i < data.shopIndexes.Count; i++)
+        {
+            details += "," + data.shopIndexes[i];
+        }
+
+        details += data.startIndexes.Count + "";
+        for (int i = 0; i < data.startIndexes.Count; i++)
+        {
+            details += "," + data.startIndexes[i];
+        }
+
+        details += data.objMapIndexes.Count + "";
+        for (int i = 0; i < data.objMapIndexes.Count; i++)
+        {
+            details += "," + data.objMapIndexes[i];
+        }
+
+        details += data.objIds.Count + "";
+        for (int i = 0; i < data.objIds.Count; i++)
+        {
+            details += "," + data.objIds[i];
+        }
+
+        details += data.specialiles.Count + "";
+        for (int i = 0; i < data.specialiles.Count; i++)
+        {
+            details += "," + data.specialiles[i];
+        }
+
+        details += data.tilesInShadow.Count + "";
+        for (int i = 0; i < data.tilesInShadow.Count; i++)
+        {
+            details += "," + data.tilesInShadow[i];
+        }
+
+        details += data.specialExtra.Count + "";
+        for (int i = 0; i < data.specialExtra.Count; i++)
+        {
+            details += "," + data.specialExtra[i];
+        }
+
+        details += data.tileIndexes.Count + "";
+        for (int i = 0; i < data.tileIndexes.Count; i++)
+        {
+            details += "," + data.tileIndexes[i];
+        }
+
+        details += data.unOccupiedIndexes.Count + "";
+        for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
+        {
+            details += "," + data.unOccupiedIndexes[i];
+        }       
+
+
+        return details;
     }
 }

@@ -46,5 +46,9 @@ public class BaseStats : StatScript {
         set { myLevel = value; }
     }
 
-
+    public override string ToString()
+    {
+        return "" + MAX_HEALTH + "," + MAX_MANA + "," + MAX_FATIGUE + "," + MOVE_DIST + "," + STRENGTH + "," + MAGIC + "," + DEX + "," + DEFENSE + "," + RESIESTANCE + "," + SPEED
+            + "," + EXP + "," + PHYSEXP + "," + MAGEXP + "," + SKILLEXP + "," + LEVEL;
+    }
 }

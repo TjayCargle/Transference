@@ -94,14 +94,10 @@ public class ModifiedStats : StatScript {
 
     }
 
-
-
-
-
-
-
-
-
+    public override string ToString()
+    {
+        return "" + HEALTH + "," + MANA + "," + FATIGUE;
+    }
 
 
 }

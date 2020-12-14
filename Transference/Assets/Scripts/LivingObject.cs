@@ -64,6 +64,10 @@ public class LivingObject : GridObject
     [SerializeField]
     protected UnityEngine.UI.Slider myWorldHealthBar = null;
 
+    [SerializeField]
+    protected TextMeshProUGUI blackWeaknessText = null;
+    protected TextMeshProUGUI WeaknessText = null;
+
     public TextMeshPro TEXT
     {
         get { return actionCounterText; }
@@ -323,12 +327,81 @@ public class LivingObject : GridObject
     {
         get { return dexLevel; }
     }
+    protected string getArrowIcon(EHitType hitType)
+    {
+        string returnString = "<size=0.2><sprite=";
+        switch (hitType)
+        {
+            case EHitType.absorbs:
+                returnString += 26;
+                break;
+            case EHitType.nulls:
+                returnString += 29;
+                break;
+            case EHitType.reflects:
+                returnString += 30;
+                break;
+            case EHitType.resists:
+                returnString += 31;
+                break;
+            case EHitType.normal:
+                break;
+            case EHitType.weak:
+                returnString += 17;
+                break;
+            case EHitType.savage:
+                returnString += 20;
+                break;
+            case EHitType.cripples:
+                returnString += 22;
+                break;
+            case EHitType.lethal:
+                returnString += 24;
+                break;
+        }
+        returnString += ">";
 
-    //public bool IsEnenmy
-    //{
-    //    get { return isEnenmy; }
-    //    set { isEnenmy = value; }
-    //}
+        return returnString;
+    }
+    public void ShowHideWeakness(EHitType hitType, bool show = true)
+    {
+        if (WeaknessText != null)
+        {
+            if (blackWeaknessText != null)
+            {
+                if (show == true)
+                {
+                    if (hitType == EHitType.normal)
+                    {
+                        WeaknessText.gameObject.SetActive(false);
+                        blackWeaknessText.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+
+                        string middleStrin = "" + hitType;//.ToString().Substring(0, 1).ToUpper();
+                                                          //middleStrin += hitType.ToString().Substring(1, hitType.ToString().Length);
+                        middleStrin += getArrowIcon(hitType);
+                        WeaknessText.gameObject.SetActive(true);
+                        blackWeaknessText.gameObject.SetActive(true);
+                        WeaknessText.text = "" + middleStrin;
+                        blackWeaknessText.text = "" + middleStrin;
+                        if (hitType > EHitType.normal)
+                            WeaknessText.color = Common.red;
+                        else
+                            WeaknessText.color = Common.cyan;
+                    }
+                }
+                else
+                {
+                    WeaknessText.gameObject.SetActive(false);
+                    blackWeaknessText.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+
     protected UnityEngine.UI.Image healthFill = null;
     public void UpdateHealthbar()
     {
@@ -846,6 +919,13 @@ public class LivingObject : GridObject
             {
                 myHealthCanvas.worldCamera = Camera.main;
                 myWorldHealthBar = GetComponentInChildren<UnityEngine.UI.Slider>();
+                if (GetComponentsInChildren<TextMeshProUGUI>().Length >= 2)
+                {
+
+                    blackWeaknessText = GetComponentsInChildren<TextMeshProUGUI>()[0];
+                    WeaknessText = GetComponentsInChildren<TextMeshProUGUI>()[1];
+                    ShowHideWeakness(EHitType.normal, false);
+                }
 
             }
 
@@ -1332,9 +1412,9 @@ public class LivingObject : GridObject
     public void TrueHeal()
     {
         ChangeHealth((int)((0.20f * MAX_HEALTH)));
-        if(myManager != null)
+        if (myManager != null)
         {
-            if(myManager.liveEnemies.Count == 0)
+            if (myManager.liveEnemies.Count == 0)
             {
                 ChangeHealth(100);
 
@@ -1452,7 +1532,7 @@ public class LivingObject : GridObject
 
         ACTIONS = 0;
         tookAction = false;
-   
+
     }
 
     public void turnUpdate(int bonus = 0)
@@ -1518,7 +1598,7 @@ public class LivingObject : GridObject
             BASE_STATS.DEX += Random.Range(0, dexLevel);
 
             if (show)
-            {          
+            {
                 myManager.CreateDmgTextEvent("LV UP ", Color.yellow, this, 1.2f);
             }
             UpdateHealthbar();
@@ -1563,11 +1643,11 @@ public class LivingObject : GridObject
             //BASE_STATS.MAX_FATIGUE += 5 + physLevel;
 
             // BASE_STATS.MAX_MANA += 2 + magLevel;
-            BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            BASE_STATS.MAX_HEALTH += LEVEL * dexLevel;
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=1>  + " + (2 + magLevel), Color.magenta, this);
-               // myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+                // myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
                 //myManager.CreateDmgTextEvent("<sprite=0>  + " + (5 + physLevel), Color.yellow, this);
                 //myManager.CreateDmgTextEvent("DEF + " + 2, Color.yellow, this);
                 //myManager.CreateDmgTextEvent("STR + " + 2, Color.yellow, this);
@@ -1590,8 +1670,8 @@ public class LivingObject : GridObject
             //else
             //{
             //}
-          //  BASE_STATS.STRENGTH += 1 + physLevel;
-           // BASE_STATS.DEFENSE += 1 + physLevel;
+            //  BASE_STATS.STRENGTH += 1 + physLevel;
+            // BASE_STATS.DEFENSE += 1 + physLevel;
             BASE_STATS.MAGIC += Random.Range(1, magLevel + 1);
             BASE_STATS.RESIESTANCE += Random.Range(1, magLevel + 1);
             //   BASE_STATS.SPEED += 1 + dexLevel;
@@ -1605,11 +1685,11 @@ public class LivingObject : GridObject
             STATS.MANA = BASE_STATS.MAX_MANA;
 
             //BASE_STATS.MAX_FATIGUE += 2 + physLevel;
-            BASE_STATS.MAX_HEALTH += 2 + dexLevel;
+            BASE_STATS.MAX_HEALTH += LEVEL * dexLevel;
             if (show)
             {
                 // myManager.CreateDmgTextEvent("<sprite=0>  + " + (2 + physLevel), Color.yellow, this);
-              //  myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
+                //  myManager.CreateDmgTextEvent("<sprite=2> + " + (2 + dexLevel), Color.green, this);
                 //  myManager.CreateDmgTextEvent("<sprite=1>  + " + (5 +magLevel), Color.magenta, this);
                 //myManager.CreateDmgTextEvent("RES + " + 2, Color.magenta, this);
                 //myManager.CreateDmgTextEvent("MAG + " + 2, Color.magenta, this);
@@ -1624,10 +1704,10 @@ public class LivingObject : GridObject
         if (BASE_STATS.SKILLEXP > 100)
         {
 
-          // BASE_STATS.STRENGTH += 1 + physLevel;
-          // BASE_STATS.DEFENSE += 1 + physLevel;
-          // BASE_STATS.MAGIC += 2 + magLevel;
-          // BASE_STATS.RESIESTANCE += 2 + magLevel;
+            // BASE_STATS.STRENGTH += 1 + physLevel;
+            // BASE_STATS.DEFENSE += 1 + physLevel;
+            // BASE_STATS.MAGIC += 2 + magLevel;
+            // BASE_STATS.RESIESTANCE += 2 + magLevel;
             BASE_STATS.SPEED += Random.Range(1, dexLevel + 1);
             BASE_STATS.DEX += Random.Range(1, dexLevel + 1);
 
@@ -1635,7 +1715,7 @@ public class LivingObject : GridObject
             dexLevel++;
             BASE_STATS.HPCOSTCHANGE += 1;
 
-            BASE_STATS.MAX_HEALTH += 5 + dexLevel;
+            BASE_STATS.MAX_HEALTH += LEVEL * dexLevel;
             STATS.HEALTH = BASE_STATS.MAX_HEALTH;
 
             // BASE_STATS.MAX_FATIGUE += 2 + physLevel;
@@ -1909,7 +1989,7 @@ public class LivingObject : GridObject
                 }
             }
         }
-     
+
         return useable;
     }
 
@@ -2053,5 +2133,12 @@ public class LivingObject : GridObject
 
             }
         }
+    }
+
+    public string GeneratteSaveString()
+    {
+        string saveString = "";
+
+        return saveString;
     }
 }

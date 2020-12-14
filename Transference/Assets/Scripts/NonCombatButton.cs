@@ -5,25 +5,30 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
+public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
     public int type;
     public NonCombatController controller;
     public GameObject loadingCanvas = null;
+    private Vector3 startLocation;
+    public int specialNumber = -1;
+    public NonCombatButtonAction myAction = NonCombatButtonAction.none;
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
+        startLocation = transform.position;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (controller)
         {
-
+            LeanTween.scale(this.gameObject, new Vector3(1.2f, 1.2f, 1.2f), 0.2f);//.setOnComplete(x => { });
+            LeanTween.moveLocalX(this.gameObject, 1.2f, 0.2f);
             controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
             controller.selectedButton = this;
             controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
-            // if(type < 3)
+            if (type < controller.targets.Length)
             {
                 controller.buttonIndex = type;
                 controller.currTarget = controller.targets[type];
@@ -90,14 +95,59 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         SceneManager.LoadScene("start");
     }
 
+    public void executeAction()
+    {
+        if (controller)
+        {
+
+            switch (myAction)
+            {
+                case NonCombatButtonAction.none:
+                    break;
+                case NonCombatButtonAction.openChapterSelect:
+                    controller.selectedCharacter = specialNumber;
+                    controller.OpenChapterSelect();
+                    break;
+                case NonCombatButtonAction.setChapter:
+                    controller.selectedChapter = specialNumber;
+                    controller.OpenNewContinue();
+                    break;
+                case NonCombatButtonAction.newGame:
+                    {
+                        controller.loading = true;
+                        if (controller.selectedCharacter == 1)
+                        {
+                            playJax();
+                        }
+                        else
+                        {
+                            playZeffron();
+                        }
+                    }
+                    break;
+                case NonCombatButtonAction.continueGame:
+                    {
+                        if (controller.selectedCharacter == 1)
+                        {
+                            playJax();
+                        }
+                        else
+                        {
+                            playZeffron();
+                        }
+                    }
+                    break;
+            }
+        }
+    }
     public void playJax()
     {
-        PlayerPrefs.SetInt("defaultSceneEntry", 26);
-        SceneManager.LoadSceneAsync("DemoMap5");
         if (loadingCanvas != null)
         {
             loadingCanvas.SetActive(true);
         }
+        PlayerPrefs.SetInt("defaultSceneEntry", 26);
+        SceneManager.LoadSceneAsync("DemoMap5");
     }
 
 
@@ -112,5 +162,11 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         if (controller != null)
             controller.HitButton();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        LeanTween.scale(this.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 0.2f);//.setOnComplete(x => { });
+        LeanTween.moveLocalX(this.gameObject, -1.2f, 0.2f);
     }
 }

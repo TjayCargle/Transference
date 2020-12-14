@@ -33,6 +33,10 @@ public class NonCombatController : MonoBehaviour
     private AudioSource source;
     public AudioClip[] clips;
     public bool loading = false;
+    public GameObject chapterSelectPanel;
+    public GameObject newContinuePanel;
+    public int selectedCharacter = -1;
+    public int selectedChapter = 1;
     // Use this for initialization
     void Start()
     {
@@ -91,6 +95,17 @@ public class NonCombatController : MonoBehaviour
         {
             cameraCanvas.gameObject.SetActive(false);
         }
+
+        if(chapterSelectPanel)
+        {
+            chapterSelectPanel.SetActive(false);
+        }
+
+        if(newContinuePanel)
+        {
+            newContinuePanel.SetActive(false);
+
+        }
     }
 
     public void SetUnPlay()
@@ -125,6 +140,40 @@ public class NonCombatController : MonoBehaviour
         if (cameraCanvas)
         {
             cameraCanvas.gameObject.SetActive(false);
+        }
+
+        if (chapterSelectPanel)
+        {
+            chapterSelectPanel.SetActive(false);
+        }
+
+        if (newContinuePanel)
+        {
+            newContinuePanel.SetActive(false);
+
+        }
+    }
+
+    public void OpenChapterSelect()
+    {
+        if (chapterSelectPanel)
+        {
+            chapterSelectPanel.SetActive(true);
+        }
+
+        if (newContinuePanel)
+        {
+            newContinuePanel.SetActive(false);
+
+        }
+    }
+    public void OpenNewContinue()
+    {
+     
+        if (newContinuePanel)
+        {
+            newContinuePanel.SetActive(true);
+
         }
     }
     public void TurnOff(GameObject someObj)
@@ -231,8 +280,9 @@ public class NonCombatController : MonoBehaviour
                     case 4:
                         {
 
-                            loading = true;
-                    selectedButton.playJax();
+                            //       loading = true;
+                            // selectedButton.playJax();
+                            selectedButton.executeAction();
                         }
 
                     break;

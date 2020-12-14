@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public class ManagerScript : EventRunner
 {
 
@@ -3271,6 +3270,17 @@ public class ManagerScript : EventRunner
         {
             myCamera.SetCameraPosOffsetZoom();
         }
+        if (GetState() != State.PlayerAttacking)
+        {
+            if (GetState() != State.EnemyTurn)
+            {
+                for (int k = 0; k < liveEnemies.Count; k++)
+                {
+                    liveEnemies[k].ShowHideWeakness(EHitType.normal, false);
+
+                }
+            }
+        }
         if (GetState() == State.PlayerAttacking)
         {
             myCamera.attackingCheck = true;
@@ -3688,7 +3698,7 @@ public class ManagerScript : EventRunner
 
     public void MovetoMousePos(LivingObject movedObj)
     {
-        if(movingObj == null)
+        if (movingObj == null)
         {
             returnState();
         }
@@ -5039,11 +5049,11 @@ public class ManagerScript : EventRunner
             {
                 if (hazards[i].INVENTORY.CSKILLS[0].SUBTYPE == SubSkillType.Magic)
                 {
-                    hazards[i].GainMagExp(80);
+                    hazards[i].GainMagExp(80,false);
                 }
                 else
                 {
-                    hazards[i].GainPhysExp(80);
+                    hazards[i].GainPhysExp(80, false);
                 }
             }
             hazards[i].MapIndex = map.hazardIndexes[i];
@@ -5844,6 +5854,28 @@ public class ManagerScript : EventRunner
         }
 
 
+    }
+
+    public void SaveGame()
+    {
+        string saveString = "";
+        saveString += currentMap.mapIndex;
+
+        saveString += Common.GetMapDetailAsString(currentMap) + ",";
+
+        for (int i = 0; i < visitedMaps.Count; i++)
+        {
+            saveString += Common.GetMapDetailAsString(visitedMaps[i]) + ",";
+        }
+        LivingObject[] liveObjects = GameObject.FindObjectsOfType<LivingObject>();
+        saveString += liveObjects.Length;
+        for (int i = 0; i < liveObjects.Length; i++)
+        {
+            if(liveObjects[i].DEAD == false)
+            {
+                saveString += "," + database.GenerateSaveString(liveObjects[i]) ;
+            }
+        }
     }
 
     public void Clear()
@@ -9793,6 +9825,18 @@ public class ManagerScript : EventRunner
                             {
                                 tempTiles[i][j].MYCOLOR = Common.pink;
                             }
+                            if (GetState() != State.EnemyTurn)
+                            {
+                                for (int k = 0; k < liveEnemies.Count; k++)
+                                {
+                                    if (tempTiles[i][j] == liveEnemies[k].currentTile)
+                                    {
+
+                                        EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
+                                            liveEnemies[k].ShowHideWeakness(hitType);
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -9803,6 +9847,19 @@ public class ManagerScript : EventRunner
                             else if (tempTiles[i][j].MYCOLOR != Common.red)
                             {
                                 tempTiles[i][j].MYCOLOR = Common.pink;
+                            }
+
+                            if (GetState() != State.EnemyTurn)
+                            {
+                                for (int k = 0; k < liveEnemies.Count; k++)
+                                {
+                                    if (tempTiles[i][j] == liveEnemies[k].currentTile)
+                                    {
+
+                                        EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
+                                            liveEnemies[k].ShowHideWeakness(hitType);
+                                    }
+                                }
                             }
                         }
 
@@ -9896,6 +9953,7 @@ public class ManagerScript : EventRunner
             return;
         if (GetState() == State.PlayerOppOptions)
             return;
+
         if (tempTiles.Count > 0)
         {
             for (int i = 0; i < tempTiles.Count; i++) //list of lists
@@ -9912,6 +9970,18 @@ public class ManagerScript : EventRunner
                         {
                             tempTiles[i][j].MYCOLOR = Common.pink;
                         }
+                        if (GetState() != State.EnemyTurn)
+                        {
+                            for (int k = 0; k < liveEnemies.Count; k++)
+                            {
+                                if (tempTiles[i][j] == liveEnemies[k].currentTile)
+                                {
+
+                                    EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
+                                        liveEnemies[k].ShowHideWeakness(hitType);
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -9923,6 +9993,19 @@ public class ManagerScript : EventRunner
                         {
                             tempTiles[i][j].MYCOLOR = Common.pink;
                         }
+
+                        if (GetState() != State.EnemyTurn)
+                        {
+                            for (int k = 0; k < liveEnemies.Count; k++)
+                            {
+                                if (tempTiles[i][j] == liveEnemies[k].currentTile)
+                                {
+
+                                    EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
+                                        liveEnemies[k].ShowHideWeakness(hitType);
+                                }
+                            }
+                        }
                     }
 
 
@@ -9931,6 +10014,8 @@ public class ManagerScript : EventRunner
             }
 
         }
+
+
     }
 
     public List<int> GetTargetList()

@@ -1521,6 +1521,85 @@ public class DatabaseManager : MonoBehaviour
 
     }
 
+    public string GenerateSaveString(LivingObject someObject)
+    {
+
+
+
+        string lines = "";
+        if (someObject != null)
+        {
+            string[] parsed = lines.Split(',');
+           // if (reciever != null)
+            {
+            
+                string details = "";
+                details += someObject.FullName + ",";
+                details += someObject.FACTION + ",";
+                details += someObject.id + ",";
+                details += someObject.ACTIONS + ",";
+                details += someObject.currentTile.listindex;
+                details += "" + (someObject.BASE_STATS).ToString() + ",";
+                details += "" + (someObject.STATS).ToString() + ",";
+
+                details += "" + someObject.INVENTORY.WEAPONS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.WEAPONS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.WEAPONS[i].INDEX + "," + someObject.INVENTORY.WEAPONS[i].LEVEL;
+                }
+
+                details += "," + someObject.INVENTORY.ARMOR.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.ARMOR.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.ARMOR[i].INDEX + "," + someObject.INVENTORY.ARMOR[i].LEVEL;
+                }
+                details += "," + someObject.INVENTORY.CSKILLS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.CSKILLS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.CSKILLS[i].INDEX + "," + someObject.INVENTORY.CSKILLS[i].LEVEL;
+                }
+                details += "," + someObject.INVENTORY.COMBOS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.COMBOS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.COMBOS[i].INDEX + "," + someObject.INVENTORY.COMBOS[i].LEVEL;
+                }
+
+                details += "," + someObject.INVENTORY.AUTOS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.AUTOS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.AUTOS[i].INDEX + "," + someObject.INVENTORY.AUTOS[i].LEVEL;
+                }
+
+                details += "," + someObject.INVENTORY.OPPS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.OPPS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.OPPS[i].INDEX + "," + someObject.INVENTORY.OPPS[i].LEVEL;
+                }
+
+                details += "," + someObject.INVENTORY.ITEMS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.ITEMS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.ITEMS[i].INDEX + "," + someObject.INVENTORY.ITEMS[i].LEVEL;
+                }
+
+                details += "," + someObject.INVENTORY.EFFECTS.Count + "";
+                for (int i = 0; i < someObject.INVENTORY.EFFECTS.Count; i++)
+                {
+                    details += "," + someObject.INVENTORY.EFFECTS[i].EFFECT + "," + someObject.INVENTORY.EFFECTS[i].TURNS;
+                }
+                //item.DEATS = details;
+                // item.UpdateDesc();
+
+                return details;
+            }
+        }
+
+
+        return null;
+        // reader.Close();
+
+    }
+
     public void GetHazard(int id, HazardScript newHazard)
     {
 
