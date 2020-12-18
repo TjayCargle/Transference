@@ -36,9 +36,10 @@ public class UsableScript : ScriptableObject
     [SerializeField]
     protected List<SkillEventContainer> specialEvents = new List<SkillEventContainer>();
 
-    public float EXP
+    public int EXP
     {
         get { return exp; }
+        set { exp = value; }
     }
     public LivingObject USER
     {
@@ -150,5 +151,15 @@ public class UsableScript : ScriptableObject
     {
 
     }
+
+    public virtual string GetDataString()
+    {
+        string returnString = "";
+
+        returnString += "" + index + "," + level + "," + exp + "," + maxExp + "," + useCount;
+
+        return returnString;
+    }
+
 
 }

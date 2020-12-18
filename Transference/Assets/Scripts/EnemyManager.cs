@@ -20,7 +20,7 @@ public class EnemyManager : MonoBehaviour {
         Setup();
     }
 
-    public List<EnemyScript> getEnemies(int num)
+    public List<EnemyScript> getEnemies( int num, int specialId = -1)
     {
 
         List<EnemyScript> subenemies = new List<EnemyScript>();
@@ -31,7 +31,9 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = enemies[i].GetComponent<EnemySetup>();
                 enemies[i].Unset();
                 enemySetup.Unset();
-                enemySetup.enemyId = Random.Range(0, 6);
+                if(specialId == -1)
+                    specialId = Random.Range(0, 6);
+                enemySetup.enemyId = specialId;
                 enemies[i].Setup();
                 //if(enemySetup.enemyId == 2)
                 //{
@@ -53,7 +55,9 @@ public class EnemyManager : MonoBehaviour {
                 enemies[i].Unset();
                 enemySetup.Unset();
 
-                enemySetup.enemyId = Random.Range(0, 4);
+                if (specialId == -1)
+                    specialId = Random.Range(0, 6);
+                enemySetup.enemyId = specialId;
                 enemies[i].Setup();
              
                 subenemies.Add(enemies[i]);
@@ -64,7 +68,9 @@ public class EnemyManager : MonoBehaviour {
                 EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
                 enemySetup.Unset();
 
-                enemySetup.enemyId = Random.Range(0, 6);
+                if (specialId == -1)
+                    specialId = Random.Range(0, 6);
+                enemySetup.enemyId = specialId;
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
                 if (enemySetup.enemyId == 2)
@@ -79,6 +85,10 @@ public class EnemyManager : MonoBehaviour {
                 subenemies.Add(enemy);
         
             }
+        }
+        for (int i = 0; i < subenemies.Count; i++)
+        {
+            enemies.Remove((enemies[0]));
         }
         return subenemies;
     }

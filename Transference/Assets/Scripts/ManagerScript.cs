@@ -587,9 +587,12 @@ public class ManagerScript : EventRunner
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            stackLog();
+            LoadGameAndScene();
         }
-
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SaveGame();
+        }
         {
             switch (currentState)
             {
@@ -3932,6 +3935,18 @@ public class ManagerScript : EventRunner
         movingObj = false;
     }
 
+    public LivingObject GetActor(int id)
+    {
+        GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+        jax.SetActive(true);
+        ActorSetup asetup = jax.GetComponent<ActorSetup>();
+        asetup.characterId = id;
+        LivingObject liveJax = jax.GetComponent<LivingObject>();
+        liveJax.FACTION = Faction.ally;
+        liveJax.Setup();
+        return liveJax;
+    }
+
     public void SetScene(SceneContainer scene)
     {
         if (eventImage)
@@ -5049,7 +5064,7 @@ public class ManagerScript : EventRunner
             {
                 if (hazards[i].INVENTORY.CSKILLS[0].SUBTYPE == SubSkillType.Magic)
                 {
-                    hazards[i].GainMagExp(80,false);
+                    hazards[i].GainMagExp(80, false);
                 }
                 else
                 {
@@ -5858,26 +5873,295 @@ public class ManagerScript : EventRunner
 
     public void SaveGame()
     {
+   
         string saveString = "";
-        saveString += currentMap.mapIndex;
 
         saveString += Common.GetMapDetailAsString(currentMap) + ",";
-
+        saveString += visitedMaps.Count;
         for (int i = 0; i < visitedMaps.Count; i++)
         {
-            saveString += Common.GetMapDetailAsString(visitedMaps[i]) + ",";
+            saveString += "," + Common.GetMapDetailAsString(visitedMaps[i]);
         }
         LivingObject[] liveObjects = GameObject.FindObjectsOfType<LivingObject>();
-        saveString += liveObjects.Length;
+        saveString += "," + liveObjects.Length;
         for (int i = 0; i < liveObjects.Length; i++)
         {
-            if(liveObjects[i].DEAD == false)
+            if (liveObjects[i].DEAD == false)
             {
-                saveString += "," + database.GenerateSaveString(liveObjects[i]) ;
+                saveString += "," + database.GenerateSaveString(liveObjects[i]);
             }
         }
+
+        Debug.Log(saveString);
+        PlayerPrefs.SetString(Common.JaxSaveSlot1, saveString);
     }
 
+
+    public void LoadGameAndScene()
+    {
+        MapDetail detail;
+
+        if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        {
+            string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
+
+            string[] dataString = loadString.Split(',');
+            int dataIIndex = 0;
+
+            detail = Common.ConstructMapFromStringArray(dataString, dataIIndex, ref dataIIndex);
+            //Assaign data to current map
+
+            // MapWidth = data.width;
+            // MapHeight = data.height;
+            Debug.Log(Common.GetMapDetailAsString(detail));
+            Debug.Log("num=" + dataIIndex);
+
+            int visitedCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out visitedCount);
+            Debug.Log("visited=" + visitedCount);
+            dataIIndex++;
+            visitedMaps.Clear();
+
+
+            Clear();
+            MapData data = database.GetMapData(detail.mapName);
+            data = Common.ConvertMapDetail2Data(detail, data);
+            if (null == tileMap || tileMap.Count == 0)
+            {
+                tileMap = tileManager.getTiles(data.width * data.height); // * MapHeight);
+            }
+            else
+            {
+                return;
+            }
+            LivingObject[] livingobjs = GameObject.FindObjectsOfType<LivingObject>();
+            int tileIndex = 0;
+            float tileHeight = 0;
+            float xoffset = 1 / (float)MapWidth;
+            float yoffset = 1 / (float)MapHeight;
+            float yElevation = 0;
+
+            for (int i = 0; i < data.width; i++)
+            {
+
+                for (int j = 0; j < data.height; j++)
+                {
+                    int mapIndex = TwoToOneD(j, data.width, i);
+                    TileScript tile = tileMap[tileIndex];
+                    tile.listindex = mapIndex;
+                    if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
+                        tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight) + yElevation, j * 2);
+                    else
+                        tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight), j * 2);
+                    tile.transform.parent = tileParent.transform;
+                    tile.name = "Tile " + mapIndex;
+                    tile.transform.rotation = Quaternion.Euler(90, 0, 0);
+                    tile.setTexture(data.texture);
+                    tile.EXTRA = "";
+                    tile.isInShadow = false;
+                    tile.TTYPE = TileType.regular;
+                    tile.setUVs((xoffset * (float)i), (xoffset * (float)(i + 1)), (yoffset * (float)j), (yoffset * (float)(j + 1)));
+                    tileIndex++;
+                    tile.canBeOccupied = true;
+                    if (mapIndex == data.xElevation)
+                    {
+                        data.yElevation = -1 * data.yElevation;
+                    }
+                }
+                yElevation += data.yElevation;
+
+            }
+            tileMap.Sort();
+            data.yElevation = -1 * data.yElevation;
+            for (int i = 0; i < data.doorIndexes.Count; i++)
+            {
+                tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
+                tileMap[data.doorIndexes[i]].MAP = data.roomNames[i];
+                tileMap[data.doorIndexes[i]].ROOM = data.roomIndexes[i];
+                tileMap[data.doorIndexes[i]].START = data.startIndexes[i];
+                tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
+                tileMap[data.doorIndexes[i]].TTYPE = TileType.door;
+            }
+            if (data.shopIndexes.Count > 0)
+            {
+
+                for (int i = 0; i < data.shopIndexes.Count; i++)
+                {
+                    tileMap[data.shopIndexes[i]].MAT.mainTexture = shopTexture;
+                    tileMap[data.shopIndexes[i]].setUVs(0, 1, 0, 1);
+                    tileMap[data.shopIndexes[i]].TTYPE = TileType.shop;
+                }
+
+            }
+            int extraIndex = 0;
+            if (data.tilesInShadow.Count > 0)
+            {
+                for (int i = 0; i < data.tilesInShadow.Count; i++)
+                {
+                    tileMap[data.tilesInShadow[i]].isInShadow = true;
+                }
+            }
+            if (data.specialTileIndexes.Count > 0)
+            {
+
+                for (int i = 0; i < data.specialTileIndexes.Count; i++)
+                {
+
+                    TileType newtype = data.specialiles[i];
+                    int specialIndex = data.specialTileIndexes[i];
+                    tileMap[specialIndex].MAT.mainTexture = Common.GetSpecialTexture(newtype);
+                    tileMap[specialIndex].setUVs(0, 1, 0, 1);
+                    tileMap[specialIndex].TTYPE = newtype;
+                    if (newtype == TileType.help)
+                    {
+                        if (extraIndex < data.specialExtra.Count)
+                        {
+                            int helpIndex = data.specialExtra[extraIndex];
+                            tileMap[data.specialTileIndexes[i]].EXTRA = helpIndex + ";" + Common.GetHelpText(helpIndex);
+                            extraIndex++;
+                        }
+                    }
+                    else
+                    {
+                        switch (newtype)
+                        {
+                            case TileType.knockback:
+                                tileMap[data.specialTileIndexes[i]].EXTRA = "18 ;" + Common.GetHelpText(18);
+                                break;
+                            case TileType.pullin:
+                                tileMap[data.specialTileIndexes[i]].EXTRA = "19 ;" + Common.GetHelpText(19);
+                                break;
+                            case TileType.swap:
+                                tileMap[data.specialTileIndexes[i]].EXTRA = "14 ;" + Common.GetHelpText(14);
+                                break;
+                            case TileType.reposition:
+                                tileMap[data.specialTileIndexes[i]].EXTRA = "20 ;" + Common.GetHelpText(20);
+                                break;
+
+                        }
+                    }
+                }
+            }
+
+            if (data.unOccupiedIndexes != null)
+            {
+
+                for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
+                {
+                    int tindex = data.unOccupiedIndexes[i];
+                    tileMap[tindex].canBeOccupied = false;
+                    tileMap[tindex].gameObject.SetActive(false);
+                }
+            }
+
+            turnOrder.Clear();
+
+
+            for (int i = 0; i < visitedCount; i++)
+            {
+                MapDetail vistiedDetail = Common.ConstructMapFromStringArray(dataString, dataIIndex, ref dataIIndex);
+                visitedMaps.Add(vistiedDetail);
+                Debug.Log(Common.GetMapDetailAsString(vistiedDetail));
+            }
+
+            int livingCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out livingCount);
+            dataIIndex++;
+            Debug.Log("living=" + livingCount);
+            for (int i = 0; i < livingCount; i++)
+            {
+                LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
+             
+            }
+
+
+
+
+
+            List<GridObject> gridobjs = objManager.getObjects(data);
+            for (int i = 0; i < gridobjs.Count; i++)
+            {
+
+                gridobjs[i].transform.position = tileMap[data.objMapIndexes[i]].transform.position + new Vector3(0, 0.5f, 0);
+                gridobjs[i].gameObject.SetActive(true);
+                gridobjs[i].currentTileIndex = data.objMapIndexes[i];
+
+                gridobjs[i].STATS.HEALTH = gridobjs[i].BASE_STATS.MAX_HEALTH;
+                gridobjs[i].STATS.MANA = 0;
+                gridobjs[i].STATS.FATIGUE = 0;
+
+
+                gridobjs[i].MapIndex = data.objMapIndexes[i];
+            }
+
+
+            if (turnOrder.Count > 0)
+                currentObject = turnOrder[0];
+
+
+
+
+            attackableTiles = new List<List<TileScript>>();
+            ShowWhite();
+
+
+            SoftReset();
+            if (gridobjs.Count > 0)
+            {
+
+                tempGridObj.currentTile = gridobjs[0].currentTile;
+                ShowSelectedTile(tempGridObj);
+            }
+
+            myCamera.UpdateCamera();
+
+            if (shopItems != null)
+            {
+                shopItems.Clear();
+                for (int i = 0; i < 5; i++)
+                {
+                    UsableScript newItem = null;
+
+                    int itemNum = 0;
+
+                    switch (i)
+                    {
+                        case 0:
+                            itemNum = Random.Range(0, 13);
+                            newItem = database.GetWeapon(itemNum, null);
+                            break;
+                        case 1:
+                            itemNum = Random.Range(0, 4);
+                            itemNum += (Random.Range(1, 8) * 10);
+                            //    Debug.Log("command skill" + itemNum);
+                            newItem = database.GetSkill(itemNum);
+                            break;
+                        case 2:
+                            itemNum = Random.Range(4, 7);
+                            itemNum += (Random.Range(1, 10) * 10);
+                            //    Debug.Log("command spell" + itemNum);
+                            newItem = database.GetSkill(itemNum);
+                            break;
+                        case 3:
+                            itemNum = Random.Range(110, 120);
+                            //  Debug.Log("auto " + itemNum);
+                            newItem = database.GetSkill(itemNum);
+                            break;
+                        case 4:
+                            itemNum = Random.Range(204, 214);
+                            //  Debug.Log("passive " + itemNum);
+                            newItem = database.GetSkill(itemNum);
+                            break;
+
+                        default:
+                            break;
+                    }
+                    shopItems.Add(newItem);
+                }
+            }
+        }
+
+    }
     public void Clear()
     {
         if (null == tileMap)
@@ -9833,7 +10117,7 @@ public class ManagerScript : EventRunner
                                     {
 
                                         EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
-                                            liveEnemies[k].ShowHideWeakness(hitType);
+                                        liveEnemies[k].ShowHideWeakness(hitType);
                                     }
                                 }
                             }
@@ -9857,7 +10141,7 @@ public class ManagerScript : EventRunner
                                     {
 
                                         EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
-                                            liveEnemies[k].ShowHideWeakness(hitType);
+                                        liveEnemies[k].ShowHideWeakness(hitType);
                                     }
                                 }
                             }
@@ -9978,7 +10262,7 @@ public class ManagerScript : EventRunner
                                 {
 
                                     EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
-                                        liveEnemies[k].ShowHideWeakness(hitType);
+                                    liveEnemies[k].ShowHideWeakness(hitType);
                                 }
                             }
                         }
@@ -10002,7 +10286,7 @@ public class ManagerScript : EventRunner
                                 {
 
                                     EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
-                                        liveEnemies[k].ShowHideWeakness(hitType);
+                                    liveEnemies[k].ShowHideWeakness(hitType);
                                 }
                             }
                         }
@@ -15869,6 +16153,7 @@ public class ManagerScript : EventRunner
 
     public void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity)
     {
+        return;
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
         currentTutorial.clarifications.Clear();

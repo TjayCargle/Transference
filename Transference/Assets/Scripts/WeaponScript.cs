@@ -267,4 +267,13 @@ public class WeaponScript : UsableScript
         //    DESC += " Hits " + Range + " tiles  " + DIST + " spaces away";
         //}
     }
+
+    public override string GetDataString()
+    {
+        string dataString = base.GetDataString();
+
+        dataString += "," + myAttack + "," + myAccurracy + "," + myCritChance + "," + cost + "," + range + "," + eType + "," + boost + "," + boostVal + "," + myAfinity;
+
+        return dataString;
+    }
 }

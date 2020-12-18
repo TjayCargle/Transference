@@ -755,6 +755,12 @@ public class CameraScript : MonoBehaviour
                                     infoText.text = "Attacker jumps to opposite side of target";
                                 }
                                 break;
+                            case TileType.saveLoad:
+                                {
+                                    actionText.text = "Memory Tile ";
+                                    infoText.text = "Allows user to save and load the game";
+                                }
+                                break;
                         }
                     }
 

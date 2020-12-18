@@ -596,7 +596,8 @@ public enum TileType
     knockback,
     pullin,
     swap,
-    reposition
+    reposition, 
+    saveLoad
 }
 
 public enum HazardType
@@ -1140,6 +1141,7 @@ public class Common : ScriptableObject
     private static Texture repositionTexture = null;
     private static Texture pullinTexture = null;
     private static Texture helpTexture = null;
+    private static Texture saveTexture = null;
 
     public static BoolConatainer container = new BoolConatainer();
 
@@ -1155,6 +1157,41 @@ public class Common : ScriptableObject
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
 
+    public static string JaxSaveSlot1 = "JaxSaveSlot1";
+    public static string JaxSaveSlot2 = "JaxSaveSlot2";
+    public static string JaxSaveSlot3 = "JaxSaveSlot3";
+    public static string JaxSaveSlot4 = "JaxSaveSlot4";
+    public static string JaxSaveSlot5 = "JaxSaveSlot5";
+
+    public static string ZeffSaveSlot1 = "ZeffSaveSlot1";
+    public static string ZeffSaveSlot2 = "ZeffSaveSlot2";
+    public static string ZeffSaveSlot3 = "ZeffSaveSlot3";
+    public static string ZeffSaveSlot4 = "ZeffSaveSlot4";
+    public static string ZeffSaveSlot5 = "ZeffSaveSlot5";
+
+    public static string FlaraSaveSlot1 = "FlaraSaveSlot1";
+    public static string FlaraSaveSlot2 = "FlaraSaveSlot2";
+    public static string FlaraSaveSlot3 = "FlaraSaveSlot3";
+    public static string FlaraSaveSlot4 = "FlaraSaveSlot4";
+    public static string FlaraSaveSlot5 = "FlaraSaveSlot5";
+
+    public static string PyrinSaveSlot1 = "PyrinSaveSlot1";
+    public static string PyrinSaveSlot2 = "PyrinSaveSlot2";
+    public static string PyrinSaveSlot3 = "PyrinSaveSlot3";
+    public static string PyrinSaveSlot4 = "PyrinSaveSlot4";
+    public static string PyrinSaveSlot5 = "PyrinSaveSlot5";
+
+    public static string SaphSaveSlot1 = "SaphSaveSlot1";
+    public static string SaphSaveSlot2 = "SaphSaveSlot2";
+    public static string SaphSaveSlot3 = "SaphSaveSlot3";
+    public static string SaphSaveSlot4 = "SaphSaveSlot4";
+    public static string SaphSaveSlot5 = "SaphSaveSlot5";
+
+    public static string LukonSaveSlot1 = "LukonSaveSlot1";
+    public static string LukonSaveSlot2 = "LukonSaveSlot2";
+    public static string LukonSaveSlot3 = "LukonSaveSlot3";
+    public static string LukonSaveSlot4 = "LukonSaveSlot4";
+    public static string LukonSaveSlot5 = "LukonSaveSlot5";
     public static ManagerScript GetManager()
     {
         if (manager == null)
@@ -1237,6 +1274,16 @@ public class Common : ScriptableObject
                     }
                     repositionTexture = Resources.Load<Texture>("Tiles/Reposition");
                     return repositionTexture;
+                }
+                break;
+            case TileType.saveLoad:
+                {
+                    if (saveTexture != null)
+                    {
+                        return saveTexture;
+                    }
+                    saveTexture = Resources.Load<Texture>("Tiles/Sxave");
+                    return saveTexture;
                 }
                 break;
         }
@@ -3372,85 +3419,85 @@ public class Common : ScriptableObject
             details += "," + data.doorIndexes[i];
         }
 
-        details += data.roomNames.Count + "";
+        details += "," + data.roomNames.Count + "";
         for (int i = 0; i < data.roomNames.Count; i++)
         {
             details += "," + data.roomNames[i];
         }
 
-        details += data.roomIndexes.Count + "";
+        details += "," + data.roomIndexes.Count + "";
         for (int i = 0; i < data.roomIndexes.Count; i++)
         {
             details += "," + data.roomIndexes[i];
         }
 
-        details += data.enemyIndexes.Count + "";
+        details += "," + data.enemyIndexes.Count + "";
         for (int i = 0; i < data.enemyIndexes.Count; i++)
         {
             details += "," + data.enemyIndexes[i];
         }
 
-        details += data.hazardIndexes.Count + "";
+        details += "," + data.hazardIndexes.Count + "";
         for (int i = 0; i < data.hazardIndexes.Count; i++)
         {
             details += "," + data.hazardIndexes[i];
         }
 
-        details += data.hazardIds.Count + "";
+        details += "," + data.hazardIds.Count + "";
         for (int i = 0; i < data.hazardIds.Count; i++)
         {
             details += "," + data.hazardIds[i];
         }
 
-        details += data.shopIndexes.Count + "";
+        details += "," + data.shopIndexes.Count + "";
         for (int i = 0; i < data.shopIndexes.Count; i++)
         {
             details += "," + data.shopIndexes[i];
         }
 
-        details += data.startIndexes.Count + "";
+        details += "," + data.startIndexes.Count + "";
         for (int i = 0; i < data.startIndexes.Count; i++)
         {
             details += "," + data.startIndexes[i];
         }
 
-        details += data.objMapIndexes.Count + "";
+        details += "," + data.objMapIndexes.Count + "";
         for (int i = 0; i < data.objMapIndexes.Count; i++)
         {
             details += "," + data.objMapIndexes[i];
         }
 
-        details += data.objIds.Count + "";
+        details += "," + data.objIds.Count + "";
         for (int i = 0; i < data.objIds.Count; i++)
         {
             details += "," + data.objIds[i];
         }
 
-        details += data.specialiles.Count + "";
+        details += "," + data.specialiles.Count + "";
         for (int i = 0; i < data.specialiles.Count; i++)
         {
             details += "," + data.specialiles[i];
         }
 
-        details += data.tilesInShadow.Count + "";
+        details += "," + data.tilesInShadow.Count + "";
         for (int i = 0; i < data.tilesInShadow.Count; i++)
         {
             details += "," + data.tilesInShadow[i];
         }
 
-        details += data.specialExtra.Count + "";
+        details += "," + data.specialExtra.Count + "";
         for (int i = 0; i < data.specialExtra.Count; i++)
         {
             details += "," + data.specialExtra[i];
         }
 
-        details += data.tileIndexes.Count + "";
+        details += "," + data.tileIndexes.Count + "";
         for (int i = 0; i < data.tileIndexes.Count; i++)
         {
             details += "," + data.tileIndexes[i];
         }
 
-        details += data.unOccupiedIndexes.Count + "";
+        details += "," + data.unOccupiedIndexes.Count + "";
         for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
         {
             details += "," + data.unOccupiedIndexes[i];
@@ -3459,4 +3506,850 @@ public class Common : ScriptableObject
 
         return details;
     }
+    public static MapDetail ConstructMapFromStringArray(string[] dataString, int startingIndex, ref int dataIIndex)
+    {
+        MapDetail data = new MapDetail();
+        data.doorIndexes = new List<int>();
+        data.roomNames = new List<string>();
+        data.roomIndexes = new List<int>();
+        data.enemyIndexes = new List<int>();
+        data.hazardIndexes = new List<int>();
+        data.shopIndexes = new List<int>();
+        data.startIndexes = new List<int>();
+        data.objMapIndexes = new List<int>();
+        data.objIds = new List<int>();
+        data.enemyIds = new List<int>();
+        data.unOccupiedIndexes = new List<int>();
+        data.hazardIds = new List<int>();
+        data.specialiles = new List<TileType>();
+        data.specialExtra = new List<int>();
+        data.tileIndexes = new List<int>();
+        data.tilesInShadow = new List<int>();
+
+       // if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        {
+         //   string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
+
+           // string[] dataString = loadString.Split(',');
+             dataIIndex = startingIndex;
+
+            System.Int32.TryParse(dataString[dataIIndex], out data.mapIndex);
+            dataIIndex++;
+
+            data.mapName = dataString[dataIIndex];
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out data.width);
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out data.height);
+            dataIIndex++;
+
+            int currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.doorIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                string tempString = "";
+                tempString = dataString[dataIIndex];
+                dataIIndex++;
+                data.roomNames.Add(tempString);
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.roomIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.enemyIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.hazardIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.hazardIds.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.shopIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.startIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.objMapIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.objIds.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                TileType tempIndex = 0;
+                System.Enum.TryParse(dataString[dataIIndex], out tempIndex);
+                data.specialiles.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.tilesInShadow.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.specialExtra.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.tileIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.unOccupiedIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+        }
+
+        return data;
+    }
+
+    public static LivingObject ConstructLivingFromStringArray(string[] dataString, int startingIndex, ref int dataIIndex)
+    {
+        LivingObject generatedCharacter = null;
+
+        dataIIndex = startingIndex;
+
+        string characterName = dataString[dataIIndex];
+        dataIIndex++;
+
+        Faction newFacttion;
+        System.Enum.TryParse(dataString[dataIIndex], out newFacttion);
+      //  generatedCharacter.FACTION = newFacttion;
+        dataIIndex++;
+
+        int tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+       // generatedCharacter.id = tempInt;
+        dataIIndex++;
+        switch (newFacttion)
+        {
+            case Faction.ally:
+                {
+                    ActorScript[] actors = GameObject.FindObjectsOfType<ActorScript>();
+                    bool found = false;
+                    for (int i = 0; i < actors.Length; i++)
+                    {
+                        if(actors[i].NAME == characterName)
+                        {
+                            found = true;
+                            generatedCharacter = actors[i];
+                        }
+                    }
+
+                    if(found == false)
+                    {
+                        generatedCharacter = GetManager().GetActor(tempInt);
+                    }
+
+                    manager.turnOrder.Add(generatedCharacter);
+                }
+                break;
+
+            case Faction.enemy:
+                {
+                    EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+                    if(enemyManager != null)
+                    {
+                      generatedCharacter =  enemyManager.getEnemies(1, tempInt)[0];
+                    }
+                }
+                break;
+
+            case Faction.hazard:
+                {
+                    HazardManager hazardManager = GameObject.FindObjectOfType<HazardManager>();
+                    if (hazardManager != null)
+                    {
+                        generatedCharacter = hazardManager.getHazards(1, tempInt)[0];
+                    }
+                }
+                break;
+   
+            case Faction.fairy:
+                {
+                    EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+                    if (enemyManager != null)
+                    {
+                        generatedCharacter = enemyManager.getEnemies(1)[0];
+                    }
+                }
+                break;
+     
+            default:
+                break;
+        }
+
+        generatedCharacter.LivingUnset(false);
+        generatedCharacter.isSetup = true;
+        generatedCharacter.gameObject.SetActive(true);
+        generatedCharacter.name = characterName;
+        generatedCharacter.NAME = characterName;
+        generatedCharacter.FACTION = newFacttion;
+        generatedCharacter.id = tempInt;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.ACTIONS = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        int currentTileIndex = tempInt;
+        generatedCharacter.currentTile = GetManager().tileMap[currentTileIndex];
+        generatedCharacter.transform.position = GetManager().tileMap[currentTileIndex].transform.position + new Vector3(0, 0.5f, 0.12f); ;
+        dataIIndex++;
+
+
+        if (generatedCharacter.BASE_STATS == null)
+            generatedCharacter.BASE_STATS = new BaseStats();
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MAX_HEALTH = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MAX_MANA = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MAX_FATIGUE = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MOVE_DIST = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.STRENGTH = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MAGIC = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.DEX = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.DEFENSE = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.RESIESTANCE = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.SPEED = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.EXP = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.PHYSEXP = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.MAGEXP = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.SKILLEXP = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.BASE_STATS.LEVEL = tempInt;
+        dataIIndex++;
+
+        if (generatedCharacter.STATS == null)
+            generatedCharacter.STATS = new ModifiedStats();
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.STATS.HEALTH = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.STATS.MANA = tempInt;
+        dataIIndex++;
+
+        tempInt = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out tempInt);
+        generatedCharacter.STATS.FATIGUE = tempInt;
+        dataIIndex++;
+
+        int totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+
+            WeaponScript newWeapon = GetDatabase().GetWeapon(curInx, generatedCharacter);
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.LEVEL = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.EXP = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.maxExp = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.USECOUNT = curInx;
+            dataIIndex++;
+
+            DMG wepDmg;
+            System.Enum.TryParse(dataString[dataIIndex], out wepDmg);
+            newWeapon.ATTACK = wepDmg;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.ACCURACY = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.CRIT = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.COST = curInx;
+            dataIIndex++;
+
+            RangeType wepRange;
+            System.Enum.TryParse(dataString[dataIIndex], out wepRange);
+            newWeapon.ATKRANGE = wepRange;
+            dataIIndex++;
+
+            EType wepType;
+            System.Enum.TryParse(dataString[dataIIndex], out wepType);
+            newWeapon.ATTACK_TYPE = wepType;
+            dataIIndex++;
+
+            ModifiedStat wepMod;
+            System.Enum.TryParse(dataString[dataIIndex], out wepMod);
+            newWeapon.BOOST = wepMod;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newWeapon.BOOSTVAL = curInx;
+            dataIIndex++;
+
+            Element wepElement;
+            System.Enum.TryParse(dataString[dataIIndex], out wepElement);
+            newWeapon.ELEMENT = wepElement;
+            dataIIndex++;
+
+
+            int augCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);       
+            dataIIndex++;
+
+            for (int j = 0; j < augCount; j++)
+            {
+                Augment someAugment;
+                System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+                newWeapon.AUGMENTS.Add(someAugment);
+                dataIIndex++;
+            }
+
+            for (int j = 1; j < newWeapon.LEVEL; j++)
+            {
+                newWeapon.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            ArmorScript newArmor = GetDatabase().GetArmor(curInx, generatedCharacter);
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.LEVEL = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.EXP = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.maxExp = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.USECOUNT = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.DEFENSE = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.RESISTANCE = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.SPEED = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.TURNCOUNT = curInx;
+            dataIIndex++;
+
+            for (int j = 0; j < newArmor.HITLIST.Count; j++)
+            {
+                EHitType hittype;
+                System.Enum.TryParse(dataString[dataIIndex], out hittype);
+                newArmor.HITLIST[j] = hittype;
+                dataIIndex++;
+            }
+
+
+            int augCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);
+            dataIIndex++;
+
+            for (int j = 0; j < augCount; j++)
+            {
+                Augment someAugment;
+                System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+                newArmor.AUGMENTS.Add(someAugment);
+                dataIIndex++;
+            }
+
+            for (int j = 1; j < newArmor.LEVEL; j++)
+            {
+                newArmor.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            CommandSkill newSkill = GetDatabase().LearnSkill(curInx, generatedCharacter) as CommandSkill;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.LEVEL = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.EXP = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.maxExp = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.USECOUNT = curInx;
+            dataIIndex++;
+
+            Element wepElement;
+            System.Enum.TryParse(dataString[dataIIndex], out wepElement);
+            newSkill.ELEMENT = wepElement;
+
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.COST = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.ACCURACY = curInx;
+            dataIIndex++;
+
+
+            SideEffect sideEff;
+            System.Enum.TryParse(dataString[dataIIndex], out sideEff);
+            newSkill.EFFECT = sideEff;
+
+            dataIIndex++;
+
+            DMG wepDmg;
+            System.Enum.TryParse(dataString[dataIIndex], out wepDmg);
+            newSkill.DAMAGE = wepDmg;
+            dataIIndex++;
+
+
+            RangeType wepRange;
+            System.Enum.TryParse(dataString[dataIIndex], out wepRange);
+            newSkill.RTYPE = wepRange;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.CRIT_RATE = curInx;
+            dataIIndex++;
+
+            BuffType buffType;
+            System.Enum.TryParse(dataString[dataIIndex], out buffType);
+            newSkill.BUFF = buffType;
+            dataIIndex++;
+
+            float doub = 0.0f;
+            System.Single.TryParse(dataString[dataIIndex], out doub);
+            newSkill.BUFFVAL = doub;
+            dataIIndex++;
+
+            ModifiedStat wepMod;
+            System.Enum.TryParse(dataString[dataIIndex], out wepMod);
+            newSkill.BUFFEDSTAT = wepMod;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.HITS = curInx;
+            dataIIndex++;
+
+            EType skillHit;
+            System.Enum.TryParse(dataString[dataIIndex], out skillHit);
+            newSkill.ETYPE = skillHit;
+            dataIIndex++;
+
+            Reaction skillReact;
+            System.Enum.TryParse(dataString[dataIIndex], out skillReact);
+            newSkill.REACTION = skillReact;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.MIN_HIT = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newSkill.MAX_HIT = curInx;
+            dataIIndex++;
+
+            int augCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);
+            dataIIndex++;
+
+            for (int j = 0; j < augCount; j++)
+            {
+                Augment someAugment;
+                System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+                newSkill.AUGMENTS.Add(someAugment);
+                dataIIndex++;
+            }
+
+            for (int j = 1; j < newSkill.LEVEL; j++)
+            {
+                newSkill.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            Debug.Log("combo=" + curInx);
+            ComboSkill newCombo = GetDatabase().LearnSkill(curInx, generatedCharacter) as ComboSkill;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newCombo.LEVEL = curInx;
+            dataIIndex++;      
+
+            int augCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);
+            dataIIndex++;
+
+            for (int j = 0; j < augCount; j++)
+            {
+                Augment someAugment;
+                System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+                newCombo.AUGMENTS.Add(someAugment);
+                dataIIndex++;
+                newCombo.GAIN++;
+            }
+
+            for (int j = 1; j < newCombo.LEVEL; j++)
+            {
+                newCombo.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            Debug.Log("auto=" + curInx);
+            AutoSkill newAuto = GetDatabase().LearnSkill(curInx, generatedCharacter) as AutoSkill;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newAuto.LEVEL = curInx;
+            dataIIndex++;
+
+            int augCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);
+            dataIIndex++;
+
+            for (int j = 0; j < augCount; j++)
+            {
+                Augment someAugment;
+                System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+                newAuto.AUGMENTS.Add(someAugment);
+                dataIIndex++;
+                newAuto.CHANCE += 20.0f;
+            }
+
+            for (int j = 1; j < newAuto.LEVEL; j++)
+            {
+                newAuto.LevelUP();
+            }
+
+        }
+
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            OppSkill newOpp = GetDatabase().LearnSkill(curInx, generatedCharacter) as OppSkill;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newOpp.LEVEL = curInx;
+            dataIIndex++;
+
+         
+
+            for (int j = 1; j < newOpp.LEVEL; j++)
+            {
+                newOpp.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            Debug.Log("item=" + curInx);
+            ItemScript newItem = GetDatabase().GetItem(curInx, generatedCharacter) as ItemScript;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newItem.LEVEL = curInx;
+            dataIIndex++;
+
+
+
+            for (int j = 1; j < newItem.LEVEL; j++)
+            {
+                newItem.LevelUP();
+            }
+
+        }
+
+        totalAmount = 0;
+        System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
+        dataIIndex++;
+
+        for (int i = 0; i < totalAmount; i++)
+        {
+            EffectScript someEffect = new EffectScript();
+
+            SideEffect side;
+            System.Enum.TryParse(dataString[dataIIndex], out side);
+            Debug.Log("eff=" + side);
+            dataIIndex++;
+            someEffect.EFFECT = side;
+
+
+            int curInx = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            someEffect.TURNS = curInx;
+            dataIIndex++;
+
+            generatedCharacter.INVENTORY.EFFECTS.Add(someEffect);
+        }
+
+
+        return generatedCharacter;
+    }
+
+
 }

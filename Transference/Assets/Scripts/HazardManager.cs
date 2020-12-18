@@ -22,7 +22,7 @@ public class HazardManager : MonoBehaviour
         Setup();
     }
 
-    public List<HazardScript> getHazards(int num)
+    public List<HazardScript> getHazards(int num, int specialId = 0)
     {
         List<HazardScript> subhazards = new List<HazardScript>();
         if (num < hazards.Count)
@@ -32,7 +32,8 @@ public class HazardManager : MonoBehaviour
                 HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
                 hazards[i].Unset();
                 hazardSetup.Unset();
-                hazardSetup.hazardid = 0;
+
+                hazardSetup.hazardid = specialId;
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
@@ -56,7 +57,7 @@ public class HazardManager : MonoBehaviour
                 HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
                 hazards[i].Unset();
                 hazardSetup.Unset();
-                hazardSetup.hazardid = 0; skilloratk = Random.Range(0, 2);
+                hazardSetup.hazardid = specialId; skilloratk = Random.Range(0, 2);
                 if (skilloratk == 0)
                 {
                      
@@ -74,7 +75,7 @@ public class HazardManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(hazardPrefab, Vector2.zero, Quaternion.identity);
                 HazardSetup hazardSetup = temp.GetComponent<HazardSetup>();
-                hazardSetup.hazardid = 0;
+                hazardSetup.hazardid = specialId;
                 HazardScript hazard = temp.AddComponent<HazardScript>();
                 skilloratk = 1;// Random.Range(0, 2);
                 if (skilloratk == 0)

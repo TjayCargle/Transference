@@ -381,5 +381,19 @@ public class ArmorScript : UsableScript
                 break;
          
         }
+
+    }
+
+    public override string GetDataString()
+    {
+        string dataString = base.GetDataString();
+
+        dataString += "," + myDefense + "," + myRes + "," + mySpeed + "," + turnCount +","+ healthPercent +","+ maxHealthPercent;
+        for (int i = 0; i < HITLIST.Count; i++)
+        {
+            dataString += "," + HITLIST[i];
+        }
+
+        return dataString;
     }
 }

@@ -1538,36 +1538,80 @@ public class DatabaseManager : MonoBehaviour
                 details += someObject.FACTION + ",";
                 details += someObject.id + ",";
                 details += someObject.ACTIONS + ",";
-                details += someObject.currentTile.listindex;
+                details += someObject.currentTile.listindex + ",";
                 details += "" + (someObject.BASE_STATS).ToString() + ",";
                 details += "" + (someObject.STATS).ToString() + ",";
 
                 details += "" + someObject.INVENTORY.WEAPONS.Count + "";
                 for (int i = 0; i < someObject.INVENTORY.WEAPONS.Count; i++)
                 {
-                    details += "," + someObject.INVENTORY.WEAPONS[i].INDEX + "," + someObject.INVENTORY.WEAPONS[i].LEVEL;
+                    details += "," + someObject.INVENTORY.WEAPONS[i].GetDataString();
+                    
+                    int augCount = someObject.INVENTORY.WEAPONS[i].AUGMENTS.Count;
+                    details += "," + augCount;
+                    for (int j = 0; j < augCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.WEAPONS[i].AUGMENTS[j];
+                       
+                    }
                 }
 
                 details += "," + someObject.INVENTORY.ARMOR.Count + "";
                 for (int i = 0; i < someObject.INVENTORY.ARMOR.Count; i++)
                 {
-                    details += "," + someObject.INVENTORY.ARMOR[i].INDEX + "," + someObject.INVENTORY.ARMOR[i].LEVEL;
+                    details += "," + someObject.INVENTORY.ARMOR[i].GetDataString();
+                  
+                    int augCount = someObject.INVENTORY.ARMOR[i].AUGMENTS.Count;
+                    details += "," + augCount;
+                    for (int j = 0; j < augCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.ARMOR[i].AUGMENTS[j];
+                    }
+
+                    int hitCount = someObject.INVENTORY.ARMOR[i].HITLIST.Count;
+                    details += "," + hitCount;
+                    for (int j = 0; j < hitCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.ARMOR[i].HITLIST[j];
+                    }
                 }
+
                 details += "," + someObject.INVENTORY.CSKILLS.Count + "";
                 for (int i = 0; i < someObject.INVENTORY.CSKILLS.Count; i++)
                 {
-                    details += "," + someObject.INVENTORY.CSKILLS[i].INDEX + "," + someObject.INVENTORY.CSKILLS[i].LEVEL;
+                    details += "," + someObject.INVENTORY.CSKILLS[i].GetDataString();
+                    
+                    int augCount = someObject.INVENTORY.CSKILLS[i].AUGMENTS.Count;
+                    details += "," + augCount;
+                    for (int j = 0; j < augCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.CSKILLS[i].AUGMENTS[j];
+                    }
                 }
                 details += "," + someObject.INVENTORY.COMBOS.Count + "";
                 for (int i = 0; i < someObject.INVENTORY.COMBOS.Count; i++)
                 {
                     details += "," + someObject.INVENTORY.COMBOS[i].INDEX + "," + someObject.INVENTORY.COMBOS[i].LEVEL;
+
+                    int augCount = someObject.INVENTORY.COMBOS[i].AUGMENTS.Count;
+                    details += "," + augCount;
+                    for (int j = 0; j < augCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.COMBOS[i].AUGMENTS[j];
+                    }
                 }
 
                 details += "," + someObject.INVENTORY.AUTOS.Count + "";
                 for (int i = 0; i < someObject.INVENTORY.AUTOS.Count; i++)
                 {
                     details += "," + someObject.INVENTORY.AUTOS[i].INDEX + "," + someObject.INVENTORY.AUTOS[i].LEVEL;
+
+                    int augCount = someObject.INVENTORY.AUTOS[i].AUGMENTS.Count;
+                    details += "," + augCount;
+                    for (int j = 0; j < augCount; j++)
+                    {
+                        details += "," + someObject.INVENTORY.AUTOS[i].AUGMENTS[j];
+                    }
                 }
 
                 details += "," + someObject.INVENTORY.OPPS.Count + "";
@@ -1961,6 +2005,7 @@ public class DatabaseManager : MonoBehaviour
                 if (Int32.Parse(parsed[0]) == id)
                 {
                     int fileIndex = 1;
+                    living.id = id;
                     living.STATS.Reset(true);
                     living.FullName = parsed[fileIndex];
                     fileIndex++;

@@ -1365,5 +1365,13 @@ public class CommandSkill : SkillScript
         return returnedString;
     }
 
+    public override string GetDataString()
+    {
+        string dataString = base.GetDataString();
+
+        dataString += "," + ELEMENT + "," + cost + "," + accuraccy + "," + effect + "," + damage + "," + rType + "," + critRate + "," + buff + "," + modVal + "," + buffedStat + "," + hitCount + "," + eType + "," + reaction + "," + minHit + "," + maxHit;
+
+        return dataString;
+    }
 
 }

@@ -2009,7 +2009,7 @@ public class LivingObject : GridObject
             Debug.Log("ive lost my tile");
     }
 
-    public void LivingUnset()
+    public void LivingUnset(bool removeDefault = true)
     {
         isSetup = false;
         DEAD = false;
@@ -2022,7 +2022,8 @@ public class LivingObject : GridObject
         MAGICAL_SLOTS.SKILLS.Clear();
         OPP_SLOTS.SKILLS.Clear();
         AUTO_SLOTS.SKILLS.Clear();
-        DEFAULT_ARMOR = null;
+        if (removeDefault == true)
+            DEFAULT_ARMOR = null;
         ARMOR.unEquip();
         PSTATUS = PrimaryStatus.normal;
         LAST_USED.Clear();
