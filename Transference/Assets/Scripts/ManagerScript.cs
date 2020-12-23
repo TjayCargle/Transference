@@ -309,6 +309,7 @@ public class ManagerScript : EventRunner
 
             //  currentState = State.FreeCamera;
             enterStateTransition();
+            database.Setup();
             if (PlayerPrefs.HasKey("defaultSceneEntry"))
             {
                 defaultSceneEntry = 26;// PlayerPrefs.GetInt("defaultSceneEntry");
@@ -316,14 +317,21 @@ public class ManagerScript : EventRunner
             Common.summonedJax = false;
             Common.summonedZeffron = false;
 
-            LoadDefaultScene();
-
+            if (PlayerPrefs.HasKey("continue"))
+            {
+                int newOrContune = PlayerPrefs.GetInt("continue");
+                Debug.Log("nc= " + newOrContune);
+                if (newOrContune == 1)
+                {
+                    LoadGameAndScene();
+                }
+                else
+                {
+                    LoadDefaultScene();
+                }
+            }
 
             updateConditionals();
-
-
-
-
 
             StartCoroutine(performChecks());
         }
@@ -587,12 +595,13 @@ public class ManagerScript : EventRunner
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LoadGameAndScene();
+            //  LoadGameAndScene();
+            stackLog();
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            SaveGame();
-        }
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    SaveGame();
+        //}
         {
             switch (currentState)
             {
@@ -1778,7 +1787,7 @@ public class ManagerScript : EventRunner
                                         {
                                             if (menuManager.hiddenCanvas)
                                             {
-                                                if (GetObjectAtTile(hitTile) != null)
+                                                if (GetObjectAtTile(hitTile) != null && currentTutorial.steps.Count == 0)
                                                 {
                                                     if (detailsScreen)
                                                     {
@@ -1817,6 +1826,18 @@ public class ManagerScript : EventRunner
                                                 {
                                                     if (currentTutorial.steps.Count == 0)
                                                     {
+                                                        StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                        menuManager.ShowHiddenCanvas();
+                                                    }
+                                                    else if (currentTutorial.currentStep < currentTutorial.steps.Count)
+                                                    {
+                                                        CheckTutorialPrompt("-1; Tutorial - " + Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep], true));
+                                                    }
+                                                    else
+                                                    {
+                                                        currentTutorial.steps.Clear();
+                                                        currentTutorial.currentStep = 0;
+                                                        currentTutorial.clarifications.Clear();
                                                         StackNewSelection(State.PlayerInput, currentMenu.none);
                                                         menuManager.ShowHiddenCanvas();
                                                     }
@@ -1974,21 +1995,13 @@ public class ManagerScript : EventRunner
                                     // enterState(defaultEntry);
                                     StackCMDSelection();
                                     CreateEvent(this, currentObject, "Select Camera Event", CameraEvent);
+                                    break;
                                 }
-                                else
-                                {
-                                    if (menuManager)
-                                    {
-                                        if (menuManager.hiddenCanvas)
-                                        {
-                                            StackNewSelection(State.PlayerInput, currentMenu.none);
-                                            menuManager.ShowHiddenCanvas();
-                                        }
-                                    }
-                                }
+
                             }
 
                         }
+
 
                         if (playerIndx == -1)
                         {
@@ -1996,8 +2009,23 @@ public class ManagerScript : EventRunner
                             {
                                 if (menuManager.hiddenCanvas)
                                 {
-                                    StackNewSelection(State.PlayerInput, currentMenu.none);
-                                    menuManager.ShowHiddenCanvas();
+                                    if (currentTutorial.steps.Count == 0)
+                                    {
+                                        StackNewSelection(State.PlayerInput, currentMenu.none);
+                                        menuManager.ShowHiddenCanvas();
+                                    }
+                                    else if (currentTutorial.currentStep < currentTutorial.steps.Count)
+                                    {
+                                        CheckTutorialPrompt("-1;Tutorial - " + Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep], true));
+                                    }
+                                    else
+                                    {
+                                        currentTutorial.steps.Clear();
+                                        currentTutorial.currentStep = 0;
+                                        currentTutorial.clarifications.Clear();
+                                        StackNewSelection(State.PlayerInput, currentMenu.none);
+                                        menuManager.ShowHiddenCanvas();
+                                    }
                                 }
                             }
                         }
@@ -3235,7 +3263,7 @@ public class ManagerScript : EventRunner
         }
         else
         {
-            if (currentState == State.EventRunning && prevState == State.FreeCamera)
+            if (currentState == State.EventRunning)
             {
                 menuManager.ShowNone();
                 currentState = State.FreeCamera;
@@ -3492,6 +3520,11 @@ public class ManagerScript : EventRunner
                             menuManager.ShowActCanvas();
                             ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
                         }
+                        else
+                        {
+                            Debug.Log("um.. but why");
+                       
+                        }
                     }
                     break;
                 case State.PlayerAllocate:
@@ -3584,7 +3617,7 @@ public class ManagerScript : EventRunner
 
                 case State.PlayerUsingItems:
                     break;
-
+        
             }
         }
         UpdateCameraPosition();
@@ -4519,7 +4552,7 @@ public class ManagerScript : EventRunner
     }
     public void LoadDefaultScene()
     {
-        database.Setup();
+
         LoadDScene(defaultSceneEntry);
         //myCamera.PlaySoundTrack1();
 
@@ -4691,6 +4724,7 @@ public class ManagerScript : EventRunner
             log.Clear();
         }
         liveEnemies.Clear();
+        menuManager.ShowNone();
         MapDetail map = database.GetMap(amapIndex);
         MapData data = database.GetMapData(map.mapName);
         bool visited = false;
@@ -5873,9 +5907,22 @@ public class ManagerScript : EventRunner
 
     public void SaveGame()
     {
-   
-        string saveString = "";
 
+        string saveString = "";
+        //int tutCount = currentTutorial.steps.Count;
+        //saveString += "" + tutCount + ",";
+        //saveString += "" + currentTutorial.currentStep;
+        //for (int i = 0; i < tutCount; i++)
+        //{
+        //    saveString += "," + currentTutorial.steps[i] + "," + currentTutorial.clarifications[i];
+        //}
+        saveString += Common.summonedJax + ",";
+        saveString += Common.summonedZeffron + ",";
+        saveString += Common.enemiesCompletedPhase + ",";
+        saveString += Common.haveBeenCrippled + ",";
+        saveString += Common.hasAllocated + ",";
+        saveString += Common.hasGainedSkill + ",";
+        saveString += Common.hasLearnedFromEnemy + ",";
         saveString += Common.GetMapDetailAsString(currentMap) + ",";
         saveString += visitedMaps.Count;
         for (int i = 0; i < visitedMaps.Count; i++)
@@ -5892,8 +5939,9 @@ public class ManagerScript : EventRunner
             }
         }
 
-        Debug.Log(saveString);
+        //Debug.Log(saveString);
         PlayerPrefs.SetString(Common.JaxSaveSlot1, saveString);
+        CheckTutorialPrompt(30);
     }
 
 
@@ -5903,29 +5951,62 @@ public class ManagerScript : EventRunner
 
         if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
         {
+            Clear();
             string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
 
             string[] dataString = loadString.Split(',');
             int dataIIndex = 0;
+            bool aCommon = false;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.summonedJax = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.summonedZeffron = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.enemiesCompletedPhase = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.haveBeenCrippled = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.hasAllocated = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.hasGainedSkill = aCommon;
+            dataIIndex++;
+
+            System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
+            Common.hasLearnedFromEnemy = aCommon;
+            dataIIndex++;
 
             detail = Common.ConstructMapFromStringArray(dataString, dataIIndex, ref dataIIndex);
+            currentMap = detail;
             //Assaign data to current map
 
             // MapWidth = data.width;
             // MapHeight = data.height;
-            Debug.Log(Common.GetMapDetailAsString(detail));
-            Debug.Log("num=" + dataIIndex);
+
 
             int visitedCount = 0;
             System.Int32.TryParse(dataString[dataIIndex], out visitedCount);
-            Debug.Log("visited=" + visitedCount);
+          //  Debug.Log("visited=" + visitedCount);
             dataIIndex++;
             visitedMaps.Clear();
 
 
-            Clear();
             MapData data = database.GetMapData(detail.mapName);
             data = Common.ConvertMapDetail2Data(detail, data);
+            MapWidth = data.width;
+            MapHeight = data.height;
+            Clear();
+
             if (null == tileMap || tileMap.Count == 0)
             {
                 tileMap = tileManager.getTiles(data.width * data.height); // * MapHeight);
@@ -5940,6 +6021,7 @@ public class ManagerScript : EventRunner
             float xoffset = 1 / (float)MapWidth;
             float yoffset = 1 / (float)MapHeight;
             float yElevation = 0;
+            float xElevation = 0;
 
             for (int i = 0; i < data.width; i++)
             {
@@ -6057,26 +6139,6 @@ public class ManagerScript : EventRunner
             turnOrder.Clear();
 
 
-            for (int i = 0; i < visitedCount; i++)
-            {
-                MapDetail vistiedDetail = Common.ConstructMapFromStringArray(dataString, dataIIndex, ref dataIIndex);
-                visitedMaps.Add(vistiedDetail);
-                Debug.Log(Common.GetMapDetailAsString(vistiedDetail));
-            }
-
-            int livingCount = 0;
-            System.Int32.TryParse(dataString[dataIIndex], out livingCount);
-            dataIIndex++;
-            Debug.Log("living=" + livingCount);
-            for (int i = 0; i < livingCount; i++)
-            {
-                LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
-             
-            }
-
-
-
-
 
             List<GridObject> gridobjs = objManager.getObjects(data);
             for (int i = 0; i < gridobjs.Count; i++)
@@ -6095,17 +6157,37 @@ public class ManagerScript : EventRunner
             }
 
 
-            if (turnOrder.Count > 0)
-                currentObject = turnOrder[0];
 
 
 
 
             attackableTiles = new List<List<TileScript>>();
             ShowWhite();
+            for (int i = 0; i < visitedCount; i++)
+            {
+                MapDetail vistiedDetail = Common.ConstructMapFromStringArray(dataString, dataIIndex, ref dataIIndex);
+                visitedMaps.Add(vistiedDetail);
+
+            }
+
+            int livingCount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out livingCount);
+            dataIIndex++;
+            Debug.Log("living=" + livingCount);
+            for (int i = 0; i < livingCount; i++)
+            {
+                LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
+                if (!gridObjects.Contains(possibleCharacter))
+                {
+                    gridObjects.Add(possibleCharacter);
+                }
+            }
 
 
             SoftReset();
+            if (turnOrder.Count > 0)
+                currentObject = turnOrder[0];
+
             if (gridobjs.Count > 0)
             {
 
@@ -6160,7 +6242,30 @@ public class ManagerScript : EventRunner
                 }
             }
         }
+        CleanMenuStack(true);
 
+        if (currentRoomName)
+        {
+            if (!currentRoomName.isSetup)
+            {
+                currentRoomName.Setup();
+            }
+            if (currentRoomName.textmeshpro)
+            {
+                currentRoomName.textmeshpro.text = currentMap.mapName;
+                if (currentMap.mapIndex == 4)
+                    currentRoomName.textmeshpro.text = "Storage Room";
+            }
+        }
+        prevState = State.FreeCamera;
+        if (turnOrder.Count > 0)
+        {
+            CreateEvent(this, turnOrder[0], "Phase Announce Event", PhaseAnnounce, null, -1, PhaseAnnounceStart);
+
+        }
+        CreateEvent(this, null, "return state event", BufferedStateChange);
+        turnImgManger.LoadTurnImg(turnOrder);
+        turnImgManger.UpdateSelection(-1);
     }
     public void Clear()
     {
@@ -6240,7 +6345,8 @@ public class ManagerScript : EventRunner
                 gridObjects.Add(griddy);
             //    Debug.Log(griddy.NAME);
             griddy.currentTile = GetTile(griddy);
-            griddy.currentTile.isOccupied = true;
+            if (griddy.currentTile != null)
+                griddy.currentTile.isOccupied = true;
 
         }
     }
@@ -6527,6 +6633,59 @@ public class ManagerScript : EventRunner
         myCamera.UpdateCamera();
         updateConditionals();
     }
+    public void ReviveCheat()
+    {
+        nextRoundCalled = false;
+        LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
+        for (int i = livingObjects.Length - 1; i >= 0; i--)
+        {
+            if (livingObjects[i].FACTION == Faction.ally)
+            {
+                LivingObject playable = livingObjects[i];
+
+                if (playable.SHADOW)
+                {
+                    if (playable.SHADOW.SPRITE.sr)
+                    {
+
+                        playable.SHADOW.SPRITE.sr.color = Common.GetFactionColor(playable.FACTION);
+                    }
+                }
+
+                playable.DEAD = false;
+
+                playable.STATS.Reset(true);
+
+                playable.STATS.HEALTH = (int)(playable.BASE_STATS.MAX_HEALTH);
+                playable.STATS.MANA = (int)(playable.BASE_STATS.MAX_MANA);
+                playable.STATS.FATIGUE = (int)(playable.BASE_STATS.MAX_FATIGUE);
+
+
+                playable.RENDERER.color = Color.white;
+
+                //   playable.updateLastSprites();
+                for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
+                {
+                    EffectScript anEffect = playable.INVENTORY.EFFECTS[j];
+                    PoolManager.GetManager().ReleaseEffect(anEffect);
+                }
+                playable.INVENTORY.EFFECTS.Clear();
+                playable.Refresh();
+                playable.updateAilmentIcons();
+                gridObjects.Add(playable);
+                playable.UpdateHealthbar();
+            }
+
+            livingObjects[i].Refresh();
+        }
+        if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        {
+            PlayerPrefs.DeleteKey(Common.JaxSaveSlot1);
+        }
+        SoftReset();
+
+        myCamera.PlayPreviousSoundTrack();
+    }
     public void ReviveFull()
     {
         nextRoundCalled = false;
@@ -6598,6 +6757,7 @@ public class ManagerScript : EventRunner
                 playable.Refresh();
                 playable.updateAilmentIcons();
                 gridObjects.Add(playable);
+                playable.UpdateHealthbar();
             }
 
             livingObjects[i].Refresh();
@@ -6667,6 +6827,7 @@ public class ManagerScript : EventRunner
                 playable.Refresh();
                 playable.updateAilmentIcons();
                 gridObjects.Add(playable);
+                playable.UpdateHealthbar();
             }
             livingObjects[i].Refresh();
         }
@@ -6725,6 +6886,7 @@ public class ManagerScript : EventRunner
                 playable.Refresh();
                 playable.updateAilmentIcons();
                 gridObjects.Add(playable);
+                playable.UpdateHealthbar();
             }
             livingObjects[i].Refresh();
         }
@@ -8216,6 +8378,20 @@ public class ManagerScript : EventRunner
             newSkillEvent.data = player.current;
             SkillEventContainer sec = new SkillEventContainer();
             sec.name = "?;" + Common.GetHelpText(checkText);
+            inTutorialMenu = true;
+            CreateEvent(this, sec, "help event", CheckIfIntutorialMenu, null, 0, TutorialStart);
+        }
+    }
+    public void CheckTutorialPrompt(string newText)
+    {
+
+        // if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
+        {
+            menuManager.ShowNone();
+            newSkillEvent.caller = this;
+            newSkillEvent.data = player.current;
+            SkillEventContainer sec = new SkillEventContainer();
+            sec.name = newText;
             inTutorialMenu = true;
             CreateEvent(this, sec, "help event", CheckIfIntutorialMenu, null, 0, TutorialStart);
         }
@@ -10056,6 +10232,11 @@ public class ManagerScript : EventRunner
 
     public void ShowSkillAttackbleTiles(LivingObject obj, CommandSkill skill, GridObject target = null)
     {
+        for (int k = 0; k < liveEnemies.Count; k++)
+        {
+            liveEnemies[k].ShowHideWeakness(EHitType.normal, false);
+
+        }
         ShowWhite();
         List<List<TileScript>> tempTiles = GetSkillsAttackableTiles(obj, skill);
         if (tempTiles == null)
@@ -10231,6 +10412,11 @@ public class ManagerScript : EventRunner
 
     public void ShowWeaponAttackbleTiles(LivingObject obj, WeaponScript skill, GridObject target = null)
     {
+        for (int k = 0; k < liveEnemies.Count; k++)
+        {
+            liveEnemies[k].ShowHideWeakness(EHitType.normal, false);
+
+        }
         ShowWhite();
         List<List<TileScript>> tempTiles = GetAttackableTiles(obj, skill);
         if (tempTiles == null)
@@ -16153,7 +16339,6 @@ public class ManagerScript : EventRunner
 
     public void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity)
     {
-        return;
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
         currentTutorial.clarifications.Clear();
@@ -16213,6 +16398,7 @@ public class ManagerScript : EventRunner
                                 {
                                     tileMap[currentTutorial.clarifications[currentTutorial.currentStep]].isMarked = false;
                                     returnedBool = true;
+
                                 }
                             }
                         }
@@ -16299,6 +16485,7 @@ public class ManagerScript : EventRunner
                         }
                         break;
                     case tutorialStep.showTutorial:
+
                         returnedBool = true;
                         break;
                 }
@@ -16324,9 +16511,19 @@ public class ManagerScript : EventRunner
                 }
                 if (currentTutorial.steps[currentTutorial.currentStep] == tutorialStep.moveToPosition)
                 {
-                    TileScript selectedtile = tileMap[currentTutorial.clarifications[currentTutorial.currentStep]];
-                    selectedtile.MYCOLOR = Common.orange;
-                    selectedtile.isMarked = true;
+                    if (tileMap.Count > currentTutorial.clarifications[currentTutorial.currentStep])
+                    {
+
+                        TileScript selectedtile = tileMap[currentTutorial.clarifications[currentTutorial.currentStep]];
+                        selectedtile.MYCOLOR = Common.orange;
+                        selectedtile.isMarked = true;
+                    }
+                    else
+                    {
+                        currentTutorial.currentStep = -1;
+                        currentTutorial.clarifications.Clear();
+                        currentTutorial.steps.Clear();
+                    }
                 }
             }
         }

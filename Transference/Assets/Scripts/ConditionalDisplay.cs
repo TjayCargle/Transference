@@ -10,6 +10,7 @@ public class ConditionalDisplay : MonoBehaviour
     public bool isAffectDisplay = false;
     public bool requiresDoorTile = false;
     public bool requiresShopTile = false;
+    public bool requiresSaveTile = false;
     public bool requriesSelectedPlayer = false;
     public bool requriesSelectedEnemy = false;
     public bool mustBeLiving = false;
@@ -470,6 +471,20 @@ public class ConditionalDisplay : MonoBehaviour
                     if (manager.myCamera.currentTile)
                     {
                         if (manager.myCamera.currentTile.TTYPE != TileType.shop)
+                        {
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (requiresSaveTile == true)
+            {
+                if (manager.myCamera)
+                {
+                    if (manager.myCamera.currentTile)
+                    {
+                        if (manager.myCamera.currentTile.TTYPE != TileType.saveLoad)
                         {
                             gameObject.SetActive(false);
                             return;

@@ -32,11 +32,12 @@ public class TurnImageManager : MonoBehaviour
             if (turnImages.Count > i)
             {
                 turnImages[i].gameObject.SetActive(true);
+                turnImages[i].face.preserveAspect = true;
                 turnImages[i].face.GetComponent<ImgObj>().index = i;
                 turnImages[i].face.sprite = turnOrder[i].FACE;
                 turnImages[i].hiddenFace.sprite = turnOrder[i].FACE;
                 turnImages[i].uGUI.text = "" + turnOrder[i].ACTIONS;
-                turnImages[i].face.GetComponent<Button>().interactable = true;
+                turnImages[i].GetComponent<Button>().interactable = true;
             }
         }
         if (turnImages.Count > turnOrder.Count)
@@ -58,11 +59,12 @@ public class TurnImageManager : MonoBehaviour
             if (turnImages.Count > i)
             {
                 turnImages[i].gameObject.SetActive(true);
+                turnImages[i].face.preserveAspect = true;
                 turnImages[i].face.GetComponent<ImgObj>().index = i;
                 turnImages[i].face.sprite = turnOrder[i].FACE;
                 turnImages[i].hiddenFace.sprite = turnOrder[i].FACE;
                 turnImages[i].uGUI.text = "" + turnOrder[i].ACTIONS;
-                turnImages[i].face.GetComponent<Button>().interactable = true;
+                turnImages[i].GetComponent<Button>().interactable = true;
             }
             else
             {
@@ -81,12 +83,17 @@ public class TurnImageManager : MonoBehaviour
                 subObj.transform.parent = baseObj.transform;
                 Image subImage = subObj.AddComponent<Image>();
                 subImage.sprite = turnOrder[i].FACE;
+                subImage.preserveAspect = true;
 
                 ImgObj imgobject = subObj.AddComponent<ImgObj>();
                 imgobject.manager = manager;
                 imgobject.index = i;
-                Button selectButton = subObj.AddComponent<Button>();
+                Button selectButton = baseObj.AddComponent<Button>();
                 selectButton.onClick.AddListener(imgobject.SelectMe);
+                ColorBlock cBlock = selectButton.colors;
+                cBlock.highlightedColor = Color.yellow;
+                cBlock.pressedColor = Common.orange;
+                selectButton.colors = cBlock;
 
                 timg.face = subImage;
 
@@ -111,6 +118,7 @@ public class TurnImageManager : MonoBehaviour
                 uGUI.color = Color.black;
 
                 timg.uGUI = uGUI;
+
                 turnImages.Add(timg);
             }
         }
@@ -148,7 +156,7 @@ public class TurnImageManager : MonoBehaviour
             return;
         if (orderIndex > turnImages.Count)
             return;
-        turnImages[orderIndex].GetComponentsInChildren<Image>()[1].GetComponent<Button>().interactable = false;
+        turnImages[orderIndex].GetComponent<Button>().interactable = false;
 
     }
 

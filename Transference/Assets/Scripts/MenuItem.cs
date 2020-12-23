@@ -90,694 +90,712 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         }
         MenuItemType item = (MenuItemType)itemType;
         // Debug.Log("Menu item :" + item);
-        LeanTween.rotateX(gameObject, 180.0f, 0.2f ).setOnComplete(x => { 
-        gameObject.transform.rotation = Quaternion.Euler( Vector3.zero);
-
-        switch (item)
+        LeanTween.rotateX(gameObject, 180.0f, 0.2f).setOnComplete(x =>
         {
-            case MenuItemType.Move:
-                {
+            gameObject.transform.rotation = Quaternion.Euler(Vector3.zero);
 
-                    //myManager.prevState = myManager.currentState;
-                    //myManager.currentState = State.PlayerMove
-
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerMove;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.command;
-                    //myManager.enterState(entry);
-                    myManager.StackNewSelection(State.PlayerMove, currentMenu.command);
-
-                    if (invokingObject.GetComponent<AnimationScript>())
+            switch (item)
+            {
+                case MenuItemType.Move:
                     {
-                        AnimationScript anim = invokingObject.GetComponent<AnimationScript>();
-                        if (anim.hasMove)
+
+                        //myManager.prevState = myManager.currentState;
+                        //myManager.currentState = State.PlayerMove
+
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerMove;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.command;
+                        //myManager.enterState(entry);
+                        myManager.StackNewSelection(State.PlayerMove, currentMenu.command);
+
+                        if (invokingObject.GetComponent<AnimationScript>())
                         {
-                            anim.LoadList(anim.movePath);
+                            AnimationScript anim = invokingObject.GetComponent<AnimationScript>();
+                            if (anim.hasMove)
+                            {
+                                anim.LoadList(anim.movePath);
+                            }
+                        }
+
+                        MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                        if (myMenuManager)
+                        {
+                            myMenuManager.ShowNone();
                         }
                     }
-
-                    MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                    if (myMenuManager)
+                    break;
+                case MenuItemType.Attack:
                     {
-                        myMenuManager.ShowNone();
-                    }
-                }
-                break;
-            case MenuItemType.Attack:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                        myManager.attackableTiles = myManager.GetAttackableTiles(liveInvokingObject, myManager.player.current.WEAPON.EQUIPPED);
-                        myManager.ShowWhite();
-                        if (myManager.attackableTiles.Count > 0)
+                        if (invokingObject.GetComponent<LivingObject>())
                         {
-                            for (int i = 0; i < myManager.attackableTiles.Count; i++)
+                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                            myManager.attackableTiles = myManager.GetAttackableTiles(liveInvokingObject, myManager.player.current.WEAPON.EQUIPPED);
+                            myManager.ShowWhite();
+                            if (myManager.attackableTiles.Count > 0)
                             {
-                                for (int j = 0; j < myManager.attackableTiles[i].Count; j++)
+                                for (int i = 0; i < myManager.attackableTiles.Count; i++)
                                 {
-                                    myManager.attackableTiles[i][j].MYCOLOR = Common.pink;
-                                }
-                            }
-                            myManager.currentAttackList = myManager.attackableTiles[0];
-                            bool foundSomething = false;
-                            for (int i = 0; i < myManager.currentAttackList.Count; i++)
-                            {
-
-                                if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
-                                {
-
-                                    foundSomething = true;
-                                    if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[i].transform.position) == true)
+                                    for (int j = 0; j < myManager.attackableTiles[i].Count; j++)
                                     {
-                                        myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+                                        myManager.attackableTiles[i][j].MYCOLOR = Common.pink;
+                                    }
+                                }
+                                myManager.currentAttackList = myManager.attackableTiles[0];
+                                bool foundSomething = false;
+                                for (int i = 0; i < myManager.currentAttackList.Count; i++)
+                                {
 
-                                        myManager.myCamera.potentialDamage = 0;
-                                        myManager.myCamera.UpdateCamera();
-                                        myManager.anchorHpBar();
+                                    if (myManager.GetObjectAtTile(myManager.currentAttackList[i]) != null)
+                                    {
 
-                                        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
-                                        if (griddy)
+                                        foundSomething = true;
+                                        if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[i].transform.position) == true)
                                         {
-                                            if (griddy.GetComponent<LivingObject>())
-                                            {
-                                                LivingObject livvy = griddy.GetComponent<LivingObject>();
-                                                if (livvy.FACTION != myManager.player.current.FACTION)
-                                                {
-                                                    DmgReaction reac;
-                                                    if (myManager.player.currentSkill)
-                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
-                                                    else
-                                                        reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
-                                                    if (reac.reaction > Reaction.weak)
-                                                        reac.damage = 0;
-                                                    myManager.myCamera.potentialDamage = reac.damage;
-                                                    myManager.myCamera.UpdateCamera();
-                                                    if (myManager.potential)
-                                                    {
-                                                        myManager.potential.pulsing = true;
-                                                    }
+                                            myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
 
+                                            myManager.myCamera.potentialDamage = 0;
+                                            myManager.myCamera.UpdateCamera();
+                                            myManager.anchorHpBar();
+
+                                            GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+                                            if (griddy)
+                                            {
+                                                if (griddy.GetComponent<LivingObject>())
+                                                {
+                                                    LivingObject livvy = griddy.GetComponent<LivingObject>();
+                                                    if (livvy.FACTION != myManager.player.current.FACTION)
+                                                    {
+                                                        DmgReaction reac;
+                                                        if (myManager.player.currentSkill)
+                                                            reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
+                                                        else
+                                                            reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
+                                                        if (reac.reaction > Reaction.weak)
+                                                            reac.damage = 0;
+                                                        myManager.myCamera.potentialDamage = reac.damage;
+                                                        myManager.myCamera.UpdateCamera();
+                                                        if (myManager.potential)
+                                                        {
+                                                            myManager.potential.pulsing = true;
+                                                        }
+
+                                                    }
                                                 }
                                             }
                                         }
+
+                                    }
+                                    myManager.currentAttackList[i].MYCOLOR = Common.red;
+                                }
+                                if (foundSomething == false)
+                                {
+                                    if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.player.current.transform.position) == true)
+                                    {
+                                        myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
+
                                     }
 
                                 }
-                                myManager.currentAttackList[i].MYCOLOR = Common.red;
-                            }
-                            if (foundSomething == false)
-                            {
-                                if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.player.current.transform.position) == true)
+
+                                MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
+                                if (myMenuManager)
                                 {
-                                    myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-
+                                    myMenuManager.ShowNone();
                                 }
+                                myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
+                                //menuStackEntry entry = new menuStackEntry();
+                                //entry.state = State.PlayerAttacking;
+                                //entry.index = myManager.invManager.currentIndex;
+                                //entry.menu = currentMenu.command;
+                                //myManager.enterState(entry);
+
 
                             }
-
-                            MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
-                            if (myMenuManager)
+                            else
                             {
-                                myMenuManager.ShowNone();
+                                Debug.Log("Looking for weapons?");
+                                myManager.CreateTextEvent(this, "No weapon equipped for " + invokingObject.NAME, "no weapon", myManager.CheckText, myManager.TextStart);
                             }
-                            myManager.StackNewSelection(State.PlayerAttacking, currentMenu.act);
-                            //menuStackEntry entry = new menuStackEntry();
-                            //entry.state = State.PlayerAttacking;
-                            //entry.index = myManager.invManager.currentIndex;
-                            //entry.menu = currentMenu.command;
-                            //myManager.enterState(entry);
-
 
                         }
                         else
                         {
-                            Debug.Log("Looking for weapons?");
-                            myManager.CreateTextEvent(this, "No weapon equipped for " + invokingObject.NAME, "no weapon", myManager.CheckText, myManager.TextStart);
+                            myManager.attackableTiles.Clear();
                         }
+                        myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                        myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
 
-                    }
-                    else
-                    {
-                        myManager.attackableTiles.Clear();
-                    }
-                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-
-                }
-                break;
-            case MenuItemType.Equip:
-                {
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingMenu;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.command;
-                    //myManager.enterState(entry);
-
-                    myManager.StackInventory();
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        myMenuManager.ShowInventoryCanvas();
-                        myManager.invManager.currentIndex = 0;
-                        //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
                     }
                     break;
-                }
-            case MenuItemType.Wait:
-                if (myManager)
-                {
-                    myManager.myCamera.SetCameraPosFar();
-                }
-                if (invokingObject.GetComponent<LivingObject>())
-                {
-                    invokingObject.GetComponent<LivingObject>().Wait();
-                }
-
-                break;
-            case MenuItemType.Look:
-                {
-                    Debug.Log("Where u lookin dumbass");
-                    return;
-                    myManager.tempObject.transform.position = myManager.currentObject.transform.position;
-                    myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
-                    myManager.GetComponent<MenuManager>().ShowNone();
-
-                    menuStackEntry entry = new menuStackEntry();
-                    entry.state = State.FreeCamera;
-                    entry.index = myManager.invManager.currentIndex;
-                    entry.menu = currentMenu.command;
-                    myManager.enterState(entry);
-                }
-                break;
-            case MenuItemType.InventoryWeapon:
-                {
-
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquipping;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerEquipping, currentMenu.invMain);
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
+                case MenuItemType.Equip:
                     {
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(0, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(4, liveInvokingObject);
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingMenu;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.command;
+                        //myManager.enterState(entry);
 
+                        myManager.StackInventory();
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+                            myMenuManager.ShowInventoryCanvas();
+                            myManager.invManager.currentIndex = 0;
                             //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-
                         }
+                        break;
                     }
-                }
-                break;
-            case MenuItemType.chooseSkill:
-                {
-                    // Debug.Log("going into select skill");
-                    //  myManager.prevState = myManager.currentState;
-                    //  myManager.currentState = State.PlayerEquipping;
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingMenu;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.command;
-                    //myManager.enterState(entry);
-                    myManager.StackSkills();
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            myMenuManager.ShowSkillCanvas();
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.InventoryArmor:
-                {
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquipping;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //Debug.Log("curr index = " + myManager.invManager.currentIndex);
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-                    myManager.StackNewSelection(State.PlayerEquipping, currentMenu.act);
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(1, liveInvokingObject);
-                            // myMenuManager.ShowExtraCanvas(5, liveInvokingObject);
-
-                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.InventoryAcc:
-                {
-                    menuStackEntry entry = new menuStackEntry();
-                    entry.state = State.PlayerEquipping;
-                    entry.index = myManager.invManager.currentIndex;
-                    entry.menu = currentMenu.invMain;
-                    myManager.enterState(entry);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(2, liveInvokingObject);
-                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.equipBS:
-                {
-                    //Debug.Log("equip cmd skill");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingSkills;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(5, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(0, invokingObject.GetComponent<LivingObject>());
-                            //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.Skills:
-                {
-
-                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(5, liveInvokingObject);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.equipAS:
-                {
-                    // Debug.Log("select auto skill");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingSkills;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            //myMenuManager.ShowItemCanvas(9, liveInvokingObject);
-                            myMenuManager.ShowItemCanvas(9, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(2, invokingObject.GetComponent<LivingObject>());
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.equipPS:
-                {
-                    //Debug.Log("select passive skill");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingSkills;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(6, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(1, invokingObject.GetComponent<LivingObject>());
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.equipOS:
-                {
-                    //Debug.Log("select opp skill");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerEquippingSkills;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            //myMenuManager.ShowItemCanvas(10, liveInvokingObject);
-                            myMenuManager.ShowItemCanvas(10, liveInvokingObject);
-                            myMenuManager.ShowExtraCanvas(3, invokingObject.GetComponent<LivingObject>());
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.chooseOptions:
-
-                myManager.StackOptions();
-
-                break;
-            case MenuItemType.prevMenu:
-                myManager.inTutorialMenu = false;
-                if (myManager.eventManager.activeEvents == 0)
-                {
-                    //   Debug.Log("prev, " + myManager.GetState());
-                    myManager.DidCompleteTutorialStep();
-                    myManager.returnState();
-                }
-                else
-                {
-                    if (myManager.prevState == State.EnemyTurn || myManager.prevState == State.HazardTurn)
-                    {
-                        myManager.menuManager.ShowNone();
-                        myManager.currentState = State.EnemyTurn;
-                    }
-                    else if (myManager.currentState == State.EventRunning)
-                    {
-                        myManager.DidCompleteTutorialStep();
-                        myManager.returnState();
-                    }
-                    else
-                    {
-                        Debug.Log("nah, " + myManager.GetState());
-
-                        myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
-                        myManager.DidCompleteTutorialStep();
-                        myManager.currentState = State.PlayerTransition;
-                    }
-                }
-                break;
-            case MenuItemType.generated:
-
-                //  myManager.CreateEvent(this, null, "player user or atk", myManager.ReturnTrue, );
-                PlayerUseOrAtk(invokingObject.GetComponent<LivingObject>());
-
-                break;
-
-            case MenuItemType.Items:
-                {
-                    //Debug.Log("select item");
-                    //menuStackEntry entry = new menuStackEntry();
-                    //entry.state = State.PlayerSelectItem;
-                    //entry.index = myManager.invManager.currentIndex;
-                    //entry.menu = currentMenu.invMain;
-                    //myManager.enterState(entry);
-
-                    myManager.StackNewSelection(State.PlayerSelectItem, currentMenu.act);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(11, liveInvokingObject);
-
-                        }
-                    }
-                    InventoryMangager invManager = myManager.GetComponent<InventoryMangager>();
-                    if (invManager)
-                    {
-                        invManager.TurnOffNewDesc();
-                    }
-
-                }
-                break;
-
-            case MenuItemType.Battle:
-                {
-                    //myManager.menuManager.ShowActCanvas();
-
-                    myManager.StackActSelection();
-                }
-                break;
-            case MenuItemType.Details:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        myManager.detailsScreen.anotherObj = null;
-                        myManager.detailsScreen.currentObj = invokingObject.GetComponent<LivingObject>();
-                        myManager.StackDetails();
-                    }
-                    else
-                    {
-                        myManager.detailsScreen.currentObj = null;
-                        myManager.detailsScreen.anotherObj = invokingObject.GetComponent<GridObject>();
-                        myManager.StackDetails();
-                    }
-
-                }
-                break;
-            case MenuItemType.Shop:
-                {
-                    myManager.StackShop();
-                }
-                break;
-            case MenuItemType.Door:
-                {
-
-                    myManager.GotoNewRoom();
-                    // myManager.CheckDoorPrompt();
-                }
-                break;
-            case MenuItemType.anEvent:
-                {
-                    myManager.CheckEventPrompt();
-                }
-                break;
-            case MenuItemType.Spells:
-                {
-
-                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(12, liveInvokingObject);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.Strikes:
-                {
-
-                    myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
-
-                    MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
-                    if (myMenuManager)
-                    {
-
-                        if (invokingObject.GetComponent<LivingObject>())
-                        {
-                            LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
-                            myMenuManager.ShowItemCanvas(13, liveInvokingObject);
-
-                        }
-                    }
-                }
-                break;
-            case MenuItemType.forceEnd:
-                myManager.forceEnd();
-                break;
-            case MenuItemType.openBattleLog:
-                myManager.stackLog();
-                break;
-            case MenuItemType.yesPrompt:
-                myManager.YesPrompt();
-                break;
-            case MenuItemType.noPrompt:
-                myManager.NoPrompt();
-                break;
-            case MenuItemType.trade:
-                break;
-            case MenuItemType.Tip:
-                {
-                    myManager.CheckHelpPrompt();
-                }
-                break;
-            case MenuItemType.Interact:
-                {
-                    myManager.InteractWithObject();
-                }
-                break;
-            case MenuItemType.Hack:
-                {
-                    if (myManager)
-                    {
-                        myManager.BeginHacking();
-
-                    }
-                }
-                break;
-            case MenuItemType.Guard:
-                {
+                case MenuItemType.Wait:
                     if (myManager)
                     {
                         myManager.myCamera.SetCameraPosFar();
                     }
                     if (invokingObject.GetComponent<LivingObject>())
                     {
-                        invokingObject.GetComponent<LivingObject>().GuardCharge();
+                        invokingObject.GetComponent<LivingObject>().Wait();
                     }
 
-                }
-                break;
-
-            case MenuItemType.Talk:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
+                    break;
+                case MenuItemType.Look:
                     {
-                        LivingObject living = invokingObject.GetComponent<LivingObject>();
+                        Debug.Log("Where u lookin dumbass");
+                        return;
+                        myManager.tempObject.transform.position = myManager.currentObject.transform.position;
+                        myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
+                        myManager.GetComponent<MenuManager>().ShowNone();
 
-                        if (myManager)
+                        menuStackEntry entry = new menuStackEntry();
+                        entry.state = State.FreeCamera;
+                        entry.index = myManager.invManager.currentIndex;
+                        entry.menu = currentMenu.command;
+                        myManager.enterState(entry);
+                    }
+                    break;
+                case MenuItemType.InventoryWeapon:
+                    {
+
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquipping;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerEquipping, currentMenu.invMain);
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
                         {
-
-                            EnemyScript enemy = myManager.GetAdjecentEnemy(living);
-
-                            if (enemy)
+                            if (invokingObject.GetComponent<LivingObject>())
                             {
-                                string response = enemy.CheckTalkRequirements(living);
-                                DatabaseManager database = Common.GetDatabase();
-                                if (database)
-                                {
-                                    SceneContainer scene = database.GenerateScene(enemy.NAME, response, enemy.FACE);
-                                    myManager.SetScene(scene);
-                                }
-                            }
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(0, liveInvokingObject);
+                                myMenuManager.ShowExtraCanvas(4, liveInvokingObject);
 
+                                //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                            }
                         }
                     }
-                }
-                break;
-            case MenuItemType.heal:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
+                    break;
+                case MenuItemType.chooseSkill:
                     {
-                        invokingObject.GetComponent<LivingObject>().Heal();
-                    }
-
-                }
-                break;
-            case MenuItemType.restore:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        invokingObject.GetComponent<LivingObject>().Restore();
-                    }
-
-                }
-                break;
-            case MenuItemType.charge:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        invokingObject.GetComponent<LivingObject>().Charge();
-                    }
-
-                }
-                break;
-            case MenuItemType.drain:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        invokingObject.GetComponent<LivingObject>().Drain();
-                    }
-
-                }
-                break;
-            case MenuItemType.overload:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
-                    {
-                        LivingObject livvy = invokingObject.GetComponent<LivingObject>();
-                        if (livvy.HEALTH > (int)(0.30f * livvy.MAX_HEALTH))
+                        // Debug.Log("going into select skill");
+                        //  myManager.prevState = myManager.currentState;
+                        //  myManager.currentState = State.PlayerEquipping;
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingMenu;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.command;
+                        //myManager.enterState(entry);
+                        myManager.StackSkills();
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
                         {
-                            invokingObject.GetComponent<LivingObject>().Overload();
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                myMenuManager.ShowSkillCanvas();
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.InventoryArmor:
+                    {
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquipping;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //Debug.Log("curr index = " + myManager.invManager.currentIndex);
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+                        myManager.StackNewSelection(State.PlayerEquipping, currentMenu.act);
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(1, liveInvokingObject);
+                                // myMenuManager.ShowExtraCanvas(5, liveInvokingObject);
+
+                                //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.InventoryAcc:
+                    {
+                        menuStackEntry entry = new menuStackEntry();
+                        entry.state = State.PlayerEquipping;
+                        entry.index = myManager.invManager.currentIndex;
+                        entry.menu = currentMenu.invMain;
+                        myManager.enterState(entry);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(2, liveInvokingObject);
+                                //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.equipBS:
+                    {
+                        //Debug.Log("equip cmd skill");
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingSkills;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(5, liveInvokingObject);
+                                myMenuManager.ShowExtraCanvas(0, invokingObject.GetComponent<LivingObject>());
+                                //myManager.updateCurrentMenuPosition(myManager.currentMenuitem);
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.Skills:
+                    {
+
+                        myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(5, liveInvokingObject);
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.equipAS:
+                    {
+                        // Debug.Log("select auto skill");
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingSkills;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                //myMenuManager.ShowItemCanvas(9, liveInvokingObject);
+                                myMenuManager.ShowItemCanvas(9, liveInvokingObject);
+                                myMenuManager.ShowExtraCanvas(2, invokingObject.GetComponent<LivingObject>());
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.equipPS:
+                    {
+                        //Debug.Log("select passive skill");
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingSkills;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(6, liveInvokingObject);
+                                myMenuManager.ShowExtraCanvas(1, invokingObject.GetComponent<LivingObject>());
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.equipOS:
+                    {
+                        //Debug.Log("select opp skill");
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerEquippingSkills;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerEquippingSkills, currentMenu.skillsMain);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                //myMenuManager.ShowItemCanvas(10, liveInvokingObject);
+                                myMenuManager.ShowItemCanvas(10, liveInvokingObject);
+                                myMenuManager.ShowExtraCanvas(3, invokingObject.GetComponent<LivingObject>());
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.chooseOptions:
+
+                    myManager.StackOptions();
+
+                    break;
+                case MenuItemType.prevMenu:
+                    myManager.inTutorialMenu = false;
+                    if (myManager.eventManager.activeEvents == 0)
+                    {
+                        //   Debug.Log("prev, " + myManager.GetState());
+                        myManager.DidCompleteTutorialStep();
+                        myManager.returnState();
+                        myManager.showCurrentState();
+                    
+                    }
+                    else
+                    {
+                        if (myManager.prevState == State.EnemyTurn || myManager.prevState == State.HazardTurn)
+                        {
+                            myManager.menuManager.ShowNone();
+                            myManager.currentState = State.EnemyTurn;
+                        }
+                        else if (myManager.currentState == State.EventRunning)
+                        {
+                            myManager.DidCompleteTutorialStep();
+                            myManager.returnState();
                         }
                         else
                         {
-                            myManager.ShowCantUseText("Not enough health to overload");
+                            Debug.Log("nah, " + myManager.GetState());
+
+                            myManager.CreateEvent(this, null, "returning", myManager.BufferedReturnEvent);
+                            myManager.DidCompleteTutorialStep();
+                            myManager.currentState = State.PlayerTransition;
+                        }
+                        myManager.showCurrentState();
+                    }
+                    break;
+                case MenuItemType.generated:
+
+                    //  myManager.CreateEvent(this, null, "player user or atk", myManager.ReturnTrue, );
+                    PlayerUseOrAtk(invokingObject.GetComponent<LivingObject>());
+
+                    break;
+
+                case MenuItemType.Items:
+                    {
+                        //Debug.Log("select item");
+                        //menuStackEntry entry = new menuStackEntry();
+                        //entry.state = State.PlayerSelectItem;
+                        //entry.index = myManager.invManager.currentIndex;
+                        //entry.menu = currentMenu.invMain;
+                        //myManager.enterState(entry);
+
+                        myManager.StackNewSelection(State.PlayerSelectItem, currentMenu.act);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(11, liveInvokingObject);
+
+                            }
+                        }
+                        InventoryMangager invManager = myManager.GetComponent<InventoryMangager>();
+                        if (invManager)
+                        {
+                            invManager.TurnOffNewDesc();
+                        }
+
+                    }
+                    break;
+
+                case MenuItemType.Battle:
+                    {
+                        //myManager.menuManager.ShowActCanvas();
+
+                        myManager.StackActSelection();
+                    }
+                    break;
+                case MenuItemType.Details:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            myManager.detailsScreen.anotherObj = null;
+                            myManager.detailsScreen.currentObj = invokingObject.GetComponent<LivingObject>();
+                            myManager.StackDetails();
+                        }
+                        else
+                        {
+                            myManager.detailsScreen.currentObj = null;
+                            myManager.detailsScreen.anotherObj = invokingObject.GetComponent<GridObject>();
+                            myManager.StackDetails();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.Shop:
+                    {
+                        myManager.StackShop();
+                    }
+                    break;
+                case MenuItemType.Door:
+                    {
+
+                        myManager.GotoNewRoom();
+                        // myManager.CheckDoorPrompt();
+                    }
+                    break;
+                case MenuItemType.anEvent:
+                    {
+                        myManager.CheckEventPrompt();
+                    }
+                    break;
+                case MenuItemType.Spells:
+                    {
+
+                        myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(12, liveInvokingObject);
+
+                            }
                         }
                     }
-
-                }
-                break;
-            case MenuItemType.shield:
-                {
-                    if (invokingObject.GetComponent<LivingObject>())
+                    break;
+                case MenuItemType.Strikes:
                     {
-                        invokingObject.GetComponent<LivingObject>().Shield();
+
+                        myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
+
+                        MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
+                        if (myMenuManager)
+                        {
+
+                            if (invokingObject.GetComponent<LivingObject>())
+                            {
+                                LivingObject liveInvokingObject = invokingObject.GetComponent<LivingObject>();
+                                myMenuManager.ShowItemCanvas(13, liveInvokingObject);
+
+                            }
+                        }
                     }
+                    break;
+                case MenuItemType.forceEnd:
+                    myManager.forceEnd();
+                    break;
+                case MenuItemType.openBattleLog:
+                    myManager.stackLog();
+                    break;
+                case MenuItemType.yesPrompt:
+                    myManager.YesPrompt();
+                    break;
+                case MenuItemType.noPrompt:
+                    myManager.NoPrompt();
+                    break;
+                case MenuItemType.trade:
+                    break;
+                case MenuItemType.Tip:
+                    {
+                        myManager.CheckHelpPrompt();
+                    }
+                    break;
+                case MenuItemType.Interact:
+                    {
+                        myManager.InteractWithObject();
+                    }
+                    break;
+                case MenuItemType.Hack:
+                    {
+                        if (myManager)
+                        {
+                            myManager.BeginHacking();
 
-                }
-                break;
-            case MenuItemType.allocate:
-                {
+                        }
+                    }
+                    break;
+                case MenuItemType.Guard:
+                    {
+                        if (myManager)
+                        {
+                            myManager.myCamera.SetCameraPosFar();
+                        }
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().GuardCharge();
+                        }
 
-                    myManager.StackInventory();
+                    }
+                    break;
+
+                case MenuItemType.Talk:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject living = invokingObject.GetComponent<LivingObject>();
+
+                            if (myManager)
+                            {
+
+                                EnemyScript enemy = myManager.GetAdjecentEnemy(living);
+
+                                if (enemy)
+                                {
+                                    string response = enemy.CheckTalkRequirements(living);
+                                    DatabaseManager database = Common.GetDatabase();
+                                    if (database)
+                                    {
+                                        SceneContainer scene = database.GenerateScene(enemy.NAME, response, enemy.FACE);
+                                        myManager.SetScene(scene);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    break;
+                case MenuItemType.heal:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().Heal();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.restore:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().Restore();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.charge:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().Charge();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.drain:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().Drain();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.overload:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            LivingObject livvy = invokingObject.GetComponent<LivingObject>();
+                            if (livvy.HEALTH > (int)(0.30f * livvy.MAX_HEALTH))
+                            {
+                                invokingObject.GetComponent<LivingObject>().Overload();
+                            }
+                            else
+                            {
+                                myManager.ShowCantUseText("Not enough health to overload");
+                            }
+                        }
+
+                    }
+                    break;
+                case MenuItemType.shield:
+                    {
+                        if (invokingObject.GetComponent<LivingObject>())
+                        {
+                            invokingObject.GetComponent<LivingObject>().Shield();
+                        }
+
+                    }
+                    break;
+                case MenuItemType.allocate:
+                    {
+
+                        myManager.StackInventory();
 
 
-                }
-                break;
-            default:
-                break;
-        }
-        myManager.DidCompleteTutorialStep();
+                    }
+                    break;
+                case MenuItemType.save:
+                    {
+                        myManager.SaveGame();
+
+                    }
+                    break;
+                case MenuItemType.load:
+                    {
+
+                        myManager.LoadGameAndScene();
+
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+            myManager.DidCompleteTutorialStep();
         });
     }
 
@@ -871,6 +889,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                 {
                                     if (tutorial.clarifications[tutorial.currentStep] != checkTile.listindex)
                                     {
+                                        myManager.CheckTutorialPrompt("-1;Tutorial - " + Common.GetTutorialText(tutorial.steps[tutorial.currentStep], true));
+
                                         return false;
                                     }
                                 }

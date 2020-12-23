@@ -14,6 +14,11 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     private Vector3 startLocation;
     public int specialNumber = -1;
     public NonCombatButtonAction myAction = NonCombatButtonAction.none;
+    public NonCombatButtonRequirements requirements = NonCombatButtonRequirements.none;
+    private void Awake()
+    {
+        CheckRequirements();
+    }
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -114,6 +119,10 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     break;
                 case NonCombatButtonAction.newGame:
                     {
+                        PlayerPrefs.SetInt("continue", -1);
+                        Debug.Log("newGame");
+                        PlayerPrefs.Save();
+
                         controller.loading = true;
                         if (controller.selectedCharacter == 1)
                         {
@@ -127,6 +136,10 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     break;
                 case NonCombatButtonAction.continueGame:
                     {
+                        PlayerPrefs.SetInt("continue", 1);
+                        Debug.Log("contune");
+                        PlayerPrefs.Save();
+                        controller.loading = true;
                         if (controller.selectedCharacter == 1)
                         {
                             playJax();
@@ -154,7 +167,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void playZeffron()
     {
         PlayerPrefs.SetInt("defaultSceneEntry", 4);
-        SceneManager.LoadSceneAsync("DemoMap45");
+        SceneManager.LoadSceneAsync("DemoMap5");
     }
 
 
@@ -168,5 +181,43 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         LeanTween.scale(this.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 0.2f);//.setOnComplete(x => { });
         LeanTween.moveLocalX(this.gameObject, -1.2f, 0.2f);
+    }
+
+    public bool CheckRequirements()
+    {
+        bool turnOff = false;
+        switch (requirements)
+        {
+            case NonCombatButtonRequirements.none:
+                break;
+            case NonCombatButtonRequirements.jaxSave1:
+                {
+                    if(!PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+                    {
+                        turnOff = true;
+                    }
+                }
+                break;
+            case NonCombatButtonRequirements.jaxSave2:
+                break;
+            case NonCombatButtonRequirements.jaxSave3:
+                break;
+            case NonCombatButtonRequirements.jaxSave4:
+                break;
+            case NonCombatButtonRequirements.jaxSave5:
+                break;
+            default:
+                break;
+        }
+        if(turnOff == true)
+        {
+            Image myImg = GetComponent<Image>();
+            Color disabled;
+            ColorUtility.TryParseHtmlString("#6C440B", out disabled);//;
+            myImg.color = disabled;
+            enabled = false;
+        }
+
+        return turnOff;
     }
 }

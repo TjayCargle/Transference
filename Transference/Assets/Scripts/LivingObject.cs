@@ -2110,7 +2110,7 @@ public class LivingObject : GridObject
         }
     }
 
-    Vector2 prev = Vector2.zero;
+   protected Vector2 prev = Vector2.zero;
     private void Update()
     {
 

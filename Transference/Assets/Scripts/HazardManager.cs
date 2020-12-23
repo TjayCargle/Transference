@@ -94,6 +94,10 @@ public class HazardManager : MonoBehaviour
 
             }
         }
+        for (int i = 0; i < subhazards.Count; i++)
+        {
+            hazards.Remove((hazards[0]));
+        }
         return subhazards;
     }
 

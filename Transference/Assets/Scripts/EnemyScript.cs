@@ -771,11 +771,7 @@ public class EnemyScript : LivingObject
                                     continue;
                                 }
                             }
-                            else
-                            {
-
-                                Debug.Log("you son of a" + objects[i].NAME);
-                            }
+                           
                         }
                         if (personality == EPType.finisher)
                         {

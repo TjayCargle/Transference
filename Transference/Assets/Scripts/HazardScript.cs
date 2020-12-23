@@ -769,9 +769,25 @@ private void IncreaseHacks(SubSkillType sub)
 
     private void Update()
     {
-      if(Input.GetKeyDown(KeyCode.G))
+        if (actionCounterText)
         {
-            generateSequence();
+
+            if (prev != actionCounterText.rectTransform.sizeDelta)
+            {
+
+                if (prev == Vector2.zero)
+                {
+                    actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                    prev = actionCounterText.rectTransform.sizeDelta;
+                }
+                else
+                {
+                    actionCounterText.rectTransform.sizeDelta = new Vector2(6.2f, 4.2f);
+                    prev = actionCounterText.rectTransform.sizeDelta;
+
+                }
+
+            }
         }
     }
 }

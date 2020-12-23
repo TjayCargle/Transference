@@ -100,6 +100,26 @@ public class GameOverBtn : MonoBehaviour, IPointerEnterHandler
                     }
                 }
                 break;
+            case 4:
+                {
+                    //Cheat Death
+                    //Revive each character to full, but deletes save file.
+                    if (manager)
+                    {
+                        manager.ReviveCheat();
+                        manager.forceReloadRound(Faction.ally);
+                        manager.menuManager.DontShowGameOver();
+                        if (mybutton)
+                        {
+                            mybutton.interactable = false;
+                            if (used)
+                            {
+                                used.gameObject.SetActive(true);
+                            }
+                        }
+                    }
+                }
+                break;
             case 3:
                 {
                     //

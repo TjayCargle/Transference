@@ -403,7 +403,9 @@ public enum MenuItemType
     drain,
     overload,
     shield,
-    allocate
+    allocate,
+    save,
+    load
 
 }
 
@@ -596,7 +598,7 @@ public enum TileType
     knockback,
     pullin,
     swap,
-    reposition, 
+    reposition,
     saveLoad
 }
 
@@ -670,6 +672,17 @@ public enum NonCombatButtonAction
     setChapter,
     newGame,
     continueGame
+}
+
+public enum NonCombatButtonRequirements
+{
+    none,
+    jaxSave1,
+    jaxSave2,
+    jaxSave3,
+    jaxSave4,
+    jaxSave5,
+
 }
 public struct StringContainer
 {
@@ -2663,17 +2676,30 @@ public class Common : ScriptableObject
         }
         return 0;
     }
-    public static string GetTutorialText(tutorialStep someStep)
+    public static string GetTutorialText(tutorialStep someStep, bool extended = false)
     {
         string returnedString = "";
 
         switch (someStep)
         {
             case tutorialStep.moveToPosition:
-                returnedString = "Move to the orange tile";
+                {
+                    returnedString = "Move to the orange tile";
+                    if (extended == true)
+                    {
+                        returnedString = "Moving; 1) Click on Jax.\n 2) Click move.\n 3) Click the orange tile so that Jax will move there. \n 4) Click on Jax once more to confirm moving.";
+                    }
+                }
                 break;
             case tutorialStep.useStrike:
-                returnedString = "Attack with a strike";
+                {
+                    returnedString = "Attack with a strike";
+                    if (extended == true)
+                    {
+                        returnedString = "Strikes; 1) Click on Jax.\n 2) Click battle.\n 3) Select Strikes. \n 4) Select an attack to use. \n 5) Click on an enemy in range to use the attack.";
+                    }
+
+                }
                 break;
             case tutorialStep.useSkill:
                 returnedString = "Attack with a skill";
@@ -2688,7 +2714,13 @@ public class Common : ScriptableObject
                 returnedString = "Use an item";
                 break;
             case tutorialStep.allocate:
-                returnedString = "Allocate your Action Points";
+                {
+                    returnedString = "Allocate your Action Points";
+                    if (extended == true)
+                    {
+                        returnedString = "Allocate; 1) Click on Jax.\n 2) Click allocate.\n 3) Select any option.";
+                    }
+                }
                 break;
             case tutorialStep.defeatEnemy:
                 returnedString = "Defeat the enemy";
@@ -2732,7 +2764,7 @@ public class Common : ScriptableObject
                 break;
             case 3:
                 {
-                    returnedString = "Guarding; Choosing to 'Guard Charge' will use up all remaining actions for a character and put them in a Guard state. While guarding: all damage is halved and that character cannot be crippled. Also using 'Guard Charge' will increase the Fatigue meter based on how many actions the character had left before using.";
+                    returnedString = "Shields; Choosing 'Shield' from the allocate menu will allow you to reduce damage from the next attack. Stacking multiple shields which will reduce damage from that many attacks. ";
                 }
                 break;
             case 4:
@@ -2747,7 +2779,7 @@ public class Common : ScriptableObject
                 break;
             case 6:
                 {
-                    returnedString = "Control Glyphs; Control Glyphs are a standard for keeping intruders from accessing your valuables. Unless hacked or destroyed, Control Glyphs are able to remove entire parts of your home from being accessible to malicious attackers.";
+                    returnedString = "Control Glyphs; Control Glyphs are able to remove entire parts of the floor from being accessible while active.";
                 }
                 break;
             case 13:
@@ -2857,12 +2889,17 @@ public class Common : ScriptableObject
                 break;
             case 28:
                 {
-                    returnedString = "Factions & Races;All charcaters belong to a specific faction. By default the faction you belong to directly tied to your race. However, anyone is free to leave their faction for another if allowed.\n\nEnemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
+                    returnedString = "Factions & Races;All charcaters belong to a specific faction which is determined by race.\n\nEnemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
                 }
                 break;
             case 29:
                 {
                     returnedString = "Skills;While Jax started with magical spells and mental strikes, Zeffron starts with physical skills.\n\nSkills utilize the <color=yellow>fatigue meter</color>. Some skills must <color=yellow>charge the FT meter</color> by a specific amount, while others must <color=yellow>drain the FT meter</color> by a specific amount.";
+                }
+                break;
+            case 30:
+                {
+                    returnedString = "Game Saved!; You have saved the game. When accessing the game from the main menu you may now choose Continue instead of New Game.";
                 }
                 break;
             default:
@@ -2872,6 +2909,7 @@ public class Common : ScriptableObject
 
         return returnedString;
     }
+
     public static EventDetails GetEventText(int eventnum, LivingObject living)
     {
         eventdetail.eventTitle = "";
@@ -3409,11 +3447,11 @@ public class Common : ScriptableObject
         string details = "";
 
         details += data.mapIndex + ",";
-        details+= data.mapName + ",";
-        details+= data.width + ",";
+        details += data.mapName + ",";
+        details += data.width + ",";
         details += data.height + ",";
-        
-        details += data.doorIndexes.Count + "";     
+
+        details += data.doorIndexes.Count + "";
         for (int i = 0; i < data.doorIndexes.Count; i++)
         {
             details += "," + data.doorIndexes[i];
@@ -3501,7 +3539,7 @@ public class Common : ScriptableObject
         for (int i = 0; i < data.unOccupiedIndexes.Count; i++)
         {
             details += "," + data.unOccupiedIndexes[i];
-        }       
+        }
 
 
         return details;
@@ -3526,12 +3564,12 @@ public class Common : ScriptableObject
         data.tileIndexes = new List<int>();
         data.tilesInShadow = new List<int>();
 
-       // if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        // if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
         {
-         //   string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
+            //   string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
 
-           // string[] dataString = loadString.Split(',');
-             dataIIndex = startingIndex;
+            // string[] dataString = loadString.Split(',');
+            dataIIndex = startingIndex;
 
             System.Int32.TryParse(dataString[dataIIndex], out data.mapIndex);
             dataIIndex++;
@@ -3741,12 +3779,12 @@ public class Common : ScriptableObject
 
         Faction newFacttion;
         System.Enum.TryParse(dataString[dataIIndex], out newFacttion);
-      //  generatedCharacter.FACTION = newFacttion;
+        //  generatedCharacter.FACTION = newFacttion;
         dataIIndex++;
 
         int tempInt = 0;
         System.Int32.TryParse(dataString[dataIIndex], out tempInt);
-       // generatedCharacter.id = tempInt;
+        // generatedCharacter.id = tempInt;
         dataIIndex++;
         switch (newFacttion)
         {
@@ -3756,29 +3794,31 @@ public class Common : ScriptableObject
                     bool found = false;
                     for (int i = 0; i < actors.Length; i++)
                     {
-                        if(actors[i].NAME == characterName)
+                        if (actors[i].NAME == characterName)
                         {
                             found = true;
                             generatedCharacter = actors[i];
                         }
                     }
 
-                    if(found == false)
+                    if (found == false)
                     {
                         generatedCharacter = GetManager().GetActor(tempInt);
+                        generatedCharacter.Setup();
                     }
 
-                    manager.turnOrder.Add(generatedCharacter);
+                    GetManager().turnOrder.Add(generatedCharacter);
                 }
                 break;
 
             case Faction.enemy:
                 {
                     EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-                    if(enemyManager != null)
+                    if (enemyManager != null)
                     {
-                      generatedCharacter =  enemyManager.getEnemies(1, tempInt)[0];
+                        generatedCharacter = enemyManager.getEnemies(1, tempInt)[0];
                     }
+                    GetManager().liveEnemies.Add(generatedCharacter);
                 }
                 break;
 
@@ -3789,19 +3829,22 @@ public class Common : ScriptableObject
                     {
                         generatedCharacter = hazardManager.getHazards(1, tempInt)[0];
                     }
+                    GetManager().liveEnemies.Add(generatedCharacter);
                 }
                 break;
-   
+
             case Faction.fairy:
                 {
                     EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
                     if (enemyManager != null)
                     {
                         generatedCharacter = enemyManager.getEnemies(1)[0];
+
                     }
+                    GetManager().liveEnemies.Add(generatedCharacter);
                 }
                 break;
-     
+
             default:
                 break;
         }
@@ -3994,7 +4037,7 @@ public class Common : ScriptableObject
 
 
             int augCount = 0;
-            System.Int32.TryParse(dataString[dataIIndex], out augCount);       
+            System.Int32.TryParse(dataString[dataIIndex], out augCount);
             dataIIndex++;
 
             for (int j = 0; j < augCount; j++)
@@ -4210,13 +4253,13 @@ public class Common : ScriptableObject
         {
             int curInx = 0;
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            Debug.Log("combo=" + curInx);
+
             ComboSkill newCombo = GetDatabase().LearnSkill(curInx, generatedCharacter) as ComboSkill;
             dataIIndex++;
 
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
             newCombo.LEVEL = curInx;
-            dataIIndex++;      
+            dataIIndex++;
 
             int augCount = 0;
             System.Int32.TryParse(dataString[dataIIndex], out augCount);
@@ -4290,7 +4333,7 @@ public class Common : ScriptableObject
             newOpp.LEVEL = curInx;
             dataIIndex++;
 
-         
+
 
             for (int j = 1; j < newOpp.LEVEL; j++)
             {
@@ -4307,7 +4350,7 @@ public class Common : ScriptableObject
         {
             int curInx = 0;
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            Debug.Log("item=" + curInx);
+            //Debug.Log("item=" + curInx);
             ItemScript newItem = GetDatabase().GetItem(curInx, generatedCharacter) as ItemScript;
             dataIIndex++;
 

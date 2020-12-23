@@ -1472,7 +1472,7 @@ public class InventoryMangager : MonoBehaviour
 
     private void AutoRotate()
     {
-        int startingDegree = 0;
+        float startingDegree = 0;
         if (currentRect)
         {
             if (currentContent)
@@ -1500,18 +1500,22 @@ public class InventoryMangager : MonoBehaviour
                         break;
                     default:
                         {
-                            startingDegree = -childCount * childCount;
+                            // startingDegree = -childCount * childCount;
                             for (int i = 0; i < childCount; i++)
                             {
-                                if(i == 0 || i == childCount -1)
+                                if (i == 0)
                                 {
-                                    GetActiveChild(i).eulerAngles = new Vector3(0, 0, startingDegree);
+                                    GetActiveChild(i).eulerAngles = new Vector3(0, 0, -5.0f);
+                                }
+                                else if (i == childCount - 1)
+                                {
+                                    GetActiveChild(i).eulerAngles = new Vector3(0, 0, 5.0f);
                                 }
                                 else
                                 {
-                                GetActiveChild(i).eulerAngles = Vector3.zero;// new Vector3(0, 0, startingDegree);
+                                    GetActiveChild(i).eulerAngles = Vector3.zero;// new Vector3(0, 0, startingDegree);
                                 }
-                                startingDegree += childCount * 2;
+                                // startingDegree += childCount * 2;
                             }
 
                         }

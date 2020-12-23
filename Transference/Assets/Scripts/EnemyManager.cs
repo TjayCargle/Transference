@@ -115,7 +115,11 @@ public class EnemyManager : MonoBehaviour {
                 enemySetup.enemyId = Random.Range(0, 6);
                 }
                 enemies[i].Setup();
-    
+                if (enemySetup.enemyId >= 100)
+                {
+                    enemies[i].FACTION = Faction.fairy;
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
+                }
                 subenemies.Add(enemies[i]);
             }
         }
@@ -139,7 +143,11 @@ public class EnemyManager : MonoBehaviour {
                 }
         
                 enemies[i].Setup();
-            
+                if (enemySetup.enemyId >= 100)
+                {
+                    enemies[i].FACTION = Faction.fairy;
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
+                }
                 subenemies.Add(enemies[i]);
             }
             while (enemies.Count < num)

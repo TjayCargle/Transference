@@ -423,16 +423,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36952980}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
+  type: 4
   controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
+  loadingCanvas: {fileID: 1970607546}
   specialNumber: -1
   myAction: 4
+  requirements: 1
 --- !u!114 &36952983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4245283, g: 0.26758298, b: 0.04405483, a: 1}
+  m_Color: {r: 1, g: 0.58431375, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1714,6 +1715,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &191369271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2503,6 +2505,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &266674088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2635,6 +2638,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &286516574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2844,6 +2848,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &295188604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3911,6 +3916,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &342388957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4054,6 +4060,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &353567218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4338,6 +4345,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!1 &411994275
 GameObject:
   m_ObjectHideFlags: 0
@@ -4645,6 +4653,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &428425167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5660,6 +5669,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &493344062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6869,6 +6879,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 1970607546}
   specialNumber: 1
   myAction: 1
+  requirements: 0
 --- !u!114 &583174124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7192,6 +7203,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 1970607546}
   specialNumber: -1
   myAction: 3
+  requirements: 0
 --- !u!114 &589379215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10059,6 +10071,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &909444272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12168,6 +12181,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!1 &1071031771
 GameObject:
   m_ObjectHideFlags: 0
@@ -14199,6 +14213,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &1271459947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17516,6 +17531,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &1511635726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17901,6 +17917,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &1533909980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18201,6 +18218,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 1970607546}
   specialNumber: 1
   myAction: 2
+  requirements: 0
 --- !u!114 &1555108908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22060,6 +22078,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!1 &1841936566
 GameObject:
   m_ObjectHideFlags: 0
@@ -23964,6 +23983,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &2003607547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25241,6 +25261,7 @@ MonoBehaviour:
   loadingCanvas: {fileID: 0}
   specialNumber: -1
   myAction: 0
+  requirements: 0
 --- !u!114 &2112685212
 MonoBehaviour:
   m_ObjectHideFlags: 0

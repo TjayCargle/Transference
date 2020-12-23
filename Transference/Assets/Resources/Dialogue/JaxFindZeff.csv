@@ -16,9 +16,9 @@ a,0, Doesn't matter! They'll come after us next if we don't deal with them.,3
 a,1, Nice seeing you again too.,4
 i,0,clear,0
 i,1,moveToTarget,44
-i,6,moveToTarget,1
+i,6,moveToTarget,3
 i,10,moveToTarget,44
-i,13,moveToTarget,1
+i,13,moveToTarget,3
 i,2,scaleimage,2
 i,3,showimage,2
 i,5,hideimage,2

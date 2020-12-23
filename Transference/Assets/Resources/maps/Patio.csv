@@ -25,8 +25,8 @@ l,17
 x,4
 o,16,17
 oi,6,7
-stt,help,help
-sti,5,8
+stt,help,help,saveLoad
+sti,12,8,3
 ex,0,10
 st,16,23,24
 -e,10
