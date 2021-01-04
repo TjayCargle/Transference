@@ -449,19 +449,19 @@ public class HackingCtrl : MonoBehaviour
         }
         if (headerText)
         {
-            headerText.text = ((int)countDown).ToString();
+            headerText.text = "Time Remaining: " + ((int)countDown).ToString();
         }
         if (strikeText)
         {
-            strikeText.text = "Strikes:" + strikeCount.ToString();
+            strikeText.text = "<sprite=32> (" + strikeCount.ToString() + " uses)";
         }
         if (skillText)
         {
-            skillText.text = "Skills:" + skillCount.ToString();
+            skillText.text = "<sprite=33> (" + skillCount.ToString() + " uses)";
         }
         if (spellText)
         {
-            spellText.text = "Spells:" + spellCount.ToString();
+            spellText.text = "<sprite=43> (" + spellCount.ToString() + " uses)";
         }
     }
 }

@@ -18,7 +18,9 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     private void Awake()
     {
         CheckRequirements();
+
     }
+
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -192,7 +194,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 break;
             case NonCombatButtonRequirements.jaxSave1:
                 {
-                    if(!PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+                    if (!PlayerPrefs.HasKey(Common.JaxSaveSlot1))
                     {
                         turnOff = true;
                     }
@@ -209,7 +211,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             default:
                 break;
         }
-        if(turnOff == true)
+        if (turnOff == true)
         {
             Image myImg = GetComponent<Image>();
             Color disabled;

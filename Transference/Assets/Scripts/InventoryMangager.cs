@@ -1822,32 +1822,32 @@ public class InventoryMangager : MonoBehaviour
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < attackbleObjects.Count; i++)
-                                    {
-                                        LivingObject griddy = attackbleObjects[i];
-                                        int elIndx = Common.GetElementIndex(cmd.ELEMENT);
-                                        if (elIndx <= 7)
-                                        {
-                                            EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
-                                            if (hitType < EHitType.normal)
-                                            {
-                                                if (support.isVisible == false)
-                                                {
-                                                    support.SetVisible();
-                                                    support.SetText(hitType.ToString(), Color.blue);
-                                                }
-                                            }
-                                            else if (hitType > EHitType.normal)
-                                            {
-                                                if (support.isVisible == false)
-                                                {
-                                                    support.SetVisible();
-                                                    support.SetText(hitType.ToString(), Color.red);
-                                                }
-                                            }
-                                        }
+                                    //for (int i = 0; i < attackbleObjects.Count; i++)
+                                    //{
+                                    //    LivingObject griddy = attackbleObjects[i];
+                                    //    int elIndx = Common.GetElementIndex(cmd.ELEMENT);
+                                    //    if (elIndx <= 7)
+                                    //    {
+                                    //        EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
+                                    //        if (hitType < EHitType.normal)
+                                    //        {
+                                    //            if (support.isVisible == false)
+                                    //            {
+                                    //                support.SetVisible();
+                                    //                support.SetText(hitType.ToString(), Color.blue);
+                                    //            }
+                                    //        }
+                                    //        else if (hitType > EHitType.normal)
+                                    //        {
+                                    //            if (support.isVisible == false)
+                                    //            {
+                                    //                support.SetVisible();
+                                    //                support.SetText(hitType.ToString(), Color.red);
+                                    //            }
+                                    //        }
+                                    //    }
 
-                                    }
+                                    //}
                                 }
                                 string extraText = "";
                                 if (proText)
@@ -1962,32 +1962,32 @@ public class InventoryMangager : MonoBehaviour
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < attackbleObjects.Count; i++)
-                                    {
-                                        LivingObject griddy = attackbleObjects[i];
-                                        int elIndx = Common.GetElementIndex(cmd.ELEMENT);
-                                        if (elIndx <= 7)
-                                        {
-                                            EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
-                                            if (hitType < EHitType.normal)
-                                            {
-                                                if (support.isVisible == false)
-                                                {
-                                                    support.SetVisible();
-                                                    support.SetText(hitType.ToString(), Color.blue);
-                                                }
-                                            }
-                                            else if (hitType > EHitType.normal)
-                                            {
-                                                if (support.isVisible == false)
-                                                {
-                                                    support.SetVisible();
-                                                    support.SetText(hitType.ToString(), Color.red);
-                                                }
-                                            }
-                                        }
+                                    //for (int i = 0; i < attackbleObjects.Count; i++)
+                                    //{
+                                    //    LivingObject griddy = attackbleObjects[i];
+                                    //    int elIndx = Common.GetElementIndex(cmd.ELEMENT);
+                                    //    if (elIndx <= 7)
+                                    //    {
+                                    //        EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
+                                    //        if (hitType < EHitType.normal)
+                                    //        {
+                                    //            if (support.isVisible == false)
+                                    //            {
+                                    //                support.SetVisible();
+                                    //                support.SetText(hitType.ToString(), Color.blue);
+                                    //            }
+                                    //        }
+                                    //        else if (hitType > EHitType.normal)
+                                    //        {
+                                    //            if (support.isVisible == false)
+                                    //            {
+                                    //                support.SetVisible();
+                                    //                support.SetText(hitType.ToString(), Color.red);
+                                    //            }
+                                    //        }
+                                    //    }
 
-                                    }
+                                    //}
                                 }
                                 if (proText)
                                 {

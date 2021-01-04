@@ -2439,6 +2439,36 @@ public class DatabaseManager : MonoBehaviour
         }
         return data;
     }
+    public MapData GetBlankMap()
+    {
+        data.mapName = "";
+        data.unOccupiedIndexes.Clear();
+        data.events.Clear();
+        data.eventMap = false;
+        data.doorIndexes.Clear();
+        data.roomNames.Clear();
+        data.roomIndexes.Clear();
+        data.enemyIndexes.Clear();
+        data.glyphIndexes.Clear();
+        data.glyphIds.Clear();
+        data.shopIndexes.Clear();
+        data.startIndexes.Clear();
+        data.objMapIndexes.Clear();
+        data.objIds.Clear();
+        data.yElevation = -1;
+        data.xElevation = -1;
+        data.yMinRestriction = -1;
+        data.yMaxRestriction = -1;
+        data.xMinRestriction = -1;
+        data.xMaxRestriction = -1;
+        data.revealCount = 0;
+
+        data.specialExtra.Clear();
+        data.tilesInShadow.Clear();
+        data.specialiles.Clear();
+        data.specialTileIndexes.Clear();
+        return data;
+    }
     public SceneContainer AddInterruptToScene(SceneContainer scene, int interrupt, SceneEvent sevent, int edata)
     {     
         scene.eventIndexs.Add(interrupt);

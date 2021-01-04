@@ -69,8 +69,20 @@ public class LevelCreationManager : MonoBehaviour
 
                     if (myCamera.currentTile != null)
                     {
-                        if (myCamera.currentTile.myColor != myCamera.currentTile.PREVCOLOR)
-                            myCamera.currentTile.MYCOLOR = myCamera.currentTile.PREVCOLOR;
+                        if (myCamera.currentTile.isInShadow)
+                        {
+                            if (myCamera.currentTile.MYCOLOR != Common.dark)
+                            {
+                                myCamera.currentTile.MYCOLOR = Common.dark ;
+                            }
+                        }
+                        else
+                        {
+                            if (myCamera.currentTile.MYCOLOR != myCamera.currentTile.PREVCOLOR)
+                            {
+                                myCamera.currentTile.MYCOLOR = myCamera.currentTile.PREVCOLOR;
+                            }
+                        }
                     }
 
                     myCamera.currentTile = hitTile;
@@ -170,6 +182,7 @@ public class LevelCreationManager : MonoBehaviour
 
     public void OpenFilePicker()
     {
+  
 #if UNITY_EDITOR
         string path = EditorUtility.OpenFilePanel("Select Level to load", "", "csv");
         if (path.Length > 0)
@@ -216,7 +229,7 @@ public class LevelCreationManager : MonoBehaviour
                 float tileHeight = 0;
                 float xoffset = 1 / (float)data.width;
                 float yoffset = 1 / (float)data.height;
-                float yElevation = 0;
+                //     float yElevation = 0;
                 //float xElevation = 0;
 
                 for (int i = 0; i < data.width; i++)
@@ -227,10 +240,10 @@ public class LevelCreationManager : MonoBehaviour
                         int mapIndex = (j * data.width) + i;
                         LevelCreationTiles tile = tileMap[tileIndex];
                         tile.listindex = mapIndex;
-                        if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
-                            tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight) + yElevation, j * 2);
-                        else
-                            tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight), j * 2);
+                        //   if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
+                        //     tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight) + yElevation, j * 2);
+                        // else
+                        tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight), j * 2);
                         tile.transform.parent = parentTransform.transform;
                         tile.name = "Tile " + mapIndex;
                         tile.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -247,7 +260,7 @@ public class LevelCreationManager : MonoBehaviour
                         }
 
                     }
-                    yElevation += data.yElevation;
+                    //yElevation += data.yElevation;
 
                 }
                 tileMap.Sort();
@@ -277,8 +290,9 @@ public class LevelCreationManager : MonoBehaviour
                 {
                     for (int i = 0; i < data.tilesInShadow.Count; i++)
                     {
-                        tileMap[i].isInShadow = true;
-                        tileMap[i].MYCOLOR = Common.dark;
+                        int shadowindex = data.tilesInShadow[i];
+                        tileMap[shadowindex].isInShadow = true;
+                        tileMap[shadowindex].MYCOLOR = Common.dark;
                     }
                 }
                 if (data.specialTileIndexes.Count > 0)
@@ -342,6 +356,136 @@ public class LevelCreationManager : MonoBehaviour
         }
 #endif
     }
+    public void SaveFilePanel()
+    {
+
+        string path = EditorUtility.SaveFilePanelInProject("Save Level", "", "csv", "Save the level?");
+
+        List<int> shadowTiles = new List<int>();
+        List<int> invisibleTiles = new List<int>();
+        List<int> doorTiles = new List<int>();
+        List<int> specialTiles = new List<int>();
+        List<TileType> specialTileTypes = new List<TileType>();
+
+
+        if (path.Length > 0)
+        {
+            string testString = "-UnoccupiedTiles count = r \n" +
+                "-event room = n  -event tiles -event nums \n" +
+                "-id = i \n" +
+                "-texture num = t \n" +
+                "-map width = w \n" +
+                "-map height = h \n" +
+                "-num of doors/door indexs = d [location], [location] \n" +
+                "-Room Names = m \n" +
+                "- Room locations = l \n" +
+                "-Start Indexes = x \n" +
+                "-num of enemies / enemy indexs = e [location], [location] \n" +
+                "-num of rando glyphs / glyph indexes = g [location], [location] \n" +
+                "-num of lock glyphs / lock glyph indexes = gi [location], [location] \n" +
+                "-num of shops/shop index = s [location], [location] \n" +
+                "-num objs/ obj indexs = o [location], [location] \n" +
+                "-obj ids = oi [location], [location] \n" +
+
+
+
+
+
+
+
+
+
+
+                "" +
+                "" +
+                "" +
+                "" +
+                "";
+            File.WriteAllText(path, testString);
+        }
+
+        AssetDatabase.Refresh();
+    }
+    public void CreateMap()
+    {
+#if UNITY_EDITOR
+        {
+
+            data = Common.GetDatabase().GetBlankMap();
+            System.Int32.TryParse(mapWidthField.text, out data.width);
+            System.Int32.TryParse(mapHeightField.text, out data.height);
+            System.Int32.TryParse(mapIndexField.text, out data.mapIndex);
+            if (data.width > 0)
+            {
+
+                if (tiles != null)
+                {
+
+                    for (int i = tiles.Count - 1; i >= 0; i--)
+                    {
+                        if (tiles[i])
+                        {
+                            tiles[i].isInShadow = false;
+                            tiles[i].transform.parent = null;
+                            tiles[i].gameObject.SetActive(false);
+                        }
+                    }
+                }
+
+
+                tileMap.Clear();
+                tileMap = getTiles(data.width * data.height);
+
+                int tileIndex = 0;
+                float tileHeight = 0;
+                float xoffset = 1 / (float)data.width;
+                float yoffset = 1 / (float)data.height;
+                //     float yElevation = 0;
+                //float xElevation = 0;
+
+                for (int i = 0; i < data.width; i++)
+                {
+
+                    for (int j = 0; j < data.height; j++)
+                    {
+                        int mapIndex = (j * data.width) + i;
+                        LevelCreationTiles tile = tileMap[tileIndex];
+                        tile.listindex = mapIndex;
+                        //   if (j > data.yMinRestriction && j < data.yMaxRestriction && i > data.xMinRestriction && i < data.xMaxRestriction)
+                        //     tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight) + yElevation, j * 2);
+                        // else
+                        tile.transform.position = new Vector3(i * 2, (j * 2 * tileHeight), j * 2);
+                        tile.transform.parent = parentTransform.transform;
+                        tile.name = "Tile " + mapIndex;
+                        tile.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        tile.setTexture(data.texture);
+                        tile.EXTRA = "";
+                        tile.isInShadow = false;
+                        tile.TTYPE = TileType.regular;
+                        tile.setUVs((xoffset * (float)i), (xoffset * (float)(i + 1)), (yoffset * (float)j), (yoffset * (float)(j + 1)));
+                        tileIndex++;
+                        tile.canBeOccupied = true;
+                        if (mapIndex == data.xElevation)
+                        {
+                            data.yElevation = -1 * data.yElevation;
+                        }
+
+                    }
+                    //yElevation += data.yElevation;
+
+                }
+                tileMap.Sort();
+
+             
+                if (myCamera != null)
+                {
+                    myCamera.selectedTile = tileMap[0];
+                }
+            }
+        }
+#endif
+    }
+
 
     public List<LevelCreationTiles> getTiles(int num)
     {
@@ -471,8 +615,31 @@ public class LevelCreationManager : MonoBehaviour
                             SetCurrentToShopTexture();
                         }
                         break;
-
+                    case TileType.help:
+                        {
+                            if (ifdoorTile != null)
+                            {
+                                ifdoorTile.SetActive(false);
+                            }
+                            if (ifHelpTile != null)
+                            {
+                                ifHelpTile.SetActive(true);
+                            }
+                            SetCurrentToSpecialTexture();
+                        }
+                        break;
                     default:
+                        {
+                            if (ifdoorTile != null)
+                            {
+                                ifdoorTile.SetActive(false);
+                            }
+                            if (ifHelpTile != null)
+                            {
+                                ifHelpTile.SetActive(false);
+                            }
+                            SetCurrentToSpecialTexture();
+                        }
                         break;
                 }
                 if (tiletype.value == (int)TileType.door)
@@ -506,12 +673,16 @@ public class LevelCreationManager : MonoBehaviour
 
     void SetCurrentToSpecialTexture()
     {
-        currentTile.MAT.mainTexture = doorTexture;
+        if(currentTile != null)
+        {
+
+            currentTile.MAT.mainTexture = Common.GetSpecialTexture(currentTile.TTYPE);
         // currentTile.MAP = data.roomNames[i];
         //currentTile.ROOM = data.roomIndexes[i];
         //currentTile.START = data.startIndexes[i];
         currentTile.setUVs(0, 1, 0, 1);
         // currentTile.TTYPE = TileType.door;
+        }
     }
 
     void SetCurrentToOriginalTexture()

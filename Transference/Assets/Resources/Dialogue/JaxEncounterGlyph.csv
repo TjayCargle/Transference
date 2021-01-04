@@ -6,7 +6,7 @@ e,101,Take your hands off my merchandise.
 a,0,Looks like those bugs are after that shopkeeper.
 a,0,She looks like she can handle herself though.
 a,1,Are you really going to leave her?
-a,0,Depends on how i feel?
+a,0,Depends on how I feel?
 a,0,Looks like we can sneak our way though without getting noticed.
 a,1,That's cruel!
 a,0,She just said she'll cut anyone who comes near!
@@ -17,3 +17,13 @@ a,0,
 a,0,I'm not laughing.
 a,0,Anyway we have a few options. I'm down to fight or sneak past.
 a,0,But I guess that's <color=yellow>your choice</color>.
+i,0,moveToTarget,49
+i,0,dim,0
+i,1,moveToTarget,45
+i,1,clear,0
+i,4,moveToTarget,49
+i,4,dim,0
+i,8,clear,0
+i,8,moveToTarget,77
+i,9,dim,0
+i,9,moveToTarget,49

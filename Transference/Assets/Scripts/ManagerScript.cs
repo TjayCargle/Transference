@@ -3522,8 +3522,8 @@ public class ManagerScript : EventRunner
                         }
                         else
                         {
-                            Debug.Log("um.. but why");
-                       
+                            //Debug.Log("um.. but why");
+
                         }
                     }
                     break;
@@ -3617,7 +3617,7 @@ public class ManagerScript : EventRunner
 
                 case State.PlayerUsingItems:
                     break;
-        
+
             }
         }
         UpdateCameraPosition();
@@ -3734,7 +3734,7 @@ public class ManagerScript : EventRunner
 
     public void MovetoMousePos(LivingObject movedObj)
     {
-        if (movingObj == null)
+        if (movedObj == null)
         {
             returnState();
         }
@@ -3907,6 +3907,7 @@ public class ManagerScript : EventRunner
     public IEnumerator Move(GridObject griddy, Vector3 targetposition, TileScript hitTile)
     {
         bool loaded = false;
+
         //if (griddy.GetComponent<AnimationScript>())
         //{
         //    AnimationScript anim = griddy.GetComponent<AnimationScript>();
@@ -4019,88 +4020,91 @@ public class ManagerScript : EventRunner
                     if (sceneEvent.intercept == index)
                     {
                         found = true;
-                        break;
+                        ExecuteIntercept(sceneEvent);
                     }
-                }
-                if (found == true)
-                {
-
-                    switch (sceneEvent.scene)
-                    {
-                        case SceneEvent.move:
-                            break;
-                        case SceneEvent.showimage:
-                            {
-                                if (eventImage)
-                                {
-                                    eventImage.myImage.sprite = Resources.LoadAll<Sprite>("SceneImg")[sceneEvent.data];
-                                    eventImage.gameObject.SetActive(true);
-                                }
-                            }
-                            break;
-                        case SceneEvent.moveToTarget:
-                            {
-                                tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
-                                ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
-                            }
-                            break;
-                        case SceneEvent.hideimage:
-                            {
-                                if (eventImage)
-                                {
-                                    eventImage.gameObject.SetActive(false);
-                                }
-                            }
-                            break;
-                        case SceneEvent.shake:
-                            break;
-                        case SceneEvent.scaleimage:
-                            if (eventImage)
-                            {
-                                eventImage.transform.localScale = new Vector3(sceneEvent.data, sceneEvent.data, 1);
-                            }
-                            break;
-                        case SceneEvent.blackout:
-                            {
-                                if (eventImage)
-                                {
-                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                                    if (img)
-                                    {
-                                        img.color = new Color(0, 0, 0, 1.0f);
-                                    }
-                                }
-                            }
-                            break;
-                        case SceneEvent.dim:
-                            {
-                                if (eventImage)
-                                {
-                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                                    if (img)
-                                    {
-                                        img.color = new Color(0, 0, 0, 0.65f);
-                                    }
-                                }
-                            }
-                            break;
-                        case SceneEvent.clear:
-                            {
-                                if (eventImage)
-                                {
-                                    UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                                    if (img)
-                                    {
-                                        img.color = new Color(0, 0, 0, 0.0f);
-                                    }
-                                }
-                            }
-                            break;
-                    }
-
                 }
             }
         }
+    }
+    private void ExecuteIntercept(SceneEventContainer sceneEvent)
+    {
+     
+            switch (sceneEvent.scene)
+            {
+                case SceneEvent.move:
+                    break;
+                case SceneEvent.showimage:
+                    {
+                        if (eventImage)
+                        {
+                            eventImage.myImage.sprite = Resources.LoadAll<Sprite>("SceneImg")[sceneEvent.data];
+                            eventImage.gameObject.SetActive(true);
+                        }
+                    }
+                    break;
+                case SceneEvent.moveToTarget:
+                    {
+
+                        tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
+                        ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
+                    }
+                    break;
+                case SceneEvent.hideimage:
+                    {
+                        if (eventImage)
+                        {
+                            eventImage.gameObject.SetActive(false);
+                        }
+                    }
+                    break;
+                case SceneEvent.shake:
+                    break;
+                case SceneEvent.scaleimage:
+                    if (eventImage)
+                    {
+                        eventImage.transform.localScale = new Vector3(sceneEvent.data, sceneEvent.data, 1);
+                    }
+                    break;
+                case SceneEvent.blackout:
+                    {
+                        if (eventImage)
+                        {
+                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                            if (img)
+                            {
+                                img.color = new Color(0, 0, 0, 1.0f);
+                            }
+                        }
+                    }
+                    break;
+                case SceneEvent.dim:
+                    {
+                        if (eventImage)
+                        {
+                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                            if (img)
+                            {
+                                img.color = new Color(0, 0, 0, 0.65f);
+                            }
+                        }
+                    }
+                    break;
+                case SceneEvent.clear:
+                    {
+                        if (eventImage)
+                        {
+                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                            if (img)
+                            {
+                                img.color = new Color(0, 0, 0, 0.0f);
+                            }
+                        }
+                    }
+                    break;
+            }
+
+        
+
     }
     public void NextScene()
     {
@@ -4422,10 +4426,10 @@ public class ManagerScript : EventRunner
                             currentState = State.SceneRunning;
                             talkPanel.scene = currentScene;
                             currentScene.index = 0;
-                            UpdateScene();
+
                             currentScene.isRunning = true;
                             menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, () => { UpdateScene(); }, 0);
                         }
                     }
                     if (checkMap.mapIndex == 14)
@@ -4745,8 +4749,10 @@ public class ManagerScript : EventRunner
 
         if (data.doorIndexes.Count > 0)
         {
+
             LoadDScene(data, startindex);
             map = Common.ConvertMapData2Detail(data, map);
+
         }
         else
         {
@@ -5375,7 +5381,7 @@ public class ManagerScript : EventRunner
         {
             aTile = tileMap[tileIndex];
         }
-
+  
         possibleTiles = tileManager.GetAdjecentTiles(aTile);
         possibleTiles.Insert(0, aTile);
         bool foundtile = false;
@@ -5396,7 +5402,7 @@ public class ManagerScript : EventRunner
                             {
                                 if (!playerIndexes.Contains(tileIndex))
                                 {
-                                    foundtile = true;
+                                   foundtile = true;
                                     livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
                                     livingobjs[i].currentTileIndex = tileIndex;
                                     playerIndexes.Add(tileIndex);
@@ -5409,6 +5415,7 @@ public class ManagerScript : EventRunner
                 if (foundtile == false)
                 {
 
+                    Debug.Log("Found is false?? ");
                     if (startindex == -1)
                     {
                         livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
@@ -5451,18 +5458,18 @@ public class ManagerScript : EventRunner
             if (livingobjs[i].GetComponent<ActorScript>())
             {
 
-                if (startindex == -1)
-                {
-                    livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
-                }
-                else if (startindex > 20)
-                {
-                    livingobjs[i].transform.position = tileMap[startindex - i].transform.position + new Vector3(0, 0.5f, 0);
-                }
-                else
-                {
-                    livingobjs[i].transform.position = tileMap[startindex + i].transform.position + new Vector3(0, 0.5f, 0);
-                }
+                //if (startindex == -1)
+                //{
+                //    livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
+                //}
+                //else if (startindex > 20)
+                //{
+                //    livingobjs[i].transform.position = tileMap[startindex - i].transform.position + new Vector3(0, 0.5f, 0);
+                //}
+                //else
+                //{
+                //    livingobjs[i].transform.position = tileMap[startindex + i].transform.position + new Vector3(0, 0.5f, 0);
+                //}
                 tileIndex++;
                 turnOrder.Add(livingobjs[i]);
                 if (!livingobjs[i].isSetup)
@@ -5916,6 +5923,7 @@ public class ManagerScript : EventRunner
         //{
         //    saveString += "," + currentTutorial.steps[i] + "," + currentTutorial.clarifications[i];
         //}
+        saveString += myCamera.soundTrack + ",";
         saveString += Common.summonedJax + ",";
         saveString += Common.summonedZeffron + ",";
         saveString += Common.enemiesCompletedPhase + ",";
@@ -5958,6 +5966,12 @@ public class ManagerScript : EventRunner
             int dataIIndex = 0;
             bool aCommon = false;
 
+            int soundTrack = 0;
+
+            System.Int32.TryParse(dataString[dataIIndex], out soundTrack);
+            myCamera.PlaySoundTrack(soundTrack);
+            dataIIndex++;
+
             System.Boolean.TryParse(dataString[dataIIndex], out aCommon);
             Common.summonedJax = aCommon;
             dataIIndex++;
@@ -5996,7 +6010,7 @@ public class ManagerScript : EventRunner
 
             int visitedCount = 0;
             System.Int32.TryParse(dataString[dataIIndex], out visitedCount);
-          //  Debug.Log("visited=" + visitedCount);
+            //  Debug.Log("visited=" + visitedCount);
             dataIIndex++;
             visitedMaps.Clear();
 
@@ -6806,16 +6820,14 @@ public class ManagerScript : EventRunner
                 playable.DEAD = false;
 
                 playable.STATS.Reset(true);
-                playable.STATS.HEALTH = playable.BASE_STATS.MAX_HEALTH;
+                playable.STATS.HEALTH = (int)(playable.BASE_STATS.MAX_HEALTH * 0.5f);
 
-                playable.STATS.MANA = playable.BASE_STATS.MAX_MANA;
+                playable.STATS.MANA = (int)(playable.BASE_STATS.MAX_MANA * 0.5f);
 
 
-                playable.STATS.FATIGUE = 0;
+                playable.STATS.FATIGUE = (int)(playable.BASE_STATS.MAX_FATIGUE * 0.5f);
 
-                playable.STATS.HEALTH = (int)((float)playable.BASE_STATS.MAX_HEALTH * 0.5f);
-                playable.STATS.MANA = (int)((float)playable.BASE_STATS.MAX_MANA * 0.5f);
-                playable.STATS.FATIGUE = (int)((float)playable.BASE_STATS.MAX_FATIGUE * 0.5f);
+
                 playable.RENDERER.color = Color.white;
                 //  playable.updateLastSprites();
                 for (int j = 0; j < playable.INVENTORY.EFFECTS.Count; j++)
@@ -6837,7 +6849,7 @@ public class ManagerScript : EventRunner
     public void ReviveLow()
     {
         nextRoundCalled = false;
-        //Revive each character with 1 hp, but halves all stats and halves Max HP, MP, and FT.
+        //Revive each character with 1 hp, but halves all stats.
         LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
         for (int i = livingObjects.Length - 1; i >= 0; i--)
         {
@@ -6854,17 +6866,33 @@ public class ManagerScript : EventRunner
                     }
                 }
 
-                playable.BASE_STATS.MAX_HEALTH = (int)(playable.BASE_STATS.MAX_HEALTH * 0.5f);
-                playable.BASE_STATS.MAX_MANA = (int)(playable.BASE_STATS.MAX_MANA * 0.5f);
-                playable.BASE_STATS.MAX_FATIGUE = (int)(playable.BASE_STATS.MAX_FATIGUE * 0.5f);
 
-                playable.BASE_STATS.STRENGTH = (int)(playable.BASE_STATS.STRENGTH * 0.5f);
-                playable.BASE_STATS.DEFENSE = (int)(playable.BASE_STATS.DEFENSE * 0.5f);
-                playable.BASE_STATS.SPEED = (int)(playable.BASE_STATS.SPEED * 0.5f);
 
-                playable.BASE_STATS.MAGIC = (int)(playable.BASE_STATS.MAGIC * 0.5f);
-                playable.BASE_STATS.RESIESTANCE = (int)(playable.BASE_STATS.RESIESTANCE * 0.5f);
-                playable.BASE_STATS.DEX = (int)(playable.BASE_STATS.DEX * 0.5f);
+                playable.BASE_STATS.STRENGTH = Mathf.RoundToInt(playable.BASE_STATS.STRENGTH * 0.5f);
+                playable.BASE_STATS.DEFENSE = Mathf.RoundToInt(playable.BASE_STATS.DEFENSE * 0.5f);
+                playable.BASE_STATS.SPEED = Mathf.RoundToInt(playable.BASE_STATS.SPEED * 0.5f);
+
+                playable.BASE_STATS.MAGIC = Mathf.RoundToInt(playable.BASE_STATS.MAGIC * 0.5f);
+                playable.BASE_STATS.RESIESTANCE = Mathf.RoundToInt(playable.BASE_STATS.RESIESTANCE * 0.5f);
+                playable.BASE_STATS.DEX = Mathf.RoundToInt(playable.BASE_STATS.DEX * 0.5f);
+
+                if (playable.BASE_STATS.STRENGTH == 0)
+                    playable.BASE_STATS.STRENGTH = 1;
+
+                if (playable.BASE_STATS.MAGIC == 0)
+                    playable.BASE_STATS.MAGIC = 1;
+
+                if (playable.BASE_STATS.DEX == 0)
+                    playable.BASE_STATS.DEX = 1;
+
+                if (playable.BASE_STATS.SPEED == 0)
+                    playable.BASE_STATS.SPEED = 1;
+
+                if (playable.BASE_STATS.DEFENSE == 0)
+                    playable.BASE_STATS.DEFENSE = 1;
+
+                if (playable.BASE_STATS.RESIESTANCE == 0)
+                    playable.BASE_STATS.RESIESTANCE = 1;
                 playable.DEAD = false;
 
                 playable.STATS.Reset(true);
@@ -8290,27 +8318,32 @@ public class ManagerScript : EventRunner
     }
     public void ComfirmMoveGridObject(GridObject obj, int tileIndex)
     {
-        if (obj.gameObject != tempObject)
-        {
-            obj.currentTile.isOccupied = false;
-            obj.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
-            obj.currentTile.isOccupied = true;
-            obj.currentTileIndex = tileIndex;
-            if (obj.currentTile.isInShadow)
-            {
-                AttemptToGoIntoShadows(obj);
-            }
 
-        }
-        else
+        if (movingObj == false)
         {
-            obj.currentTile = tileMap[tileIndex];
+
+            if (obj.gameObject != tempObject)
+            {
+                obj.currentTile.isOccupied = false;
+                obj.currentTile = tileMap[tileIndex].GetComponent<TileScript>();
+                obj.currentTile.isOccupied = true;
+                obj.currentTileIndex = tileIndex;
+                if (obj.currentTile.isInShadow)
+                {
+                    AttemptToGoIntoShadows(obj);
+                }
+
+            }
+            else
+            {
+                obj.currentTile = tileMap[tileIndex];
+            }
+            myCamera.currentTile = tileMap[tileIndex];
+            myCamera.selectedTile = myCamera.currentTile;
+            myCamera.infoObject = GetObjectAtTile(tileMap[tileIndex].GetComponent<TileScript>());
+            myCamera.UpdateCamera();
+            updateConditionals();
         }
-        myCamera.currentTile = tileMap[tileIndex];
-        myCamera.selectedTile = myCamera.currentTile;
-        myCamera.infoObject = GetObjectAtTile(tileMap[tileIndex].GetComponent<TileScript>());
-        myCamera.UpdateCamera();
-        updateConditionals();
     }
 
     public void CheckDoorPrompt()

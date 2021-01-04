@@ -49,7 +49,7 @@ public class LevelCreationTiles : MonoBehaviour, IComparable
                 myColor = value;
                 if (isInShadow)
                 {
-                    myColor = value * 0.75f;
+                    myColor = Common.dark;
                 }
             }
             else
@@ -58,7 +58,7 @@ public class LevelCreationTiles : MonoBehaviour, IComparable
                 myColor = value;
                 if (isInShadow)
                 {
-                    myColor = value * 0.75f;
+                    myColor = Common.dark;
                 }
             }
 

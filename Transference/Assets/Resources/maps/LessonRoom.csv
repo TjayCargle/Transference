@@ -14,13 +14,13 @@
 -num of shops/shop index = s [location], [location] 
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
-r,2,9,17,26,31,29,30,32,33,36,15,16,18,19,8,15,29
+r,2,9,17,31,25,29,30,32,15,16,18,8,15,37
 n,false
 i,5
 t,1
 w,7
 h,6
-d,0,27,35,37,3
+d,0,27,35,38,3
 m,Art Gallery, Foyer,Training Room,Training Room,Private Study
 l,8,16,24,24,0
 x,49,0,0,4,43

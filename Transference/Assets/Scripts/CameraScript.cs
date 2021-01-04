@@ -45,7 +45,7 @@ public class CameraScript : MonoBehaviour
     AudioSource audio;
     public AudioClip previousClip;
     bool isSetup = false;
-    int soundTrack = 1;
+    public int soundTrack = 1;
 
     private int fadeMode = 0;
     private float currentVolume = 0.0f;

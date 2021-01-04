@@ -3357,6 +3357,7 @@ public class Common : ScriptableObject
         detail.specialiles.Clear();
         detail.specialExtra.Clear();
         detail.tileIndexes.Clear();
+        detail.tilesInShadow.Clear();
 
         detail.unOccupiedIndexes.AddRange(data.unOccupiedIndexes);
 
@@ -3398,6 +3399,7 @@ public class Common : ScriptableObject
         detail.roomNames.Clear();
         detail.roomIndexes.Clear();
         detail.enemyIndexes.Clear();
+        detail.EnemyIds.Clear();
         detail.glyphIndexes.Clear();
         detail.glyphIds.Clear();
         detail.shopIndexes.Clear();
@@ -3408,11 +3410,15 @@ public class Common : ScriptableObject
         detail.tilesInShadow.Clear();
         detail.specialExtra.Clear();
         detail.specialTileIndexes.Clear();
+        detail.tilesInShadow.Clear();
 
         //    if (data.hazardIds.Count > 0)
         {
             detail.glyphIds.Clear();
             detail.glyphIds.AddRange(data.hazardIds);
+            
+            detail.EnemyIds.Clear();
+            detail.EnemyIds.AddRange(data.enemyIds);
         }
         //  if (data.unOccupiedIndexes.Count > 0)
         {
@@ -3430,7 +3436,6 @@ public class Common : ScriptableObject
 
         detail.shopIndexes.AddRange(data.shopIndexes);
         detail.objMapIndexes.AddRange(data.objMapIndexes);
-        detail.EnemyIds.AddRange(data.enemyIds);
         detail.objIds.AddRange(data.objIds);
 
         detail.specialiles.AddRange(data.specialiles);
@@ -3475,6 +3480,11 @@ public class Common : ScriptableObject
             details += "," + data.enemyIndexes[i];
         }
 
+        details += "," + data.enemyIds.Count + "";
+        for (int i = 0; i < data.enemyIds.Count; i++)
+        {
+            details += "," + data.enemyIds[i];
+        }
         details += "," + data.hazardIndexes.Count + "";
         for (int i = 0; i < data.hazardIndexes.Count; i++)
         {
@@ -3628,6 +3638,18 @@ public class Common : ScriptableObject
                 int tempIndex = 0;
                 System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
                 data.enemyIndexes.Add(tempIndex);
+                dataIIndex++;
+            }
+
+            currentAmount = 0;
+            System.Int32.TryParse(dataString[dataIIndex], out currentAmount);
+            dataIIndex++;
+
+            for (int i = 0; i < currentAmount; i++)
+            {
+                int tempIndex = 0;
+                System.Int32.TryParse(dataString[dataIIndex], out tempIndex);
+                data.enemyIds.Add(tempIndex);
                 dataIIndex++;
             }
 

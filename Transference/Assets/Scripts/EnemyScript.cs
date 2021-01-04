@@ -169,6 +169,7 @@ public class EnemyScript : LivingObject
         {
             DEAD = true;
             myManager.gridObjects.Remove(this);
+            myManager.liveEnemies.Remove(this);
             Wait();
             this.Die();
         }
