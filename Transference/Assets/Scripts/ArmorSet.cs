@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class ArmorSet : MonoBehaviour
 {
 
@@ -23,6 +24,17 @@ public class ArmorSet : MonoBehaviour
 
     [SerializeField]
     Text sliderText;
+
+    [SerializeField]
+    TextMeshProUGUI attr1;
+
+    [SerializeField]
+    TextMeshProUGUI attr2;
+
+    [SerializeField]
+    TextMeshProUGUI attr3;
+
+    public bool onPlayer = false;
 
     private List<EHitType> selectedHitlist;
 
@@ -110,7 +122,13 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[0].text = "Str: " + currentObj.BASE_STATS.STRENGTH + " (" + val + ")";
         attributes[0].text = "Str: " + currentObj.STRENGTH;
-
+        if(onPlayer == true)
+        {
+            if(attr1 != null)
+            {
+                attr1.text = "Str: " + currentObj.STRENGTH;
+            }
+        }
         //val = currentObj.STATS.DEFENSE + currentObj.ARMOR.DEFENSE;
         //if (val > 0)
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (+" + val + ")";
@@ -119,7 +137,13 @@ public class ArmorSet : MonoBehaviour
         //else
         //    attributes[1].text = "Def: " + currentObj.BASE_STATS.DEFENSE + " (" + val + ")";
         attributes[3].text = "Def: " + (currentObj.DEFENSE + selectedArmor.DEFENSE);//(currentObj.BASE_STATS.DEFENSE + currentObj.STATS.DEFENSE);
-
+        if (onPlayer == false)
+        {
+            if (attr1 != null)
+            {
+                attr1.text = "Def: " + currentObj.DEFENSE + selectedArmor.DEFENSE;
+            }
+        }
         //val = currentObj.STATS.MAGIC;
         //if (val > 0)
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (+" + val + ")";
@@ -129,7 +153,13 @@ public class ArmorSet : MonoBehaviour
         //    attributes[2].text = "Mag: " + currentObj.BASE_STATS.MAGIC + " (" + val + ")";
 
         attributes[5].text = "Spd: " + (currentObj.SPEED + selectedArmor.SPEED);//(currentObj.BASE_STATS.SPEED + currentObj.STATS.SPEED);
-
+        if (onPlayer == false)
+        {
+            if (attr3 != null)
+            {
+                attr3.text = "Spd: " + currentObj.SPEED + selectedArmor.SPEED;
+            }
+        }
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
         //if (val > 0)
         //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (+" + val + ")";
@@ -139,8 +169,24 @@ public class ArmorSet : MonoBehaviour
         //    attributes[3].text = "Res: " + currentObj.BASE_STATS.RESIESTANCE + " (" + val + ")";
 
         attributes[1].text = "Mag: " + currentObj.MAGIC;
+
+        if (onPlayer == true)
+        {
+            if (attr2 != null)
+            {
+                attr2.text = "Mag: " + currentObj.MAGIC;
+            }
+        }
+
         attributes[4].text = "Res: " + (currentObj.RESIESTANCE + selectedArmor.RESISTANCE);// (currentObj.BASE_STATS.RESIESTANCE + currentObj.STATS.RESIESTANCE);
 
+        if (onPlayer == false)
+        {
+            if (attr2 != null)
+            {
+                attr2.text = "Res: " + currentObj.RESIESTANCE + selectedArmor.RESISTANCE;
+            }
+        }
         //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;
         //if (val > 0)
         //    attributes[4].text = "Spd: " + currentObj.BASE_STATS.SPEED + " (+" + val + ")";
@@ -159,7 +205,13 @@ public class ArmorSet : MonoBehaviour
         //    attributes[5].text = "Skl: " + currentObj.BASE_STATS.SKILL + " (" + val + ")";
 
         attributes[2].text = "Dex: " + currentObj.DEX;
-
+        if (onPlayer == true)
+        {
+            if (attr3 != null)
+            {
+                attr3.text = "Dex: " + currentObj.DEX;
+            }
+        }
     }
     public void updateGridDetails()
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +17,8 @@ public class CameraScript : MonoBehaviour
     public Text manaText;
     public Text fatigueText;
     public GridObject infoObject;
-    public Text actionText;
+    //public Text actionText;
+    public TextMeshProUGUI actionText;
     public Image faceImage;
     public CanvasRenderer test;
     public Canvas DescriptionCanvas;
@@ -67,9 +68,10 @@ public class CameraScript : MonoBehaviour
     public Text enemymanaText;
     public Text enemyfatigueText;
     public ArmorSet enemyarmorSet;
-    public Text enemyactionText;
+    //public Text enemyactionText;
     public Image enemyfaceImage;
     public Text enemyinfoText;
+    public TextMeshProUGUI enemyactionText;
     void Start()
     {
         Setup();
@@ -143,10 +145,10 @@ public class CameraScript : MonoBehaviour
                 Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
                 transform.position = smooth;
             }
-           else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
             {
-              
-                 if (manager.GetState() == State.FreeCamera)
+
+                if (manager.GetState() == State.FreeCamera)
                 {
                     hoverTime += 2 * Time.deltaTime;
 
@@ -185,7 +187,7 @@ public class CameraScript : MonoBehaviour
                 Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
                 transform.position = smooth;
             }
-           else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
+            else if (Vector3.Distance(transform.position, tilePos) > 0.5f)
             {
                 moving = true;
                 Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
@@ -419,8 +421,36 @@ public class CameraScript : MonoBehaviour
 
                                             liver = manager.player.current;
                                         }
-                                        if (manager.liveEnemies.Count > 0)
-                                            actionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                        // if (manager.liveEnemies.Count > 0)
+                                        {
+                                            actionText.text = "uses: ";
+                                            List<Element> usingElements = new List<Element>();
+                                            for (int i = 0; i < liver.INVENTORY.WEAPONS.Count; i++)
+                                            {
+                                                WeaponScript wep = liver.INVENTORY.WEAPONS[i];
+                                                if (!usingElements.Contains(wep.ELEMENT))
+                                                {
+                                                    usingElements.Add(wep.ELEMENT);
+                                                }
+
+                                            }
+
+                                            for (int i = 0; i < liver.INVENTORY.CSKILLS.Count; i++)
+                                            {
+                                                CommandSkill wep = liver.INVENTORY.CSKILLS[i];
+                                                if (!usingElements.Contains(wep.ELEMENT))
+                                                {
+                                                    usingElements.Add(wep.ELEMENT);
+                                                }
+
+                                            }
+
+                                            for (int i = 0; i < usingElements.Count; i++)
+                                            {
+                                                actionText.text += " " + Common.GetElementSpriteIndex(usingElements[i]) + " ";
+                                            }
+                                        }
+                                        //  actionText.text = "AP next turn: " + (3 + liver.GENERATED);
                                         infoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
                                         if (faceImage)
                                         {
@@ -479,10 +509,36 @@ public class CameraScript : MonoBehaviour
                                         enemyinfoText.text = liver.FullName + " LV: " + liver.LEVEL.ToString();
                                         if (enemyactionText != null)
                                         {
-                                            if (manager.GetState() == State.EnemyTurn)
-                                                enemyactionText.text = "AP next turn: " + (3 + liver.GENERATED);
-                                            else
-                                                enemyactionText.text = "AP next turn: " + (liver.ACTIONS);
+                                            enemyactionText.text = "uses: ";
+                                            List<Element> usingElements = new List<Element>();
+                                            for (int i = 0; i < liver.INVENTORY.WEAPONS.Count; i++)
+                                            {
+                                                WeaponScript wep = liver.INVENTORY.WEAPONS[i];
+                                                if (!usingElements.Contains(wep.ELEMENT))
+                                                {
+                                                    usingElements.Add(wep.ELEMENT);
+                                                }
+
+                                            }
+
+                                            for (int i = 0; i < liver.INVENTORY.CSKILLS.Count; i++)
+                                            {
+                                                CommandSkill wep = liver.INVENTORY.CSKILLS[i];
+                                                if (!usingElements.Contains(wep.ELEMENT))
+                                                {
+                                                    usingElements.Add(wep.ELEMENT);
+                                                }
+
+                                            }
+
+                                            for (int i = 0; i < usingElements.Count; i++)
+                                            {
+                                                enemyactionText.text += " " + Common.GetElementSpriteIndex(usingElements[i]) + " ";
+                                            }
+                                            //if (manager.GetState() == State.EnemyTurn)
+                                            //    enemyactionText.text = "AP next turn: " + (3 + liver.GENERATED);
+                                            //else
+                                            //    enemyactionText.text = "AP next turn: " + (liver.ACTIONS);
                                         }
 
                                         if (enemyfaceImage)
@@ -782,9 +838,12 @@ public class CameraScript : MonoBehaviour
         }
         else
         {
-            if (actionText.gameObject.activeInHierarchy)
+            if (actionText != null)
             {
-                // actionText.gameObject.SetActive(false);
+                if (actionText.gameObject.activeInHierarchy)
+                {
+                    // actionText.gameObject.SetActive(false);
+                }
             }
             if (infoCanvas.gameObject.activeInHierarchy)
             {
