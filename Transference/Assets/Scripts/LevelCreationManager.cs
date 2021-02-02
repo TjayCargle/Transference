@@ -73,7 +73,7 @@ public class LevelCreationManager : MonoBehaviour
                         {
                             if (myCamera.currentTile.MYCOLOR != Common.dark)
                             {
-                                myCamera.currentTile.MYCOLOR = Common.dark ;
+                                myCamera.currentTile.MYCOLOR = Common.dark;
                             }
                         }
                         else
@@ -182,7 +182,7 @@ public class LevelCreationManager : MonoBehaviour
 
     public void OpenFilePicker()
     {
-  
+
 #if UNITY_EDITOR
         string path = EditorUtility.OpenFilePanel("Select Level to load", "", "csv");
         if (path.Length > 0)
@@ -360,16 +360,84 @@ public class LevelCreationManager : MonoBehaviour
     {
 
         string path = EditorUtility.SaveFilePanelInProject("Save Level", "", "csv", "Save the level?");
-
-        List<int> shadowTiles = new List<int>();
-        List<int> invisibleTiles = new List<int>();
-        List<int> doorTiles = new List<int>();
-        List<int> specialTiles = new List<int>();
-        List<TileType> specialTileTypes = new List<TileType>();
-
-
         if (path.Length > 0)
         {
+
+            List<int> shadowTiles = new List<int>();
+            List<int> invisibleTiles = new List<int>();
+            List<int> doorTiles = new List<int>();
+            List<int> specialTiles = new List<int>();
+            List<TileType> specialTileTypes = new List<TileType>();
+
+            for (int i = 0; i < tileMap.Count; i++)
+            {
+                LevelCreationTiles ltile = tileMap[i];
+                if (ltile.isInShadow)
+                {
+                    shadowTiles.Add(ltile.listindex);
+                }
+                if (ltile.canBeOccupied == false)
+                {
+                    invisibleTiles.Add(ltile.listindex);
+                }
+                if (ltile.TTYPE != TileType.regular)
+                {
+                    if (ltile.TTYPE == TileType.door)
+                    {
+                        doorTiles.Add(ltile.listindex);
+                    }
+                    else
+                    {
+                        specialTiles.Add(ltile.listindex);
+                        specialTileTypes.Add(ltile.TTYPE);
+                    }
+                }
+            }
+
+            string addedString = "i," + mapIndexField.text + "\n";
+            addedString += "w," + mapWidthField.text + "\n";
+            addedString += "h," + mapHeightField.text;
+            if(invisibleTiles.Count > 0)
+            {
+                addedString += "\n r," + invisibleTiles[0];
+                for (int i = 1; i < invisibleTiles.Count; i++)
+                {
+                    addedString += "," + invisibleTiles[i];
+                }
+            }
+            if (shadowTiles.Count > 0)
+            {
+                addedString += "\n st," + shadowTiles[0];
+                for (int i = 1; i < shadowTiles.Count; i++)
+                {
+                    addedString += "," + shadowTiles[i];
+                }
+            }
+            if (specialTiles.Count > 0)
+            {
+                addedString += "\n sti," + specialTiles[0];
+                for (int i = 1; i < specialTiles.Count; i++)
+                {
+                    addedString += "," + specialTiles[i];
+                }
+                
+                addedString += "\n stt," + specialTileTypes[0];
+                for (int i = 1; i < specialTileTypes.Count; i++)
+                {
+                    addedString += "," + specialTileTypes[i];
+                }
+            }
+
+            if (doorTiles.Count > 0)
+            {
+                addedString += "\n d," + doorTiles[0];
+                for (int i = 1; i < doorTiles.Count; i++)
+                {
+                    addedString += "," + doorTiles[i];
+                }
+            }
+
+
             string testString = "-UnoccupiedTiles count = r \n" +
                 "-event room = n  -event tiles -event nums \n" +
                 "-id = i \n" +
@@ -386,20 +454,7 @@ public class LevelCreationManager : MonoBehaviour
                 "-num of shops/shop index = s [location], [location] \n" +
                 "-num objs/ obj indexs = o [location], [location] \n" +
                 "-obj ids = oi [location], [location] \n" +
-
-
-
-
-
-
-
-
-
-
-                "" +
-                "" +
-                "" +
-                "" +
+                addedString.Trim() +
                 "";
             File.WriteAllText(path, testString);
         }
@@ -476,7 +531,7 @@ public class LevelCreationManager : MonoBehaviour
                 }
                 tileMap.Sort();
 
-             
+
                 if (myCamera != null)
                 {
                     myCamera.selectedTile = tileMap[0];
@@ -673,15 +728,15 @@ public class LevelCreationManager : MonoBehaviour
 
     void SetCurrentToSpecialTexture()
     {
-        if(currentTile != null)
+        if (currentTile != null)
         {
 
             currentTile.MAT.mainTexture = Common.GetSpecialTexture(currentTile.TTYPE);
-        // currentTile.MAP = data.roomNames[i];
-        //currentTile.ROOM = data.roomIndexes[i];
-        //currentTile.START = data.startIndexes[i];
-        currentTile.setUVs(0, 1, 0, 1);
-        // currentTile.TTYPE = TileType.door;
+            // currentTile.MAP = data.roomNames[i];
+            //currentTile.ROOM = data.roomIndexes[i];
+            //currentTile.START = data.startIndexes[i];
+            currentTile.setUVs(0, 1, 0, 1);
+            // currentTile.TTYPE = TileType.door;
         }
     }
 
