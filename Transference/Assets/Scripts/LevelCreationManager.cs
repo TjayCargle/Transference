@@ -36,6 +36,10 @@ public class LevelCreationManager : MonoBehaviour
     public GameObject ifHelpTile;
 
     public LevelCreationTiles currentTile = null;
+
+    public TMP_InputField roomNum;
+    public TMP_InputField roomName;
+    public TMP_InputField playerStart;
     //public List
     // Start is called before the first frame update
     void Awake()
@@ -152,7 +156,22 @@ public class LevelCreationManager : MonoBehaviour
                                 isInShadow.isOn = hitTile.isInShadow;
 
                             if (tiletype != null)
+                            {
                                 tiletype.value = (int)hitTile.TTYPE;
+
+                                //if(hitTile.TTYPE == TileType.door)
+                                {
+                                    if(roomNum != null)                                    
+                                        roomNum.text = hitTile.ROOM.ToString();
+
+                                    if (roomName != null)
+                                        roomName.text = hitTile.MAP;
+
+                                    if (playerStart != null)
+                                        playerStart.text = hitTile.START.ToString();
+
+                                }
+                            }
 
                             //(objectOnTop != null)
                             //  objectOnTop
@@ -399,7 +418,7 @@ public class LevelCreationManager : MonoBehaviour
             addedString += "h," + mapHeightField.text;
             if(invisibleTiles.Count > 0)
             {
-                addedString += "\n r," + invisibleTiles[0];
+                addedString += "\nr," + invisibleTiles[0];
                 for (int i = 1; i < invisibleTiles.Count; i++)
                 {
                     addedString += "," + invisibleTiles[i];
@@ -407,7 +426,7 @@ public class LevelCreationManager : MonoBehaviour
             }
             if (shadowTiles.Count > 0)
             {
-                addedString += "\n st," + shadowTiles[0];
+                addedString += "\nst," + shadowTiles[0];
                 for (int i = 1; i < shadowTiles.Count; i++)
                 {
                     addedString += "," + shadowTiles[i];
@@ -415,13 +434,13 @@ public class LevelCreationManager : MonoBehaviour
             }
             if (specialTiles.Count > 0)
             {
-                addedString += "\n sti," + specialTiles[0];
+                addedString += "\nsti," + specialTiles[0];
                 for (int i = 1; i < specialTiles.Count; i++)
                 {
                     addedString += "," + specialTiles[i];
                 }
                 
-                addedString += "\n stt," + specialTileTypes[0];
+                addedString += "\nstt," + specialTileTypes[0];
                 for (int i = 1; i < specialTileTypes.Count; i++)
                 {
                     addedString += "," + specialTileTypes[i];
@@ -430,10 +449,28 @@ public class LevelCreationManager : MonoBehaviour
 
             if (doorTiles.Count > 0)
             {
-                addedString += "\n d," + doorTiles[0];
+                addedString += "\nd," + doorTiles[0];
                 for (int i = 1; i < doorTiles.Count; i++)
                 {
                     addedString += "," + doorTiles[i];
+                }
+
+                addedString += "\nm," + tileMap[doorTiles[0]].MAP;
+                for (int i = 1; i < doorTiles.Count; i++)
+                {
+                    addedString += "," + tileMap[doorTiles[i]].MAP;
+                }
+
+                addedString += "\nl," + tileMap[doorTiles[0]].ROOM;
+                for (int i = 1; i < doorTiles.Count; i++)
+                {
+                    addedString += "," + tileMap[doorTiles[i]].ROOM;
+                }
+
+                addedString += "\nx," + tileMap[doorTiles[0]].START;
+                for (int i = 1; i < doorTiles.Count; i++)
+                {
+                    addedString += "," + tileMap[doorTiles[i]].START;
                 }
             }
 
@@ -702,6 +739,50 @@ public class LevelCreationManager : MonoBehaviour
 
                 }
 
+            }
+        }
+    }
+
+    public void UpdateDoorIndex()
+    {
+        if (currentTile != null)
+        {
+            if(roomNum != null)
+            {
+                int outVar = -1;
+               System.Int32.TryParse(roomNum.text, out outVar);
+                currentTile.ROOM = outVar;
+            }
+
+        }
+    }
+
+    public void UpdateDoorName()
+    {
+        if (currentTile != null)
+        {
+       
+
+            if (roomName != null)
+            {
+                currentTile.MAP = roomName.text;
+            }
+
+       
+        }
+    }
+
+    public void UpdateDoorStart()
+    {
+        if (currentTile != null)
+        {
+    
+
+            if (playerStart != null)
+            {
+                int outVar = -1;
+                System.Int32.TryParse(playerStart.text, out outVar);
+                currentTile.START = outVar;
             }
         }
     }

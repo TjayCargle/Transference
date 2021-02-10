@@ -3786,6 +3786,7 @@ public class ManagerScript : EventRunner
                                             }
                                             DidCompleteTutorialStep();
                                             player.current.TakeAction();
+                                            Debug.Log("lete");
                                         }
                                         // CleanMenuStack();
                                     }
@@ -3811,7 +3812,8 @@ public class ManagerScript : EventRunner
                                     {
                                         if (newSkillEvent.caller == null)
                                         {
-                                            player.current.TakeAction();
+                                           // player.current.TakeAction();
+                                           // Debug.Log("comp");
                                             // CleanMenuStack();
                                         }
                                     }
