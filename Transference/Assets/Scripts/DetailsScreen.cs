@@ -9,7 +9,9 @@ public class DetailsScreen : MonoBehaviour
     public LivingObject currentObj;
     public GridObject anotherObj = null;
     [SerializeField]
-    Text nameText;
+    TextMeshProUGUI nameText;
+    [SerializeField]
+    TextMeshProUGUI aboutText;
 
     [SerializeField]
     Text sectionText;
@@ -116,6 +118,19 @@ public class DetailsScreen : MonoBehaviour
 
     [SerializeField]
     TextMeshProUGUI nextLevelInfo;
+
+    [SerializeField]
+    TextMeshProUGUI[] comboList;
+
+    [SerializeField]
+    TextMeshProUGUI[] itemList;
+
+    [SerializeField]
+    TextMeshProUGUI[] barrierList;
+
+    [SerializeField]
+    TextMeshProUGUI[] modList;
+
     public bool fullDescription = true;
     private DetailsTabIndicator currentIndicator = null;
     private ArmorScript selectedArmor;
@@ -201,6 +216,11 @@ public class DetailsScreen : MonoBehaviour
             Debug.Log("No hitlist found or details");
             return;
         }
+
+        if(aboutText != null)
+        {
+            aboutText.text = Common.GetCharacterText(currentObj);
+        }
         selectedHitlist = currentObj.ARMOR.HITLIST;
         selectedArmor = currentObj.ARMOR.SCRIPT;
         if (descriptionText)
@@ -221,7 +241,7 @@ public class DetailsScreen : MonoBehaviour
                 nextLevelInfo.color = Common.trans;
             }
         }
-
+        viewContent = -1;
         if (hoverContent != -1)
         {
             viewContent = hoverContent;
@@ -382,11 +402,11 @@ public class DetailsScreen : MonoBehaviour
                 break;
 
         }
-        if (detail != DetailType.Exp)
+        //  if (detail != DetailType.Exp)
         {
             if (expObj)
             {
-                expObj.gameObject.SetActive(false);
+                //    expObj.gameObject.SetActive(false);
             }
             if (SkillsObj)
             {
@@ -497,7 +517,7 @@ public class DetailsScreen : MonoBehaviour
                                 skillSliders[i].maxValue = command.maxExp;
                                 skillSliders[i].value = currAmount;
                                 skillProText[i].text = "" + currAmount + "/" + command.maxExp;
-                             
+
                             }
                             else
                             {
@@ -506,7 +526,7 @@ public class DetailsScreen : MonoBehaviour
                                 skillSliders[i].value = 0;
                                 skillProText[i].text = "";
                             }
-                            if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                            if (viewContent >= 0 && selectableContent[viewContent].GetComponentInChildren<Text>())
                             {
                                 if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                 {
@@ -546,13 +566,8 @@ public class DetailsScreen : MonoBehaviour
                                                 descriptionText2.gameObject.SetActive(true);
                                         }
                                     }
-                                    else if (currentSlot.SKILLS[i].GetType() == typeof(ComboSkill))
-                                    {
-                                        (currentSlot.SKILLS[i] as ComboSkill).UpdateDesc();
-                                        finalText = currentSlot.SKILLS[i].DESC;
-                                      
-                                    }
-                                    else if (currentSlot.SKILLS[i].GetType() == typeof(AutoSkill))
+
+                                    if (currentSlot.SKILLS[i].GetType() == typeof(AutoSkill))
                                     {
                                         (currentSlot.SKILLS[i] as AutoSkill).UpdateDesc();
                                         finalText = currentSlot.SKILLS[i].DESC;
@@ -580,22 +595,61 @@ public class DetailsScreen : MonoBehaviour
                         }
                     }
 
-                    else
+
                     {
-                        if (detail == DetailType.Armor)
+                        if (comboList.Length > 0)
                         {
-                            if (currentObj.INVENTORY.ARMOR.Count > i)
+                            if (i < currentObj.INVENTORY.COMBOS.Count)
                             {
-                                skills[i].text = currentObj.INVENTORY.ARMOR[i].NAME + " LV: " + currentObj.INVENTORY.ARMOR[i].LEVEL;
+                                comboList[i].text = currentObj.INVENTORY.COMBOS[i].NAME;
+                                if (comboList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = comboList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    pTip.myUsable = currentObj.INVENTORY.COMBOS[i];
+                                    pTip.UpdateTooltip();
+                                }
+                            }
+                            else
+                            {
+                                comboList[i].text = "-";
+                                if (comboList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = comboList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    pTip.myUsable = null;
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = false;
+                                }
+                            }
+                            //finalText = currentSlot.SKILLS[i].DESC;
+
+                        }
+                        //  if (detail == DetailType.Armor)
+                        {
+                            if (currentObj.INVENTORY.ARMOR.Count > i && barrierList.Length > 0)
+                            {
+                                barrierList[i].text = currentObj.INVENTORY.ARMOR[i].NAME + " LV: " + currentObj.INVENTORY.ARMOR[i].LEVEL;
                                 ArmorScript command = currentObj.INVENTORY.ARMOR[i];
-                                int currAmount = command.USECOUNT % 2;
-                                skillSliders[i].maxValue = command.maxExp;
-                                skillSliders[i].value = currAmount;
-                                skillProText[i].text = "" + currAmount + "/2";
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+
+                                if (barrierList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = barrierList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    pTip.myUsable = currentObj.INVENTORY.ARMOR[i];
+                                    pTip.UpdateTooltip();
+                                }
+
+                                //int currAmount = command.USECOUNT % 2;
+                                //skillSliders[i].maxValue = command.maxExp;
+                                //skillSliders[i].value = currAmount;
+                                //skillProText[i].text = "" + currAmount + "/2";
+                                if (viewContent >= 0 && selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                     {
+
                                         currentObj.INVENTORY.ARMOR[i].UpdateDesc();
                                         finalText = currentObj.INVENTORY.ARMOR[i].DESC;
                                         selectedHitlist = currentObj.INVENTORY.ARMOR[i].HITLIST;
@@ -636,15 +690,24 @@ public class DetailsScreen : MonoBehaviour
                             }
                             else
                             {
-                                skills[i].text = "-";
+                                if (barrierList.Length > 0)
+                                    barrierList[i].text = "-";
+
+                                if (barrierList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = barrierList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = false;
+                                    pTip.myUsable = null;
+                                }
                             }
                         }
-                        else if (detail == DetailType.Opportunity)
+                        if (detail == DetailType.Opportunity)
                         {
                             if (currentObj.INVENTORY.OPPS.Count > i)
                             {
                                 skills[i].text = currentObj.INVENTORY.OPPS[i].NAME;// + " LV: " + currentObj.INVENTORY.OPPS[i].LEVEL;
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                                if (viewContent >= 0 && selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                     {
@@ -684,10 +747,7 @@ public class DetailsScreen : MonoBehaviour
                                     }
                                 }
                             }
-                            else
-                            {
-                                skills[i].text = "-";
-                            }
+
                         }
                         else if (detail == DetailType.BasicAtk)
                         {
@@ -699,7 +759,7 @@ public class DetailsScreen : MonoBehaviour
                                 skillSliders[i].maxValue = command.maxExp;
                                 skillSliders[i].value = currAmount;
                                 skillProText[i].text = "" + currAmount + "/" + command.maxExp;
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                                if (viewContent >= 0 && selectableContent[viewContent].GetComponentInChildren<Text>())
                                 {
                                     if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
                                     {
@@ -746,94 +806,97 @@ public class DetailsScreen : MonoBehaviour
                                 skills[i].text = "-";
                             }
                         }
-                        else if (detail == DetailType.Buffs)
+                        if (modList.Length > 0)
                         {
-                            if (currentObj.INVENTORY.BUFFS.Count > i)
+                            if (i < currentObj.INVENTORY.BUFFS.Count)
                             {
-                                skills[i].text = currentObj.INVENTORY.BUFFS[i].NAME;
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                                modList[i].text = currentObj.INVENTORY.BUFFS[i].NAME;
+                                if (modList[i].transform.parent.GetComponent<TooltipConnector>())
                                 {
-                                    if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
-                                    {
-                                        currentObj.INVENTORY.BUFFS[i].UpdateDesc();
-                                        finalText = currentObj.INVENTORY.BUFFS[i].getEffectDesc();
-                                    }
+                                    TooltipConnector pTip = modList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    pTip.myUsable = currentObj.INVENTORY.BUFFS[i];
+                                    pTip.UpdateTooltip();
+                                }
+                            }
+                            else if (i - currentObj.INVENTORY.BUFFS.Count < currentObj.INVENTORY.DEBUFFS.Count)
+                            {
+                                modList[i].text = currentObj.INVENTORY.DEBUFFS[i - currentObj.INVENTORY.BUFFS.Count].NAME;
+                                if (modList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = modList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    pTip.myUsable = currentObj.INVENTORY.DEBUFFS[i - currentObj.INVENTORY.BUFFS.Count];
+                                    pTip.UpdateTooltip();
+                                }
+                            }
+                            else if ((i - currentObj.INVENTORY.BUFFS.Count - currentObj.INVENTORY.DEBUFFS.Count) < currentObj.INVENTORY.EFFECTS.Count)
+                            {
+                                modList[i].text = currentObj.INVENTORY.EFFECTS[i - currentObj.INVENTORY.BUFFS.Count - currentObj.INVENTORY.DEBUFFS.Count].EFFECT.ToString();
+                                if (modList[i].transform.parent.GetComponent<TooltipConnector>())
+                                {
+                                    TooltipConnector pTip = modList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    CommandSkill effect = Common.GenericSkill;
+                                    effect.SUBTYPE = SubSkillType.Ailment;
+                                    effect.EFFECT = currentObj.INVENTORY.EFFECTS[i - currentObj.INVENTORY.BUFFS.Count - currentObj.INVENTORY.DEBUFFS.Count].EFFECT;
+                                    pTip.myUsable = effect;
+                                    pTip.UpdateTooltip();
                                 }
                             }
                             else
                             {
-                                skills[i].text = "-";
-                            }
-                        }
-                        else if (detail == DetailType.Debuffs)
-                        {
-                            if (currentObj.INVENTORY.DEBUFFS.Count > i)
-                            {
-                                skills[i].text = currentObj.INVENTORY.DEBUFFS[i].NAME;
-                                if (skills[i].text == "")
+                                modList[i].text = "-";
+                                if (modList[i].transform.parent.GetComponent<TooltipConnector>())
                                 {
-                                    skills[i].text = "Debuff";
-                                }
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
-                                {
-                                    if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
-                                    {
-                                        currentObj.INVENTORY.DEBUFFS[i].UpdateDesc();
-                                        finalText = currentObj.INVENTORY.DEBUFFS[i].getEffectDesc();
-                                    }
+                                    TooltipConnector pTip = modList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = false;
+                                  pTip.myUsable = null;
                                 }
                             }
-                            else
-                            {
-                                skills[i].text = "-";
-                            }
                         }
-                        else if (detail == DetailType.Effects)
+
+                        //  else if (detail == DetailType.Items)
                         {
-                            if (currentObj.INVENTORY.EFFECTS.Count > i)
+                            if (currentObj.INVENTORY.ITEMS.Count > i && itemList.Length > 0)
                             {
-                                skills[i].text = currentObj.INVENTORY.EFFECTS[i].EFFECT.ToString();
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                                itemList[i].text = currentObj.INVENTORY.ITEMS[i].NAME;
+                                if (itemList[i].transform.parent.GetComponent<TooltipConnector>())
                                 {
-                                    if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
-                                    {
-                                        finalText = Common.GetSideEffectText(currentObj.INVENTORY.EFFECTS[i].EFFECT);
-                                    }
+                                    TooltipConnector pTip = itemList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = true;
+                                    pTip.myUsable = currentObj.INVENTORY.ITEMS[i];
+                                    pTip.UpdateTooltip();
                                 }
                             }
                             else
                             {
-                                skills[i].text = "-";
-                            }
-                        }
-                        else if (detail == DetailType.Items)
-                        {
-                            if (currentObj.INVENTORY.ITEMS.Count > i)
-                            {
-                                skills[i].text = currentObj.INVENTORY.ITEMS[i].NAME;
-                                if (selectableContent[viewContent].GetComponentInChildren<Text>())
+                                itemList[i].text = "-";
+
+                                if (itemList[i].transform.parent.GetComponent<TooltipConnector>())
                                 {
-                                    if (selectableContent[viewContent].GetComponentInChildren<Text>() == skills[i])
-                                    {
-                                        finalText = currentObj.INVENTORY.ITEMS[i].DESC;
-                                    }
+                                    TooltipConnector pTip = itemList[i].transform.parent.GetComponent<TooltipConnector>();
+                                    if (pTip.myTooltip)
+                                        pTip.myTooltip.enabled = false;
+                                    pTip.myUsable = null;
                                 }
                             }
-                            else
-                            {
-                                skills[i].text = "-";
-                            }
                         }
-                        else
+                        //  else
                         {
-                            Debug.Log("Whats thes actuals fucks");
+                            //    Debug.Log("Whats thes actuals fucks");
                         }
                     }
                 }
 
             }
         }
-        else
+        //  else
         {
             sectionText.text = "Levels and XP";
             if (expObj)
@@ -916,7 +979,7 @@ public class DetailsScreen : MonoBehaviour
             for (int i = 0; i < selectedHitlist.Count; i++)
             {
                 armorreacts[i].sprite = armorSprites[(int)selectedHitlist[i]];
-                if (selectableContent[viewContent] == armorreacts[i].transform.parent.GetComponent<Image>())
+                if (viewContent >= 0 && selectableContent[viewContent] == armorreacts[i].transform.parent.GetComponent<Image>())
                 {
                     switch ((int)selectedHitlist[i])
                     {
@@ -1060,9 +1123,9 @@ public class DetailsScreen : MonoBehaviour
 
         attributes[2].text = "Dex: " + currentObj.DEX;
         if (descriptionText)
-            descriptionText.text = finalText;
+            descriptionText.text = "";// finalText;
         if (descriptionText2)
-            descriptionText2.text = finalText;
+            descriptionText2.text = "";//finalText;
 
         if (fullDescription == true)
         {
@@ -1080,6 +1143,11 @@ public class DetailsScreen : MonoBehaviour
     {
         if (!anotherObj)
             return;
+
+        if (aboutText != null)
+        {
+            aboutText.text = Common.GetCharacterText(anotherObj);
+        }
         selectedHitlist = null;// anotherObj.ARMOR.HITLIST;
         selectedArmor = null;// anotherObj.ARMOR.SCRIPT;
         if (descriptionText)
@@ -1257,11 +1325,11 @@ public class DetailsScreen : MonoBehaviour
             skillSliders[i].value = 0;
             skillProText[i].text = "";
         }
-        if (detail != DetailType.Exp)
+        // if (detail != DetailType.Exp)
         {
             if (expObj)
             {
-                expObj.gameObject.SetActive(false);
+                //     expObj.gameObject.SetActive(false);
             }
             if (SkillsObj)
             {
@@ -1366,9 +1434,9 @@ public class DetailsScreen : MonoBehaviour
 
             }
         }
-        else
+        // else
         {
-         
+
             sectionText.text = "Levels and XP";
             if (expObj)
             {
@@ -1582,6 +1650,56 @@ public class DetailsScreen : MonoBehaviour
             descriptionText.text = finalText;
         if (descriptionText2)
             descriptionText2.text = finalText;
+
+
+        for (int i = 0; i < skills.Length; i++)
+        {
+            if (barrierList.Length > i)
+                barrierList[i].text = "-";
+
+            if (barrierList[i].transform.parent.GetComponent<TooltipConnector>())
+            {
+                TooltipConnector pTip = barrierList[i].transform.parent.GetComponent<TooltipConnector>();
+                if (pTip.myTooltip)
+                    pTip.myTooltip.enabled = false;
+                pTip.myUsable = null;
+            }
+
+            if (itemList.Length > i)
+                itemList[i].text = "-";
+
+            if (itemList[i].transform.parent.GetComponent<TooltipConnector>())
+            {
+                TooltipConnector pTip = itemList[i].transform.parent.GetComponent<TooltipConnector>();
+                if (pTip.myTooltip)
+                    pTip.myTooltip.enabled = false;
+                pTip.myUsable = null;
+            }
+
+
+            if (modList.Length > i)
+                modList[i].text = "-";
+
+            if (modList[i].transform.parent.GetComponent<TooltipConnector>())
+            {
+                TooltipConnector pTip = modList[i].transform.parent.GetComponent<TooltipConnector>();
+                if (pTip.myTooltip)
+                    pTip.myTooltip.enabled = false;
+                pTip.myUsable = null;
+            }
+
+            if (comboList.Length > i)
+                comboList[i].text = "-";
+
+            if (comboList[i].transform.parent.GetComponent<TooltipConnector>())
+            {
+                TooltipConnector pTip = comboList[i].transform.parent.GetComponent<TooltipConnector>();
+                if (pTip.myTooltip)
+                    pTip.myTooltip.enabled = false;
+                pTip.myUsable = null;
+            }
+        }
+
 
         if (fullDescription == true)
         {

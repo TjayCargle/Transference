@@ -461,7 +461,7 @@ public class HackingCtrl : MonoBehaviour
         }
         if (spellText)
         {
-            spellText.text = "<sprite=43> (" + spellCount.ToString() + " uses)";
+            spellText.text = "<sprite=28> (" + spellCount.ToString() + " uses)";
         }
     }
 }

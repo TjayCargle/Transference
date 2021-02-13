@@ -2740,6 +2740,46 @@ public class Common : ScriptableObject
 
         return returnedString;
     }
+    public static string GetCharacterText(GridObject obj)
+    {
+        string returnedString = "";
+        if(obj == null)
+        {
+            return returnedString;
+        }
+        switch (obj.FACTION)
+        {
+            case Faction.ally:
+                {
+                    if(obj.id == 0)
+                    {
+                        returnedString = "Jax was a gifted kid and easily able to pickup magic from a young age. However, when he was young his parents died after his village was caught up in a battle between the fairies and the phixies. ";
+                    }
+                    else
+                    {
+                        returnedString = "Zeffron is the foster brother of Jax. Zeffron and Jax were best friends growing up and so his family decided to take Jax in after his parents died. Zeffron is physically fit and is more adept with physical skills than magic. ";
+                    }
+                }
+                break;
+            case Faction.enemy:
+                returnedString = "Hybrid creatures, mixes of the scorpion and bumblebee. They have the head and thorax of a bee with a scorpion tail replacing the abdomen. Two compound eyes reside on each side of the head, and three bee stingers act as arms on the right side of the body. ";
+                break;
+            case Faction.hazard:
+                {
+                    returnedString = "Glyph technology is the latest advancement in home security. Though Glyphs usualy cannot move, they have many features that will be a hindrance to intruders.";
+                }
+                break;
+
+            case Faction.fairy:
+                returnedString = "One of the few purebred creatures, descending from their woodland ancestors. They are at the top rungs of society, and their legions control most of the world, enforcing a brutal regime despite their unsuspecting appearances.";
+                break;
+            default:
+                returnedString = "Coffins that house the spirits of those who died. With Transference in effect, they may contain some lingering power that can be harnessed.";
+                break;
+        }
+
+        return returnedString;
+    }
 
     public static string GetHelpText(int helpnum)
     {

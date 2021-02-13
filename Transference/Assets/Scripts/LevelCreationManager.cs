@@ -198,11 +198,11 @@ public class LevelCreationManager : MonoBehaviour
             }
         }
     }
-
+#if UNITY_EDITOR
     public void OpenFilePicker()
     {
 
-#if UNITY_EDITOR
+
         string path = EditorUtility.OpenFilePanel("Select Level to load", "", "csv");
         if (path.Length > 0)
         {
@@ -373,7 +373,7 @@ public class LevelCreationManager : MonoBehaviour
                 }
             }
         }
-#endif
+
     }
     public void SaveFilePanel()
     {
@@ -498,6 +498,8 @@ public class LevelCreationManager : MonoBehaviour
 
         AssetDatabase.Refresh();
     }
+
+#endif
     public void CreateMap()
     {
 #if UNITY_EDITOR

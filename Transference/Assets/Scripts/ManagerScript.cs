@@ -597,6 +597,7 @@ public class ManagerScript : EventRunner
         {
             //  LoadGameAndScene();
             stackLog();
+
         }
         //if (Input.GetKeyDown(KeyCode.S))
         //{
@@ -3734,11 +3735,17 @@ public class ManagerScript : EventRunner
 
     public void MovetoMousePos(LivingObject movedObj)
     {
+        if (currentState == State.PlayerMove)
+        {
+
         if (movedObj == null)
         {
             returnState();
         }
-
+        if (movedObj.currentTile == null)
+        {
+            returnState();
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit))
@@ -3754,7 +3761,7 @@ public class ManagerScript : EventRunner
             {
                 TileScript hitTile = hitoobject.GetComponent<TileScript>();
                 bool alreadySelected = false;
-                if (myCamera.currentTile == hitTile)
+                if (myCamera.currentTile == hitTile && movedObj.transform.position == hitTile.transform.position + new Vector3(0, 0.5f, 0.12f))
                 {
                     alreadySelected = true;
 
@@ -3769,9 +3776,11 @@ public class ManagerScript : EventRunner
                         {
                             movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
                             myCamera.currentTile = hitTile;
+            
+
                             if (ComfirmMenuAction(movedObj))
                             {
-
+                                    ComfirmMoveGridObject(movedObj, hitTile.listindex);
                                 if (currentState != State.PlayerOppMove && currentState != State.PlayerOppOptions)
                                 {
                                     if (newSkillEvent.caller == null)
@@ -3786,7 +3795,7 @@ public class ManagerScript : EventRunner
                                             }
                                             DidCompleteTutorialStep();
                                             player.current.TakeAction();
-                                            Debug.Log("lete");
+
                                         }
                                         // CleanMenuStack();
                                     }
@@ -3812,8 +3821,8 @@ public class ManagerScript : EventRunner
                                     {
                                         if (newSkillEvent.caller == null)
                                         {
-                                           // player.current.TakeAction();
-                                           // Debug.Log("comp");
+                                            // player.current.TakeAction();
+                                            // Debug.Log("comp");
                                             // CleanMenuStack();
                                         }
                                     }
@@ -3903,6 +3912,8 @@ public class ManagerScript : EventRunner
             }
         }
         myCamera.UpdateCamera();
+
+        }
     }
 
 
@@ -4030,82 +4041,82 @@ public class ManagerScript : EventRunner
     }
     private void ExecuteIntercept(SceneEventContainer sceneEvent)
     {
-     
-            switch (sceneEvent.scene)
-            {
-                case SceneEvent.move:
-                    break;
-                case SceneEvent.showimage:
-                    {
-                        if (eventImage)
-                        {
-                            eventImage.myImage.sprite = Resources.LoadAll<Sprite>("SceneImg")[sceneEvent.data];
-                            eventImage.gameObject.SetActive(true);
-                        }
-                    }
-                    break;
-                case SceneEvent.moveToTarget:
-                    {
 
-                        tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
-                        ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
-                    }
-                    break;
-                case SceneEvent.hideimage:
-                    {
-                        if (eventImage)
-                        {
-                            eventImage.gameObject.SetActive(false);
-                        }
-                    }
-                    break;
-                case SceneEvent.shake:
-                    break;
-                case SceneEvent.scaleimage:
+        switch (sceneEvent.scene)
+        {
+            case SceneEvent.move:
+                break;
+            case SceneEvent.showimage:
+                {
                     if (eventImage)
                     {
-                        eventImage.transform.localScale = new Vector3(sceneEvent.data, sceneEvent.data, 1);
+                        eventImage.myImage.sprite = Resources.LoadAll<Sprite>("SceneImg")[sceneEvent.data];
+                        eventImage.gameObject.SetActive(true);
                     }
-                    break;
-                case SceneEvent.blackout:
-                    {
-                        if (eventImage)
-                        {
-                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                            if (img)
-                            {
-                                img.color = new Color(0, 0, 0, 1.0f);
-                            }
-                        }
-                    }
-                    break;
-                case SceneEvent.dim:
-                    {
-                        if (eventImage)
-                        {
-                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                            if (img)
-                            {
-                                img.color = new Color(0, 0, 0, 0.65f);
-                            }
-                        }
-                    }
-                    break;
-                case SceneEvent.clear:
-                    {
-                        if (eventImage)
-                        {
-                            UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
-                            if (img)
-                            {
-                                img.color = new Color(0, 0, 0, 0.0f);
-                            }
-                        }
-                    }
-                    break;
-            }
+                }
+                break;
+            case SceneEvent.moveToTarget:
+                {
 
-        
+                    tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
+                    ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
+                }
+                break;
+            case SceneEvent.hideimage:
+                {
+                    if (eventImage)
+                    {
+                        eventImage.gameObject.SetActive(false);
+                    }
+                }
+                break;
+            case SceneEvent.shake:
+                break;
+            case SceneEvent.scaleimage:
+                if (eventImage)
+                {
+                    eventImage.transform.localScale = new Vector3(sceneEvent.data, sceneEvent.data, 1);
+                }
+                break;
+            case SceneEvent.blackout:
+                {
+                    if (eventImage)
+                    {
+                        UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                        if (img)
+                        {
+                            img.color = new Color(0, 0, 0, 1.0f);
+                        }
+                    }
+                }
+                break;
+            case SceneEvent.dim:
+                {
+                    if (eventImage)
+                    {
+                        UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                        if (img)
+                        {
+                            img.color = new Color(0, 0, 0, 0.65f);
+                        }
+                    }
+                }
+                break;
+            case SceneEvent.clear:
+                {
+                    if (eventImage)
+                    {
+                        UnityEngine.UI.Image img = eventImage.transform.parent.GetComponent<UnityEngine.UI.Image>();
+                        if (img)
+                        {
+                            img.color = new Color(0, 0, 0, 0.0f);
+                        }
+                    }
+                }
+                break;
+        }
+
+
 
     }
     public void NextScene()
@@ -5383,7 +5394,7 @@ public class ManagerScript : EventRunner
         {
             aTile = tileMap[tileIndex];
         }
-  
+
         possibleTiles = tileManager.GetAdjecentTiles(aTile);
         possibleTiles.Insert(0, aTile);
         bool foundtile = false;
@@ -5404,7 +5415,7 @@ public class ManagerScript : EventRunner
                             {
                                 if (!playerIndexes.Contains(tileIndex))
                                 {
-                                   foundtile = true;
+                                    foundtile = true;
                                     livingobjs[i].transform.position = tileMap[tileIndex].transform.position + new Vector3(0, 0.5f, 0);
                                     livingobjs[i].currentTileIndex = tileIndex;
                                     playerIndexes.Add(tileIndex);
@@ -11091,11 +11102,12 @@ public class ManagerScript : EventRunner
 
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg, Reaction alteration = Reaction.none)
     {
-        if (attackingElement == Element.Buff)
+        DmgReaction react = new DmgReaction();
+        if (attackingElement == Element.Buff || dmgObject == null)
         {
             Debug.Log("U don goofed");
+            return react;
         }
-        DmgReaction react = new DmgReaction();
         react.dmgElement = attackingElement;
         float mod = 0.0f;
         switch (dmgObject.ARMOR.HITLIST[(int)attackingElement])

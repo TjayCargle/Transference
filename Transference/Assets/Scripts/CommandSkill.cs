@@ -982,10 +982,16 @@ public class CommandSkill : SkillScript
         if (level < Common.MaxSkillLevel)
         {
             returnedString = "Level " + LEVEL + "";
+            returnedString += "\n Element: " + ELEMENT;
+            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+            returnedString += "\n Accuracy: " + (ACCURACY) + "";
         }
         else
         {
             returnedString = "Max Level ";
+            returnedString += "\n Element: " + ELEMENT;
+            returnedString += "\n Damage: " + DAMAGE.ToString() + "";
+            returnedString += "\n Accuracy: " + (ACCURACY) + "";
         }
 
         if (level > 0)
@@ -994,8 +1000,7 @@ public class CommandSkill : SkillScript
             switch (ELEMENT)
             {
                 case Element.Water:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     if (MAX_HIT == 0)
                     {
                         returnedString += "\n Hits: " + HITS + " time(s)";
@@ -1008,8 +1013,7 @@ public class CommandSkill : SkillScript
 
                     break;
                 case Element.Pyro:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + HITS + " time(s)";
 
                     if (EFFECT == SideEffect.burn)
@@ -1021,8 +1025,7 @@ public class CommandSkill : SkillScript
 
                     break;
                 case Element.Ice:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + HITS + " time(s)";
                     if (CRIT_RATE > 0)
                         returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
@@ -1034,8 +1037,7 @@ public class CommandSkill : SkillScript
 
                     break;
                 case Element.Electric:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + MIN_HIT + "-" + (MAX_HIT) + " times";
                     if (EFFECT == SideEffect.paralyze)
                     {
@@ -1043,21 +1045,18 @@ public class CommandSkill : SkillScript
                     }
                     break;
                 case Element.Slash:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + (HITS) + " time(s)";
 
                     break;
                 case Element.Pierce:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + (HITS) + " time(s)";
                     if (CRIT_RATE > 0)
                         returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
                     break;
                 case Element.Blunt:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + (HITS) + " time(s)";
                     if (CRIT_RATE > 0)
                         returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
@@ -1070,8 +1069,7 @@ public class CommandSkill : SkillScript
                         returnedString += "\n " + BUFFEDSTAT + " " + (BUFFVAL) + "% for 3 turns";
                     break;
                 case Element.Force:
-                    returnedString += "\n Damage: " + DAMAGE.ToString() + "";
-                    returnedString += "\n Accuracy: " + (ACCURACY) + "";
+
                     returnedString += "\n Hits: " + HITS + " time(s)";
                     if (CRIT_RATE > 0)
                         returnedString += "\n Chance of critical hit: " + (CRIT_RATE) + "%";
@@ -1085,6 +1083,15 @@ public class CommandSkill : SkillScript
             }
 
         }
+
+        if (level < Common.MaxSkillLevel)
+        {
+       
+            returnedString += "\n " + (exp) + " uses to level up";
+            
+        }
+     
+
         return returnedString;
     }
 

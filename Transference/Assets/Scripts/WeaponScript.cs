@@ -200,10 +200,14 @@ public class WeaponScript : UsableScript
         {
             returnedString = "Max Level ";
         }
-
+        returnedString += "\n Element: " + ELEMENT;
         returnedString += "\n Damage: " + ATTACK.ToString() + "";
         returnedString += "\n Accuracy: " + (ACCURACY) + "";
-        //  returnedString += "\n Boosts: " + (BOOST) + " +" + BOOSTVAL;
+        if (level < Common.MaxSkillLevel)
+        {
+            returnedString += "\n " + (exp) + " uses to level up";
+        }
+
         return returnedString;
     }
     public string GetNextLevelStats()
