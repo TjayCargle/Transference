@@ -104,14 +104,155 @@ public class AutoSkill : SkillScript
                 OWNER.ChangeFatigue((int)amount);
                 break;
             case SkillReaction.reduceDef:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = BuffType.Def;
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+
+                            liveTarget.UpdateBuffsAndDebuffs();
+                            liveTarget.updateAilmentIcons();
+                        }
+                    }
+                }
                 break;
             case SkillReaction.reduceMag:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = BuffType.Mag;
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+
+                            liveTarget.UpdateBuffsAndDebuffs();
+                            liveTarget.updateAilmentIcons();
+                        }
+                    }
+                }
                 break;
             case SkillReaction.reduceRes:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = BuffType.Res;
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+
+                            liveTarget.UpdateBuffsAndDebuffs();
+                            liveTarget.updateAilmentIcons();
+                        }
+                    }
+                }
                 break;
             case SkillReaction.reduceSpd:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = BuffType.Spd;
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+
+                            liveTarget.UpdateBuffsAndDebuffs();
+                            liveTarget.updateAilmentIcons();
+                        }
+                    }
+                }
                 break;
+
             case SkillReaction.reduceLuck:
+                {
+                    if (target)
+                    {
+                        if (target.GetComponent<LivingObject>())
+                        {
+                            LivingObject liveTarget = target.GetComponent<LivingObject>();
+                            CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
+                            randomDeBuff.EFFECT = SideEffect.none;
+                            randomDeBuff.BUFF = BuffType.Dex;
+                            randomDeBuff.BUFFVAL = Random.Range(-10, -100);
+                            randomDeBuff.ELEMENT = Element.Buff;
+                            randomDeBuff.SUBTYPE = SubSkillType.Debuff;
+                            randomDeBuff.BUFFEDSTAT = Common.BuffToModStat(randomDeBuff.BUFF);
+                            randomDeBuff.OWNER = liveTarget;
+                            randomDeBuff.NAME = NAME + " " + randomDeBuff.BUFF + " debuff";
+                            randomDeBuff.extra = NAME;
+                            liveTarget.INVENTORY.DEBUFFS.Add(randomDeBuff);
+                            DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
+
+                            buff.SKILL = randomDeBuff;
+                            buff.BUFF = randomDeBuff.BUFF;
+                            buff.COUNT = 1;
+
+                            liveTarget.UpdateBuffsAndDebuffs();
+                            liveTarget.updateAilmentIcons();
+                        }
+                    }
+                }
                 break;
             case SkillReaction.debuff:
                 {

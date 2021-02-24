@@ -1,68 +1,68 @@
-id, name, description,attack, attack_type,affinity, range, accurracy, crit,boost type, boost amt
+id, name, description,attack, attack_type,affinity, range, accurracy, crit,skill event, skill reaction
 -
-0, Stab,El:  2, 2, physical, Pierce, adjacent, 100, 0, Str, 2
-1, Adept Stab,El:  2, 2, physical, Pierce, pinWheel, 100, 0, Str, 2
-2, Throw Stab,El:  2, 2, physical, Pierce, detached, 100, 0, Str, 2
-3, Share Stab,El:  2, 2, physical, Pierce, spear, 100, 0, Str, 2
-4, Sweep Stab,El:  2, 2, physical, Pierce, rotator, 100, 0, Str, 2
-5, Thrust Stab,El:  2, 2, physical, Pierce, lance, 100, 0, Str, 2
-6, Skewer Stab,El:  2, 2, physical, Pierce, line, 100, 0, Str, 2
+0, Poison Stab,El:  2, 2, physical, Pierce, adjacent, 100, 20, afterDmg, poison
+1, Adept Stab,El:  2, 2, physical, Pierce, pinWheel, 100, 30, afterDmg, discoverItem
+2, Throw Stab,El:  2, 2, physical, Pierce, detached, 100, 10, afterDmg, poison
+3, Share Stab,El:  2, 2, physical, Pierce, spear, 100, 10, afterDmg, cripple
+4, Sweep Stab,El:  2, 2, physical, Pierce, rotator, 100, 20, afterDmg, cripple
+5, Thrust Stab,El:  2, 2, physical, Pierce, lance, 100, 10, afterDmg, discoverItem
+6, Skewer Stab,El:  2, 2, physical, Pierce, line, 100, 20, afterDmg, discoverItem
 -
-7, Blade,El:  2, 2, physical, Slash, adjacent, 100, 0, Str, 2
-8, Adept Blade,El:  2, 2, physical, Slash, pinWheel, 100, 0, Str, 2
-9, Throw Blade,El:  2, 2, physical, Slash, detached, 100, 0, Str, 2
-10, Share Blade,El:  2, 2, physical, Slash, spear, 100, 0, Str, 2
-11, Sweep Blade,El:  2, 2, physical, Slash, rotator, 100, 0, Str, 2
-12, Thrust Blade,El:  2, 2, physical, Slash, lance, 100, 0, Str, 2
-13, Skewer Blade,El:  2, 2, physical, Slash, line, 100, 0, Str, 2
+7, Blade,El:  2, 2, physical, Slash, adjacent, 100, 35, afterDmg, reduceMag
+8, Adept Blade,El:  2, 2, physical, Slash, pinWheel, 100, 30, afterDmg, extraAction
+9, Throw Blade,El:  2, 2, physical, Slash, detached, 100, 35, afterDmg, reduceStr
+10, Share Blade,El:  2, 2, physical, Slash, spear, 100, 25, afterDmg, reduceStr
+11, Sweep Blade,El:  2, 2, physical, Slash, rotator, 100, 20, afterDmg, extraAction
+12, Thrust Blade,El:  2, 2, physical, Slash, lance, 100, 25, afterDmg, reduceMag
+13, Skewer Blade,El:  2, 2, physical, Slash, line, 100, 10, afterDmg, extraAction
 -
-14, Slap,El:  2, 2, physical, Blunt, adjacent, 100, 0, Str, 2
-15, Adept Slap,El:  2, 2, physical, Blunt, pinWheel, 100, 0, Str, 2
-16, Throw Slap,El:  2, 2, physical, Blunt, detached, 100, 0, Str, 2
-17, Share Slap,El:  2, 2, physical, Blunt, spear, 100, 0, Str, 2
-18, Sweep Slap,El:  2, 2, physical, Blunt, rotator, 100, 0, Str, 2
-19, Thrust Slap,El:  2, 2, physical, Blunt, lance, 100, 0, Str, 2
-20, Skewer Slap,El:  2, 2, physical, Blunt, line, 100, 0, Str, 2
+14, Slap,El:  2, 2, physical, Blunt, adjacent, 100, 20, afterDmg, instaKill
+15, Adept Slap,El:  2, 2, physical, Blunt, pinWheel, 100, 20, afterDmg, healByDmg
+16, Throw Slap,El:  2, 2, physical, Blunt, detached, 100, 20, afterDmg, healByDmg
+17, Share Slap,El:  2, 2, physical, Blunt, spear, 100, 20, afterDmg, healByDmg
+18, Sweep Slap,El:  2, 2, physical, Blunt, rotator, 100, 20, afterDmg, healByDmg
+19, Thrust Slap,El:  2, 2, physical, Blunt, lance, 100, 20, afterDmg, healByDmg
+20, Skewer Slap,El:  2, 2, physical, Blunt, line, 100, 20, afterDmg, healByDmg
 -
-21, Pyre ,El:  2, 2, physical, Pyro, adjacent, 100, 0, Str, 2
-22, Pyre Tome,El:  2, 2, physical, Pyro, pinWheel, 100, 0, Str, 2
-23, Pyre Shot,El:  2, 2, physical, Pyro, detached, 100, 0, Str, 2
-24, Pyre Breath,El:  2, 2, physical, Pyro, spear, 100, 0, Str, 2
-25, Pyre Wheel,El:  2, 2, physical, Pyro, rotator, 100, 0, Str, 2
-26, Pyre Lance,El:  2, 2, physical, Pyro, lance, 100, 0, Str, 2
-27, Pyre Dance,El:  2, 2, physical, Pyro, line, 100, 0, Str, 2
+21, Pyre ,El:  2, 2, physical, Pyro, adjacent, 100, 20, afterDmg, healByDmg
+22, Pyre Tome,El:  2, 2, physical, Pyro, pinWheel, 100, 20, afterDmg, healByDmg
+23, Pyre Shot,El:  2, 2, physical, Pyro, detached, 100, 20, afterDmg, healByDmg
+24, Pyre Breath,El:  2, 2, physical, Pyro, spear, 100, 20, afterDmg, healByDmg
+25, Pyre Wheel,El:  2, 2, physical, Pyro, rotator, 100, 20, afterDmg, healByDmg
+26, Pyre Lance,El:  2, 2, physical, Pyro, lance, 100, 10, afterDmg, instaKill
+27, Pyre Dance,El:  2, 2, physical, Pyro, line, 100, 20, afterDmg, healByDmg
 -
-28, Hydro ,El:  2, 2, physical, Water, adjacent, 100, 0, Str, 2
-29, Hydro Tome,El:  2, 2, physical, Water, pinWheel, 100, 0, Str, 2
-30, Hydro Shot,El:  2, 2, physical, Water, detached, 100, 0, Str, 2
-31, Hydro Breath,El:  2, 2, physical, Water, spear, 100, 0, Str, 2
-32, Hydro Wheel,El:  2, 2, physical, Water, rotator, 100, 0, Str, 2
-33, Hydro Lance,El:  2, 2, physical, Water, lance, 100, 0, Str, 2
-34, Hydro Dance,El:  2, 2, physical, Water, line, 100, 0, Str, 2
+28, Hydro ,El:  2, 2, physical, Water, adjacent, 100, 20, afterDmg, healByDmg
+29, Hydro Tome,El:  2, 2, physical, Water, pinWheel, 100, 20, afterDmg, healByDmg
+30, Hydro Shot,El:  2, 2, physical, Water, detached, 100, 20, afterDmg, healByDmg
+31, Hydro Breath,El:  2, 2, physical, Water, spear, 100, 20, afterDmg, healByDmg
+32, Hydro Wheel,El:  2, 2, physical, Water, rotator, 100, 20, afterDmg, healByDmg
+33, Hydro Lance,El:  2, 2, physical, Water, lance, 100, 20, afterDmg, healByDmg
+34, Hydro Dance,El:  2, 2, physical, Water, line, 100, 20, afterDmg, healByDmg
 -
-35, Chill ,El:  2, 2, physical, Ice, adjacent, 100, 0, Str, 2
-36, Chill Tome,El:  2, 2, physical, Ice, pinWheel, 100, 0, Str, 2
-37, Chill Shot,El:  2, 2, physical, Ice, detached, 100, 0, Str, 2
-38, Chill Breath,El:  2, 2, physical, Ice, spear, 100, 0, Str, 2
-39, Chill Wheel,El:  2, 2, physical, Ice, rotator, 100, 0, Str, 2
-40, Chill Lance,El:  2, 2, physical, Ice, lance, 100, 0, Str, 2
-41, Chill Dance,El:  2, 2, physical, Ice, line, 100, 0, Str, 2
+35, Chill ,El:  2, 2, physical, Ice, adjacent, 100, 20, afterDmg, healByDmg
+36, Chill Tome,El:  2, 2, physical, Ice, pinWheel, 100, 20, afterDmg, healByDmg
+37, Chill Shot,El:  2, 2, physical, Ice, detached, 100, 20, afterDmg, healByDmg
+38, Chill Breath,El:  2, 2, physical, Ice, spear, 100, 20, afterDmg, healByDmg
+39, Chill Wheel,El:  2, 2, physical, Ice, rotator, 100, 20, afterDmg, healByDmg
+40, Chill Lance,El:  2, 2, physical, Ice, lance, 100, 20, afterDmg, healByDmg
+41, Chill Dance,El:  2, 2, physical, Ice, line, 100, 20, afterDmg, healByDmg
 -
-42, Energy ,El:  2, 2, physical, Force, adjacent, 100, 0, Str, 2
-43, Energy Tome,El:  2, 2, physical, Force, pinWheel, 100, 0, Str, 2
-44, Energy Shot,El:  2, 2, physical, Force, detached, 100, 0, Str, 2
-45, Energy Breath,El:  2, 2, physical, Force, spear, 100, 0, Str, 2
-46, Energy Wheel,El:  2, 2, physical, Force, rotator, 100, 0, Str, 2
-47, Energy Lance,El:  2, 2, physical, Force, lance, 100, 0, Str, 2
-48, Energy Dance,El:  2, 2, physical, Force, line, 100, 0, Str, 2
+42, Energy ,El:  2, 2, physical, Force, adjacent, 100, 20, afterDmg, healByDmg
+43, Energy Tome,El:  2, 2, physical, Force, pinWheel, 100, 20, afterDmg, healByDmg
+44, Energy Shot,El:  2, 2, physical, Force, detached, 100, 20, afterDmg, healByDmg
+45, Energy Breath,El:  2, 2, physical, Force, spear, 100, 20, afterDmg, healByDmg
+46, Energy Wheel,El:  2, 2, physical, Force, rotator, 100, 20, afterDmg, healByDmg
+47, Energy Lance,El:  2, 2, physical, Force, lance, 100, 20, afterDmg, healByDmg
+48, Energy Dance,El:  2, 2, physical, Force, line, 100, 20, afterDmg, healByDmg
 -
-49, Bubble Blast,El:  2, 2, magical, Water, adjacent, 100, 0, Str, 0
+49, Bubble Blast,El:  2, 2, magical, Water, adjacent, 100, 20, afterDmg, healByDmg
 -
 -
-50, Static ,El:  2, 2, physical, Electric, adjacent, 100, 0, Str, 2
-51, Static Tome,El:  2, 2, physical, Electric, pinWheel, 100, 0, Str, 2
-52, Static Shot,El:  2, 2, physical, Electric, detached, 100, 0, Str, 2
-53, Static Breath,El:  2, 2, physical, Electric, spear, 100, 0, Str, 2
-54, Static Wheel,El:  2, 2, physical, Electric, rotator, 100, 0, Str, 2
-55, Static Lance,El:  2, 2, physical, Electric, lance, 100, 0, Str, 2
-56, Static Dance,El:  2, 2, physical, Electric, line, 100, 0, Str, 2
+50, Static ,El:  2, 2, physical, Electric, adjacent, 100, 20, afterDmg, healByDmg
+51, Static Tome,El:  2, 2, physical, Electric, pinWheel, 100, 20, afterDmg, healByDmg
+52, Static Shot,El:  2, 2, physical, Electric, detached, 100, 20, afterDmg, healByDmg
+53, Static Breath,El:  2, 2, physical, Electric, spear, 100, 20, afterDmg, healByDmg
+54, Static Wheel,El:  2, 2, physical, Electric, rotator, 100, 20, afterDmg, healByDmg
+55, Static Lance,El:  2, 2, physical, Electric, lance, 100, 20, afterDmg, healByDmg
+56, Static Dance,El:  2, 2, physical, Electric, line, 100, 20, afterDmg, healByDmg

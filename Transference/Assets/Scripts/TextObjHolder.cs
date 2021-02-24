@@ -9,4 +9,5 @@ public class TextObjHolder : MonoBehaviour
     public TextObj shadowPhaseTracker;
     public TextObj shadowSubphaseTracker;
     public TextObj menuDescription;
+    public int extraData = -1;
 }

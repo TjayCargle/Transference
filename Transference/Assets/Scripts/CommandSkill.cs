@@ -160,7 +160,7 @@ public class CommandSkill : SkillScript
                 break;
             case SkillReaction.resetAccurracy:
                 {
-                    ACCURACY = 1;
+                    ACCURACY = LEVEL;
                 }
                 break;
             case SkillReaction.increaseStr:

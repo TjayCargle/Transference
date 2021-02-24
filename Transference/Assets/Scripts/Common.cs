@@ -520,6 +520,7 @@ public enum StatusEffect
     confused
 
 }
+
 public enum SideEffect
 {
     none,
@@ -684,6 +685,18 @@ public enum NonCombatButtonRequirements
     jaxSave5,
 
 }
+
+public enum EmotionType
+{
+    normal,
+    depressed,
+    sad,
+    blushing,
+    angry,
+    happy,
+    confused
+}
+
 public struct StringContainer
 {
     public string dataString;
@@ -1425,20 +1438,44 @@ public class Common : ScriptableObject
         {
 
             case SkillReaction.discoverItem:
+                {
+                    returnedString += " discover a random item ";
+                }
                 break;
             case SkillReaction.debuff:
+                {
+                    returnedString += " inflict a random debuff ";
+                }
                 break;
             case SkillReaction.cripple:
+                {
+                    returnedString += " cripple the enemy ";
+                }
                 break;
             case SkillReaction.instaKill:
+                {
+                    returnedString += " instantly kill ";
+                }
                 break;
             case SkillReaction.poison:
+                {
+                    returnedString += " poison ";
+                }
                 break;
             case SkillReaction.burn:
+                {
+                    returnedString += " burn ";
+                }
                 break;
             case SkillReaction.freeze:
+                {
+                    returnedString += " freeze ";
+                }
                 break;
             case SkillReaction.confuse:
+                {
+                    returnedString += " confuse ";
+                }
                 break;
             case SkillReaction.increaseAccurracy:
                 {
@@ -1448,7 +1485,7 @@ public class Common : ScriptableObject
                 break;
             case SkillReaction.resetAccurracy:
                 {
-                    returnedString += " Accurracy resets to 1 ";
+                    returnedString += " Accurracy resets to skill level ";
                 }
                 break;
             case SkillReaction.increaseStr:
@@ -1457,10 +1494,16 @@ public class Common : ScriptableObject
                 }
                 break;
             case SkillReaction.healByDmg:
+                {
+                    returnedString += " heal by the damage ";
+                }
                 break;
             case SkillReaction.healAmount:
                 break;
             case SkillReaction.GainManaByDmg:
+                {
+                    returnedString += " restore mana by the damage ";
+                }
                 break;
             case SkillReaction.GainManaAmount:
                 break;
@@ -1473,18 +1516,39 @@ public class Common : ScriptableObject
             case SkillReaction.HealFTByAmount:
                 break;
             case SkillReaction.extraAction:
+                {
+                    returnedString += " gain an action point ";
+                }
                 break;
             case SkillReaction.reduceStr:
+                {
+                    returnedString += " reduce enemy str ";
+                }
                 break;
             case SkillReaction.reduceDef:
+                {
+                    returnedString += " reduce enemy def ";
+                }
                 break;
             case SkillReaction.reduceMag:
+                {
+                    returnedString += " reduce enemy mag ";
+                }
                 break;
             case SkillReaction.reduceRes:
+                {
+                    returnedString += " reduce enemy res ";
+                }
                 break;
             case SkillReaction.reduceSpd:
+                {
+                    returnedString += " reduce enemy spd ";
+                }
                 break;
             case SkillReaction.reduceLuck:
+                {
+                    returnedString += " reduce enemy dex ";
+                }
                 break;
             case SkillReaction.decreaseAccurracy:
                 {
@@ -1610,10 +1674,19 @@ public class Common : ScriptableObject
         switch (se)
         {
             case SkillEvent.beforeDmg:
+                {
+                    returnedString += "upon use.";
+                }
                 break;
             case SkillEvent.afterDmg:
+                {
+                    returnedString += "upon hit.";
+                }
                 break;
             case SkillEvent.afterKilling:
+                {
+                    returnedString += "after killing an enemy.";
+                }
                 break;
             case SkillEvent.turnBegin:
                 break;
@@ -4066,7 +4139,7 @@ public class Common : ScriptableObject
             dataIIndex++;
 
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            newWeapon.CRIT = curInx;
+            newWeapon.CHANCE = curInx;
             dataIIndex++;
 
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
@@ -4083,13 +4156,14 @@ public class Common : ScriptableObject
             newWeapon.ATTACK_TYPE = wepType;
             dataIIndex++;
 
-            ModifiedStat wepMod;
-            System.Enum.TryParse(dataString[dataIIndex], out wepMod);
-            newWeapon.BOOST = wepMod;
+            SkillEvent wepEvent = SkillEvent.afterDmg;
+            System.Enum.TryParse(dataString[dataIIndex], out wepEvent);
+            newWeapon.SEVENT = wepEvent;
             dataIIndex++;
 
-            System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            newWeapon.BOOSTVAL = curInx;
+            SkillReaction wepReact;
+            System.Enum.TryParse(dataString[dataIIndex], out wepReact);
+            newWeapon.SREACTION = wepReact;
             dataIIndex++;
 
             Element wepElement;

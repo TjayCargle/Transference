@@ -1156,7 +1156,7 @@ public class InventoryMangager : MonoBehaviour
 
             }
 
-            newdescs[4].text = " May trigger an Auto Skill.";
+            newdescs[4].text = "" + cmd.CHANCE + "% chance to" + Common.GetSkillEventText(cmd.SEVENT, cmd.SREACTION);
 
             // if(cmd.EFFECT != SideEffect.none)
             {

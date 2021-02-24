@@ -9,7 +9,7 @@ public class WeaponScript : UsableScript
     [SerializeField]
     private int myAccurracy;
     [SerializeField]
-    private int myCritChance;
+    private float myActivateChance;
     [SerializeField]
     private int cost;
     //  [SerializeField]
@@ -20,14 +20,21 @@ public class WeaponScript : UsableScript
     private EType eType;
 
     [SerializeField]
-    private ModifiedStat boost;
+    private SkillEvent skillEvent;
     [SerializeField]
-    private int boostVal;
+    private SkillReaction skillReaction;
 
     [SerializeField]
     private Element myAfinity = Element.Slash;
 
+    [SerializeField]
+    private AutoSkill myAuto = null;
 
+    public AutoSkill AUTO
+    {
+        get { return myAuto; }
+        set { myAuto = value; }
+    }
     public Element ELEMENT
     {
         get { return myAfinity; }
@@ -49,10 +56,10 @@ public class WeaponScript : UsableScript
         get { return myAccurracy; }
         set { myAccurracy = value; }
     }
-    public int CRIT
+    public float CHANCE
     {
-        get { return myCritChance; }
-        set { myCritChance = value; }
+        get { return myActivateChance; }
+        set { myActivateChance = value; }
     }
 
     public int COST
@@ -79,16 +86,16 @@ public class WeaponScript : UsableScript
 
 
 
-    public ModifiedStat BOOST
+    public SkillEvent SEVENT
     {
-        get { return boost; }
-        set { boost = value; }
+        get { return skillEvent; }
+        set { skillEvent = value; }
     }
-    public int BOOSTVAL
+    public SkillReaction SREACTION
     {
 
-        get { return boostVal; }
-        set { boostVal = value; }
+        get { return skillReaction; }
+        set { skillReaction = value; }
     }
 
     public int GetCost(LivingObject user, float modification = 1.0f)
@@ -276,7 +283,7 @@ public class WeaponScript : UsableScript
     {
         string dataString = base.GetDataString();
 
-        dataString += "," + myAttack + "," + myAccurracy + "," + myCritChance + "," + cost + "," + range + "," + eType + "," + boost + "," + boostVal + "," + myAfinity;
+        dataString += "," + myAttack + "," + myAccurracy + "," + myActivateChance + "," + cost + "," + range + "," + eType + "," + skillEvent + "," + skillReaction + "," + myAfinity;
 
         return dataString;
     }

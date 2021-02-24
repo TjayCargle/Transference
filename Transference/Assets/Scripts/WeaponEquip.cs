@@ -64,15 +64,27 @@ public class WeaponEquip : Equipable
         get { return (equipped != null ? equipped.ACCURACY : 0); }
        
     }
-    public int CRIT
+    public float CHANCE
     {
-        get { return equipped.CRIT; }
+        get { return equipped.CHANCE; }
       
+    }
+
+    public SkillEvent SEVENT
+    {
+        get { return equipped.SEVENT; }
+
+    }
+
+    public SkillReaction SREACTION
+    {
+        get { return equipped.SREACTION; }
+
     }
     //public int DIST
     //{
     //    get { return equipped.DIST; }
-       
+
     //}
     //public int Range
     //{

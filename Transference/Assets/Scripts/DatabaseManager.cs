@@ -319,6 +319,10 @@ public class DatabaseManager : MonoBehaviour
             }
         }
     }
+    private void OnEnable()
+    {
+        Setup();
+    }
     public void Start()
     {
         Setup();
@@ -1230,8 +1234,9 @@ public class DatabaseManager : MonoBehaviour
                 //weapon.Range = Int32.Parse(parsed[7]);
                 //  Common.SetWeaponDistRange(weapon);
                 weapon.ACCURACY = Int32.Parse(parsed[7]);
-                weapon.CRIT = Int32.Parse(parsed[8]);
-                weapon.BOOST = (ModifiedStat)Enum.Parse(typeof(ModifiedStat), parsed[9]);
+                weapon.CHANCE = Single.Parse(parsed[8]);
+                weapon.SEVENT = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[9]);
+                weapon.SREACTION = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[10]);
 
                 weapon.TYPE = 0;
 

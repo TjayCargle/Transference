@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Doublsb.Dialog;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 public class ManagerScript : EventRunner
 {
@@ -105,6 +107,8 @@ public class ManagerScript : EventRunner
     public Objective currentObjective = null;
     public Tutorial currentTutorial = new Tutorial();
     public bool inTutorialMenu = false;
+    public string currentObjectiveString = "Explore the mansion";
+    public TextObjHolder[] objectivesAndNotes;
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -3738,91 +3742,65 @@ public class ManagerScript : EventRunner
         if (currentState == State.PlayerMove)
         {
 
-        if (movedObj == null)
-        {
-            returnState();
-        }
-        if (movedObj.currentTile == null)
-        {
-            returnState();
-        }
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit))
-        {
-
-            Vector3 w = hit.point;
-            w.x = Mathf.Round(w.x);
-            w.y = Mathf.Round(w.y);
-            w.z = Mathf.Round(w.z);
-            GameObject hitoobject = hit.transform.gameObject;
-            //   int hitindex = GetTileIndex(w);
-            if (hitoobject.GetComponent<TileScript>())
+            if (movedObj == null)
             {
-                TileScript hitTile = hitoobject.GetComponent<TileScript>();
-                bool alreadySelected = false;
-                if (myCamera.currentTile == hitTile && movedObj.transform.position == hitTile.transform.position + new Vector3(0, 0.5f, 0.12f))
+                returnState();
+            }
+            if (movedObj.currentTile == null)
+            {
+                returnState();
+            }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+
+                Vector3 w = hit.point;
+                w.x = Mathf.Round(w.x);
+                w.y = Mathf.Round(w.y);
+                w.z = Mathf.Round(w.z);
+                GameObject hitoobject = hit.transform.gameObject;
+                //   int hitindex = GetTileIndex(w);
+                if (hitoobject.GetComponent<TileScript>())
                 {
-                    alreadySelected = true;
-
-                }
-                if (!hitTile.isOccupied)
-                {
-
-
-                    if (alreadySelected)
+                    TileScript hitTile = hitoobject.GetComponent<TileScript>();
+                    bool alreadySelected = false;
+                    if (myCamera.currentTile == hitTile && movedObj.transform.position == hitTile.transform.position + new Vector3(0, 0.5f, 0.12f))
                     {
-                        if (hitTile != null)
+                        alreadySelected = true;
+
+                    }
+                    if (!hitTile.isOccupied)
+                    {
+
+
+                        if (alreadySelected)
                         {
-                            movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
-                            myCamera.currentTile = hitTile;
-            
-
-                            if (ComfirmMenuAction(movedObj))
+                            if (hitTile != null)
                             {
+                                movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
+                                myCamera.currentTile = hitTile;
+
+
+                                if (ComfirmMenuAction(movedObj))
+                                {
                                     ComfirmMoveGridObject(movedObj, hitTile.listindex);
-                                if (currentState != State.PlayerOppMove && currentState != State.PlayerOppOptions)
-                                {
-                                    if (newSkillEvent.caller == null)
-                                    {
-                                        if (player.current)
-                                        {
-                                            if (player.current.GetComponent<AnimationScript>())
-                                            {
-                                                AnimationScript anim = player.current.GetComponent<AnimationScript>();
-
-                                                anim.LoadList(anim.idlePath);
-                                            }
-                                            DidCompleteTutorialStep();
-                                            player.current.TakeAction();
-
-                                        }
-                                        // CleanMenuStack();
-                                    }
-                                }
-                                else
-                                {
-                                    ComfirmMenuAction(oppObj);
-                                    oppEvent.caller = null;
-
-                                    CreateEvent(this, null, "return state event", BufferedReturnEvent);
-                                    CreateEvent(this, null, "return state event", BufferedReturnEvent);
-                                    CreateEvent(this, null, "return state event", BufferedReturnEvent);
-                                }
-                            }
-                            else
-                            {
-
-                                bool res = commandItems[0].ComfirmAction(movedObj, MenuItemType.Move, currentTutorial);
-                                if (res)
-                                {
-
                                     if (currentState != State.PlayerOppMove && currentState != State.PlayerOppOptions)
                                     {
                                         if (newSkillEvent.caller == null)
                                         {
-                                            // player.current.TakeAction();
-                                            // Debug.Log("comp");
+                                            if (player.current)
+                                            {
+                                                if (player.current.GetComponent<AnimationScript>())
+                                                {
+                                                    AnimationScript anim = player.current.GetComponent<AnimationScript>();
+
+                                                    anim.LoadList(anim.idlePath);
+                                                }
+                                                DidCompleteTutorialStep();
+                                                player.current.TakeAction();
+
+                                            }
                                             // CleanMenuStack();
                                         }
                                     }
@@ -3835,83 +3813,109 @@ public class ManagerScript : EventRunner
                                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                                         CreateEvent(this, null, "return state event", BufferedReturnEvent);
                                     }
-                                    DidCompleteTutorialStep();
                                 }
                                 else
                                 {
 
+                                    bool res = commandItems[0].ComfirmAction(movedObj, MenuItemType.Move, currentTutorial);
+                                    if (res)
+                                    {
+
+                                        if (currentState != State.PlayerOppMove && currentState != State.PlayerOppOptions)
+                                        {
+                                            if (newSkillEvent.caller == null)
+                                            {
+                                                // player.current.TakeAction();
+                                                // Debug.Log("comp");
+                                                // CleanMenuStack();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ComfirmMenuAction(oppObj);
+                                            oppEvent.caller = null;
+
+                                            CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                                            CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                                            CreateEvent(this, null, "return state event", BufferedReturnEvent);
+                                        }
+                                        DidCompleteTutorialStep();
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                myCamera.currentTile = hitTile;
+                                if (!movingObj)
+                                {
+                                    movingObj = true;
+                                    Vector3 targetposition = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
+                                    StartCoroutine(Move(movedObj, targetposition, hitTile));
                                 }
                             }
                         }
                         else
                         {
-                            myCamera.currentTile = hitTile;
-                            if (!movingObj)
+
+                            float tempX = hitTile.transform.position.x;
+                            float tempY = hitTile.transform.position.z;
+
+                            float objX = movedObj.currentTile.transform.position.x;
+                            float objY = movedObj.currentTile.transform.position.z;
+
+
+                            xDist = Mathf.Abs(tempX - objX);
+                            yDist = Mathf.Abs(tempY - objY);
+                            xDist /= 2;
+                            yDist /= 2;
+
+                            if (xDist + yDist <= player.current.MOVE_DIST && StartCanMoveCheck(player.current, player.current.currentTile, hitTile))
                             {
-                                movingObj = true;
-                                Vector3 targetposition = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
-                                StartCoroutine(Move(movedObj, targetposition, hitTile));
+
+                                tempObject.transform.position = hitTile.transform.position;
+                                tempGridObj.currentTile = hitTile;
+                                // movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
+                                //myCamera.currentTile = hitTile;
+                                if (!movingObj)
+                                {
+                                    movingObj = true;
+                                    Vector3 targetposition = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
+                                    StartCoroutine(Move(movedObj, targetposition, hitTile));
+                                }
                             }
+
+
+
+
                         }
                     }
-                    else
+                    else if (hitTile == movedObj.currentTile)
                     {
-
-                        float tempX = hitTile.transform.position.x;
-                        float tempY = hitTile.transform.position.z;
-
-                        float objX = movedObj.currentTile.transform.position.x;
-                        float objY = movedObj.currentTile.transform.position.z;
-
-
-                        xDist = Mathf.Abs(tempX - objX);
-                        yDist = Mathf.Abs(tempY - objY);
-                        xDist /= 2;
-                        yDist /= 2;
-
-                        if (xDist + yDist <= player.current.MOVE_DIST && StartCanMoveCheck(player.current, player.current.currentTile, hitTile))
+                        if (alreadySelected)
                         {
+                            CancelMenuAction(movedObj);
 
+                        }
+                        else
+                        {
                             tempObject.transform.position = hitTile.transform.position;
                             tempGridObj.currentTile = hitTile;
-                            // movedObj.transform.position = hitTile.transform.position + new Vector3(0, 0.5f);
-                            //myCamera.currentTile = hitTile;
+
                             if (!movingObj)
                             {
                                 movingObj = true;
                                 Vector3 targetposition = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
                                 StartCoroutine(Move(movedObj, targetposition, hitTile));
                             }
-                        }
-
-
-
-
-                    }
-                }
-                else if (hitTile == movedObj.currentTile)
-                {
-                    if (alreadySelected)
-                    {
-                        CancelMenuAction(movedObj);
-
-                    }
-                    else
-                    {
-                        tempObject.transform.position = hitTile.transform.position;
-                        tempGridObj.currentTile = hitTile;
-
-                        if (!movingObj)
-                        {
-                            movingObj = true;
-                            Vector3 targetposition = hitTile.transform.position + new Vector3(0, 0.5f, 0.12f);
-                            StartCoroutine(Move(movedObj, targetposition, hitTile));
                         }
                     }
                 }
             }
-        }
-        myCamera.UpdateCamera();
+            myCamera.UpdateCamera();
 
         }
     }
@@ -3993,7 +3997,7 @@ public class ManagerScript : EventRunner
         liveJax.Setup();
         return liveJax;
     }
-
+    private DialogManager dialog;
     public void SetScene(SceneContainer scene)
     {
         if (eventImage)
@@ -4005,10 +4009,43 @@ public class ManagerScript : EventRunner
         currentState = State.SceneRunning;
         talkPanel.scene = currentScene;
         currentScene.index = 0;
-        UpdateScene();
+        //UpdateScene();
         currentScene.isRunning = true;
         menuManager.ShowNone();
+        talkPanel.text.text = "";
+
         CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+
+
+        if (currentScene.eventIndexs.Contains(0))
+        {
+            SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
+            for (int i = 0; i < currentScene.sceneEvents.Count; i++)
+            {
+                sceneEvent = currentScene.sceneEvents[i];
+                if (sceneEvent.intercept == 0)
+                {
+                    ExecuteIntercept(sceneEvent);
+                }
+            }
+        }
+
+        if (dialog == null)
+        {
+            dialog = GameObject.FindObjectOfType<DialogManager>();
+        }
+        if (dialog != null)
+        {
+            var dialogTexts = new List<DialogData>();
+            for (int i = 0; i < currentScene.speakertext.Count; i++)
+            {
+                //Debug.Log(scene.speakerFace);
+                dialogTexts.Add(new DialogData(currentScene.speakertext[i], currentScene.speakerFace[i], currentScene.speakerNames[i]));
+            }
+            dialog.state = Doublsb.Dialog.State.Active;
+            dialog.Show(dialogTexts);
+        }
+
     }
 
     private void UpdateScene()
@@ -4022,7 +4059,16 @@ public class ManagerScript : EventRunner
             talkPanel.faceImage.sprite = currentScene.speakerFace[index];
             if (talkPanel.faceImage.sprite == null)
                 talkPanel.faceImage.sprite = Resources.LoadAll<Sprite>("" + shrtName + "/Idle/")[0];
-            talkPanel.text.text = currentScene.speakertext[index];
+            string input = currentScene.speakertext[index];
+            string regex = "(/.*/)";
+            //talkPanel.text.text = Regex.Replace(input, regex, ""); //currentScene.speakertext[index];
+
+
+            if (dialog == null)
+            {
+                talkPanel.text.text = Regex.Replace(input, regex, "");
+            }
+
             if (currentScene.eventIndexs.Contains(index))
             {
                 SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
@@ -4057,9 +4103,12 @@ public class ManagerScript : EventRunner
                 break;
             case SceneEvent.moveToTarget:
                 {
+                    if(sceneEvent.data < tileMap.Count)
+                    {
 
                     tempGridObj.transform.position = tileMap[sceneEvent.data].transform.position;
                     ComfirmMoveGridObject(tempGridObj, sceneEvent.data);
+                    }
                 }
                 break;
             case SceneEvent.hideimage:
@@ -4369,10 +4418,8 @@ public class ManagerScript : EventRunner
                             currentState = State.SceneRunning;
                             talkPanel.scene = currentScene;
                             currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            SetScene(currentScene);
+
                         }
 
 
@@ -4388,13 +4435,11 @@ public class ManagerScript : EventRunner
 
                             talkPanel.gameObject.SetActive(true);
                             currentScene = database.GetSceneData("Scene1");
+                            currentObjectiveString = "Get rid of the Glyph";
                             currentState = State.SceneRunning;
                             talkPanel.scene = currentScene;
                             currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            SetScene(currentScene);
                         }
                     }
                     if (checkMap.mapIndex == 17)
@@ -4417,13 +4462,14 @@ public class ManagerScript : EventRunner
                                 //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = database.GetSceneData("JaxFindZeff");
+                                currentObjectiveString = "Work with Zeffron";
                                 currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
-                                UpdateScene();
-                                currentScene.isRunning = true;
-                                menuManager.ShowNone();
-                                CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                SetScene(currentScene);
+                                //currentScene.isRunning = true;
+                                //menuManager.ShowNone();
+                                //(this, null, "scene0 event", CheckSceneRunning, null, 0);
                             }
                         }
                     }
@@ -4436,13 +4482,11 @@ public class ManagerScript : EventRunner
 
                             talkPanel.gameObject.SetActive(true);
                             currentScene = database.GetSceneData("JaxEncounterGlyph");
+                            currentObjectiveString = "Get rid of the Glyph";
                             currentState = State.SceneRunning;
                             talkPanel.scene = currentScene;
                             currentScene.index = 0;
-
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, () => { UpdateScene(); }, 0);
+                            SetScene(currentScene);
                         }
                     }
                     if (checkMap.mapIndex == 14)
@@ -4457,10 +4501,7 @@ public class ManagerScript : EventRunner
                             currentState = State.SceneRunning;
                             talkPanel.scene = currentScene;
                             currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene4 event", CheckSceneRunning, null, 0);
+                            SetScene(currentScene);
                         }
                     }
                 }
@@ -4794,6 +4835,207 @@ public class ManagerScript : EventRunner
             visitedMaps.Add(map);
         }
         SoftReset();
+
+        for (int i = 0; i < objectivesAndNotes.Length; i++)
+        {
+            objectivesAndNotes[i].extraData = -1;
+            objectivesAndNotes[i].gameObject.SetActive(false);
+        }
+
+
+        for (int i = 0; i < liveEnemies.Count; i++)
+        {
+            if (liveEnemies[i].FACTION == Faction.hazard)
+            {
+                HazardScript hazard = liveEnemies[i] as HazardScript;
+                switch (hazard.HTYPE)
+                {
+
+                    case HazardType.lockDoor:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Lock Glyph prevents exiting");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Lock Glyph prevents exiting");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.redirect:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Redirect Glyph directs attacks");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Redirect Glyph directs attacks");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.controller:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Control Glyph removing tiles");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Control Glyph removing tiles");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.movement:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Move Glyph limits movement");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Move Glyph limits movement");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.zeroExp:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Exp Glyph prevents leveling");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Exp Glyph prevents leveling");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.protection:
+                        {
+                            bool found = false;
+                            for (int j = 0; j < objectivesAndNotes.Length; j++)
+                            {
+                                if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                {
+                                    found = true;
+                                    break;
+                                }
+
+                            }
+                            if (found == false)
+                            {
+
+                                for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                {
+                                    if (objectivesAndNotes[j].extraData == -1)
+                                    {
+                                        objectivesAndNotes[j].extraData = (int)hazard.HTYPE;
+                                        objectivesAndNotes[j].gameObject.SetActive(true);
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].subphaseTracker, "Protect Glyph prevents hacking");
+                                        TextObjectHandler.UpdateText(objectivesAndNotes[j].shadowSubphaseTracker, "Protect Glyph prevents hacking");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        break;
+                    case HazardType.time:
+                        break;
+                }
+            }
+        }
     }
 
     public void LoadDScene(MapDetail map, int startindex = -1)
@@ -10004,7 +10246,11 @@ public class ManagerScript : EventRunner
             return GetAttackableTiles(obj, item);
         }
 
-        List<List<TileScript>> returnList = new List<List<TileScript>>();
+        List<List<TileScript>> returnList = GetAttackableTiles(obj, item);
+        List<TileScript> mytile = new List<TileScript>();
+        mytile.Add(obj.currentTile);
+        returnList.Add(mytile);
+        return returnList;
         List<Vector2> affectedTiles = new List<Vector2>();
         affectedTiles.Add(Vector2.up);//skill.TILES;
         Vector2 checkDist = Vector2.zero;
@@ -10081,9 +10327,7 @@ public class ManagerScript : EventRunner
                             returnList.Add(tiles);
 
                     }
-                    List<TileScript> mytile = new List<TileScript>();
-                    mytile.Add(GetTileAtIndex(checkIndex));
-                    returnList.Add(mytile);
+
                 }
                 break;
             case TargetType.enemy:
@@ -11102,6 +11346,7 @@ public class ManagerScript : EventRunner
 
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, Element attackingElement, EType attackType, int dmg, Reaction alteration = Reaction.none)
     {
+
         DmgReaction react = new DmgReaction();
         if (attackingElement == Element.Buff || dmgObject == null)
         {
@@ -11481,6 +11726,7 @@ public class ManagerScript : EventRunner
     public DmgReaction CalcDamage(LivingObject attackingObject, LivingObject dmgObject, WeaponEquip weapon, Reaction alteration = Reaction.none, bool applyAccuraccy = true)
     {
         // Debug.Log("Calc 3");
+
         int chance = weapon.ACCURACY;
         int result = (int)Random.Range(0.0f, 100.0f);
         if (applyAccuraccy == false)
@@ -12474,6 +12720,32 @@ public class ManagerScript : EventRunner
                                 {
                                     turnOrder[i].turnUpdate(liveEnemies.Count);
 
+                                }
+                                bool noMore = true;
+                                for (int i = 0; i < liveEnemies.Count; i++)
+                                {
+                                    if (liveEnemies[i].FACTION == Faction.hazard)
+                                    {
+                                        HazardScript otherHaz = liveEnemies[i] as HazardScript;
+                                        if (otherHaz.HTYPE == hazard.HTYPE)
+                                        {
+                                            noMore = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (noMore == true)
+                                {
+                                    for (int j = 0; j < objectivesAndNotes.Length; j++)
+                                    {
+                                        if (objectivesAndNotes[j].extraData == (int)hazard.HTYPE)
+                                        {
+                                            objectivesAndNotes[j].extraData = -1;
+                                            objectivesAndNotes[j].gameObject.SetActive(false);
+                                            break;
+                                        }
+
+                                    }
                                 }
                             }
                         }
@@ -13947,12 +14219,12 @@ public class ManagerScript : EventRunner
 
                                 if (weapon != null && potentialTarget.GetType().IsSubclassOf(typeof(LivingObject)))
                                 {
-                                    for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+                                    // for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
                                     {
-                                        if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == SkillEvent.beforeDmg)
+                                        if (weapon.SEVENT == SkillEvent.beforeDmg)
                                         {
-                                            AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
-                                            float chance = auto.CHANCE;
+                                            // AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
+                                            float chance = weapon.CHANCE;
                                             float result = Random.value * 100;
                                             if (result <= chance)
                                             {
@@ -13961,38 +14233,60 @@ public class ManagerScript : EventRunner
                                                 {
                                                     if (flavor.myOtherText != null)
                                                     {
-                                                        CreateTextEvent(this, "<sprite=7> Auto skill : " + auto.NAME + " activated!", "auto atk", CheckText, TextStart);
+                                                        CreateTextEvent(this, "<sprite=7> Auto skill from " + weapon.NAME + " activated!", "auto atk", CheckText, TextStart);
                                                     }
                                                     else
                                                     {
-                                                        CreateTextEvent(this, "Auto skill : " + auto.NAME + " activated!", "auto atk", CheckText, TextStart);
+                                                        CreateTextEvent(this, "Auto skill from " + weapon.NAME + " activated!", "auto atk", CheckText, TextStart);
                                                     }
                                                 }
                                                 if (log)
                                                 {
-                                                    log.Log("Auto skill : " + auto.NAME + " activated!");
+                                                    log.Log("Auto skill : " + weapon.NAME + " activated!");
                                                 }
-                                                atkReaction = auto.Activate(auto.REACT, 0, potentialTarget);
-                                                break;
+                                                atkReaction = weapon.EQUIPPED.Activate(weapon.SREACTION, 0, potentialTarget);
+                                                CreateDmgTextEvent("<sprite=4> " + weapon.NAME, Color.red, weapon.EQUIPPED.USER);
+
+
+                                                AtkContainer spc = ScriptableObject.CreateInstance<AtkContainer>();
+                                                spc.alteration = atkReaction;
+                                                spc.attackingElement = weapon.ELEMENT;
+                                                spc.attackType = weapon.ATTACK_TYPE;
+                                                spc.attackingObject = invokingObject;
+                                                spc.command = null;
+                                                spc.dmg = weapon.ATTACK;
+
+                                                if (redirect && invokingObject.FACTION != Faction.hazard)
+                                                {
+                                                    spc.dmgObject = redirect;
+                                                }
+                                                else
+                                                {
+                                                    spc.dmgObject = potentialTarget;
+
+                                                }
+
+
+                                                //break;
                                             }
                                         }
                                     }
                                 }
-                                AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
-                                conatiner.alteration = atkReaction;
-                                conatiner.attackingElement = weapon.ELEMENT;
-                                conatiner.attackType = weapon.ATTACK_TYPE;
-                                conatiner.attackingObject = invokingObject;
-                                conatiner.command = null;
-                                conatiner.dmg = weapon.ATTACK;
-
+                                AtkContainer container = ScriptableObject.CreateInstance<AtkContainer>();
+                                container.alteration = Reaction.none;
+                                container.attackingElement = weapon.ELEMENT;
+                                container.attackType = weapon.ATTACK_TYPE;
+                                container.attackingObject = invokingObject;
+                                container.command = null;
+                                container.dmg = weapon.ATTACK;
+                                container.strike = weapon.EQUIPPED;
                                 if (redirect && invokingObject.FACTION != Faction.hazard)
                                 {
-                                    conatiner.dmgObject = redirect;
+                                    container.dmgObject = redirect;
                                 }
                                 else
                                 {
-                                    conatiner.dmgObject = potentialTarget;
+                                    container.dmgObject = potentialTarget;
 
                                     if (potentialTarget.GetComponent<EnemyScript>())
                                     {
@@ -14013,9 +14307,9 @@ public class ManagerScript : EventRunner
                                 //    }
                                 //}
 
-                                DmgReaction react = CalcDamage(conatiner);
-                                conatiner.react = react;
-                                conatiner.crit = false;
+                                DmgReaction react = CalcDamage(container);
+                                container.react = react;
+                                container.crit = false;
                                 if (react.reaction < Reaction.nulled)
                                 {
 
@@ -14027,11 +14321,11 @@ public class ManagerScript : EventRunner
                                         //Debug.Log("Prior :" + react.damage);
                                         react.damage *= 2;
                                         //Debug.Log("After :" + react.damage);
-                                        conatiner.react = react;
-                                        conatiner.crit = true;
+                                        container.react = react;
+                                        container.crit = true;
                                         CritAnnounceStart(invokingObject);
                                         // CreateEvent(this, conatiner.attackingObject, "Critical Announcement", OppAnnounceEvent, null, -1, OppAnnounceStart);
-                                        CreateTextEvent(this, "" + conatiner.attackingObject.NAME + " landed a critical hit!", "crit", CheckText, TextStart, 0);
+                                        CreateTextEvent(this, "" + container.attackingObject.NAME + " landed a critical hit!", "crit", CheckText, TextStart, 0);
                                         if (log)
                                         {
                                             log.Log("\n Critial Hit!");
@@ -14045,12 +14339,11 @@ public class ManagerScript : EventRunner
                                 dmgHealth -= react.damage;
                                 currentTargetHealth -= react.damage;
                                 totalDmg += react.damage;
-                                dmgAmount += DetermineExp(invokingObject, conatiner.dmgObject, (currentTargetHealth <= 0 ? true : false));
+                                dmgAmount += DetermineExp(invokingObject, container.dmgObject, (currentTargetHealth <= 0 ? true : false));
 
 
-                                CreateEvent(this, conatiner, "weapon use event", WeaponAttackEvent, null, 0);
-
-                                conatiners.atkContainers.Add(conatiner);
+                                CreateEvent(this, container, "weapon use event", WeaponAttackEvent, null, 0);
+                                conatiners.atkContainers.Add(container);
 
 
 
@@ -14907,29 +15200,32 @@ public class ManagerScript : EventRunner
         {
             if (container.dmgObject.GetType().IsSubclassOf(typeof(LivingObject)))
             {
-                for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
+                //   for (int k = 0; k < invokingObject.AUTO_SLOTS.SKILLS.Count; k++)
                 {
-                    if ((invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill).ACT == SkillEvent.afterDmg)
+                    if (container.strike.SEVENT == SkillEvent.afterDmg)
                     {
-                        AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
-                        if (auto.REACT == SkillReaction.instaKill || auto.REACT == SkillReaction.debuff)
+                        //AutoSkill auto = (invokingObject.AUTO_SLOTS.SKILLS[k] as AutoSkill);
+                        //    if (container.strike.SREACTION == SkillReaction.instaKill || container.strike.SREACTION == SkillReaction.debuff)
                         {
                             if (!container.dmgObject.GetComponent<LivingObject>())
                             {
-                                continue;
+                                // continue;
                             }
-                        }
-                        float chance = auto.CHANCE + invokingObject.DEX;
-                        float result = Random.value * 100;
-                        if (chance > result)
-                        {
-                            CreateTextEvent(this, "" + "Auto skill : " + auto.NAME + " has gone off", "auto skill ", CheckText, TextStart);
-                            if (log)
+                            else
                             {
-                                log.Log("Auto skill : " + auto.NAME + " activated!");
+                                float chance = container.strike.CHANCE + invokingObject.DEX;
+                                float result = Random.value * 100;
+                                if (chance > result)
+                                {
+                                    CreateTextEvent(this, "" + "Auto skill : " + container.strike.NAME + " has gone off", "auto skill ", CheckText, TextStart);
+                                    if (log)
+                                    {
+                                        log.Log("Auto skill : " + container.strike.NAME + " activated!");
+                                    }
+                                    container.strike.Activate(container.strike.SREACTION, container.react.damage, container.dmgObject);
+                                }
+
                             }
-                            auto.Activate(auto.REACT, container.react.damage, container.dmgObject);
-                            break;
                         }
                     }
                 }
@@ -16545,8 +16841,8 @@ public class ManagerScript : EventRunner
             if (currentTutorial.currentStep >= currentTutorial.steps.Count)
             {
                 currentTutorial.isActive = false;
-                TextObjectHandler.UpdateText(textHolder.subphaseTracker, "Explore the mansion");
-                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, "Explore the mansion");
+                TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentObjectiveString);
+                TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentObjectiveString);
             }
             else
             {

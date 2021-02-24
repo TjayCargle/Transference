@@ -34,6 +34,7 @@ public class StatusIconManager : MonoBehaviour
         horizontal.childForceExpandWidth = true;
 
         icon.myImage = newImage.AddComponent<Image>();
+        icon.myImage.preserveAspect = true;
         newImage.transform.SetParent(newContainer.transform,false);
 
 
