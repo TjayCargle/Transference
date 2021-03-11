@@ -451,7 +451,7 @@ public class DatabaseManager : MonoBehaviour
                                     buff.HITS = Int32.Parse(parsed[11]);
                                     buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
                                     //buff.TILES = new System.Collections.Generic.List<Vector2>();
-
+                                    buff.OPPORTUNITY = Element.Support;
                                     Modification mod = new Modification();
                                     switch (buff.BUFF)
                                     {
@@ -538,7 +538,7 @@ public class DatabaseManager : MonoBehaviour
                                     support.HITS = Int32.Parse(parsed[12]);
                                     support.CRIT_RATE = Int32.Parse(parsed[13]);
                                     //support.TILES = new System.Collections.Generic.List<Vector2>();
-
+                                    support.OPPORTUNITY = Element.Buff;
 
                                     //for (int i = 0; i < count; i++)
                                     //{
@@ -660,7 +660,7 @@ public class DatabaseManager : MonoBehaviour
                                     ailment.ACCURACY = Int32.Parse(parsed[10]);
 
                                     ailment.HITS = 1;//Int32.Parse(parsed[11]);
-
+                                    ailment.OPPORTUNITY = (Element)(id % 8);
                                     if (count > 0)
                                     {
 
@@ -755,6 +755,7 @@ public class DatabaseManager : MonoBehaviour
                                     command.HITS = Int32.Parse(parsed[12]);
                                     command.CRIT_RATE = Int32.Parse(parsed[13]);
                                     //  command.TILES = new System.Collections.Generic.List<Vector2>();
+                                    command.OPPORTUNITY = (Element)(id % 8);
 
 
                                     //for (int i = 0; i < count; i++)
@@ -929,7 +930,7 @@ public class DatabaseManager : MonoBehaviour
 
 
                             buff.ACCURACY = 100;
-
+                            buff.OPPORTUNITY = Element.Support;
                             buff.HITS = Int32.Parse(parsed[11]);
                             buff.BUFF = (BuffType)Enum.Parse(typeof(BuffType), parsed[12]);
                             //  buff.TILES = new System.Collections.Generic.List<Vector2>();
@@ -999,7 +1000,7 @@ public class DatabaseManager : MonoBehaviour
                             support.HITS = Int32.Parse(parsed[12]);
                             support.CRIT_RATE = Int32.Parse(parsed[13]);
                             //support.TILES = new System.Collections.Generic.List<Vector2>();
-
+                            support.OPPORTUNITY = Element.Buff;
 
                             //for (int i = 0; i < count; i++)
                             //{
@@ -1078,6 +1079,7 @@ public class DatabaseManager : MonoBehaviour
                             ailment.ACCURACY = Int32.Parse(parsed[10]);
 
                             ailment.HITS = 1;//Int32.Parse(parsed[11]);
+                            ailment.OPPORTUNITY  = (Element)(id % 8);
 
 
                             if (count > 0)
@@ -1152,6 +1154,7 @@ public class DatabaseManager : MonoBehaviour
                             command.HITS = Int32.Parse(parsed[12]);
                             command.CRIT_RATE = Int32.Parse(parsed[13]);
                             //  command.TILES = new System.Collections.Generic.List<Vector2>();
+                            command.OPPORTUNITY = (Element)(id % 8);
 
 
                             //for (int i = 0; i < count; i++)
@@ -2530,6 +2533,8 @@ public class DatabaseManager : MonoBehaviour
                 if (line != String.Empty)
                     if (line[0] != '-')
                     {
+
+
                         string[] parsed = line.Split(',');
 
                         switch (parsed[0])
@@ -2571,13 +2576,14 @@ public class DatabaseManager : MonoBehaviour
                                             }
                                             else
                                             {
+
                                                 scene.speakerFace.Add(Resources.LoadAll<Sprite>("" + shrtName + "/Face/")[0]);
 
                                             }
                                         }
                                     }
 
-
+                                    parsed[2] = parsed[2].Replace(';', ',');
                                     scene.speakertext.Add(parsed[2]);
                                 }
                                 break;
@@ -2603,7 +2609,7 @@ public class DatabaseManager : MonoBehaviour
 
                                         }
                                     }
-
+                                    parsed[2] = parsed[2].Replace(';', ',');
                                     scene.speakertext.Add(parsed[2]);
                                 }
 

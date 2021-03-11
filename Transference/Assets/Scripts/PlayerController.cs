@@ -1300,6 +1300,21 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+    public void UseOppSkill(int index)
+    {
+        if (myManager)
+        {
+            if (current)
+            {
+                if (index < current.OPP_SLOTS.SKILLS.Count)
+                {
+                    myManager.OppAttackTargets(current.OPP_SLOTS.lastTarget, current.OPP_SLOTS.SKILLS[index].USER, current.OPP_SLOTS.SKILLS[index] as CommandSkill);
+                }
+            }
+        }
+
+    }
+
     public void OppUseOrAttack(LivingObject invoker)
     {
         if (!invoker)

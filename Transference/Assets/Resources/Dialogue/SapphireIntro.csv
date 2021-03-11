@@ -1,0 +1,33 @@
+- e 101 = Citrine(temp)
+-Gate:
+-Sapphire and Lukon happen upon two guards at the gate.
+a,4,-You there; guard; escort me to the ballroom.
+-*She flashes the guard her invitation*
+e,3,-And what about him? Does he have an invitation as well?
+a,4,-He’s with me; surely he doesn’t need one?
+e,3,-Apologies; but only invited guests are allowed in. He must leave.
+a,4,-I suppose then you can’t come in with me; you’ll have to leave then Lukon.
+a,4,(telepathically)-Leave the sight of the guard and then sneak by him in the shadows.
+a,5,(telepathically)-Yes; M’lady Sapphire.
+-*Sapphire is escorted inside; leaving Lukon and the second guard at the gate*
+-Arrival at the Grand Ballroom:
+e,3,-Here you are; Ma’am.
+-*Sapphire stands before a grand ballroom; Fairies; Scorpiees; Gorach; and Antileon make up most of the species in the party*
+a,4,(thoughts)-Now it’s just a matter of finding where they hid my book.
+-*She sneezes which gets the attention of a nearby witch*
+e,101,-You there! You’re a witch as well? Why don’t you duel me so we can get this party started?
+a,4,(thoughts)-The audacity of this one to challenge me of all people.
+a,4,-Fine; but I hope you’re prepared; it won’t be my fault if a slip of the hand gets you killed.
+e,101,-Of course I’m prepared. En garde!
+-Duel+Sinister Spell+Rest of Chapter:
+-*Sapphire appears to have the upper hand over her opponent Witch.*
+a,4,-Well then; do you understand who your better is now; fledgling?
+-*The Witch stares down at the ground and mumbles*
+a,4,-What was that? Sorry; you need to speak up.
+-*The Witch looks up; casting a powerful necromantic spell*
+a,4,(thoughts)-Necromancy? What is she trying to do?
+-*Sapphire attempts to cast magic of her own to stop the necromancy; but the Witch gets off her spell; and a loud bang is followed by a dark portal opening; revenants pouring out in droves from it*
+a,4,(thoughts)-The hell is she planning.
+-*The guests panic and chaos ensues in the ballroom*
+a,4,(telepathically)-Lukon; meet me in the basement stairwell; hell has broken loose here and we ought to take advantage of it.
+a,5,(telepathically)-I’ll be right there; Madame Sapphire.

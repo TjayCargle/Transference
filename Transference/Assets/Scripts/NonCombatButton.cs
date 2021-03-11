@@ -15,6 +15,9 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public int specialNumber = -1;
     public NonCombatButtonAction myAction = NonCombatButtonAction.none;
     public NonCombatButtonRequirements requirements = NonCombatButtonRequirements.none;
+    public float enterLocation = 1.2f;
+    public float exitLocation = -1.2f;
+
     private void Awake()
     {
         CheckRequirements();
@@ -31,10 +34,12 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (controller)
         {
             LeanTween.scale(this.gameObject, new Vector3(1.2f, 1.2f, 1.2f), 0.2f);//.setOnComplete(x => { });
-            LeanTween.moveLocalX(this.gameObject, 1.2f, 0.2f);
-            controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
+            LeanTween.moveLocalX(this.gameObject, enterLocation, 0.2f);
+           // controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
+            controller.selectedButton.GetComponent<Image>().color = Color.white;
             controller.selectedButton = this;
-            controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+            //controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+            controller.selectedButton.GetComponent<Image>().color = Color.yellow;
             if (type < controller.targets.Length)
             {
                 controller.buttonIndex = type;
@@ -182,7 +187,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void OnPointerExit(PointerEventData eventData)
     {
         LeanTween.scale(this.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 0.2f);//.setOnComplete(x => { });
-        LeanTween.moveLocalX(this.gameObject, -1.2f, 0.2f);
+        LeanTween.moveLocalX(this.gameObject, exitLocation, 0.2f);
     }
 
     public bool CheckRequirements()

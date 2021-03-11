@@ -495,7 +495,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                         myManager.DidCompleteTutorialStep();
                         myManager.returnState();
                         myManager.showCurrentState();
-                    
+
                     }
                     else
                     {
@@ -803,7 +803,19 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     {
         if (myManager.GetState() == State.PlayerOppOptions)
         {
-            myManager.player.useOppAction(myManager.oppObj);
+            if (refItem != null)
+            {
+                for (int i = 0; i < myManager.player.current.OPP_SLOTS.SKILLS.Count; i++)
+                {
+                    if (refItem == myManager.player.current.OPP_SLOTS.SKILLS[i])
+                    {
+                        myManager.oppEvent.caller = null;
+                        myManager.player.UseOppSkill(i);
+                        break;
+                    }
+                }
+            }
+
         }
         else if (myManager.GetState() == State.AquireNewSkill)
         {

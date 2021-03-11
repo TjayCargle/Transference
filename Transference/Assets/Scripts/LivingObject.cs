@@ -242,6 +242,11 @@ public class LivingObject : GridObject
             {
 
                 actionCounterText.text = actions.ToString();
+                if (actions < 0)
+                    actionCounterText.color = Color.red;
+                else
+                    actionCounterText.color = Color.white;
+
             }
         }
     }

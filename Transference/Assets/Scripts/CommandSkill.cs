@@ -53,6 +53,12 @@ public class CommandSkill : SkillScript
     [SerializeField]
     public string extra;
 
+    public Element opportunityElement = Element.Ice;
+    public Element OPPORTUNITY
+    {
+        get { return opportunityElement; }
+        set { opportunityElement = value; }
+    }
     public int COST
     {
         get { return GetCost(); }

@@ -42,7 +42,8 @@ public class NonCombatController : MonoBehaviour
     {
         source = GetComponent<AudioSource>();
         selectedButton = buttons[0];
-        selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+        //selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+        selectedButton.GetComponent<Image>().color = Color.yellow;
         if (targets != null)
         {
             if (targets.Length > 0)
@@ -406,7 +407,16 @@ public class NonCombatController : MonoBehaviour
                     //}
                 }
             }
+            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
+            {
+                ctrlCnvs.gameObject.SetActive(true);
 
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ctrlCnvs.gameObject.SetActive(false);
+
+            }
             if (patchCnvs)
             {
 

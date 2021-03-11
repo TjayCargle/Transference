@@ -294,6 +294,9 @@ public class HazardScript : LivingObject
         //  Debug.Log("determining actions");
 
         isPerforming = true;
+        if(myManager.GetState() == State.HazardTurn)
+        {
+
         int psudeoActions = -1;
         psudeoActions = ACTIONS;
         waiting = false;
@@ -310,6 +313,7 @@ public class HazardScript : LivingObject
         }
 
 
+        }
         isPerforming = false;
     }
 

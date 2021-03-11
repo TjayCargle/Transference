@@ -131,6 +131,9 @@ public class DetailsScreen : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI[] modList;
 
+    [SerializeField]
+    TextMeshProUGUI oppAutoDesc;
+
     public bool fullDescription = true;
     private DetailsTabIndicator currentIndicator = null;
     private ArmorScript selectedArmor;
@@ -255,6 +258,10 @@ public class DetailsScreen : MonoBehaviour
             descriptionText.gameObject.SetActive(true);
         if (descriptionText2)
             descriptionText2.gameObject.SetActive(true);
+        if (oppAutoDesc != null)
+        {
+            oppAutoDesc.text = "";
+        }
         string finalText = "";
         for (int i = 0; i < skillSliders.Length; i++)
         {
@@ -565,6 +572,10 @@ public class DetailsScreen : MonoBehaviour
                                             if (descriptionText2)
                                                 descriptionText2.gameObject.SetActive(true);
                                         }
+                                        if(oppAutoDesc != null)
+                                        {
+                                            oppAutoDesc.text = "Gain Opportunity when adjacent ally uses a " + (currentSlot.SKILLS[i] as CommandSkill).OPPORTUNITY.ToString() + " attack";
+                                        }
                                     }
 
                                     if (currentSlot.SKILLS[i].GetType() == typeof(AutoSkill))
@@ -796,6 +807,11 @@ public class DetailsScreen : MonoBehaviour
                                                     descriptionText.gameObject.SetActive(true);
                                                 if (descriptionText2)
                                                     descriptionText2.gameObject.SetActive(true);
+                                            }
+
+                                            if (oppAutoDesc != null)
+                                            {
+                                                oppAutoDesc.text = "Auto Skill: " + currentObj.INVENTORY.WEAPONS[i].CHANCE + "% chance to " + Common.GetSkillEventText(currentObj.INVENTORY.WEAPONS[i].SEVENT, currentObj.INVENTORY.WEAPONS[i].SREACTION);
                                             }
                                         }
                                     }
@@ -1152,6 +1168,10 @@ public class DetailsScreen : MonoBehaviour
         selectedArmor = null;// anotherObj.ARMOR.SCRIPT;
         if (descriptionText)
             descriptionText.text = "";
+        if (oppAutoDesc != null)
+        {
+            oppAutoDesc.text = "";
+        }
         for (int i = 0; i < skillSliders.Length; i++)
         {
             skillSliders[i].maxValue = 1;

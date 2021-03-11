@@ -1,0 +1,42 @@
+- e5 = Corvus (Temp)
+- e1 = Butch (Temp)
+- e3 = Dahlia (Temp)
+a,0, We made it!
+a,0,Ugh. So many books. Where are we even supposed to start.
+a,1,I doubt this place has a librarian on staff to help us find what we’re looking for.
+e,5,I’m afraid there’s no one like that here; boys.
+-Jax and Zeffron turn around.
+-CORVUS RAYVERN; tall; gaunt; imposing; skulks up the aisle.
+-He is flanked by Butch & Dahlia.
+e,5,But I suppose if you need help; my boys here would be more than happy to oblige you.
+a,0,. . .
+a,1,Who are you guys?
+-Corvus takes a few steps closer.
+e,5, A bird by the name of Corvus. I must say; Jax; I’m hurt. Not even telling your friends about your former employer.
+e,5,Oh; that's right. If I’m not mistaken; you were supposed to be dead.
+a,0,I’m supposed to be a lot of things. For example; right now; I should get going.
+-Jax grabs Zeffron and runs for the exit; only to stop short.
+-BUTCH; big; mean; dimwitted; trudges up behind them.
+e,5, And here’s the man who was meant to kill you. Butch! What the hell am I looking at?
+e,1, My apologies; boss. Could’ve sworn I dealt with this one before.
+-He cracks his knuckles and steps closer.
+e,1,I promise; this time I’ll finish the job.
+e,5,Nevermind that; you oaf. If you want something done right...
+-Corvus presents his weapon.
+e,5,... You do it yourself.
+-Jax and Zeffron stand back to back.
+a,1, Any grand ideas; Jax?
+a,0,Working on it.
+-Corvus halts his approach. Something buzzes offscreen.
+e,3,What’s that noise?
+-The Queen Scorpiee swoops above the aisle.
+e,3,Holy crap; a Queen Scorpiee!
+e,1,Run for it!
+-The two thieves race off.
+e,5,Where are you two going?
+-He glares at the remaining trio and turns to where the two thieves ran off.
+e,5, This isn’t over; you hear me?
+-Corvus escapes.
+-The Queen Scorpiee hovers in front of Jax and Zeffron.
+a,0,Guess that just leaves us; Z.
+a,1,So it would seem. Get ready; Jax.

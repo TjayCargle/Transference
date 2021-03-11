@@ -1,0 +1,15 @@
+-e101 = Citrine (Temp)
+a,2,Where the hell are we?
+a,0,Let me check. Med kits; beds; smell of uncleanliness? Yep; it’s an infirmary.
+a,2,I see your sass hasn’t changed.
+a,0,Why would i-
+e,101,Hey; you kids.
+a,0,Hello; uh; whoever you are?
+e,101,Citrine; darling. And you are Jax and Pyrina; correct?
+a,2,Careful; Jax. She’s been following us.
+e,101,Hah; you catch on quickly; girl. Yes; I have. You all could prove useful to me. You seem strong; and I need more fighters who can help me take down that Vampretti brat.
+a,0,-What; so you can take Transference and leave us with nothing?
+a,2,No way; you corpse-smelling croney.
+e,101,Alrighty then; guess this is what I get for asking the short tempered meatheads. Well; I’m a busy woman; so I’ll come back to see your corpses when I have the time. Revenants; kill them.
+a,0,Bring it!;I can do this all day!
+a,2, I'm getting tired of this.

@@ -329,7 +329,7 @@ namespace Doublsb.Dialog
         private IEnumerator Activate_List(List<DialogData> DataList)
         {
             state = State.Active;
-            Debug.Log("us");
+
             foreach (var Data in DataList)
             {
                 Show(Data);
@@ -428,6 +428,22 @@ namespace Doublsb.Dialog
                     case Command.autoDelay:
                         Set_AutoSpeed(item.Context);
                         yield return new WaitForSeconds(_autoDelay);
+                        break;
+                    case Command.setAsFirst:
+                        {
+                            if(Characters != null)
+                            {
+                                Characters.transform.GetChild(0).name = item.Context;
+                            }
+                        }
+                        break;
+                    case Command.setAsSecond:
+                        {
+                            if (Characters != null)
+                            {
+                                Characters.transform.GetChild(1).name = item.Context;
+                            }
+                        }
                         break;
                 }
             }

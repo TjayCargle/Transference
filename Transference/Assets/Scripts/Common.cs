@@ -410,7 +410,6 @@ public enum MenuItemType
 }
 
 
-
 public enum SkillEvent
 {
     beforeDmg,
@@ -480,7 +479,11 @@ public enum SkillReaction
     becomeBlunt,
     becomeForce,
     gainBecomeEvent,
-    removeEvent
+    removeEvent,
+    doubleDmg,
+    ailmentDmg,
+    buffdmg,
+    crippledVengence
 
 
 
@@ -1179,6 +1182,8 @@ public class Common : ScriptableObject
     public static bool hasAllocated = false;
     public static bool hasGainedSkill = false;
     public static bool hasLearnedFromEnemy = false;
+    public static bool hasSeenJaxAndZeffCatchUp = false;
+    public static bool hasSeenDesperation = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
@@ -1495,7 +1500,7 @@ public class Common : ScriptableObject
                 break;
             case SkillReaction.healByDmg:
                 {
-                    returnedString += " heal by the damage ";
+                    returnedString += " heal by damage delt ";
                 }
                 break;
             case SkillReaction.healAmount:
@@ -2867,7 +2872,7 @@ public class Common : ScriptableObject
                 break;
             case 1:
                 {
-                    returnedString = "Attacking; There are 3 types of attacks: Strikes which require health to use, Spells which use mana, and Skills which manipulates Fatigue. Each use different resources and are the primary way to deal damage to enemies and objects.";
+                    returnedString = "Attacking; There are 3 types of attacks:<color=yellow>Strikes</color> which require <color=yellow>health</color> to use, <color=yellow>Spells</color> which use <color=yellow>mana</color>, and <color=yellow>Skills</color> which manipulate <color=yellow>Fatigue</color>. Each uses different resources and are the primary way to deal damage to enemies and objects.";
                 }
                 break;
             case 2:
@@ -2882,7 +2887,7 @@ public class Common : ScriptableObject
                 break;
             case 4:
                 {
-                    returnedString = "Movement Tiles; While standing on a movement tile, all attacks effects will be overwritten with that movement effect. A swap tile for example will prevent a fire move from burning but will exchange places with target regardless of range. Standing on a movement tile will give the option for a pro tip with more details.";
+                    returnedString = "Movement Tiles; While standing on a movement tile, all attacks effects will be overwritten with that movement effect. A swap tile for example will cause you to swap places with an enemy if the attack hits. Standing on a movement tile will give the option for a pro tip with more details.";
                 }
                 break;
             case 5:
@@ -2897,7 +2902,7 @@ public class Common : ScriptableObject
                 break;
             case 13:
                 {
-                    returnedString = "Movement Glyphs; Movement Glyphs can slow intruders down and cause them to <color=yellow>move only 1 tile at a time</color>!\n\nHowever if someone destroys it or hacks it by matching its genetic code sequence, then it will cease to function.";
+                    returnedString = "Movement Glyphs; Movement Glyphs can slow intruders down and cause them to <color=yellow>move only 1 tile at a time</color>!\n\nHowever if someone destroys it or hacks it by matching its genetic code sequence, it will cease to function.";
                 }
                 break;
             case 14:
@@ -2937,12 +2942,12 @@ public class Common : ScriptableObject
                 break;
             case 10:
                 {
-                    returnedString = "Hacking;Glyph Technology is relatively new and while they are hard to destroy by attacking, they are highly susceptible to hacking if you can get close enough. \nEvery Glyph has a <color=yellow>9 sequence</color> pattern that will cause it to cease function.  Pay attention to which <color=yellow>color unlocks an entry</color>";
+                    returnedString = "Hacking;Glyph Technology is relatively new and while they are hard to destroy by attacking, they can be hacked if you can <color=yellow>get close enough</color>. \nEvery Glyph has a <color=yellow>9 sequence</color> pattern that will cause it to shutdown.  Pay attention to which <color=yellow>shapes are in the output</color>";
                 }
                 break;
             case 11:
                 {
-                    returnedString = "Movement;Characters can move freely while there are no enemies in the room, otherwise their movement space is reduced based on the character.";
+                    returnedString = "Movement;Characters can move freely while there are no enemies in the room, otherwise their movement space is based on the individual character.";
                 }
                 break;
             case 12:
@@ -2967,7 +2972,7 @@ public class Common : ScriptableObject
                 break;
             case 21:
                 {
-                    returnedString = "Lock Glyphs; Lock Glyphs are an anomaly. Instead of keeping someone out, they are designed to lock intruders in, that way authorities have long enough to come and arrest them. Or you can just never let them out. Its your choice.";
+                    returnedString = "Lock Glyphs; Lock Glyphs are an anomaly. Instead of keeping someone out, they are designed to lock intruders in, that way authorities have long enough to come and arrest them. Or you can just never let them out. Its your choice.Lock Glyphs are an anomaly. Instead of keeping someone out, they are designed to lock intruders in, giving time for the authorities to arrive. Or they can be used to imprison the trespassers forever.";
                 }
                 break;
             case 22:
@@ -2977,12 +2982,12 @@ public class Common : ScriptableObject
                 break;
             case 23:
                 {
-                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\nWhile on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already exchanged attacks with that character.";
+                    returnedString = "Shadows;Dark tiles on a map represent shadows a character can hide in.\n\nWhile on a shadow tile,<color=yellow> enemies cannot see a player </color>unless they have already engaged in combat with that character.";
                 }
                 break;
             case 24:
                 {
-                    returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n<color=yellow>Strikes</color> reuquire a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
+                    returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n<color=yellow>Strikes</color> require a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
                 }
                 break;
             case 25:
@@ -2992,7 +2997,7 @@ public class Common : ScriptableObject
                 break;
             case 26:
                 {
-                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own decisions</color>.\nIn addition to prompts, more information will be available on tiles marked with a <color=yellow>question mark</color>.\nGood luck and remember: <color=yellow>the choice is yours.</color>";
+                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own decisions</color>.\nFor tips please check tiles with a <color=yellow>question mark</color>.\nAlso, check your status menu often for information on new attacks!\nGood luck and remember: <color=yellow>the choice is yours.</color>";
                 }
                 break;
             case 27:
@@ -3002,7 +3007,7 @@ public class Common : ScriptableObject
                 break;
             case 28:
                 {
-                    returnedString = "Factions & Races;All charcaters belong to a specific faction which is determined by race.\n\nEnemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
+                    returnedString = "Factions & Races; All characters belong to a specific faction.\n\nEnemies of opposing factions will <color=yellow>fight each other</color>. <color=yellow>Enemies are bound to the same rules as players</color>, so if they defeat another enemy they will gain one of their skills and <color=yellow>potentially even level up.</color>";
                 }
                 break;
             case 29:
@@ -3014,6 +3019,11 @@ public class Common : ScriptableObject
                 {
                     returnedString = "Game Saved!; You have saved the game. When accessing the game from the main menu you may now choose Continue instead of New Game.";
                 }
+                break;
+            case 31:
+                {
+                    returnedString = "Desperation; When a unit ends up with negative actions, they take <color=yellow>non-lethal </color>desperation damage. Desperation damage is 10 times the amount of negative actions.\nBe careful, a unit that starts their turn with zero or less actions, they gain <color=yellow>a resistance barrier and shields </color> equal to how many actions were negative.\nUse this to take down mighty foes!";
+                } 
                 break;
             default:
                 break;

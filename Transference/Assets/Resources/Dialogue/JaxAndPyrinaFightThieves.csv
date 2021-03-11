@@ -1,0 +1,14 @@
+- e5 = Corvus (Temp)
+- e1 = Butch (Temp)
+- e3 = Dahlia (Temp)
+-*Jax and Flara encounter the Thieves guild*
+e,5,You! Jax! Stop the hell right there.
+a,2,Friend of yours?
+a,0,God I wish it was a friend; this is just a disappointment.
+e,5,You should be dead; but here you are. No matter; it just means I get to enjoy this. Stand back you two; this is personal business.
+e,1,You tell him boss.
+e,5,Oh shut up; Butch.
+e,3,Let’s just get to the fight already. Cease the monologue.
+a,0,Thanks Dahlia; I was nearly about to die of boredom.
+-*She stares daggers at Corvus and sighs*
+e,5,Well; what are you waiting for? Attack!

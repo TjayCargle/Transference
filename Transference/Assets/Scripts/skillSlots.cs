@@ -8,7 +8,7 @@ public class skillSlots : MonoBehaviour {
     private int type;
     [SerializeField]
     List<SkillScript> skills = new List<SkillScript>();
-
+    public LivingObject lastTarget = null;
     public string NAME
     {
         get

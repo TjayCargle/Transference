@@ -1,0 +1,24 @@
+- e5 = Corvus (Temp)
+- e1 = Butch (Temp)
+- e3 = Dahlia (Temp)
+e,5,What; are; you! Why won't you die!
+a,0,I’m nothing special.
+e,5,Nothing special my a-
+-*Dahlia stabs Corvus from behind*
+e,5,D-dahlia; what are you-
+-*She finishes him off*
+e,1,Dahlia; boss...why?
+e,3,Shut up Butch. You; Jax and whatever your name. I have to thank you.
+a,2,I’m not taking thanks from a snake.
+a,0,I-were you plotting this? I guess I never really knew you well when I was in the guild; but I didn’t take you for a backstabber.
+e,3,What can I say; things change. You don’t have to worry though; as little as my words might mean to you right now; I’m not here to cause trouble for you. 
+e,3,With this prick dead; I’m the new leader; and I have business besides your stupid book.
+a,0,On that note; let's go. Don't mind me if I walk backwards though; I just hate getting stabbed.
+e,3,Pfft; Piss off. Butch; come with me; and carry the body;
+e,1,Y-yes; boss.
+-*The two leave*
+a,2,Well; that was quite dramatic.
+a,0,I couldn’t agree more. Next time I'll bring snacks.
+a,2,Come on.
+-*They head up the staircase; and at the top Lukon reveals himself with a laugh*
+a,5,Congratulations on the victory; you two...

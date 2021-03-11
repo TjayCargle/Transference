@@ -104,6 +104,11 @@ public class CtrlsButton : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
                 }
             }
         }
+        TestMessage tm = GameObject.FindObjectOfType<TestMessage>();
+        if(tm != null)
+        {
+            tm.PlayScene(titlestr);
+        }
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

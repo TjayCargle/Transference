@@ -5,18 +5,18 @@ using Doublsb.Dialog;
 
 public class TestMessage : MonoBehaviour
 {
-    public DialogManager DialogManager;
+    public DialogManager dialogue;
 
     public GameObject[] Example;
-
+    public string testScene = "JaxFindZeff";
     private void Awake()
     {
-        var dialogTexts = new List<DialogData>();
+        // var dialogTexts = new List<DialogData>();
 
         //dialogTexts.Add(new DialogData("/size:up/Hi, /size:init/my name is Li.", "Li"));
 
         //dialogTexts.Add(new DialogData("I am Sa. Popped out to let you know Asset can show other characters.", "Sa"));
-        
+
         //dialogTexts.Add(new DialogData("This Asset, The D'Dialog System has many features.", "Li"));
 
         //dialogTexts.Add(new DialogData("/hide:1/You can easily change text /color:red/color, /color:white/and /size:up//size:up/size/size:init/ like this.", "Li", () => Show_Example(0)));
@@ -38,16 +38,34 @@ public class TestMessage : MonoBehaviour
         //dialogTexts.Add(new DialogData("That's it! Please check the documents. Good luck to you.", "Li"));
 
 
+        //DatabaseManager dm = Common.GetDatabase();
+        //dm.Setup();
+        //SceneContainer scene = dm.GetSceneData("JaxFindZeff");
+        //for (int i = 0; i < scene.speakertext.Count; i++)
+        //{
+        //    //Debug.Log(scene.speakerFace);
+        //    dialogTexts.Add(new DialogData(scene.speakertext[i], scene.speakerFace[i], scene.speakerNames[i]));
+        //}
+
+        //DialogManager.Show(dialogTexts);
+
+        PlayScene(testScene);
+    }
+
+    public void PlayScene(string sceneName)
+    {
+        var dialogTexts = new List<DialogData>();
+
         DatabaseManager dm = Common.GetDatabase();
         dm.Setup();
-        SceneContainer scene = dm.GetSceneData("JaxFindZeff");
+        SceneContainer scene = dm.GetSceneData(sceneName);
         for (int i = 0; i < scene.speakertext.Count; i++)
         {
             //Debug.Log(scene.speakerFace);
             dialogTexts.Add(new DialogData(scene.speakertext[i], scene.speakerFace[i], scene.speakerNames[i]));
         }
-
-        DialogManager.Show(dialogTexts);
+        dialogue.gameObject.SetActive(true);
+        dialogue.Show(dialogTexts);
     }
 
     private void Show_Example(int index)

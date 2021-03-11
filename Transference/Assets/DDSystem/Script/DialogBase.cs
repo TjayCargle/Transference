@@ -56,7 +56,9 @@ namespace Doublsb.Dialog
         select,
         swap,
         move,
-        autoDelay
+        autoDelay,
+        setAsFirst,
+        setAsSecond
     }
 
     public enum TextColor

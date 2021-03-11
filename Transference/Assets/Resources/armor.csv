@@ -24,5 +24,6 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 208,Tutorial,Purely Neutral, 0, 0, 0, normal,normal,weak,weak,normal,normal, normal,resists
 209,Tutorial2,Purely Neutral, 0, 0, 0, normal,normal,weak,cripples,normal,resists, normal,resists
 210,TutorialBoss,Purely Neutral, 0, 0, 0, weak,weak,weak,weak,normal,normal, normal,normal
+211,Resist Barrier,Purely Neutral, 0, 0, 0, resists,resists,resists,resists,resists,resists, resists,resists
 -204,Royal Barrier,Purely Neutral, 0, 0, 0, absorbs,resists,resists,resists,resists,resists, cripples,normal
 -204,Queen Barrier,Purely Neutral, 0, 0, 0, cripples,nulls,reflects,nulls,resists,weak, reflects,resists

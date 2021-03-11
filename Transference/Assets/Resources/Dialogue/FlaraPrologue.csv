@@ -1,0 +1,11 @@
+a,2,-Hey; Mr. Guard; I was called for a tutoring lesson; and brought my friend along. You recognize the name Pyrina?
+e,1,-Yes; Mrs. Pyrina; please follow me this way. Lord Vampretti is busy; but I’m sure he has your lessons in his schedule. He’s not one to slack on his studies.
+-*The pair follows the guard to the third floor Common Room*
+-Conversation in the room:
+a,2,-Alright; so we’re in the Manor. What now; Flara?
+a,3,-Well if we’re gonna get our hands on Transference we’re gonna have to-
+-*A loud bang is followed by the violent shaking of the mansion*
+a,2,-The hell?
+a,3,-That...wouldn’t have anything to do with the book; now would it? We should look around; if someone else gets their hands on the book...I-
+a,2,- -won’t be able to swap bodies with me; I know. We should hurry.
+a,3,(thoughts)-(I was going to say strangle the thief; but that will do)

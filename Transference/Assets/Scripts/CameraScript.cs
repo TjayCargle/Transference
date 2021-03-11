@@ -40,7 +40,7 @@ public class CameraScript : MonoBehaviour
     public Image[] weaknesses;
     Color transparent;
     Color opaque;
-    public float smoothSpd = 0.5f;
+    public float smoothSpd = 2.54f;
     public ArmorSet armorSet;
     public AudioClip[] musicClips;
     AudioSource audio;

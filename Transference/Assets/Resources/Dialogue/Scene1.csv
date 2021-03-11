@@ -10,9 +10,11 @@ a,0,...,1
 a,0,I probably shouldn't sit here talking to myself for too long.,2
 a,0,Huh?,6
 a,0,Is that a Glyph?,5
-a,0,I guess they have SOME decent security after all.
+a,0,Guess they have SOME decent security after all.
 a,0,Glphys are hard to destory but are easy to /color:yellow/hack if you get close to them./color:white/
-a,0,Since they are /color:yellow/machines/color:white/ they probably can /color:yellow/attack me in the shadows/color:white/.,6
+a,0,They are /color:yellow/machines/color:white/ though. 
+a,0,Which means they probably can /color:yellow/attack me in the shadows/color:white/.,6
+a,0,I should take /color:yellow/note/color:white/ of when Glyphs in the room.,6
 i,0,showimage,1
 i,1,moveToTarget,0
 i,2,hideimage,1

@@ -1,0 +1,21 @@
+-2 basil (temp)
+-4 indigo (temp)
+a,3,/setAsFirst:Flara Phixie/ /setAsSecond:Zeffron Drix/
+a,3,Alright; now that that’s done; we need to move somewhere safer before looking for Jax and Pyrina. Afterwards we can get our hands on Transference and get out of here.
+a,3,Let’s head to the third floor Common Room; there should be good.
+a,1,Wait a sec; how do you know Jax; and what are you going to do wi..
+a,3,Do you have rocks for brains? I said let's talk somewhere safe.
+a,1,R-right.
+-*They head to the Common Room; and once there stop to talk*
+a,3,We’re here; and I presume you’re calmer. So let’s talk.
+a,1,What are planning to do with Transference; and how do you know my brother?
+a,3,To the point; good. Currently; everyone and their second cousin is trying to get their hands on Transference. It's a magical spellbook that allows you to transfer anything from one entity to another; which makes it extremely useful.
+a,1, That much I already know.
+a,3,As for Jax; me and him are both in Pyrina's pyromancy class at Transmigration Academy; We don't talk much though; so can't say why he's here.
+a,1,Transmigration Academy? I had no idea... anyway; do you know where that portal took them?
+a,3, Can't say for sure; but based on the size and how it only stayed open for a few seconds; they are definitely still in this building somewhere.
+a,3, For now let's jus-
+e,2,You’re still here; little phixie?
+e,4,You should have left when you had the chance; worm.
+a,3,Not the time to doubt me; watch yourself. These enemies are strong.
+a,1,Don't worry about me; I can handle myself.

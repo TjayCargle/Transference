@@ -11,7 +11,7 @@ namespace Doublsb.Dialog
         public AudioClip[] CallSE;
         public Image myImage;
 
-        private void Awake()
+        private void OnEnable()
         {
             myImage = GetComponent<Image>();
         }

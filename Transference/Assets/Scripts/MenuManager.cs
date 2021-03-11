@@ -28,8 +28,8 @@ public class MenuManager : MonoBehaviour
     public Canvas eventCanvas;
 
     public Canvas hackingCanvas;
+    public Canvas opportunityCanvas;
 
- 
 
     public TextMeshProUGUI DESC
     {
@@ -93,6 +93,10 @@ public class MenuManager : MonoBehaviour
 
     public void ShowEventCanvas(int type = -1)
     {
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
         if (eventCanvas)
         {
             eventCanvas.gameObject.SetActive(true);
@@ -244,6 +248,10 @@ public class MenuManager : MonoBehaviour
         {
             DontEventCanvas();
         }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void ShowOptions()
@@ -284,6 +292,10 @@ public class MenuManager : MonoBehaviour
         {
             shopCanvas.gameObject.SetActive(true);
         }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
     public void DontShowShop()
     {
@@ -323,6 +335,10 @@ public class MenuManager : MonoBehaviour
         if (detailCanvas)
         {
             detailCanvas.gameObject.SetActive(false);
+        }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
         }
     }
     public void ShowNone()
@@ -400,6 +416,10 @@ public class MenuManager : MonoBehaviour
         {
             DontEventCanvas();
         }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
     public void ShowCommandCanvas()
     {
@@ -476,6 +496,10 @@ public class MenuManager : MonoBehaviour
         {
             DontEventCanvas();
         }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void ShowInventoryCanvas()
@@ -535,6 +559,10 @@ public class MenuManager : MonoBehaviour
         {
             DontEventCanvas();
         }
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
 
     public void ShowItemCanvas(int index, LivingObject invokingObject)
@@ -589,6 +617,11 @@ public class MenuManager : MonoBehaviour
         {
             DontEventCanvas();
         }
+
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(false);
+        }
     }
     public void showOpportunityOptions(LivingObject invokingObject)
     {
@@ -619,15 +652,20 @@ public class MenuManager : MonoBehaviour
         }
         if (itemCanvas)
         {
-            itemCanvas.gameObject.SetActive(true);
+            itemCanvas.gameObject.SetActive(false);
+        }
+
+        if (opportunityCanvas)
+        {
+            opportunityCanvas.gameObject.SetActive(true);
             if (inManager)
             {
                 inManager.unloadContents();
-                if (itemCanvas.GetComponentInChildren<VerticalLayoutGroup>())
+                if (opportunityCanvas.GetComponentInChildren<VerticalLayoutGroup>())
                 {
-                    if (itemCanvas.GetComponentInChildren<ScrollRect>())
+                    if (opportunityCanvas.GetComponentInChildren<ScrollRect>())
                     {
-                        inManager.loadContents(itemCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, itemCanvas.GetComponentInChildren<ScrollRect>(), 3, invokingObject);
+                        inManager.loadContents(opportunityCanvas.GetComponentInChildren<VerticalLayoutGroup>().gameObject, opportunityCanvas.GetComponentInChildren<ScrollRect>(), 3, invokingObject);
                         inManager.ForceSelect();
                     }
                 }

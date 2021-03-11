@@ -1,0 +1,36 @@
+a,0,Sheesh; was that all this place had? 
+a,0,I figured the /speed:down/big; bad; /speed:init/Vampretti manor would be more exciting
+a,1,Jax; what are you doing in here?
+-Jax turns to glance back at the scorpiee bodies and beams up at Zeffron.
+a,0,/speed:down/Oh; /speed:down/you know. /speed:up/A little /speed:init/exterminating.
+a,1,Jax.
+-Jax raises his arms.
+a,0,Alright; alright. 
+a,0,I snuck in because I was looking for the Book of Transference.
+-He takes a step back.
+a,0,/select:1//move:-50/Look; I know what you’re gonna say. But I’m not stopping. 
+a,0,I’m finding that book; alright.
+-Zeffron forces a smile.
+a,1,Easy; Jax. Take it easy./select:1//move:0/ I’m on your side.
+a,0, Wait/move:-25/; 
+a,0,What? /move:-50/
+a,0,Since when?/move:-75/
+-Zeffron turns around.
+a,1,A lot has happened since we last saw each other. Now; come on.
+-Jax grabs his shoulder.
+a,0,Whoa; whoa. Hold on./move:-90/ What’s with the change in attitude? /move:-110/
+a,0,You didn’t care about the book before. And what's happened.
+-Zeffron doesn’t move. He turns around forces the smile again.
+a,1,I think I understand why you left; and I just... 
+a,1,I dunno; I missed my brother./move:75/
+a,0,/move:-25/Except; we're not brothers. Not really anyway./move:0/
+a,1,Yeah; yeah. Now come on./move:0/ We’ve got work to do.
+a,1,Now; for our next order of business;/select:0//move:275/ figuring out where the book is.
+-Jax walks towards the west wing.
+a,1,And just where do you think you’re running off to?
+a,0,/move:0/The library; duh. This place should have one.
+-Jax races up the stairs.
+-Zeffron shakes his head and hurries after him.
+a,1,And... why /move:175/would be heading to the library?
+a,0,It's called hiding in plain sight.
+a,0,Where else would a Vampretti hide a spell book?/move:275/

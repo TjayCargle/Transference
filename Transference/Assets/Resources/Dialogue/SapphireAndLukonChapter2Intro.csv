@@ -1,0 +1,14 @@
+a,4,Well that was unexpected./setAsFirst:Sapphire Witchcoven/ /setAsSecond:Lukon Redwolf/
+a,5,Milday; may I inquire as to the situation?
+a,4,Another witch; the pain that she is; decided to unleash hell. Disgusting revenants of all things; yet this will give us the opportunity we need. 
+a,4, If I was hiding a spellbook; it would be somewhere in a basement vault.
+a,5,Then allow me to lead; I shall be your shield.
+-Jail Cell:
+a,4,Nothing; nothing; absolutely nothing. 
+a,4,I mean; I suppose it wouldn’t be that easy; but then why are these Vampretti guarding this location?
+a,5,Perhaps just to protect minor goods? Or something could be hidden here.
+a,4,Let me see...interesting. This cell over here is made of anti-magic materials. This could be it; but how do we break it…
+-*Guards rush in*
+e,0,Who are you!?
+a,5,Milday; step back
+a,4, Hush; Lukon dear. This will be entertainment; not a threat.

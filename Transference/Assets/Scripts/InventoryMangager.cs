@@ -22,6 +22,7 @@ public class InventoryMangager : MonoBehaviour
     public int menuSide = -1;
     public MenuItem[] itemSlots;
     public MenuItem[] extraSlots;
+    public MenuItem[] oppSlots;
     // UsableScript genericMove;
     UsableScript genericAtk;
     public int lastIndex;
@@ -885,7 +886,18 @@ public class InventoryMangager : MonoBehaviour
                                 if (selectedMenuItem.refItem.GetType() == typeof(CommandSkill))
                                 {
                                     CommandSkill cmd = selectedMenuItem.refItem as CommandSkill;
+
+                                    if(manager.GetState() == State.PlayerOppOptions)
+                                    {
+                                    manager.ShowSkillAttackbleTiles(manager.player.current, cmd, manager.player.current.OPP_SLOTS.lastTarget);
+
+                                    }
+                                    else
+                                    {
                                     manager.ShowSkillAttackbleTiles(manager.player.current, cmd);
+
+                                    }
+
                                     newdescs[0].transform.parent.parent.gameObject.SetActive(true);
                                     UpdateDescriptions(cmd);
 
@@ -1730,6 +1742,11 @@ public class InventoryMangager : MonoBehaviour
         for (int useCount = 0; useCount < 6; useCount++) //UsableScript item in liveObject.GetComponents<UsableScript>())
         {
             MenuItem selectableItem = itemSlots[useCount];
+            if (useType == 4 && windowType == -1)
+            {
+                selectableItem = oppSlots[useCount];
+            }
+
             selectableItem.itemType = 15;
             Image attr = selectableItem.GetComponentsInChildren<Image>()[2];
             Text selectedText = selectableItem.GetComponentInChildren<Text>();
@@ -1782,6 +1799,62 @@ public class InventoryMangager : MonoBehaviour
                         }
                     }
 
+                    if (useType == 4 && windowType == -1)
+                    {
+                        if (attr)
+                            attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                        Image actface = selectableItem.GetComponentsInChildren<Image>()[2];
+
+                        if (actface != null && item.USER != null)
+                            actface.sprite = item.USER.FACE;
+
+                        attr = selectableItem.GetComponentsInChildren<Image>()[3];
+                        {
+                                if (attr)
+                                {
+                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                    if (item != genericAtk)
+                                    {
+                                        int indxex = (int)((CommandSkill)item).ELEMENT;
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                    else
+                                    {
+                                        int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                        attr.sprite = attributeImages[indxex];
+                                    }
+                                }
+                            }
+                            CommandSkill cmd = ((CommandSkill)item);
+               
+                            string extraText = "";
+                            if (proText)
+                            {
+
+                                proText.text = newText;
+                                if (item.NAME.Length > 7)
+                                {
+                                    proText.enableAutoSizing = true;
+                                }
+                                else
+                                {
+                                    proText.enableAutoSizing = false;
+                                    proText.fontSize = 25.0f;
+                                }
+                          
+                            }
+                            else
+                            {
+                                if (selectedText)
+                                {
+                                    selectedText.text = newText;
+                                    selectedText.supportRichText = true;
+
+                                }
+                            }
+                        
+                    }
+                    else
                     {
 
                         if (windowType == 3 || windowType == -1)
@@ -1789,6 +1862,7 @@ public class InventoryMangager : MonoBehaviour
 
                             if (item.GetType() == typeof(CommandSkill))
                             {
+
                                 //  if (manager.GetState() == State.PlayerEquipping || manager.GetState() == State.playerUsingSkills || manager.GetState() == State.PlayerOppOptions)
                                 {
                                     if (attr)
@@ -1822,32 +1896,7 @@ public class InventoryMangager : MonoBehaviour
                                             }
                                         }
                                     }
-                                    //for (int i = 0; i < attackbleObjects.Count; i++)
-                                    //{
-                                    //    LivingObject griddy = attackbleObjects[i];
-                                    //    int elIndx = Common.GetElementIndex(cmd.ELEMENT);
-                                    //    if (elIndx <= 7)
-                                    //    {
-                                    //        EHitType hitType = griddy.ARMOR.HITLIST[elIndx];
-                                    //        if (hitType < EHitType.normal)
-                                    //        {
-                                    //            if (support.isVisible == false)
-                                    //            {
-                                    //                support.SetVisible();
-                                    //                support.SetText(hitType.ToString(), Color.blue);
-                                    //            }
-                                    //        }
-                                    //        else if (hitType > EHitType.normal)
-                                    //        {
-                                    //            if (support.isVisible == false)
-                                    //            {
-                                    //                support.SetVisible();
-                                    //                support.SetText(hitType.ToString(), Color.red);
-                                    //            }
-                                    //        }
-                                    //    }
 
-                                    //}
                                 }
                                 string extraText = "";
                                 if (proText)
@@ -2157,7 +2206,10 @@ public class InventoryMangager : MonoBehaviour
                     proText.text = "";
                 selectableItem.refItem = null;
                 if (windowType < 5)
+                {
                     selectableItem.gameObject.SetActive(false);
+
+                }
                 if (attr)
                     attr.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             }
