@@ -114,6 +114,10 @@ namespace Doublsb.Dialog
             Printer.SetActive(true);
             Characters.SetActive(true);
             StopCoroutine("Activate_List");
+            _select("1");
+            _move("0");
+            _select("0");
+            _move("0");
             _hide("0");
             _hide("1");
             StartCoroutine(Activate_List(Data));

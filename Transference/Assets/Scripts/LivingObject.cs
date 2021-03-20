@@ -1583,6 +1583,46 @@ public class LivingObject : GridObject
     //    tookAction = false;
 
     //}
+
+    private int GetExpCap(int expType)
+    {
+        //0 = exp
+        //1 = phys
+        //2 = mag
+        //3 = sprt
+
+        switch(expType)
+        {
+            case 0:
+                {
+                    return (int)((float)BASE_STATS.LEVEL * 100.0f * 1.25f);
+                }
+                break;
+
+            case 1:
+                {
+                    return (int)((float)PHYSLEVEL * 100.0f * 1.25f);
+                }
+                break;
+
+            case 2:
+                {
+                    return (int)((float)MAGLEVEL * 100.0f * 1.25f);
+                }
+                break;
+
+            case 3:
+                {
+                    return (int)((float)DEXLEVEL * 100.0f * 1.25f);
+                }
+                break;
+        }
+
+     
+
+
+        return 100;
+    }
     public void LevelUp(bool show = true)
     {
         if (BASE_STATS.LEVEL + 1 < Common.MaxLevel)
@@ -1594,7 +1634,7 @@ public class LivingObject : GridObject
             // BASE_STATS.MAX_MANA = BASE_STATS.MAX_MANA;
             // BASE_STATS.MAX_FATIGUE += physLevel;
 
-            BASE_STATS.EXP -= 100;
+            BASE_STATS.EXP = 0;
             BASE_STATS.STRENGTH += Random.Range(0, physLevel + 1);
             BASE_STATS.DEFENSE += Random.Range(0, physLevel + 1);
             BASE_STATS.MAGIC += Random.Range(0, magLevel + 1);
@@ -1614,7 +1654,7 @@ public class LivingObject : GridObject
     public void GainExp(int val)
     {
         BASE_STATS.EXP += val;
-        if (BASE_STATS.EXP >= 100)
+        if (BASE_STATS.EXP >= GetExpCap(0))
         {
             LevelUp();
 
@@ -1623,7 +1663,7 @@ public class LivingObject : GridObject
     public void GainPhysExp(int val, bool show = true)
     {
         BASE_STATS.PHYSEXP += val;
-        if (BASE_STATS.PHYSEXP > 100)
+        if (BASE_STATS.PHYSEXP > GetExpCap(1))
         {
             //float chance = Random.Range(0, 2);
             //if (chance > 0)
@@ -1665,7 +1705,7 @@ public class LivingObject : GridObject
     public void GainMagExp(int val, bool show = true)
     {
         BASE_STATS.MAGEXP += val;
-        if (BASE_STATS.MAGEXP > 100)
+        if (BASE_STATS.MAGEXP > GetExpCap(2))
         {
             //float chance = Random.Range(0, 2);
             //if (chance > 0)
@@ -1706,7 +1746,7 @@ public class LivingObject : GridObject
     public void GainDexExp(int val, bool show = true)
     {
         BASE_STATS.SKILLEXP += val;
-        if (BASE_STATS.SKILLEXP > 100)
+        if (BASE_STATS.SKILLEXP > GetExpCap(3))
         {
 
             // BASE_STATS.STRENGTH += 1 + physLevel;

@@ -51,6 +51,9 @@ public class HackingCtrl : MonoBehaviour
     [SerializeField]
     Image playerImage;
 
+    [SerializeField]
+    TextMeshProUGUI firewallText;
+
     public int spellCount = 3;
 
     public float countDown = 30;
@@ -58,6 +61,8 @@ public class HackingCtrl : MonoBehaviour
     public bool isPlaying = false;
     public bool won = false;
     private bool instaFail = false;
+
+    private int firewalls = 9;
 
     public void Setup()
     {
@@ -105,7 +110,7 @@ public class HackingCtrl : MonoBehaviour
         currentChip = 0;
         currentChipType = currentSequence[0];
         updateTarget();
- 
+        firewalls = 9;
     }
 
     private void updateTarget()
@@ -157,7 +162,7 @@ public class HackingCtrl : MonoBehaviour
                 break;
 
         }
-        nextTarget.color = Common.semi;
+        nextTarget.color = Color.white;
         switch (secondChip)
         {
             case SubSkillType.Strike:
@@ -203,7 +208,7 @@ public class HackingCtrl : MonoBehaviour
                 break;
 
         }
-        thirdTarget.color = Common.moresemi;
+       thirdTarget.color = Color.white;
         switch (thirdChip)
         {
             case SubSkillType.Strike:
@@ -303,8 +308,8 @@ public class HackingCtrl : MonoBehaviour
                 if (currentChip < currentSequence.Count)
                     currentChipType = currentSequence[currentChip];
                 updateTarget();
-            
-                if(manager)
+                firewalls--;
+                if (manager)
                 {
                     manager.PlayOppSnd();
                 }
@@ -352,6 +357,7 @@ public class HackingCtrl : MonoBehaviour
                     currentChipType = currentSequence[currentChip];
 
                 updateTarget();
+                firewalls--;
                 if (manager)
                 {
                     manager.PlayOppSnd();
@@ -399,6 +405,7 @@ public class HackingCtrl : MonoBehaviour
                 if (currentChip < currentSequence.Count)
                     currentChipType = currentSequence[currentChip];
                 updateTarget();
+                firewalls--;
                 if (manager)
                 {
                     manager.PlayOppSnd();
@@ -450,6 +457,10 @@ public class HackingCtrl : MonoBehaviour
         if (headerText)
         {
             headerText.text = "Time Remaining: " + ((int)countDown).ToString();
+        }
+        if (firewallText)
+        {
+            firewallText.text = "Firewalls: " + firewalls;
         }
         if (strikeText)
         {

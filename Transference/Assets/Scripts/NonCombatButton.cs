@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using TMPro;
 public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
@@ -12,17 +12,13 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public NonCombatController controller;
     public GameObject loadingCanvas = null;
     private Vector3 startLocation;
-    public int specialNumber = -1;
+    public StorySection specialNumber = StorySection.none;
     public NonCombatButtonAction myAction = NonCombatButtonAction.none;
-    public NonCombatButtonRequirements requirements = NonCombatButtonRequirements.none;
+    public StorySection requirements = StorySection.none;
     public float enterLocation = 1.2f;
     public float exitLocation = -1.2f;
+    public int storyFollow = 4;
 
-    private void Awake()
-    {
-        CheckRequirements();
-
-    }
 
     private void Start()
     {
@@ -35,11 +31,8 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         {
             LeanTween.scale(this.gameObject, new Vector3(1.2f, 1.2f, 1.2f), 0.2f);//.setOnComplete(x => { });
             LeanTween.moveLocalX(this.gameObject, enterLocation, 0.2f);
-           // controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
-            controller.selectedButton.GetComponent<Image>().color = Color.white;
-            controller.selectedButton = this;
-            //controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
-            controller.selectedButton.GetComponent<Image>().color = Color.yellow;
+            // controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
+
             if (type < controller.targets.Length)
             {
                 controller.buttonIndex = type;
@@ -50,13 +43,26 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             {
                 if (controller.currNeoTarget)
                     controller.currNeoTarget.color = Common.blackened;
-                controller.currNeoTarget = controller.neotargets[type - 4];
+                controller.currNeoTarget = controller.neotargets[storyFollow - 4];
                 controller.currNeoTarget.color = Color.white;
+
+                Color brown;
+                ColorUtility.TryParseHtmlString("#FF9500", out brown);//;
+
+                controller.selectedButton.GetComponent<Image>().color = brown;
+                controller.selectedButton = this;
+                //controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+                controller.selectedButton.GetComponent<Image>().color = Color.yellow;
             }
             else
             {
                 if (controller.currNeoTarget)
                     controller.currNeoTarget.color = Common.blackened;
+
+                controller.selectedButton.GetComponent<Image>().color = Color.white;
+                controller.selectedButton = this;
+                //controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
+                controller.selectedButton.GetComponent<Image>().color = Color.yellow;
             }
 
 
@@ -118,48 +124,94 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     break;
                 case NonCombatButtonAction.openChapterSelect:
                     controller.selectedCharacter = specialNumber;
+                    switch (specialNumber)
+                    {
+
+                        case StorySection.JaxSaveSlot1:
+                            controller.storyFollow = 4;
+                            break;
+                        case StorySection.JaxSaveSlotPrologue:
+                            controller.storyFollow = 4;
+                            break;
+
+                        case StorySection.ZeffSaveSlot1:
+                            controller.storyFollow = 5;
+                            break;
+                        case StorySection.ZeffSaveSlotPrologue:
+                            controller.storyFollow = 5;
+                            break;
+
+                        case StorySection.PryinaSaveSlot1:
+                            controller.storyFollow = 6;
+                            break;
+                        case StorySection.PyrinaPrologue:
+                            controller.storyFollow = 6;
+                            break;
+
+                        case StorySection.FlaraSaveSlot1:
+                            controller.storyFollow = 7;
+                            break;
+                        case StorySection.FlaraSaveSlotPrologue:
+                            controller.storyFollow = 7;
+                            break;
+
+                        case StorySection.SapphireSaveSlot1:
+                            controller.storyFollow = 8;
+                            break;
+                        case StorySection.SapphireSaveSlotPrologue:
+                            controller.storyFollow = 8;
+                            break;
+
+                        case StorySection.LukonSaveSlot1:
+                            controller.storyFollow = 9;
+                            break;
+                        case StorySection.LukonSaveSlotPrologue:
+                            controller.storyFollow = 9;
+                            break;
+                    }
                     controller.OpenChapterSelect();
+
                     break;
                 case NonCombatButtonAction.setChapter:
-                    controller.selectedChapter = specialNumber;
+                    Debug.Log("wait what");
                     controller.OpenNewContinue();
                     break;
                 case NonCombatButtonAction.newGame:
                     {
-                        PlayerPrefs.SetInt("continue", -1);
-                        Debug.Log("newGame");
-                        PlayerPrefs.Save();
-
-                        controller.loading = true;
-                        if (controller.selectedCharacter == 1)
-                        {
-                            playJax();
-                        }
-                        else
-                        {
-                            playZeffron();
-                        }
+                        PlayNew();
                     }
                     break;
                 case NonCombatButtonAction.continueGame:
                     {
-                        PlayerPrefs.SetInt("continue", 1);
-                        Debug.Log("contune");
-                        PlayerPrefs.Save();
-                        controller.loading = true;
-                        if (controller.selectedCharacter == 1)
-                        {
-                            playJax();
-                        }
-                        else
-                        {
-                            playZeffron();
-                        }
+                        PlayContinue();
                     }
                     break;
             }
         }
     }
+
+    public void PlayNew()
+    {
+        PlayerPrefs.SetInt("continue", -1);
+        Debug.Log("newGame");
+        PlayerPrefs.Save();
+        int sceneEntry = Common.GetDefaultSceneEntry(controller.selectedCharacter);
+        controller.loading = true;
+        PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
+        SceneManager.LoadSceneAsync("DemoMap5");
+    }
+
+    public void PlayContinue()
+    {
+        PlayerPrefs.SetInt("continue", 1);
+        Debug.Log("contune");
+        PlayerPrefs.Save();
+        int sceneEntry = Common.GetDefaultSceneEntry(controller.selectedCharacter);
+        controller.loading = true;
+        PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
+        SceneManager.LoadSceneAsync("DemoMap5");
+    }
+
     public void playJax()
     {
         if (loadingCanvas != null)
@@ -193,29 +245,23 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public bool CheckRequirements()
     {
         bool turnOff = false;
-        switch (requirements)
+
+        if(myAction == NonCombatButtonAction.setChapter)
         {
-            case NonCombatButtonRequirements.none:
-                break;
-            case NonCombatButtonRequirements.jaxSave1:
-                {
-                    if (!PlayerPrefs.HasKey(Common.JaxSaveSlot1))
-                    {
-                        turnOff = true;
-                    }
-                }
-                break;
-            case NonCombatButtonRequirements.jaxSave2:
-                break;
-            case NonCombatButtonRequirements.jaxSave3:
-                break;
-            case NonCombatButtonRequirements.jaxSave4:
-                break;
-            case NonCombatButtonRequirements.jaxSave5:
-                break;
-            default:
-                break;
+            requirements = (StorySection)((int)controller.selectedCharacter + (int)specialNumber);
         }
+
+        if (requirements != StorySection.none)
+        {
+
+            if (!PlayerPrefs.HasKey(requirements.ToString()))
+            {
+                turnOff = true;
+            }
+        }
+
+
+
         if (turnOff == true)
         {
             Image myImg = GetComponent<Image>();
@@ -223,6 +269,32 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             ColorUtility.TryParseHtmlString("#6C440B", out disabled);//;
             myImg.color = disabled;
             enabled = false;
+        }
+        else
+        {
+            if (type == 4)
+            {
+                Image myImg = GetComponent<Image>();
+                Color enabledColor;
+                ColorUtility.TryParseHtmlString("#FF9500", out enabledColor);//;
+                myImg.color = enabledColor;
+                enabled = true;
+                if (GetComponentInChildren<TextMeshProUGUI>())
+                {
+
+                    GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+                }
+
+                if (GetComponentInChildren<Text>())
+                {
+
+                    GetComponentInChildren<Text>().color = Color.white;
+                }
+            }
+            else
+            {
+
+            }
         }
 
         return turnOff;

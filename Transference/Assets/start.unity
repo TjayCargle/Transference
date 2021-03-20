@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 36952983}
   - component: {fileID: 36952982}
   m_Layer: 5
-  m_Name: Chpt 2
+  m_Name: Continue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -428,14 +428,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 4
+  type: 5
   controller: {fileID: 0}
   loadingCanvas: {fileID: 1970607546}
-  specialNumber: -1
+  specialNumber: 0
   myAction: 4
   requirements: 1
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &36952983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2070,19 +2071,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191369268}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
-  requirements: 0
+  type: 4
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 7
+  myAction: 1
+  requirements: 12
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 5
 --- !u!114 &191369271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2864,19 +2866,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266674085}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
-  requirements: 0
+  type: 4
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 19
+  myAction: 1
+  requirements: 19
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 6
 --- !u!114 &266674088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3168,6 +3171,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: 95
+  storyFollow: 4
 --- !u!114 &286516574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3367,19 +3371,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 295188601}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 2
+  myAction: 2
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &295188604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4450,6 +4455,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &342388957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4596,6 +4602,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &353567218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4955,6 +4962,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!1 &411994275
 GameObject:
   m_ObjectHideFlags: 0
@@ -5265,6 +5273,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: 105
+  storyFollow: 4
 --- !u!114 &428425167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6270,19 +6279,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493344059}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
-  requirements: 0
+  type: 4
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 25
+  myAction: 1
+  requirements: 25
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 8
 --- !u!114 &493344062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7560,6 +7570,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &583174124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7840,7 +7851,7 @@ GameObject:
   - component: {fileID: 589379215}
   - component: {fileID: 589379214}
   m_Layer: 5
-  m_Name: Chpt 1
+  m_Name: New Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7878,14 +7889,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 4
+  type: 5
   controller: {fileID: 0}
   loadingCanvas: {fileID: 1970607546}
-  specialNumber: -1
+  specialNumber: 0
   myAction: 3
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &589379215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10433,7 +10445,7 @@ MonoBehaviour:
   chapterSelectPanel: {fileID: 1361116772}
   newContinuePanel: {fileID: 338516638}
   selectedCharacter: -1
-  selectedChapter: 1
+  storyFollow: 4
 --- !u!1 &802574662
 GameObject:
   m_ObjectHideFlags: 0
@@ -11511,19 +11523,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909444269}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 4
+  myAction: 2
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &909444272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13636,6 +13649,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: 85
+  storyFollow: 4
 --- !u!1 &1071031771
 GameObject:
   m_ObjectHideFlags: 0
@@ -16153,6 +16167,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &1271459947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19537,19 +19552,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511635723}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 3
+  myAction: 2
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &1511635726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19925,19 +19941,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533909977}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
-  requirements: 0
+  type: 4
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 13
+  myAction: 1
+  requirements: 13
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 7
 --- !u!114 &1533909980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20233,14 +20250,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 4
-  controller: {fileID: 0}
+  type: 5
+  controller: {fileID: 789368541}
   loadingCanvas: {fileID: 1970607546}
-  specialNumber: 1
+  specialNumber: 5
   myAction: 2
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &1555108908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24179,6 +24197,7 @@ MonoBehaviour:
   requirements: 0
   enterLocation: -170
   exitLocation: -185
+  storyFollow: 4
 --- !u!1 &1841936566
 GameObject:
   m_ObjectHideFlags: 0
@@ -26091,19 +26110,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2003607544}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 1
+  myAction: 2
   requirements: 0
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 4
 --- !u!114 &2003607547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27371,19 +27391,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112685209}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b9332168dc6d3408436db2f65f3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
-  controller: {fileID: 0}
-  loadingCanvas: {fileID: 0}
-  specialNumber: -1
-  myAction: 0
-  requirements: 0
+  type: 4
+  controller: {fileID: 789368541}
+  loadingCanvas: {fileID: 1970607546}
+  specialNumber: 31
+  myAction: 1
+  requirements: 31
   enterLocation: 1.2
   exitLocation: -1.2
+  storyFollow: 9
 --- !u!114 &2112685212
 MonoBehaviour:
   m_ObjectHideFlags: 0

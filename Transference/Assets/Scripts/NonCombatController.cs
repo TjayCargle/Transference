@@ -35,8 +35,9 @@ public class NonCombatController : MonoBehaviour
     public bool loading = false;
     public GameObject chapterSelectPanel;
     public GameObject newContinuePanel;
-    public int selectedCharacter = -1;
-    public int selectedChapter = 1;
+    public StorySection selectedCharacter = StorySection.none;
+    public int storyFollow = 4;
+    //    public int selectedChapter = 1;
     // Use this for initialization
     void Start()
     {
@@ -97,12 +98,12 @@ public class NonCombatController : MonoBehaviour
             cameraCanvas.gameObject.SetActive(false);
         }
 
-        if(chapterSelectPanel)
+        if (chapterSelectPanel)
         {
             chapterSelectPanel.SetActive(false);
         }
 
-        if(newContinuePanel)
+        if (newContinuePanel)
         {
             newContinuePanel.SetActive(false);
 
@@ -170,7 +171,7 @@ public class NonCombatController : MonoBehaviour
     }
     public void OpenNewContinue()
     {
-     
+
         if (newContinuePanel)
         {
             newContinuePanel.SetActive(true);
@@ -184,7 +185,7 @@ public class NonCombatController : MonoBehaviour
 
     public void SetMusic()
     {
-    
+
         if (musicCanvas)
         {
             musicCanvas.gameObject.SetActive(true);
@@ -214,11 +215,11 @@ public class NonCombatController : MonoBehaviour
 
     public void HitButton()
     {
-        if(!loading)
+        if (!loading)
         {
 
-        if (selectedButton)
-        {
+            if (selectedButton)
+            {
 
                 switch (selectedButton.type)
                 {
@@ -286,20 +287,39 @@ public class NonCombatController : MonoBehaviour
                             selectedButton.executeAction();
                         }
 
-                    break;
+                        break;
 
-                case 5:
+                    case 5:
                         {
 
-                            loading = true;
-                    selectedButton.playZeffron();
+                            //        loading = true;
+                            //  selectedButton.playZeffron();
                         }
-                    break;
-                case 6:
-                    SetUnPlay();
-                    break;
+                        break;
+                    case 6:
+                        SetUnPlay();
+                        break;
+
+                    default:
+                        {
+                            selectedButton.executeAction();
+
+                        }
+                        break;
+                }
             }
-        }
+
+            NonCombatButton[] buttons = GameObject.FindObjectsOfType<NonCombatButton>();
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                buttons[i].enabled = true;
+                buttons[i].CheckRequirements();
+                if (buttons[i].type == 5)
+                {
+                    buttons[i].storyFollow = storyFollow;
+                }
+            }
+
         }
     }
     // Update is called once per frame
@@ -407,7 +427,7 @@ public class NonCombatController : MonoBehaviour
                     //}
                 }
             }
-            if(Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
             {
                 ctrlCnvs.gameObject.SetActive(true);
 

@@ -678,17 +678,6 @@ public enum NonCombatButtonAction
     continueGame
 }
 
-public enum NonCombatButtonRequirements
-{
-    none,
-    jaxSave1,
-    jaxSave2,
-    jaxSave3,
-    jaxSave4,
-    jaxSave5,
-
-}
-
 public enum EmotionType
 {
     normal,
@@ -822,30 +811,43 @@ public enum tutorialStep
 
 public enum StorySection
 {
-    Jax1,
-    Jax2,
-    Jax3,
-    Jax4,
-    Zeff1,
-    Zeff2,
-    Zeff3,
-    Zeff4,
-    Pryina1,
-    Pryina2,
-    Pryina3,
-    Pryina4,
-    Flara1,
-    Flara2,
-    Flara3,
-    Flara4,
-    Sapphire1,
-    Sapphire2,
-    Sapphire3,
-    Sapphire4,
-    Lukon1,
-    Lukon2,
-    Lukon3,
-    Lukon4
+    none,
+    JaxSaveSlot1,
+    JaxSaveSlot2,
+    JaxSaveSlot3,
+    JaxSaveSlot4,
+    JaxSaveSlot5,
+    JaxSaveSlotPrologue,
+    ZeffSaveSlot1,
+    ZeffSaveSlot2,
+    ZeffSaveSlot3,
+    ZeffSaveSlot4,
+    ZeffSaveSlot5,
+    ZeffSaveSlotPrologue,
+    PryinaSaveSlot1,
+    PryinaSaveSlot2,
+    PryinaSaveSlot3,
+    PryinaSaveSlot4,
+    PryinaSaveSlot5,
+    PyrinaPrologue,
+    FlaraSaveSlot1,
+    FlaraSaveSlot2,
+    FlaraSaveSlot3,
+    FlaraSaveSlot4,
+    FlaraSaveSlot5,
+    FlaraSaveSlotPrologue,
+    SapphireSaveSlot1,
+    SapphireSaveSlot2,
+    SapphireSaveSlot3,
+    SapphireSaveSlot4,
+    SapphireSaveSlot5,
+    SapphireSaveSlotPrologue,
+    LukonSaveSlot1,
+    LukonSaveSlot2,
+    LukonSaveSlot3,
+    LukonSaveSlot4,
+    LukonSaveSlot5,
+    LukonSaveSlotPrologue
 }
 
 public enum currentMenu
@@ -962,7 +964,8 @@ public enum SceneEvent
     blackout,
     dim,
     moveToTarget,
-    clear
+    clear,
+    saveData
 }
 public struct SceneEventContainer
 {
@@ -1189,40 +1192,88 @@ public class Common : ScriptableObject
     public static int MaxLevel = 99;
 
     public static string JaxSaveSlot1 = "JaxSaveSlot1";
-    public static string JaxSaveSlot2 = "JaxSaveSlot2";
-    public static string JaxSaveSlot3 = "JaxSaveSlot3";
-    public static string JaxSaveSlot4 = "JaxSaveSlot4";
-    public static string JaxSaveSlot5 = "JaxSaveSlot5";
 
-    public static string ZeffSaveSlot1 = "ZeffSaveSlot1";
-    public static string ZeffSaveSlot2 = "ZeffSaveSlot2";
-    public static string ZeffSaveSlot3 = "ZeffSaveSlot3";
-    public static string ZeffSaveSlot4 = "ZeffSaveSlot4";
-    public static string ZeffSaveSlot5 = "ZeffSaveSlot5";
 
-    public static string FlaraSaveSlot1 = "FlaraSaveSlot1";
-    public static string FlaraSaveSlot2 = "FlaraSaveSlot2";
-    public static string FlaraSaveSlot3 = "FlaraSaveSlot3";
-    public static string FlaraSaveSlot4 = "FlaraSaveSlot4";
-    public static string FlaraSaveSlot5 = "FlaraSaveSlot5";
+    public static StorySection currentStory = StorySection.none;
 
-    public static string PyrinSaveSlot1 = "PyrinSaveSlot1";
-    public static string PyrinSaveSlot2 = "PyrinSaveSlot2";
-    public static string PyrinSaveSlot3 = "PyrinSaveSlot3";
-    public static string PyrinSaveSlot4 = "PyrinSaveSlot4";
-    public static string PyrinSaveSlot5 = "PyrinSaveSlot5";
+    public static string GetSaveSlotData(StorySection section)
+    {
+        return section.ToString();
+    }
 
-    public static string SaphSaveSlot1 = "SaphSaveSlot1";
-    public static string SaphSaveSlot2 = "SaphSaveSlot2";
-    public static string SaphSaveSlot3 = "SaphSaveSlot3";
-    public static string SaphSaveSlot4 = "SaphSaveSlot4";
-    public static string SaphSaveSlot5 = "SaphSaveSlot5";
+    public static int GetDefaultSceneEntry(StorySection section)
+    {
+        int returnVal = -1;
+        switch (section)
+        {
+            case StorySection.none:
+                break;
+            case StorySection.JaxSaveSlotPrologue:
+                returnVal = 26;
+                break;
+            case StorySection.JaxSaveSlot1:
+                break;
+            case StorySection.JaxSaveSlot2:
+                break;
+            case StorySection.JaxSaveSlot3:
+                break;
+            case StorySection.JaxSaveSlot4:
+                break;
+            case StorySection.ZeffSaveSlotPrologue:
+                break;
+            case StorySection.ZeffSaveSlot1:
+                break;
+            case StorySection.ZeffSaveSlot2:
+                break;
+            case StorySection.ZeffSaveSlot3:
+                break;
+            case StorySection.ZeffSaveSlot4:
+                break;
+            case StorySection.PyrinaPrologue:
+                break;
+            case StorySection.PryinaSaveSlot1:
+                break;
+            case StorySection.PryinaSaveSlot2:
+                break;
+            case StorySection.PryinaSaveSlot3:
+                break;
+            case StorySection.PryinaSaveSlot4:
+                break;
+            case StorySection.FlaraSaveSlotPrologue:
+                break;
+            case StorySection.FlaraSaveSlot1:
+                break;
+            case StorySection.FlaraSaveSlot2:
+                break;
+            case StorySection.FlaraSaveSlot3:
+                break;
+            case StorySection.FlaraSaveSlot4:
+                break;
+            case StorySection.SapphireSaveSlotPrologue:
+                break;
+            case StorySection.SapphireSaveSlot1:
+                break;
+            case StorySection.SapphireSaveSlot2:
+                break;
+            case StorySection.SapphireSaveSlot3:
+                break;
+            case StorySection.SapphireSaveSlot4:
+                break;
+            case StorySection.LukonSaveSlotPrologue:
+                break;
+            case StorySection.LukonSaveSlot1:
+                break;
+            case StorySection.LukonSaveSlot2:
+                break;
+            case StorySection.LukonSaveSlot3:
+                break;
+            case StorySection.LukonSaveSlot4:
+                break;
+        }
 
-    public static string LukonSaveSlot1 = "LukonSaveSlot1";
-    public static string LukonSaveSlot2 = "LukonSaveSlot2";
-    public static string LukonSaveSlot3 = "LukonSaveSlot3";
-    public static string LukonSaveSlot4 = "LukonSaveSlot4";
-    public static string LukonSaveSlot5 = "LukonSaveSlot5";
+        return returnVal;
+    }
+
     public static ManagerScript GetManager()
     {
         if (manager == null)

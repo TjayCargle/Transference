@@ -4072,13 +4072,11 @@ public class ManagerScript : EventRunner
             if (currentScene.eventIndexs.Contains(index))
             {
                 SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
-                bool found = false;
                 for (int i = 0; i < currentScene.sceneEvents.Count; i++)
                 {
                     sceneEvent = currentScene.sceneEvents[i];
                     if (sceneEvent.intercept == index)
                     {
-                        found = true;
                         ExecuteIntercept(sceneEvent);
                     }
                 }
@@ -4163,6 +4161,13 @@ public class ManagerScript : EventRunner
                     }
                 }
                 break;
+
+            case SceneEvent.saveData:
+                {
+                    StorySection saveData = (StorySection)sceneEvent.data;
+                    SaveChapterData(saveData.ToString());
+                }
+                break;
         }
 
 
@@ -4189,7 +4194,15 @@ public class ManagerScript : EventRunner
         myCamera.PlayPreviousSoundTrack();
 
         talkPanel.gameObject.SetActive(false);
-
+        SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
+        for (int i = 0; i < currentScene.sceneEvents.Count; i++)
+        {
+            sceneEvent = currentScene.sceneEvents[i];
+            if (sceneEvent.scene == SceneEvent.saveData )
+            {
+                ExecuteIntercept(sceneEvent);
+            }
+        }
         if (eventManager.activeEvents > 0)
         {
 
@@ -6191,7 +6204,7 @@ public class ManagerScript : EventRunner
 
     }
 
-    public void SaveGame()
+    public void SaveGame(string saveSlot = "JaxSaveSlot1")
     {
 
         string saveString = "";
@@ -6226,11 +6239,29 @@ public class ManagerScript : EventRunner
             }
         }
 
+
         //Debug.Log(saveString);
-        PlayerPrefs.SetString(Common.JaxSaveSlot1, saveString);
+        PlayerPrefs.SetString(saveSlot, saveString);
         CheckTutorialPrompt(30);
     }
 
+    public void SaveChapterData(string saveSlot)
+    {
+        string saveString = "";
+        LivingObject[] liveObjects = GameObject.FindObjectsOfType<LivingObject>();
+        saveString += "," + liveObjects.Length;
+        for (int i = 0; i < liveObjects.Length; i++)
+        {
+            if (liveObjects[i].DEAD == false)
+            {
+                saveString += "," + database.GenerateSaveString(liveObjects[i]);
+            }
+        }
+
+
+        //Debug.Log(saveString);
+        PlayerPrefs.SetString(saveSlot, saveString);
+    }
 
     public void LoadGameAndScene()
     {
