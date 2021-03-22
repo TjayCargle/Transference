@@ -29,8 +29,8 @@ public class MenuManager : MonoBehaviour
 
     public Canvas hackingCanvas;
     public Canvas opportunityCanvas;
-
-
+    public GameObject animationCanvas;
+    public CTTDemoManager cTT;
     public TextMeshProUGUI DESC
     {
         get { return descText; }
@@ -72,6 +72,13 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void ToggleCanvas(GameObject someObject)
+    {
+        if(someObject != null)
+        {
+            someObject.SetActive(!someObject.activeInHierarchy);
+        }
+    }
 
     public void ShowHiddenCanvas()
     {

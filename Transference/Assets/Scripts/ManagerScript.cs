@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 public class ManagerScript : EventRunner
 {
 
@@ -4168,6 +4170,124 @@ public class ManagerScript : EventRunner
                     SaveChapterData(saveData.ToString());
                 }
                 break;
+
+            case SceneEvent.endChapter:
+                {
+                    Debug.Log("end chapt");
+                    if (menuManager)
+                    {
+                        if (menuManager.cTT)
+                        {
+                            Debug.Log(Common.currentStory);
+                            switch (Common.currentStory)
+                            {
+                                case StorySection.none:
+                                    break;
+                                case StorySection.JaxSaveSlot1:
+                                    break;
+                                case StorySection.JaxSaveSlot2:
+                                    break;
+                                case StorySection.JaxSaveSlot3:
+                                    break;
+                                case StorySection.JaxSaveSlot4:
+                                    break;
+                                case StorySection.JaxSaveSlot5:
+                                    break;
+                                case StorySection.JaxSaveSlotPrologue:
+                                    menuManager.cTT.SetColors(Color.red, Common.pink);
+                                    menuManager.cTT.nameText.text = "Jax Drix";
+                                    menuManager.cTT.chapterText.text = "Prologue";
+                                    menuManager.cTT.beginEndText.text = "End";
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                    LeanTween.moveX(gameObject, 0, 125 * Time.deltaTime).setOnComplete(() =>
+                                    {
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.cTT.chapterText.text = "Chapter 1";
+                                        menuManager.cTT.beginEndText.text = "Unlocked!";
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                    });
+                                    LeanTween.moveX(gameObject, 0, 375 * Time.deltaTime).setOnComplete(() =>
+                                    {
+                                        menuManager.cTT.SetColors(Color.green, Common.lime);
+
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.cTT.nameText.text = "Zeffron Drix";
+                                        menuManager.cTT.chapterText.text = "Story";
+                                        menuManager.cTT.beginEndText.text = "Unlocked!";
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                    });
+                                    LeanTween.moveX(gameObject, 0, 600 * Time.deltaTime).setOnComplete(() =>
+                                    {
+                                        SceneManager.LoadSceneAsync("Start");
+                                    });
+
+                                    break;
+                                case StorySection.ZeffSaveSlot1:
+                                    break;
+                                case StorySection.ZeffSaveSlot2:
+                                    break;
+                                case StorySection.ZeffSaveSlot3:
+                                    break;
+                                case StorySection.ZeffSaveSlot4:
+                                    break;
+                                case StorySection.ZeffSaveSlot5:
+                                    break;
+                                case StorySection.ZeffSaveSlotPrologue:
+                                    SaveGame(StorySection.ZeffSaveSlot1.ToString());
+                                    break;
+                                case StorySection.PryinaSaveSlot1:
+                                    break;
+                                case StorySection.PryinaSaveSlot2:
+                                    break;
+                                case StorySection.PryinaSaveSlot3:
+                                    break;
+                                case StorySection.PryinaSaveSlot4:
+                                    break;
+                                case StorySection.PryinaSaveSlot5:
+                                    break;
+                                case StorySection.PyrinaPrologue:
+                                    break;
+                                case StorySection.FlaraSaveSlot1:
+                                    break;
+                                case StorySection.FlaraSaveSlot2:
+                                    break;
+                                case StorySection.FlaraSaveSlot3:
+                                    break;
+                                case StorySection.FlaraSaveSlot4:
+                                    break;
+                                case StorySection.FlaraSaveSlot5:
+                                    break;
+                                case StorySection.FlaraSaveSlotPrologue:
+                                    break;
+                                case StorySection.SapphireSaveSlot1:
+                                    break;
+                                case StorySection.SapphireSaveSlot2:
+                                    break;
+                                case StorySection.SapphireSaveSlot3:
+                                    break;
+                                case StorySection.SapphireSaveSlot4:
+                                    break;
+                                case StorySection.SapphireSaveSlot5:
+                                    break;
+                                case StorySection.SapphireSaveSlotPrologue:
+                                    break;
+                                case StorySection.LukonSaveSlot1:
+                                    break;
+                                case StorySection.LukonSaveSlot2:
+                                    break;
+                                case StorySection.LukonSaveSlot3:
+                                    break;
+                                case StorySection.LukonSaveSlot4:
+                                    break;
+                                case StorySection.LukonSaveSlot5:
+                                    break;
+                                case StorySection.LukonSaveSlotPrologue:
+                                    break;
+                            }
+                        }
+                    }
+                }
+                break;
         }
 
 
@@ -4194,33 +4314,44 @@ public class ManagerScript : EventRunner
         myCamera.PlayPreviousSoundTrack();
 
         talkPanel.gameObject.SetActive(false);
+        bool resetState = true;
         SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
         for (int i = 0; i < currentScene.sceneEvents.Count; i++)
         {
-            sceneEvent = currentScene.sceneEvents[i];
-            if (sceneEvent.scene == SceneEvent.saveData )
+            if (i < currentScene.index)
             {
-                ExecuteIntercept(sceneEvent);
+
+                sceneEvent = currentScene.sceneEvents[i];
+                if (sceneEvent.scene == SceneEvent.saveData || sceneEvent.scene == SceneEvent.endChapter)
+                {
+                    if (sceneEvent.scene == SceneEvent.endChapter)
+                        resetState = false;
+                    ExecuteIntercept(sceneEvent);
+                }
             }
         }
-        if (eventManager.activeEvents > 0)
+        if (resetState == true)
         {
 
-            if (prevState == State.FreeCamera)
+            if (eventManager.activeEvents > 0)
             {
-                enterStateTransition();
+
+                if (prevState == State.FreeCamera)
+                {
+                    enterStateTransition();
+                }
+                else
+                {
+                    returnState();
+                }
             }
             else
             {
                 returnState();
+                showCurrentState();
             }
-        }
-        else
-        {
-            returnState();
-            showCurrentState();
-        }
 
+        }
 
         currentScene.isRunning = false;
     }
@@ -6829,11 +6960,11 @@ public class ManagerScript : EventRunner
                 {
                     turnOrder[i].Shield();
                 }
-                turnOrder[i].PrepareBarrier(database.GetArmor(211,turnOrder[i]));
+                turnOrder[i].PrepareBarrier(database.GetArmor(211, turnOrder[i]));
             }
             else if (turnOrder[i].ACTIONS == 0)
             {
-            
+
                 turnOrder[i].PrepareBarrier(database.GetArmor(211, turnOrder[i]));
             }
         }
@@ -6932,7 +7063,7 @@ public class ManagerScript : EventRunner
                             CreateEvent(this, hazard, "Hazard Event", HazardEvent, null, -1, SetHazardEvent);
                         }
                     }
-                
+
                     UpdateMarkedArea();
                     nextRoundCalled = false;
                 }

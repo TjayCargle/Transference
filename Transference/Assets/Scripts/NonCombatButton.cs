@@ -18,7 +18,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public float enterLocation = 1.2f;
     public float exitLocation = -1.2f;
     public int storyFollow = 4;
-
+    public int chapterSelect = -1;
 
     private void Start()
     {
@@ -123,6 +123,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 case NonCombatButtonAction.none:
                     break;
                 case NonCombatButtonAction.openChapterSelect:
+
                     controller.selectedCharacter = specialNumber;
                     switch (specialNumber)
                     {
@@ -173,17 +174,28 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
                     break;
                 case NonCombatButtonAction.setChapter:
-                    Debug.Log("wait what");
+                    controller.chapterFollow = chapterSelect;
                     controller.OpenNewContinue();
                     break;
                 case NonCombatButtonAction.newGame:
                     {
+                        StorySection currentStory = controller.selectedCharacter;
+                        if (controller.chapterFollow == 0)
+                            currentStory += 5;
+                        else if (controller.chapterFollow > 0)
+                            currentStory += controller.chapterFollow - 1;
+                        Common.currentStory = currentStory;
                         PlayNew();
                     }
                     break;
                 case NonCombatButtonAction.continueGame:
                     {
-                        PlayContinue();
+                        StorySection currentStory = controller.selectedCharacter;
+                        if (controller.chapterFollow == 0)
+                            currentStory += 5;
+                        else if (controller.chapterFollow > 0)
+                            currentStory += controller.chapterFollow - 1;
+                        Common.currentStory = currentStory; PlayContinue();
                     }
                     break;
             }
@@ -197,8 +209,74 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         PlayerPrefs.Save();
         int sceneEntry = Common.GetDefaultSceneEntry(controller.selectedCharacter);
         controller.loading = true;
+        if(loadingCanvas != null)
+        {
+        loadingCanvas.SetActive(true);
+        }
         PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
-        SceneManager.LoadSceneAsync("DemoMap5");
+        if(controller.cTT != null)
+        {
+            CTTDemoManager cTTD = controller.cTT;
+            if (cTTD.nameText != null)
+            {
+                switch(controller.storyFollow)
+                {
+                    case 4:
+                        cTTD.nameText.text = "Jax Drix";
+                        cTTD.SetColors(Color.red, Common.pink);
+                        break;
+
+                    case 5:
+                        cTTD.nameText.text = "Zeffron Drix";
+                        break;
+
+                    case 6:
+                        cTTD.nameText.text = "Pyrina Phixie";
+                        break;
+
+                    case 7:
+                        cTTD.nameText.text = "Flara Phixie";
+                        break;
+
+
+                    case 8:
+                        cTTD.nameText.text = "Sapphire Witchcoven";
+                        break;
+
+                    case 9:
+                        cTTD.nameText.text = "Lukon Hedgewolf";
+                        break;
+
+                   
+
+                }
+            }
+
+            if (cTTD.chapterText != null)
+            {
+                string display = "Chapter ";
+                if (controller.chapterFollow == 0)
+                    display = "Prologue";
+                else if (controller.chapterFollow > 0)
+                    display += "" + controller.chapterFollow;
+
+                cTTD.chapterText.text = display;
+            }
+
+            if (cTTD.beginEndText != null)
+            {
+                cTTD.beginEndText.text = "begin!";
+            }
+        }
+        controller.TogglePanel(controller.animationCanvas);
+        LeanTween.moveX(gameObject, 0, 250 * Time.deltaTime).setOnComplete(() =>
+        {
+
+            controller.TogglePanel(controller.animationCanvas);
+            SceneManager.LoadSceneAsync("DemoMap5");
+        });
+
+
     }
 
     public void PlayContinue()
@@ -245,10 +323,15 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public bool CheckRequirements()
     {
         bool turnOff = false;
+        //        if(myAction == NonCombatButtonAction.setChapter && specialNumber != StorySection.none)
 
-        if(myAction == NonCombatButtonAction.setChapter)
+        if (myAction == NonCombatButtonAction.setChapter)
         {
-            requirements = (StorySection)((int)controller.selectedCharacter + (int)specialNumber);
+            if (specialNumber != StorySection.JaxSaveSlot5)
+            {
+                requirements = (StorySection)((int)controller.selectedCharacter + (int)specialNumber);
+            }
+
         }
 
         if (requirements != StorySection.none)
@@ -291,10 +374,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     GetComponentInChildren<Text>().color = Color.white;
                 }
             }
-            else
-            {
 
-            }
         }
 
         return turnOff;

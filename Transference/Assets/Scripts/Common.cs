@@ -965,7 +965,8 @@ public enum SceneEvent
     dim,
     moveToTarget,
     clear,
-    saveData
+    saveData,
+    endChapter
 }
 public struct SceneEventContainer
 {
@@ -1220,8 +1221,10 @@ public class Common : ScriptableObject
             case StorySection.JaxSaveSlot4:
                 break;
             case StorySection.ZeffSaveSlotPrologue:
+                returnVal = 27;
                 break;
             case StorySection.ZeffSaveSlot1:
+                returnVal = 17;
                 break;
             case StorySection.ZeffSaveSlot2:
                 break;
@@ -2872,7 +2875,7 @@ public class Common : ScriptableObject
     public static string GetCharacterText(GridObject obj)
     {
         string returnedString = "";
-        if(obj == null)
+        if (obj == null)
         {
             return returnedString;
         }
@@ -2880,7 +2883,7 @@ public class Common : ScriptableObject
         {
             case Faction.ally:
                 {
-                    if(obj.id == 0)
+                    if (obj.id == 0)
                     {
                         returnedString = "Jax was a gifted kid and easily able to pickup magic from a young age. However, when he was young his parents died after his village was caught up in a battle between the fairies and the phixies. ";
                     }
@@ -3074,7 +3077,7 @@ public class Common : ScriptableObject
             case 31:
                 {
                     returnedString = "Desperation; When a unit ends up with negative actions, they take <color=yellow>non-lethal </color>desperation damage. Desperation damage is 10 times the amount of negative actions.\nBe careful, a unit that starts their turn with zero or less actions, they gain <color=yellow>a resistance barrier and shields </color> equal to how many actions were negative.\nUse this to take down mighty foes!";
-                } 
+                }
                 break;
             default:
                 break;
@@ -3590,7 +3593,7 @@ public class Common : ScriptableObject
         {
             detail.glyphIds.Clear();
             detail.glyphIds.AddRange(data.hazardIds);
-            
+
             detail.EnemyIds.Clear();
             detail.EnemyIds.AddRange(data.enemyIds);
         }
@@ -4491,7 +4494,11 @@ public class Common : ScriptableObject
             dataIIndex++;
 
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            newAuto.LEVEL = curInx;
+            if (newAuto != null)
+            {
+                newAuto.LEVEL = curInx;
+
+            }
             dataIIndex++;
 
             int augCount = 0;
@@ -4502,14 +4509,20 @@ public class Common : ScriptableObject
             {
                 Augment someAugment;
                 System.Enum.TryParse(dataString[dataIIndex], out someAugment);
+            if (newAuto != null)
                 newAuto.AUGMENTS.Add(someAugment);
                 dataIIndex++;
+            if (newAuto != null)
                 newAuto.CHANCE += 20.0f;
             }
 
-            for (int j = 1; j < newAuto.LEVEL; j++)
+            if (newAuto != null)
             {
-                newAuto.LevelUP();
+
+                for (int j = 1; j < newAuto.LEVEL; j++)
+                {
+                    newAuto.LevelUP();
+                }
             }
 
         }

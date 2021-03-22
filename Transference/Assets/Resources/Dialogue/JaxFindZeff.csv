@@ -4,20 +4,15 @@ a,0,I'm starting to wonder if I'm even in the right place.
 a,0,./reveal:1/..Is that who I think it is?
 a,0,Zeffron!?/move:-30/
 a,1,Jax?,1
-a,1,What the hell is going on here?,3
-a,0,It /move:-60/really is/move:-90/; ah never mind./move:0/
-a,0,Just be quiet before enemies spot us.
-a,1, You're the one shouting idiot.
-a,1, So do you know whats going on here?,2
-a,1, Are those Scorpies? And are they attacking that Glyph?,3
-a,0, Doesn't matter! They'll come after us next if we don't deal with them.,3
-a,1, Nice seeing you again too.,4
+-
 -
 i,0,moveToTarget,3
 i,0,clear,0
+i,1,moveToTarget,3
 i,4,moveToTarget,44
 i,6,moveToTarget,3
 i,8,moveToTarget,44
-i,11,moveToTarget,3
-i,12,moveToTarget,44
-i,12,saveData,12
+i,4,moveToTarget,3
+i,4,moveToTarget,44
+i,4,saveData,12
+i,4,endChapter,0

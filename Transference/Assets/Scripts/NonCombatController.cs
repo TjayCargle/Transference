@@ -37,6 +37,10 @@ public class NonCombatController : MonoBehaviour
     public GameObject newContinuePanel;
     public StorySection selectedCharacter = StorySection.none;
     public int storyFollow = 4;
+    public int chapterFollow = -1;
+    public GameObject animationCanvas;
+    public CTTDemoManager cTT;
+    
     //    public int selectedChapter = 1;
     // Use this for initialization
     void Start()
@@ -62,6 +66,14 @@ public class NonCombatController : MonoBehaviour
         if (patchCnvs)
         {
             patchCnvs.gameObject.SetActive(false);
+        }
+    }
+    public void TogglePanel(GameObject panel)
+    {
+        if(panel != null)
+        {
+            panel.gameObject.SetActive(!panel.activeInHierarchy);
+
         }
     }
     public void SetPlay()
