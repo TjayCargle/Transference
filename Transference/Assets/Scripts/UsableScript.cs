@@ -124,14 +124,15 @@ public class UsableScript : ScriptableObject
 
                             manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
                             manager.CreateTextEvent(this, "" + USER.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
+                            if (manager.log)
+                            {
+                                string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(USER.FACTION)) + ">";
+
+                                manager.log.Log(coloroption + USER.NAME + "</color> " + NAME + " leveled up!");
+                            }
                         }
                     }
-                    if (manager.log)
-                    {
-                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(USER.FACTION)) + ">";
-
-                        manager.log.Log(coloroption + USER.NAME + "</color> " + NAME + " leveled up!");
-                    }
+                 
                 }
             }
             return true;

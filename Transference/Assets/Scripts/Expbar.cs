@@ -60,7 +60,7 @@ public class Expbar : MonoBehaviour
                             }
                             if (manager)
                             {
-                                manager.CreateTextEvent(this, currentUser.NAME + " leveled up!", "level up event", manager.CheckText, manager.TextStart);
+                              //  manager.CreateTextEvent(this, currentUser.NAME + " leveled up!", "level up event", manager.CheckText, manager.TextStart);
                             }
                             //StartUpdating(false);
                         }

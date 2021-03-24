@@ -41,7 +41,11 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
             if (type == 4 || type == 5)
             {
-                if (controller.currNeoTarget)
+                if (myAction != NonCombatButtonAction.openChapterSelect)
+                {
+                    storyFollow = controller.storyFollow;
+                }
+                    if (controller.currNeoTarget)
                     controller.currNeoTarget.color = Common.blackened;
                 controller.currNeoTarget = controller.neotargets[storyFollow - 4];
                 controller.currNeoTarget.color = Color.white;
@@ -207,13 +211,19 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         PlayerPrefs.SetInt("continue", -1);
         Debug.Log("newGame");
         PlayerPrefs.Save();
-        int sceneEntry = Common.GetDefaultSceneEntry(controller.selectedCharacter);
+        StorySection currentStoryFollowing = controller.selectedCharacter + controller.chapterFollow -1;
+
+        if (controller.chapterFollow == 0)
+            currentStoryFollowing += 6;
+
+        int sceneEntry = Common.GetDefaultSceneEntry(currentStoryFollowing);
         controller.loading = true;
         if(loadingCanvas != null)
         {
         loadingCanvas.SetActive(true);
         }
         PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
+//        Debug.Log("going to" + sceneEntry + " aka: " + currentStoryFollowing);
         if(controller.cTT != null)
         {
             CTTDemoManager cTTD = controller.cTT;
@@ -281,6 +291,10 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void PlayContinue()
     {
+        if (loadingCanvas != null)
+        {
+            loadingCanvas.SetActive(true);
+        }
         PlayerPrefs.SetInt("continue", 1);
         Debug.Log("contune");
         PlayerPrefs.Save();

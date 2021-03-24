@@ -111,6 +111,7 @@ public class ManagerScript : EventRunner
     public bool inTutorialMenu = false;
     public string currentObjectiveString = "Explore the mansion";
     public TextObjHolder[] objectivesAndNotes;
+    public CutsceneManager cutscene;
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -145,6 +146,7 @@ public class ManagerScript : EventRunner
             enemyManager = GetComponent<EnemyManager>();
             hazardManager = GetComponent<HazardManager>();
             objManager = GetComponent<ObjManager>();
+            cutscene = GetComponent<CutsceneManager>();
             displays = GameObject.FindObjectsOfType<ConditionalDisplay>();
             if (potential == null)
             {
@@ -318,7 +320,7 @@ public class ManagerScript : EventRunner
             database.Setup();
             if (PlayerPrefs.HasKey("defaultSceneEntry"))
             {
-                defaultSceneEntry = 26;// PlayerPrefs.GetInt("defaultSceneEntry");
+                defaultSceneEntry = PlayerPrefs.GetInt("defaultSceneEntry");
             }
             Common.summonedJax = false;
             Common.summonedZeffron = false;
@@ -326,7 +328,7 @@ public class ManagerScript : EventRunner
             if (PlayerPrefs.HasKey("continue"))
             {
                 int newOrContune = PlayerPrefs.GetInt("continue");
-                Debug.Log("nc= " + newOrContune);
+
                 if (newOrContune == 1)
                 {
                     LoadGameAndScene();
@@ -2584,6 +2586,21 @@ public class ManagerScript : EventRunner
     }
     public State GetState()
     {
+        if (currentState == State.RevenantPhase)
+            return State.EnemyTurn;
+
+        if (currentState == State.VamprettiPhase)
+            return State.EnemyTurn;
+
+        if (currentState == State.AntileonPhase)
+            return State.EnemyTurn;
+
+        if (currentState == State.ThiefPhase)
+            return State.EnemyTurn;
+
+        if (currentState == State.GeniePhase)
+            return State.EnemyTurn;
+
         if (currentState == State.FairyPhase)
             return State.EnemyTurn;
 
@@ -4050,7 +4067,7 @@ public class ManagerScript : EventRunner
 
     }
 
-    private void UpdateScene()
+    public void UpdateScene()
     {
         if (currentScene.speakerNames.Count > 0)
         {
@@ -4315,6 +4332,9 @@ public class ManagerScript : EventRunner
 
         talkPanel.gameObject.SetActive(false);
         bool resetState = true;
+        if(currentScene.sceneEvents.Count > 0)
+        {
+
         SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
         for (int i = 0; i < currentScene.sceneEvents.Count; i++)
         {
@@ -4329,6 +4349,7 @@ public class ManagerScript : EventRunner
                     ExecuteIntercept(sceneEvent);
                 }
             }
+        }
         }
         if (resetState == true)
         {
@@ -4357,6 +4378,13 @@ public class ManagerScript : EventRunner
     }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
+        if(cutscene != null)
+        {
+            ( currentState, currentObjectiveString) = cutscene.CheckForMapChangeEvent(checkMap, this, defaultSceneEntry, talkPanel, currentScene, currentObjectiveString);
+        }
+        else
+        {
+
         switch (defaultSceneEntry)
         {
             case 4:
@@ -4674,6 +4702,7 @@ public class ManagerScript : EventRunner
                 }
                 break;
         }
+        }
     }
 
     public void insertNewCharMapEvent(MapDetail checkMap)
@@ -4811,11 +4840,11 @@ public class ManagerScript : EventRunner
                 //ComfirmMoveGridObject(liveZeff, 3);
 
             }
-            else if (defaultSceneEntry == 4)
+            else if (defaultSceneEntry == 27)
             {
                 GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                 zeffron.SetActive(true);
-                zeffron.transform.position = new Vector3(0.0f, 0.5f, 2.0f);
+                zeffron.transform.position = new Vector3(8.0f, 0.5f, 2.0f);
                 ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
                 asetup.characterId = 1;
                 LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
@@ -4876,70 +4905,7 @@ public class ManagerScript : EventRunner
         CreateEvent(this, null, "return state event", BufferedStateChange);
         turnImgManger.LoadTurnImg(turnOrder);
         turnImgManger.UpdateSelection(-1);
-        //Debug.Log("load");
-        //if (null == tileMap || tileMap.Count == 0)
-        //{
-        //    tileMap = tileManager.getTiles(MapWidth * MapHeight);
-        //}
-        //else
-        //{
-        //    return;
-        //}
-        //int tileIndex = 0;
-        //for (int i = 0; i < MapWidth; i++)
-        //{
-        //    for (int j = 0; j < MapHeight; j++)
-        //    {
-
-        //        int mapIndex = TwoToOneD(j, MapWidth, i);
-        //        TileScript tile = tileMap[tileIndex];
-        //        tile.listindex = mapIndex;
-        //        tile.transform.position = new Vector3(i, 0, j);
-        //        tile.transform.parent = tileParent.transform;
-        //        tile.name = "Tile " + mapIndex;
-        //        tileIndex++;
-        //    }
-        //}
-        //tileMap.Sort();
-        //LivingObject[] livingObjects = GameObject.FindObjectsOfType<LivingObject>();
-        //for (int i = livingObjects.Length - 1; i >= 0; i--)
-        //{
-
-        //    if (livingObjects[i].GetComponent<EnemyScript>() || livingObjects[i].GetComponent<HazardScript>())
-        //    {
-        //        continue;
-        //    }
-        //    turnOrder.Add(livingObjects[i]);
-        //}
-        //if (turnOrder.Count > 0)
-        //    currentObject = turnOrder[0];
-
-        //tempGridObj.currentTile = GetTileAtIndex(GetTileIndex(Vector3.zero));
-        //GridObject[] objs = GameObject.FindObjectsOfType<GridObject>();
-        //attackableTiles = new List<List<TileScript>>();
-        //ShowWhite();
-        //for (int i = 0; i < objs.Length; i++)
-        //{
-        //    if (objs[i].gameObject == tempObject)
-        //    {
-        //        continue;
-        //    }
-        //    gridObjects.Add(objs[i]);
-        //    objs[i].currentTile = GetTile(objs[i]);
-        //    objs[i].currentTile.isOccupied = true;
-
-        //}
-        //currentState = State.FreeCamera;
-
-        //ShowGridObjectAffectArea(tempGridObj, true);
-
-        //ShowSelectedTile(tempGridObj);
-        //for (int i = 0; i < turnOrder.Count; i++)
-        //{
-        //    ShowSelectedTile(turnOrder[i], Common.orange);
-
-        //}
-        //myCamera.currentTile = tileMap[0];
+     
     }
 
     public void LoadDScene(int amapIndex, int startindex = -1)
@@ -6072,7 +6038,7 @@ public class ManagerScript : EventRunner
                                         rand = Random.Range(0, 2);
                                         if (rand == 0)
                                         {
-                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1);
+                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
                                         }
                                     }
                                 }
@@ -6091,7 +6057,7 @@ public class ManagerScript : EventRunner
                                         rand = Random.Range(0, 2);
                                         if (rand == 0)
                                         {
-                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1);
+                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
                                         }
                                     }
                                 }
@@ -6109,7 +6075,7 @@ public class ManagerScript : EventRunner
                                     rand = Random.Range(0, 2);
                                     if (rand == 0)
                                     {
-                                        anEnemy.INVENTORY.WEAPONS[k].GrantXP(1);
+                                        anEnemy.INVENTORY.WEAPONS[k].GrantXP(1, false);
                                     }
                                 }
 
@@ -6872,19 +6838,50 @@ public class ManagerScript : EventRunner
                     Common.enemiesCompletedPhase = true;
                 }
                 break;
+            case State.RevenantPhase:
+                currentState = State.VamprettiPhase;
+                prevState = State.VamprettiPhase;
+                menuManager.ShowNone();
+                break;
+
+            case State.VamprettiPhase:
+                currentState = State.AntileonPhase;
+                prevState = State.AntileonPhase;
+                menuManager.ShowNone();
+                break;
+
+            case State.AntileonPhase:
+                currentState = State.ThiefPhase;
+                prevState = State.ThiefPhase;
+                menuManager.ShowNone();
+                break;
+
+            case State.ThiefPhase:
+                currentState = State.GeniePhase;
+                prevState = State.GeniePhase;
+                menuManager.ShowNone();
+                break;
+
+            case State.GeniePhase:
+                currentState = State.FairyPhase;
+                prevState = State.FairyPhase;
+                menuManager.ShowNone();
+                break;
+
             case State.FairyPhase:
                 currentState = State.EnemyTurn;
                 prevState = State.EnemyTurn;
                 menuManager.ShowNone();
                 break;
+
             case State.EnemyTurn:
                 currentState = State.HazardTurn;
                 prevState = State.HazardTurn;
                 menuManager.ShowNone();
                 break;
             default:
-                currentState = State.FairyPhase;
-                prevState = State.FairyPhase;
+                currentState = State.RevenantPhase;
+                prevState = State.RevenantPhase;
                 menuManager.ShowNone();
                 break;
         }
@@ -6915,6 +6912,51 @@ public class ManagerScript : EventRunner
                         }
 
                     }
+                    else if (currentState == State.RevenantPhase)
+                    {
+
+                        if (livingObjects[i].FACTION == Faction.revenant)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                    }
+
+                    else if (currentState == State.VamprettiPhase)
+                    {
+
+                        if (livingObjects[i].FACTION == Faction.vamprretti)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                    }
+
+                    else if (currentState == State.AntileonPhase)
+                    {
+
+                        if (livingObjects[i].FACTION == Faction.antileon)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                    }
+
+                    else if (currentState == State.ThiefPhase)
+                    {
+
+                        if (livingObjects[i].FACTION == Faction.thieves)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                    }
+
+                    else if (currentState == State.GeniePhase)
+                    {
+
+                        if (livingObjects[i].FACTION == Faction.genie)
+                        {
+                            turnOrder.Add(livingObjects[i]);
+                        }
+                    }
+
                     else if (currentState == State.FairyPhase)
                     {
 
@@ -6923,6 +6965,7 @@ public class ManagerScript : EventRunner
                             turnOrder.Add(livingObjects[i]);
                         }
                     }
+
                     else
                     {
                         if (livingObjects[i].FACTION == Faction.ally)

@@ -174,7 +174,7 @@ public class ArmorScript : UsableScript
            
                   
                 manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
-                manager.CreateTextEvent(this, "" + owner.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
+               // manager.CreateTextEvent(this, "" + owner.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
                 
             }
         }

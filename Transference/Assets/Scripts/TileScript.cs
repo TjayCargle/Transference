@@ -80,7 +80,7 @@ public class TileScript : MonoBehaviour, IComparable
                     {
                         if (value != Common.orange)
                         {
-                            myColor = value * 0.25f;
+                            myColor = value * 0.55f;
                             myColor.a = 1;
                         }
                         else

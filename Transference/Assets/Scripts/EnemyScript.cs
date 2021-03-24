@@ -73,7 +73,7 @@ public class EnemyScript : LivingObject
         if (!isSetup)
         {
             base.Setup();
-
+            FACTION = Common.GetEnemyFaction(id);
             manager = GameObject.FindObjectOfType<ManagerScript>();
             //currentPath = new Queue<TileScript>();
             isSetup = true;
@@ -772,7 +772,7 @@ public class EnemyScript : LivingObject
                                     continue;
                                 }
                             }
-                           
+
                         }
                         if (personality == EPType.finisher)
                         {
@@ -1350,13 +1350,17 @@ public class EnemyScript : LivingObject
                 {
                     attackOptions.Add(i);
                 }
-                else if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                else if (possibleAttacks[i].command != null)
                 {
-                    attackOptions.Add(i);
-                }
-                else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
-                {
-                    attackOptions.Add(i);
+
+                 if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                    {
+                        attackOptions.Add(i);
+                    }
+                    else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                    {
+                        attackOptions.Add(i);
+                    }
                 }
             }
 
@@ -1673,7 +1677,7 @@ public class EnemyScript : LivingObject
                     if (specialProfile.commands.Count > 0)
                     {
                         chosenCommand = specialProfile.commands[Random.Range(0, specialProfile.commands.Count)];
-                       // Debug.Log("Boss should: " + chosenCommand);
+                         Debug.Log("Boss should: " + chosenCommand);
                         switch (chosenCommand)
                         {
                             case BossCommand.strike:
@@ -1724,7 +1728,17 @@ public class EnemyScript : LivingObject
                                 }
                                 break;
                             case BossCommand.barrier:
+                                if(ARMOR == DEFAULT_ARMOR)
+                                {
+                                ArmorScript angryArmor = INVENTORY.ARMOR[1];
+                                myManager.CreateEvent(this, angryArmor, "Neo wait action", PrepareBarrier, ItemStart, 0);
 
+                                }
+                                else
+                                {
+                                    Shield();
+
+                                }
                                 break;
                             case BossCommand.item:
                                 {
@@ -1733,8 +1747,9 @@ public class EnemyScript : LivingObject
                                         myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
                                     else
                                     {
-                                        chosenCommand = BossCommand.heal;
-                                        Heal();
+                                        chosenCommand = BossCommand.shield;
+                                        Shield();
+
                                     }
                                 }
                                 break;
@@ -1767,12 +1782,14 @@ public class EnemyScript : LivingObject
                     }
                     else
                     {
+                        Debug.Log("no special commands");
                         waiting = true;
                         myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                     }
                 }
                 else
                 {
+                        Debug.Log("no special profile");
                     waiting = true;
                     myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                 }

@@ -33,7 +33,12 @@ public enum State
     FairyPhase,
     PlayerAct,
     PlayerDead,
-    PlayerAllocate
+    PlayerAllocate,
+    RevenantPhase,
+    VamprettiPhase,
+    AntileonPhase,
+    ThiefPhase,
+    GeniePhase
 
 
 
@@ -894,7 +899,12 @@ public enum Faction
     dropsAuto,
     inflictsAilment,
     inflictsDmg,
-    interactable
+    interactable,
+    genie,
+    vamprretti,
+    revenant,
+    antileon,
+    thieves
 }
 
 public enum Interaction
@@ -1213,6 +1223,7 @@ public class Common : ScriptableObject
                 returnVal = 26;
                 break;
             case StorySection.JaxSaveSlot1:
+                returnVal = 17;
                 break;
             case StorySection.JaxSaveSlot2:
                 break;
@@ -2447,7 +2458,7 @@ public class Common : ScriptableObject
             {
                 someProfile = enemy.specialProfile = ScriptableObject.CreateInstance<BossScript>();
                 someProfile.currentPhase = BossPhase.none;
-                someProfile.healthbars = 3;
+                someProfile.healthbars = 2;
             }
             switch (enemy.specialProfile.currentPhase)
             {
@@ -2502,6 +2513,73 @@ public class Common : ScriptableObject
 
             }
         }
+
+        if (index == 102)
+        {
+            enemy.FACTION = Faction.enemy;
+            BossScript someProfile = enemy.specialProfile;
+            if (someProfile == null)
+            {
+                someProfile = enemy.specialProfile = ScriptableObject.CreateInstance<BossScript>();
+                someProfile.currentPhase = BossPhase.none;
+                someProfile.healthbars = 3;
+            }
+            switch (enemy.specialProfile.currentPhase)
+            {
+                case BossPhase.none:
+                    {
+                        someProfile.currentPhase = BossPhase.inital;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.restore);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.restore);
+                    }
+                    break;
+                case BossPhase.inital:
+                    {
+                        someProfile.currentPhase = BossPhase.angry;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        else
+                            someProfile.commands.Clear();
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.restore);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.barrier);
+                        someProfile.commands.Add(BossCommand.shield);
+                    }
+                    break;
+                case BossPhase.angry:
+                    {
+                        someProfile.currentPhase = BossPhase.desperate;
+                        if (someProfile.commands == null)
+                            someProfile.commands = new List<BossCommand>();
+                        else
+                            someProfile.commands.Clear();
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.skill);
+                        someProfile.commands.Add(BossCommand.barrier);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.restore);
+                        someProfile.commands.Add(BossCommand.shield);
+                        someProfile.commands.Add(BossCommand.shield);
+                    }
+                    break;
+                case BossPhase.desperate:
+                    Debug.Log("boss healthbars not equal to phases");
+                    break;
+
+            }
+        }
+
+
+
     }
 
     public static int GetIconType(UsableScript useable)
@@ -4604,5 +4682,24 @@ public class Common : ScriptableObject
         return generatedCharacter;
     }
 
+    public static Faction GetEnemyFaction(int id)
+    {
+        switch(id)
+        {
+            case 2:
+                return Faction.fairy;
+                break;
+
+            case 4:
+                return Faction.fairy;
+                break;
+
+            case 101:
+                return Faction.genie;
+                break;
+        }
+
+        return Faction.enemy;
+    }
 
 }
