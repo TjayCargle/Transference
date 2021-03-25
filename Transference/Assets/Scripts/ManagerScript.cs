@@ -922,8 +922,7 @@ public class ManagerScript : EventRunner
                                                                     if (livvy.FACTION != attacker.FACTION)
                                                                     {
                                                                         DmgReaction reac = CalcDamage(attacker, livvy, player.currentSkill, Reaction.none, false);
-                                                                        if (reac.reaction > Reaction.weak)
-                                                                            reac.damage = 0;
+                                                                     
                                                                         myCamera.potentialDamage = reac.damage;
                                                                         myCamera.UpdateCamera();
 
@@ -944,8 +943,7 @@ public class ManagerScript : EventRunner
                                                                         }
                                                                     }
                                                                     DmgReaction reac = CalcDamage(attacker, griddy, player.currentSkill, Reaction.none, false);
-                                                                    if (reac.reaction > Reaction.weak)
-                                                                        reac.damage = 0;
+                                                                 
                                                                     myCamera.potentialDamage = reac.damage;
                                                                     myCamera.UpdateCamera();
                                                                 }
@@ -975,8 +973,7 @@ public class ManagerScript : EventRunner
                                                                 if (livvy.FACTION != player.current.FACTION)
                                                                 {
                                                                     DmgReaction reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
-                                                                    if (reac.reaction > Reaction.weak)
-                                                                        reac.damage = 0;
+                                                              
                                                                     myCamera.potentialDamage = reac.damage;
                                                                     myCamera.UpdateCamera();
 
@@ -987,8 +984,7 @@ public class ManagerScript : EventRunner
                                                             {
 
                                                                 DmgReaction reac = CalcDamage(player.current, griddy, player.current.WEAPON, Reaction.none, false);
-                                                                if (reac.reaction > Reaction.weak)
-                                                                    reac.damage = 0;
+                                                        
                                                                 myCamera.potentialDamage = reac.damage;
                                                                 myCamera.UpdateCamera();
 
@@ -1112,8 +1108,7 @@ public class ManagerScript : EventRunner
                                                             if (livvy.FACTION != attacker.FACTION)
                                                             {
                                                                 DmgReaction reac = CalcDamage(attacker, livvy, player.currentSkill, Reaction.none, false);
-                                                                if (reac.reaction > Reaction.weak)
-                                                                    reac.damage = 0;
+                                                              
                                                                 myCamera.potentialDamage = reac.damage;
                                                                 myCamera.UpdateCamera();
 
@@ -1134,8 +1129,7 @@ public class ManagerScript : EventRunner
                                                                 }
                                                             }
                                                             DmgReaction reac = CalcDamage(attacker, griddy, player.currentSkill, Reaction.none, false);
-                                                            if (reac.reaction > Reaction.weak)
-                                                                reac.damage = 0;
+                                                          
                                                             myCamera.potentialDamage = reac.damage;
                                                             myCamera.UpdateCamera();
                                                         }
@@ -4378,6 +4372,7 @@ public class ManagerScript : EventRunner
     }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
+            Debug.Log("Original Map change");
         if(cutscene != null)
         {
             ( currentState, currentObjectiveString) = cutscene.CheckForMapChangeEvent(checkMap, this, defaultSceneEntry, talkPanel, currentScene, currentObjectiveString);
@@ -12395,7 +12390,6 @@ public class ManagerScript : EventRunner
 
                     log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=blue>NULLED</color>");
                 }
-                attackingObject.GENERATED++;
                 break;
             case Reaction.reflected:
                 DamageGridObject(attackingObject, react.damage);
@@ -12407,7 +12401,6 @@ public class ManagerScript : EventRunner
 
                     log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=blue>REFLECTED</color> back at them");
                 }
-                attackingObject.GENERATED++;
                 break;
             case Reaction.knockback:
                 {
@@ -12609,7 +12602,7 @@ public class ManagerScript : EventRunner
 
                         log.Log(coloroption + target.FullName + "</color> healed " + react.damage.ToString() + " health");
                     }
-                    attackingObject.GENERATED++;
+                   // attackingObject.GENERATED++;
                     if (target.GetComponent<LivingObject>())
                     {
                         LivingObject liveTarget = target.GetComponent<LivingObject>();
@@ -12637,7 +12630,6 @@ public class ManagerScript : EventRunner
 
 
                     }
-                    attackingObject.GENERATED++;
                     if (log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
@@ -13917,7 +13909,27 @@ public class ManagerScript : EventRunner
                         if (acceptable == true)
                         {
                             //skill.UseSkill(invokingObject, modification);
+                            if(skill.SUBTYPE == SubSkillType.Charge)
+                            {
+                                if(skill.OWNER.FATIGUE < 50)
+                                {
+                                    skill.OWNER.ACTIONS++;
+                                    //skill.OWNER.GENERATED++;
 
+                                    if (skill.OWNER.GetComponent<EnemyScript>())
+                                    {
+                                        CreateEvent(skill.OWNER, null, ""  + "determine action event ", skill.OWNER.GetComponent<EnemyScript>().DetermineNextAction, null, 0);
+
+                                    }
+
+                                    if (skill.OWNER.GetComponent<HazardScript>())
+                                    {
+                                        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<HazardScript>().DetermineNextAction, null, 0);
+
+                                    }
+                                }
+
+                            }
                             hitSomething = true;
                             if (flavor)
                             {
@@ -14039,6 +14051,15 @@ public class ManagerScript : EventRunner
                                     react.usedSkill = skill;
                                     conatiner.react = react;
                                     conatiner.crit = false;
+
+                                    if(j == 0)
+                                    {
+                                        if(react.reaction >= Reaction.resist && react.reaction <= Reaction.absorb)
+                                        {
+                                            skill.OWNER.GENERATED++;
+                                        }
+                                    }
+
                                     if (react.reaction < Reaction.nulled)
                                     {
 

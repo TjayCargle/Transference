@@ -19,7 +19,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public float exitLocation = -1.2f;
     public int storyFollow = 4;
     public int chapterSelect = -1;
-
+    public Canvas controlCanvas = null;
     private void Start()
     {
         controller = GameObject.FindObjectOfType<NonCombatController>();
@@ -117,6 +117,13 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         SceneManager.LoadScene("start");
     }
 
+    public void ToggleCanvas()
+    {
+        if(controlCanvas != null)
+        {
+            controlCanvas.gameObject.SetActive(!controlCanvas.gameObject.activeInHierarchy);
+        }
+    }
     public void executeAction()
     {
         if (controller)
@@ -298,8 +305,12 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         PlayerPrefs.SetInt("continue", 1);
         Debug.Log("contune");
         PlayerPrefs.Save();
-        int sceneEntry = Common.GetDefaultSceneEntry(controller.selectedCharacter);
-        controller.loading = true;
+        StorySection currentStoryFollowing = controller.selectedCharacter + controller.chapterFollow - 1;
+
+        if (controller.chapterFollow == 0)
+            currentStoryFollowing += 6;
+
+        int sceneEntry = Common.GetDefaultSceneEntry(currentStoryFollowing); controller.loading = true;
         PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
         SceneManager.LoadSceneAsync("DemoMap5");
     }

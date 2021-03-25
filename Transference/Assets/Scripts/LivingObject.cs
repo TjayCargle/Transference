@@ -36,11 +36,11 @@ public class LivingObject : GridObject
     private InventoryScript inventory;
     public int refreshState;
     [SerializeField]
-    protected int physLevel = 0;
+    protected int physLevel = 1;
     [SerializeField]
-    protected int magLevel = 0;
+    protected int magLevel = 1;
     [SerializeField]
-    protected int dexLevel = 0;
+    protected int dexLevel = 1;
     private bool tookAction = false;
     protected ShadowObject shadow;
     protected SpriteObject barrier;

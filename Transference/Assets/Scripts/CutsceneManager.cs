@@ -30,6 +30,8 @@ public class CutsceneManager : MonoBehaviour
     public (State, string) CheckForMapChangeEvent(MapDetail checkMap, ManagerScript someManager, int defaultSceneEntry, TalkPanel talkPanel, SceneContainer currentScene,  string currentObjectiveString)
     {
 
+
+   
         switch (defaultSceneEntry)
         {
             case 27:
@@ -131,6 +133,37 @@ public class CutsceneManager : MonoBehaviour
 
                         if (Common.summonedZeffron == false)
                         {
+
+
+                            someManager.myCamera.PlaySoundTrack(6);
+                            someManager.myCamera.previousClip = someManager.myCamera.musicClips[16];
+
+                            if (talkPanel)
+                            {
+                                //MoveCameraAndShow(liveZeff);
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = Common.GetDatabase().GetSceneData("JaxFindZeff");
+                                currentObjectiveString = "Work with Zeffron";
+                                someManager.currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                someManager.SetScene(currentScene);
+
+                            }
+
+                        }
+                    }
+                }
+                break;
+            case 17:
+                {
+                    ChangeBackground(0);
+                  
+                    if (checkMap.mapIndex == 17)
+                    {
+
+                        if (Common.summonedZeffron == false)
+                        {
                             List<tutorialStep> tSteps = new List<tutorialStep>();
                             List<int> tClar = new List<int>();
 
@@ -145,7 +178,7 @@ public class CutsceneManager : MonoBehaviour
                             {
                                 //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
-                                currentScene = Common.GetDatabase().GetSceneData("JaxFindZeff");
+                                currentScene = Common.GetDatabase().GetSceneData("JaxTalkToZeffOne");
                                 currentObjectiveString = "Work with Zeffron";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;

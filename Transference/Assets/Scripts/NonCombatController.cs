@@ -339,7 +339,10 @@ public class NonCombatController : MonoBehaviour
     {
         if (!loading)
         {
-
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                PlayerPrefs.DeleteKey(StorySection.ZeffSaveSlotPrologue.ToString());
+            }
             Vector3 targetLocation = Vector3.zero;
             if (currTarget)
             {

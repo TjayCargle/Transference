@@ -1,0 +1,17 @@
+a,1,Jax?/select:0//autoDelay:0//move:-30/ 
+a,0,Zeffron!/move:-60/
+a,1,What the hell /select:0//move:-90/ are you doing here?
+a,0,/move:0/Of course it had to be you,5
+a,0,I mean...; nevermind!,3
+a,0,Just be quiet before enemies spot us.
+a,1, So do you know whats going on here?,2
+a,1, Are those Scorpies? And are they attacking that Glyph?,3
+a,0, Doesn't matter! They'll come after us next if we don't deal with them.,3
+a,1, Nice seeing you again too.,4
+-i,0,moveToTarget,3
+-i,0,clear,0
+-i,1,moveToTarget,44
+-i,6,moveToTarget,3
+-i,10,moveToTarget,44
+-i,13,moveToTarget,3
+-i,14,hideimage,2
