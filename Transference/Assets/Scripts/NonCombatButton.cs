@@ -45,7 +45,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 {
                     storyFollow = controller.storyFollow;
                 }
-                    if (controller.currNeoTarget)
+                if (controller.currNeoTarget)
                     controller.currNeoTarget.color = Common.blackened;
                 controller.currNeoTarget = controller.neotargets[storyFollow - 4];
                 controller.currNeoTarget.color = Color.white;
@@ -119,7 +119,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void ToggleCanvas()
     {
-        if(controlCanvas != null)
+        if (controlCanvas != null)
         {
             controlCanvas.gameObject.SetActive(!controlCanvas.gameObject.activeInHierarchy);
         }
@@ -206,7 +206,8 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                             currentStory += 5;
                         else if (controller.chapterFollow > 0)
                             currentStory += controller.chapterFollow - 1;
-                        Common.currentStory = currentStory; PlayContinue();
+                        Common.currentStory = currentStory;
+                        PlayContinue();
                     }
                     break;
             }
@@ -218,25 +219,25 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         PlayerPrefs.SetInt("continue", -1);
         Debug.Log("newGame");
         PlayerPrefs.Save();
-        StorySection currentStoryFollowing = controller.selectedCharacter + controller.chapterFollow -1;
+        StorySection currentStoryFollowing = controller.selectedCharacter + controller.chapterFollow - 1;
 
         if (controller.chapterFollow == 0)
             currentStoryFollowing += 6;
 
         int sceneEntry = Common.GetDefaultSceneEntry(currentStoryFollowing);
         controller.loading = true;
-        if(loadingCanvas != null)
+        if (loadingCanvas != null)
         {
-        loadingCanvas.SetActive(true);
+            loadingCanvas.SetActive(true);
         }
         PlayerPrefs.SetInt("defaultSceneEntry", sceneEntry);
-//        Debug.Log("going to" + sceneEntry + " aka: " + currentStoryFollowing);
-        if(controller.cTT != null)
+        //        Debug.Log("going to" + sceneEntry + " aka: " + currentStoryFollowing);
+        if (controller.cTT != null)
         {
             CTTDemoManager cTTD = controller.cTT;
             if (cTTD.nameText != null)
             {
-                switch(controller.storyFollow)
+                switch (controller.storyFollow)
                 {
                     case 4:
                         cTTD.nameText.text = "Jax Drix";
@@ -264,7 +265,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                         cTTD.nameText.text = "Lukon Hedgewolf";
                         break;
 
-                   
+
 
                 }
             }
@@ -368,6 +369,25 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             }
         }
 
+        if (myAction == NonCombatButtonAction.continueGame)
+        {
+            StorySection currentStory = controller.selectedCharacter;
+            if (controller.chapterFollow == 0)
+                currentStory += 5;
+            else if (controller.chapterFollow > 0)
+                currentStory += controller.chapterFollow - 1;
+
+            Debug.Log(currentStory);
+            if (!PlayerPrefs.HasKey(currentStory.ToString() + "_c"))
+            {
+            Debug.Log("turning off");
+                turnOff = true;
+            }
+            else
+            {
+                turnOff = false;
+            }
+        }
 
 
         if (turnOff == true)

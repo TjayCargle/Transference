@@ -922,7 +922,7 @@ public class ManagerScript : EventRunner
                                                                     if (livvy.FACTION != attacker.FACTION)
                                                                     {
                                                                         DmgReaction reac = CalcDamage(attacker, livvy, player.currentSkill, Reaction.none, false);
-                                                                     
+
                                                                         myCamera.potentialDamage = reac.damage;
                                                                         myCamera.UpdateCamera();
 
@@ -943,7 +943,7 @@ public class ManagerScript : EventRunner
                                                                         }
                                                                     }
                                                                     DmgReaction reac = CalcDamage(attacker, griddy, player.currentSkill, Reaction.none, false);
-                                                                 
+
                                                                     myCamera.potentialDamage = reac.damage;
                                                                     myCamera.UpdateCamera();
                                                                 }
@@ -973,7 +973,7 @@ public class ManagerScript : EventRunner
                                                                 if (livvy.FACTION != player.current.FACTION)
                                                                 {
                                                                     DmgReaction reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
-                                                              
+
                                                                     myCamera.potentialDamage = reac.damage;
                                                                     myCamera.UpdateCamera();
 
@@ -984,7 +984,7 @@ public class ManagerScript : EventRunner
                                                             {
 
                                                                 DmgReaction reac = CalcDamage(player.current, griddy, player.current.WEAPON, Reaction.none, false);
-                                                        
+
                                                                 myCamera.potentialDamage = reac.damage;
                                                                 myCamera.UpdateCamera();
 
@@ -1108,7 +1108,7 @@ public class ManagerScript : EventRunner
                                                             if (livvy.FACTION != attacker.FACTION)
                                                             {
                                                                 DmgReaction reac = CalcDamage(attacker, livvy, player.currentSkill, Reaction.none, false);
-                                                              
+
                                                                 myCamera.potentialDamage = reac.damage;
                                                                 myCamera.UpdateCamera();
 
@@ -1129,7 +1129,7 @@ public class ManagerScript : EventRunner
                                                                 }
                                                             }
                                                             DmgReaction reac = CalcDamage(attacker, griddy, player.currentSkill, Reaction.none, false);
-                                                          
+
                                                             myCamera.potentialDamage = reac.damage;
                                                             myCamera.UpdateCamera();
                                                         }
@@ -2139,6 +2139,7 @@ public class ManagerScript : EventRunner
                         }
                         if (Input.GetMouseButtonDown(1))
                         {
+
                             EndScene();
                         }
                     }
@@ -4184,12 +4185,12 @@ public class ManagerScript : EventRunner
 
             case SceneEvent.endChapter:
                 {
-                    Debug.Log("end chapt");
+
                     if (menuManager)
                     {
                         if (menuManager.cTT)
                         {
-                            Debug.Log(Common.currentStory);
+
                             switch (Common.currentStory)
                             {
                                 case StorySection.none:
@@ -4212,10 +4213,10 @@ public class ManagerScript : EventRunner
                                     menuManager.ToggleCanvas(menuManager.animationCanvas);
                                     LeanTween.moveX(gameObject, 0, 125 * Time.deltaTime).setOnComplete(() =>
                                     {
-                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
                                         menuManager.cTT.chapterText.text = "Chapter 1";
                                         menuManager.cTT.beginEndText.text = "Unlocked!";
-                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
                                     });
                                     LeanTween.moveX(gameObject, 0, 375 * Time.deltaTime).setOnComplete(() =>
                                     {
@@ -4326,24 +4327,28 @@ public class ManagerScript : EventRunner
 
         talkPanel.gameObject.SetActive(false);
         bool resetState = true;
-        if(currentScene.sceneEvents.Count > 0)
+
+        if (currentScene.sceneEvents.Count > 0)
         {
 
-        SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
-        for (int i = 0; i < currentScene.sceneEvents.Count; i++)
-        {
-            if (i < currentScene.index)
+            SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
+            for (int i = 0; i < currentScene.sceneEvents.Count; i++)
             {
-
-                sceneEvent = currentScene.sceneEvents[i];
-                if (sceneEvent.scene == SceneEvent.saveData || sceneEvent.scene == SceneEvent.endChapter)
+               // if (i < currentScene.index)
                 {
-                    if (sceneEvent.scene == SceneEvent.endChapter)
-                        resetState = false;
-                    ExecuteIntercept(sceneEvent);
+
+                    sceneEvent = currentScene.sceneEvents[i];
+                    if (sceneEvent.scene == SceneEvent.saveData || sceneEvent.scene == SceneEvent.endChapter)
+                    {
+                        if (sceneEvent.scene == SceneEvent.endChapter)
+                        {
+
+                            resetState = false;
+                        }
+                        ExecuteIntercept(sceneEvent);
+                    }
                 }
             }
-        }
         }
         if (resetState == true)
         {
@@ -4372,331 +4377,331 @@ public class ManagerScript : EventRunner
     }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
-            Debug.Log("Original Map change");
-        if(cutscene != null)
+        Debug.Log("Original Map change");
+        if (cutscene != null)
         {
-            ( currentState, currentObjectiveString) = cutscene.CheckForMapChangeEvent(checkMap, this, defaultSceneEntry, talkPanel, currentScene, currentObjectiveString);
+            (currentState, currentObjectiveString) = cutscene.CheckForMapChangeEvent(checkMap, this, defaultSceneEntry, talkPanel, currentScene, currentObjectiveString);
         }
         else
         {
 
-        switch (defaultSceneEntry)
-        {
-            case 4:
-                {
-
-
-                    if (checkMap.mapIndex == 4)
+            switch (defaultSceneEntry)
+            {
+                case 4:
                     {
-                        myCamera.PlaySoundTrack(3);
-                        myCamera.previousClip = myCamera.musicClips[0];
-                        if (talkPanel)
+
+
+                        if (checkMap.mapIndex == 4)
                         {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene2");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene2 event", CheckSceneRunning, null, 0);
-                        }
-                    }
-                    if (checkMap.mapIndex == 8)
-                    {
-                        if (Common.summonedJax == false)
-                        {
-
-
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[0];
                             if (talkPanel)
                             {
 
                                 talkPanel.gameObject.SetActive(true);
-                                currentScene = database.GetSceneData("Scene0");
+                                currentScene = database.GetSceneData("Scene2");
                                 currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
                                 UpdateScene();
                                 currentScene.isRunning = true;
                                 menuManager.ShowNone();
-                                CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                CreateEvent(this, null, "scene2 event", CheckSceneRunning, null, 0);
                             }
                         }
-
-
-                    }
-
-
-                    if (checkMap.mapIndex == 10)
-                    {
-                        myCamera.PlaySoundTrack(3);
-                        myCamera.previousClip = myCamera.musicClips[7];
-                        if (talkPanel)
+                        if (checkMap.mapIndex == 8)
                         {
+                            if (Common.summonedJax == false)
+                            {
 
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene3");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+
+                                if (talkPanel)
+                                {
+
+                                    talkPanel.gameObject.SetActive(true);
+                                    currentScene = database.GetSceneData("Scene0");
+                                    currentState = State.SceneRunning;
+                                    talkPanel.scene = currentScene;
+                                    currentScene.index = 0;
+                                    UpdateScene();
+                                    currentScene.isRunning = true;
+                                    menuManager.ShowNone();
+                                    CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                }
+                            }
+
+
                         }
-                    }
 
-                    if (checkMap.mapIndex == 14)
-                    {
-                        myCamera.PlaySoundTrack(5);
-                        myCamera.previousClip = myCamera.musicClips[4];
-                        if (talkPanel)
+
+                        if (checkMap.mapIndex == 10)
                         {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene4");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
-                        }
-                    }
-                }
-                break;
-
-            case 15:
-                {
-
-
-                    if (checkMap.mapIndex == 10)
-                    {
-                        myCamera.PlaySoundTrack(3);
-                        myCamera.previousClip = myCamera.musicClips[6];
-                        if (talkPanel)
-                        {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene3");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
-                        }
-                    }
-                    if (checkMap.mapIndex == 15)
-                    {
-                        myCamera.PlaySoundTrack(3);
-                        myCamera.previousClip = myCamera.musicClips[13];
-                        if (talkPanel)
-                        {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene1");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
-                        }
-                    }
-                    if (checkMap.mapIndex == 8)
-                    {
-
-                        if (Common.summonedZeffron == false)
-                        {
-
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[7];
                             if (talkPanel)
                             {
 
                                 talkPanel.gameObject.SetActive(true);
-                                currentScene = database.GetSceneData("JaxFindZeff");
+                                currentScene = database.GetSceneData("Scene3");
                                 currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
                                 UpdateScene();
                                 currentScene.isRunning = true;
                                 menuManager.ShowNone();
-                                CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            }
+                        }
+
+                        if (checkMap.mapIndex == 14)
+                        {
+                            myCamera.PlaySoundTrack(5);
+                            myCamera.previousClip = myCamera.musicClips[4];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("Scene4");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                UpdateScene();
+                                currentScene.isRunning = true;
+                                menuManager.ShowNone();
+                                CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
                             }
                         }
                     }
+                    break;
 
-                    if (checkMap.mapIndex == 14)
-                    {
-                        myCamera.PlaySoundTrack(5);
-                        myCamera.previousClip = myCamera.musicClips[4];
-                        if (talkPanel)
-                        {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene4");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            UpdateScene();
-                            currentScene.isRunning = true;
-                            menuManager.ShowNone();
-                            CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
-                        }
-                    }
-                }
-                break;
-
-            case 26:
-                {
-                    if (checkMap.mapIndex == 26)
-                    {
-                        myCamera.PlaySoundTrack(10);
-                        myCamera.previousClip = myCamera.musicClips[13];
-                        if (talkPanel)
-                        {
-                            List<tutorialStep> tSteps = new List<tutorialStep>();
-                            List<int> tClar = new List<int>();
-
-
-
-                            tSteps.Add(tutorialStep.showTutorial);
-                            tClar.Add(27);
-                            tSteps.Add(tutorialStep.moveToPosition);
-                            tClar.Add(20);
-                            tSteps.Add(tutorialStep.showTutorial);
-                            tClar.Add(12);
-                            // tClar.Add(23);
-                            tSteps.Add(tutorialStep.useStrike);
-                            tClar.Add(-1);
-                            tSteps.Add(tutorialStep.showTutorial);
-                            tClar.Add(17);
-                            tSteps.Add(tutorialStep.useSpell);
-                            tClar.Add(-1);
-
-                            PrepareTutorial(tSteps, tClar);
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("JaxPrologue");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            SetScene(currentScene);
-
-                        }
-
-
-
-
-                    }
-                    if (checkMap.mapIndex == 15)
-                    {
-                        myCamera.PlaySoundTrack(3);
-                        myCamera.previousClip = myCamera.musicClips[13];
-                        if (talkPanel)
-                        {
-
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene1");
-                            currentObjectiveString = "Get rid of the Glyph";
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            SetScene(currentScene);
-                        }
-                    }
-                    if (checkMap.mapIndex == 17)
+                case 15:
                     {
 
-                        if (Common.summonedZeffron == false)
+
+                        if (checkMap.mapIndex == 10)
                         {
-                            List<tutorialStep> tSteps = new List<tutorialStep>();
-                            List<int> tClar = new List<int>();
-
-                            tSteps.Add(tutorialStep.showTutorial);
-                            tClar.Add(29);
-                            PrepareTutorial(tSteps, tClar);
-
-                            myCamera.PlaySoundTrack(6);
-                            myCamera.previousClip = myCamera.musicClips[16];
-
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[6];
                             if (talkPanel)
                             {
-                                //MoveCameraAndShow(liveZeff);
+
                                 talkPanel.gameObject.SetActive(true);
-                                currentScene = database.GetSceneData("JaxFindZeff");
-                                currentObjectiveString = "Work with Zeffron";
+                                currentScene = database.GetSceneData("Scene3");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                UpdateScene();
+                                currentScene.isRunning = true;
+                                menuManager.ShowNone();
+                                CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            }
+                        }
+                        if (checkMap.mapIndex == 15)
+                        {
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[13];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("Scene1");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                UpdateScene();
+                                currentScene.isRunning = true;
+                                menuManager.ShowNone();
+                                CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            }
+                        }
+                        if (checkMap.mapIndex == 8)
+                        {
+
+                            if (Common.summonedZeffron == false)
+                            {
+
+                                if (talkPanel)
+                                {
+
+                                    talkPanel.gameObject.SetActive(true);
+                                    currentScene = database.GetSceneData("JaxFindZeff");
+                                    currentState = State.SceneRunning;
+                                    talkPanel.scene = currentScene;
+                                    currentScene.index = 0;
+                                    UpdateScene();
+                                    currentScene.isRunning = true;
+                                    menuManager.ShowNone();
+                                    CreateEvent(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                }
+                            }
+                        }
+
+                        if (checkMap.mapIndex == 14)
+                        {
+                            myCamera.PlaySoundTrack(5);
+                            myCamera.previousClip = myCamera.musicClips[4];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("Scene4");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                UpdateScene();
+                                currentScene.isRunning = true;
+                                menuManager.ShowNone();
+                                CreateEvent(this, null, "scene1 event", CheckSceneRunning, null, 0);
+                            }
+                        }
+                    }
+                    break;
+
+                case 26:
+                    {
+                        if (checkMap.mapIndex == 26)
+                        {
+                            myCamera.PlaySoundTrack(10);
+                            myCamera.previousClip = myCamera.musicClips[13];
+                            if (talkPanel)
+                            {
+                                List<tutorialStep> tSteps = new List<tutorialStep>();
+                                List<int> tClar = new List<int>();
+
+
+
+                                tSteps.Add(tutorialStep.showTutorial);
+                                tClar.Add(27);
+                                tSteps.Add(tutorialStep.moveToPosition);
+                                tClar.Add(20);
+                                tSteps.Add(tutorialStep.showTutorial);
+                                tClar.Add(12);
+                                // tClar.Add(23);
+                                tSteps.Add(tutorialStep.useStrike);
+                                tClar.Add(-1);
+                                tSteps.Add(tutorialStep.showTutorial);
+                                tClar.Add(17);
+                                tSteps.Add(tutorialStep.useSpell);
+                                tClar.Add(-1);
+
+                                PrepareTutorial(tSteps, tClar);
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("JaxPrologue");
                                 currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
                                 SetScene(currentScene);
-                                //currentScene.isRunning = true;
-                                //menuManager.ShowNone();
-                                //(this, null, "scene0 event", CheckSceneRunning, null, 0);
+
                             }
-                        }
-                    }
-                    if (checkMap.mapIndex == 8)
-                    {
-                        myCamera.PlaySoundTrack(4);
-                        myCamera.previousClip = myCamera.musicClips[4];
-                        if (talkPanel)
-                        {
 
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("JaxEncounterGlyph");
-                            currentObjectiveString = "Head to the Library";
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            SetScene(currentScene);
-                        }
-                    }
-                    if (checkMap.mapIndex == 14)
-                    {
-                        myCamera.PlaySoundTrack(4);
-                        myCamera.previousClip = myCamera.musicClips[10];
-                        if (talkPanel)
-                        {
 
-                            talkPanel.gameObject.SetActive(true);
-                            currentScene = database.GetSceneData("Scene4");
-                            currentState = State.SceneRunning;
-                            talkPanel.scene = currentScene;
-                            currentScene.index = 0;
-                            SetScene(currentScene);
-                        }
-                    }
 
-                    if (Common.hasSeenJaxAndZeffCatchUp == false)
-                    {
-                        if (checkMap.mapIndex == 16 || checkMap.mapIndex == 0)
+
+                        }
+                        if (checkMap.mapIndex == 15)
                         {
-                            myCamera.PlaySoundTrack(2);
-                            myCamera.previousClip = myCamera.musicClips[10];
+                            myCamera.PlaySoundTrack(3);
+                            myCamera.previousClip = myCamera.musicClips[13];
                             if (talkPanel)
                             {
 
                                 talkPanel.gameObject.SetActive(true);
-                                currentScene = database.GetSceneData("JaxAndZeffronChapter1");
+                                currentScene = database.GetSceneData("Scene1");
+                                currentObjectiveString = "Get rid of the Glyph";
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                SetScene(currentScene);
+                            }
+                        }
+                        if (checkMap.mapIndex == 17)
+                        {
+
+                            if (Common.summonedZeffron == false)
+                            {
+                                List<tutorialStep> tSteps = new List<tutorialStep>();
+                                List<int> tClar = new List<int>();
+
+                                tSteps.Add(tutorialStep.showTutorial);
+                                tClar.Add(29);
+                                PrepareTutorial(tSteps, tClar);
+
+                                myCamera.PlaySoundTrack(6);
+                                myCamera.previousClip = myCamera.musicClips[16];
+
+                                if (talkPanel)
+                                {
+                                    //MoveCameraAndShow(liveZeff);
+                                    talkPanel.gameObject.SetActive(true);
+                                    currentScene = database.GetSceneData("JaxFindZeff");
+                                    currentObjectiveString = "Work with Zeffron";
+                                    currentState = State.SceneRunning;
+                                    talkPanel.scene = currentScene;
+                                    currentScene.index = 0;
+                                    SetScene(currentScene);
+                                    //currentScene.isRunning = true;
+                                    //menuManager.ShowNone();
+                                    //(this, null, "scene0 event", CheckSceneRunning, null, 0);
+                                }
+                            }
+                        }
+                        if (checkMap.mapIndex == 8)
+                        {
+                            myCamera.PlaySoundTrack(4);
+                            myCamera.previousClip = myCamera.musicClips[4];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("JaxEncounterGlyph");
                                 currentObjectiveString = "Head to the Library";
                                 currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
                                 SetScene(currentScene);
                             }
-                            Common.hasSeenJaxAndZeffCatchUp = true;
+                        }
+                        if (checkMap.mapIndex == 14)
+                        {
+                            myCamera.PlaySoundTrack(4);
+                            myCamera.previousClip = myCamera.musicClips[10];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = database.GetSceneData("Scene4");
+                                currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                SetScene(currentScene);
+                            }
+                        }
+
+                        if (Common.hasSeenJaxAndZeffCatchUp == false)
+                        {
+                            if (checkMap.mapIndex == 16 || checkMap.mapIndex == 0)
+                            {
+                                myCamera.PlaySoundTrack(2);
+                                myCamera.previousClip = myCamera.musicClips[10];
+                                if (talkPanel)
+                                {
+
+                                    talkPanel.gameObject.SetActive(true);
+                                    currentScene = database.GetSceneData("JaxAndZeffronChapter1");
+                                    currentObjectiveString = "Head to the Library";
+                                    currentState = State.SceneRunning;
+                                    talkPanel.scene = currentScene;
+                                    currentScene.index = 0;
+                                    SetScene(currentScene);
+                                }
+                                Common.hasSeenJaxAndZeffCatchUp = true;
+                            }
+
                         }
 
                     }
-
-                }
-                break;
-        }
+                    break;
+            }
         }
     }
 
@@ -4704,19 +4709,21 @@ public class ManagerScript : EventRunner
     {
         switch (defaultSceneEntry)
         {
-            case 4:
+            case 27:
                 {
 
 
-                    if (checkMap.mapIndex == 8)
+                    if (checkMap.mapIndex == 17)
                     {
                         if (Common.summonedJax == false)
-                        {
+                        {                         
 
                             myCamera.PlaySoundTrack(3);
-                            myCamera.previousClip = myCamera.musicClips[13];
+                            myCamera.previousClip = myCamera.musicClips[10];
                             GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                             jax.SetActive(true);
+                            jax.transform.position = tileMap[3].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
+                            //zeffron.transform.position = tileMap[2].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
                             ActorSetup asetup = jax.GetComponent<ActorSetup>();
                             asetup.characterId = 0;
                             LivingObject liveJax = jax.GetComponent<LivingObject>();
@@ -4724,6 +4731,7 @@ public class ManagerScript : EventRunner
                             liveJax.Setup();
                             gridObjects.Add(liveJax);
                             turnOrder.Add(liveJax);
+                            ComfirmMoveGridObject(liveJax, 37);
                             Common.summonedJax = true;
 
                         }
@@ -4738,33 +4746,33 @@ public class ManagerScript : EventRunner
                 }
                 break;
 
-            case 15:
+            case 17:
                 {
 
 
-                    if (checkMap.mapIndex == 8)
+                    if (checkMap.mapIndex == 17)
                     {
 
                         if (Common.summonedZeffron == false)
                         {
                             myCamera.PlaySoundTrack(3);
-                            myCamera.previousClip = myCamera.musicClips[9];
+                            myCamera.previousClip = myCamera.musicClips[10];
                             GameObject zeffron = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
                             zeffron.SetActive(true);
+                            zeffron.transform.position = tileMap[37].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
+                            //zeffron.transform.position = tileMap[2].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
                             ActorSetup asetup = zeffron.GetComponent<ActorSetup>();
                             asetup.characterId = 1;
                             LivingObject liveZeff = zeffron.GetComponent<LivingObject>();
                             liveZeff.FACTION = Faction.ally;
                             liveZeff.Setup();
-                            liveZeff.transform.position = tileMap[5].transform.position + new Vector3(0.0f, 0.5f, 2.0f);
-                            ComfirmMoveGridObject(liveZeff, 5);
                             gridObjects.Add(liveZeff);
                             turnOrder.Add(liveZeff);
+                            ComfirmMoveGridObject(liveZeff, 37);
                             Common.summonedZeffron = true;
 
                         }
                     }
-
 
                 }
                 break;
@@ -4900,7 +4908,7 @@ public class ManagerScript : EventRunner
         CreateEvent(this, null, "return state event", BufferedStateChange);
         turnImgManger.LoadTurnImg(turnOrder);
         turnImgManger.UpdateSelection(-1);
-     
+
     }
 
     public void LoadDScene(int amapIndex, int startindex = -1)
@@ -6296,9 +6304,14 @@ public class ManagerScript : EventRunner
 
     }
 
-    public void SaveGame(string saveSlot = "JaxSaveSlot1")
+    public void SaveGame(string saveSlot = "")
     {
-
+        if(saveSlot == "")
+        {
+            saveSlot = Common.currentStory.ToString();
+        }
+        saveSlot = saveSlot + "_c";
+        Debug.Log(saveSlot);
         string saveString = "";
         //int tutCount = currentTutorial.steps.Count;
         //saveString += "" + tutCount + ",";
@@ -6359,10 +6372,10 @@ public class ManagerScript : EventRunner
     {
         MapDetail detail;
 
-        if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        if (PlayerPrefs.HasKey(Common.currentStory + "_c"))
         {
             Clear();
-            string loadString = PlayerPrefs.GetString(Common.JaxSaveSlot1);
+            string loadString = PlayerPrefs.GetString(Common.currentStory + "_c");
 
             string[] dataString = loadString.Split(',');
             int dataIIndex = 0;
@@ -7177,9 +7190,9 @@ public class ManagerScript : EventRunner
 
             livingObjects[i].Refresh();
         }
-        if (PlayerPrefs.HasKey(Common.JaxSaveSlot1))
+        if (PlayerPrefs.HasKey(Common.currentStory + "_c"))
         {
-            PlayerPrefs.DeleteKey(Common.JaxSaveSlot1);
+            PlayerPrefs.DeleteKey(Common.currentStory +"_c");
         }
         SoftReset();
 
@@ -12602,7 +12615,7 @@ public class ManagerScript : EventRunner
 
                         log.Log(coloroption + target.FullName + "</color> healed " + react.damage.ToString() + " health");
                     }
-                   // attackingObject.GENERATED++;
+                    // attackingObject.GENERATED++;
                     if (target.GetComponent<LivingObject>())
                     {
                         LivingObject liveTarget = target.GetComponent<LivingObject>();
@@ -13909,16 +13922,16 @@ public class ManagerScript : EventRunner
                         if (acceptable == true)
                         {
                             //skill.UseSkill(invokingObject, modification);
-                            if(skill.SUBTYPE == SubSkillType.Charge)
+                            if (skill.SUBTYPE == SubSkillType.Charge)
                             {
-                                if(skill.OWNER.FATIGUE < 50)
+                                if (skill.OWNER.FATIGUE < 50)
                                 {
                                     skill.OWNER.ACTIONS++;
                                     //skill.OWNER.GENERATED++;
 
                                     if (skill.OWNER.GetComponent<EnemyScript>())
                                     {
-                                        CreateEvent(skill.OWNER, null, ""  + "determine action event ", skill.OWNER.GetComponent<EnemyScript>().DetermineNextAction, null, 0);
+                                        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<EnemyScript>().DetermineNextAction, null, 0);
 
                                     }
 
@@ -14052,9 +14065,9 @@ public class ManagerScript : EventRunner
                                     conatiner.react = react;
                                     conatiner.crit = false;
 
-                                    if(j == 0)
+                                    if (j == 0)
                                     {
-                                        if(react.reaction >= Reaction.resist && react.reaction <= Reaction.absorb)
+                                        if (react.reaction >= Reaction.resist && react.reaction <= Reaction.absorb)
                                         {
                                             skill.OWNER.GENERATED++;
                                         }

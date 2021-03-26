@@ -1,19 +1,28 @@
 -2 basil (temp)
 -4 indigo (temp)
-e,2, Where you followed?
-e,4, I don’t think so. I told them I was going to a study group. So what are we doing out here?
-e,2,I got a tip that the Vamperriti are auctioning off the Book or Transference tonight.
+a,1,Everything in this world is made of Essence.
+a,1,From flowers; to people; to magic.
+a,1,As descendants of those who survived the Great Cataclysm....
+a,1,It is our duty to protect it.
+e,2,Where you followed?
+a,1,Huh; whats going on here? 
+e,4, I don’t think so.
+e,4, So what are we doing out here?
+e,2,The Vamperriti are auctioning off the Book of Transference tonight.
 -The camera is over Zeffron’s right shoulder and shows two fairies arguing. When they mention the book the camera switches to Zeffron’s face of shock/concern.
-a,1,The book of …. Isn’t that one of the lost tombs? An auction? I can’t let the book fall into the wrong hands.
-e,4,Wait; what? The Book of Transference? 
-e,2, Shhh. We don’t want to alert anyone. If we can get our hands on that book; I can guarantee we would be set for life.
-e,4, No more taking orders or being pushed around. I do have one question. Why me? Why didn’t you grab Ivory?
-e,2,Oh; that’s easy. I need you –
+a,1,The book of …. Isn’t that one of the forbidden spellbooks?
+e,4,Wait; what? The Book of Transference?
+e,2,Yeah the book that lets you transfer anything! Bodies; memories; you name it.
+a,1,I can’t let the book fall into the wrong hands.
+e,4,I do have one question. Why me? Why didn’t you grab Ivory?
+e,2,Oh; that’s easy. I need you to make us a portal.
 -Indigo blushes
-e,2,-- to make us a portal in; you are the best with portals.
+-e,2,-- to make us a portal in; you are the best with portals.
 e,4, It’s going to be tough because I’ve never been inside. 
-a,1,Dammit; I can’t let those two steal that book. Who knows what carnage those Dark Fairies will do with that kind of power.
+a,1,Dammit; I can’t let those two steal that book.
+a,1,Who knows what carnage those Dark Fairies will do with that kind of power.
 -enter portal
-a,1,No sign of those two Dark Fairies. Guess I’ll just have to--
-a,0, Got you now!
-a,1, Was that who I think it is?
+-a,1,No sign of those two Dark Fairies. Guess I’ll just have to--
+-a,0, Got you now!
+-a,1, Was that who I think it is?
+i,5,clear,0

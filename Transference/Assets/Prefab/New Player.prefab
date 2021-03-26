@@ -224,14 +224,15 @@ MonoBehaviour:
   autoSlots: {fileID: 0}
   inventory: {fileID: 0}
   refreshState: 0
-  physLevel: 0
-  magLevel: 0
-  dexLevel: 0
+  physLevel: 1
+  magLevel: 1
+  dexLevel: 1
   moveableTiles: []
   usedSkills: 
   actionCounterText: {fileID: 0}
   generatedCounterText: {fileID: 0}
   myWorldHealthBar: {fileID: 0}
+  blackWeaknessText: {fileID: 0}
 --- !u!1 &751431115679142846
 GameObject:
   m_ObjectHideFlags: 0

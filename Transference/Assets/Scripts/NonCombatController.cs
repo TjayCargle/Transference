@@ -342,6 +342,8 @@ public class NonCombatController : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.D))
             {
                 PlayerPrefs.DeleteKey(StorySection.ZeffSaveSlotPrologue.ToString());
+                PlayerPrefs.DeleteKey(StorySection.JaxSaveSlot1.ToString());
+                PlayerPrefs.DeleteKey(StorySection.JaxSaveSlotPrologue.ToString());
             }
             Vector3 targetLocation = Vector3.zero;
             if (currTarget)

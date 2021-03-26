@@ -128,6 +128,7 @@ public class CutsceneManager : MonoBehaviour
                             someManager.SetScene(currentScene);
                         }
                     }
+
                     if (checkMap.mapIndex == 17)
                     {
 
@@ -179,7 +180,7 @@ public class CutsceneManager : MonoBehaviour
                                 //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = Common.GetDatabase().GetSceneData("JaxTalkToZeffOne");
-                                currentObjectiveString = "Work with Zeffron";
+                                currentObjectiveString = "Work with Jax";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
