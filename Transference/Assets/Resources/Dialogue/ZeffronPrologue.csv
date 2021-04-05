@@ -1,24 +1,25 @@
 -2 basil (temp)
 -4 indigo (temp)
+a,1,/hide:1/ /setAsFirst:Zeffron Drix/ /setAsSecond:Fairy Warrior/ 
 a,1,Everything in this world is made of Essence.
 a,1,From flowers; to people; to magic.
 a,1,As descendants of those who survived the Great Cataclysm....
-a,1,It is our duty to protect it.
-e,2,Where you followed?
-a,1,Huh; whats going on here? 
+a,1,It is our duty to protect it./setAsFirst:Fairy Assassin/ /setAsSecond:Zeffron Drix/ 
+e,2,Where you followed?/reveal:1/
+a,1,Huh; whats going on here? /setAsSecond:Fairy Warrior/ 
 e,4, I don’t think so.
 e,4, So what are we doing out here?
-e,2,The Vamperriti are auctioning off the Book of Transference tonight.
+e,2,The Vamperriti are auctioning off the Book of Transference tonight./setAsSecond:Zeffron Drix/ 
 -The camera is over Zeffron’s right shoulder and shows two fairies arguing. When they mention the book the camera switches to Zeffron’s face of shock/concern.
-a,1,The book of …. Isn’t that one of the forbidden spellbooks?
+a,1,The book of …. Isn’t that one of the forbidden spellbooks?/setAsSecond:Fairy Warrior/ 
 e,4,Wait; what? The Book of Transference?
-e,2,Yeah the book that lets you transfer anything! Bodies; memories; you name it.
-a,1,I can’t let the book fall into the wrong hands.
+e,2,Yeah the book that lets you transfer anything! Bodies; memories; you name it./setAsSecond:Zeffron Drix/ 
+a,1,I can’t let the book fall into the wrong hands./setAsSecond:Fairy Warrior/ 
 e,4,I do have one question. Why me? Why didn’t you grab Ivory?
 e,2,Oh; that’s easy. I need you to make us a portal.
 -Indigo blushes
--e,2,-- to make us a portal in; you are the best with portals.
-e,4, It’s going to be tough because I’ve never been inside. 
+-e,2,-- to make us a portal in; you are the best with portals./setAsSecond:Zeffron Drix/ 
+e,4, It’s going to be tough because I’ve never been inside. /hide:1//setAsFirst:Zeffron Drix/ 
 a,1,Dammit; I can’t let those two steal that book.
 a,1,Who knows what carnage those Dark Fairies will do with that kind of power.
 -enter portal

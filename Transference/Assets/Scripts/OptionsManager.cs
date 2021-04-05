@@ -82,6 +82,11 @@ public class OptionsManager : MonoBehaviour
             if(cameraSlider)
             {
                 cameraSlider.value = cameraSpeed;
+
+                if (myCamera)
+                {
+                    myCamera.smoothSpd = cameraSpeed;
+                }
             }
 
             if (battleAnimToggle)
@@ -391,6 +396,23 @@ public class OptionsManager : MonoBehaviour
 
 
         loadSettings();
+    }
+
+    public static void SaveDefaultSettings()
+    {
+        string newGameSettings = "";
+
+        newGameSettings += "ba," + true + "|";
+        newGameSettings += "da," + true + "|";
+        newGameSettings += "dm," + true + "|";
+        newGameSettings += "hs," + true + "|";
+        newGameSettings += "mv," + (0.775f).ToString() + "|";
+        newGameSettings += "av," + (0.775f).ToString() + "|";
+        newGameSettings += "sv," + (0.49f).ToString() + "|";
+        newGameSettings += "vv," + (0.49f).ToString() + "|";
+        newGameSettings += "dms," + (0.5f).ToString() + "|";
+        newGameSettings += "cs," + (2.5f).ToString() + "|";
+        PlayerPrefs.SetString("gameSettings", newGameSettings);
     }
 
     public void Cancel()

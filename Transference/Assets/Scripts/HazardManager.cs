@@ -24,11 +24,14 @@ public class HazardManager : MonoBehaviour
 
     public List<HazardScript> getHazards(int num, int specialId = 0)
     {
+        Debug.Log("finding " + specialId);
         List<HazardScript> subhazards = new List<HazardScript>();
         if (num < hazards.Count)
         {
+        Debug.Log("1"); 
             for (int i = 0; i < num; i++)
             {
+        Debug.Log("2"); 
                 HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
                 hazards[i].Unset();
                 hazardSetup.Unset();
@@ -51,8 +54,10 @@ public class HazardManager : MonoBehaviour
         }
         else
         {
+        Debug.Log("3"); 
             for (int i = 0; i < hazards.Count; i++)
             {
+        Debug.Log("4"); 
 
                 HazardSetup hazardSetup = hazards[i].GetComponent<HazardSetup>();
                 hazards[i].Unset();
@@ -73,6 +78,7 @@ public class HazardManager : MonoBehaviour
             }
             while (hazards.Count < num)
             {
+        Debug.Log("5"); 
                 GameObject temp = Instantiate(hazardPrefab, Vector2.zero, Quaternion.identity);
                 HazardSetup hazardSetup = temp.GetComponent<HazardSetup>();
                 hazardSetup.hazardid = specialId;
@@ -96,6 +102,7 @@ public class HazardManager : MonoBehaviour
         }
         for (int i = 0; i < subhazards.Count; i++)
         {
+        Debug.Log("6"); 
             hazards.Remove((hazards[0]));
         }
         return subhazards;

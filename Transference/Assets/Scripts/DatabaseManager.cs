@@ -1576,12 +1576,6 @@ public class DatabaseManager : MonoBehaviour
                         details += "," + someObject.INVENTORY.ARMOR[i].AUGMENTS[j];
                     }
 
-                    int hitCount = someObject.INVENTORY.ARMOR[i].HITLIST.Count;
-                    details += "," + hitCount;
-                    for (int j = 0; j < hitCount; j++)
-                    {
-                        details += "," + someObject.INVENTORY.ARMOR[i].HITLIST[j];
-                    }
                 }
 
                 details += "," + someObject.INVENTORY.CSKILLS.Count + "";

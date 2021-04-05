@@ -1788,64 +1788,63 @@ public class ManagerScript : EventRunner
                                         // PlayExitSnd();
                                         if (menuManager)
                                         {
-                                            if (menuManager.hiddenCanvas)
+
+                                            if (GetObjectAtTile(hitTile) != null && currentTutorial.steps.Count == 0)
                                             {
-                                                if (GetObjectAtTile(hitTile) != null && currentTutorial.steps.Count == 0)
+                                                if (detailsScreen)
                                                 {
-                                                    if (detailsScreen)
+                                                    if (myCamera.infoObject.GetComponent<LivingObject>())
                                                     {
-                                                        if (myCamera.infoObject.GetComponent<LivingObject>())
-                                                        {
-                                                            detailsScreen.anotherObj = null;
-                                                            detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
-                                                            StackDetails();
-                                                        }
-                                                        else
-                                                        {
-                                                            detailsScreen.currentObj = null;
-                                                            detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
-                                                            StackDetails();
-                                                        }
-                                                    }
-                                                    //LivingObject livvy = GetObjectAtTile(hitTile).GetComponent<LivingObject>();
-                                                    //if (livvy != null)
-                                                    //{
-                                                    //    if (markedEnemies.Contains(livvy))
-                                                    //    {
-                                                    //        markedEnemies.Remove(livvy);
-                                                    //        livvy.RENDERER.color = Color.white;
-
-                                                    //    }
-                                                    //    else
-                                                    //    {
-
-                                                    //        markedEnemies.Add(livvy);
-                                                    //        livvy.RENDERER.color = Color.magenta;
-                                                    //    }
-                                                    //    UpdateMarkedArea();
-                                                    //}
-                                                }
-                                                else
-                                                {
-                                                    if (currentTutorial.steps.Count == 0)
-                                                    {
-                                                        StackNewSelection(State.PlayerInput, currentMenu.none);
-                                                        menuManager.ShowHiddenCanvas();
-                                                    }
-                                                    else if (currentTutorial.currentStep < currentTutorial.steps.Count)
-                                                    {
-                                                        CheckTutorialPrompt("-1; Tutorial - " + Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep], true));
+                                                        detailsScreen.anotherObj = null;
+                                                        detailsScreen.currentObj = myCamera.infoObject.GetComponent<LivingObject>();
+                                                        StackDetails();
                                                     }
                                                     else
                                                     {
-                                                        currentTutorial.steps.Clear();
-                                                        currentTutorial.currentStep = 0;
-                                                        currentTutorial.clarifications.Clear();
-                                                        StackNewSelection(State.PlayerInput, currentMenu.none);
-                                                        menuManager.ShowHiddenCanvas();
+                                                        detailsScreen.currentObj = null;
+                                                        detailsScreen.anotherObj = myCamera.infoObject.GetComponent<GridObject>();
+                                                        StackDetails();
                                                     }
                                                 }
+                                                //LivingObject livvy = GetObjectAtTile(hitTile).GetComponent<LivingObject>();
+                                                //if (livvy != null)
+                                                //{
+                                                //    if (markedEnemies.Contains(livvy))
+                                                //    {
+                                                //        markedEnemies.Remove(livvy);
+                                                //        livvy.RENDERER.color = Color.white;
+
+                                                //    }
+                                                //    else
+                                                //    {
+
+                                                //        markedEnemies.Add(livvy);
+                                                //        livvy.RENDERER.color = Color.magenta;
+                                                //    }
+                                                //    UpdateMarkedArea();
+                                                //}
                                             }
+                                            else
+                                            {
+                                                if (currentTutorial.steps.Count == 0)
+                                                {
+                                                    //StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                    //menuManager.ShowHiddenCanvas();
+                                                }
+                                                else if (currentTutorial.currentStep < currentTutorial.steps.Count)
+                                                {
+                                                    CheckTutorialPrompt("-1; Tutorial - " + Common.GetTutorialText(currentTutorial.steps[currentTutorial.currentStep], true));
+                                                }
+                                                else
+                                                {
+                                                    currentTutorial.steps.Clear();
+                                                    currentTutorial.currentStep = 0;
+                                                    currentTutorial.clarifications.Clear();
+                                                    //StackNewSelection(State.PlayerInput, currentMenu.none);
+                                                    //menuManager.ShowHiddenCanvas();
+                                                }
+                                            }
+
                                         }
                                     }
                                     myCamera.currentTile = myCamera.selectedTile;
@@ -2010,12 +2009,12 @@ public class ManagerScript : EventRunner
                         {
                             if (menuManager)
                             {
-                                if (menuManager.hiddenCanvas)
+                                // if (menuManager.hiddenCanvas)
                                 {
                                     if (currentTutorial.steps.Count == 0)
                                     {
-                                        StackNewSelection(State.PlayerInput, currentMenu.none);
-                                        menuManager.ShowHiddenCanvas();
+                                        //StackNewSelection(State.PlayerInput, currentMenu.none);
+                                        //menuManager.ShowHiddenCanvas();
                                     }
                                     else if (currentTutorial.currentStep < currentTutorial.steps.Count)
                                     {
@@ -2026,8 +2025,8 @@ public class ManagerScript : EventRunner
                                         currentTutorial.steps.Clear();
                                         currentTutorial.currentStep = 0;
                                         currentTutorial.clarifications.Clear();
-                                        StackNewSelection(State.PlayerInput, currentMenu.none);
-                                        menuManager.ShowHiddenCanvas();
+                                        //StackNewSelection(State.PlayerInput, currentMenu.none);
+                                        //menuManager.ShowHiddenCanvas();
                                     }
                                 }
                             }
@@ -4067,8 +4066,34 @@ public class ManagerScript : EventRunner
         if (currentScene.speakerNames.Count > 0)
         {
             int index = currentScene.index;
-            string objName = currentScene.speakerNames[index];
-            talkPanel.faceName.text = objName;
+            string objName = currentScene.speakerNames[index].Trim();
+            if (dialog != null)
+            {
+
+                if (dialog.FIRST.name == objName)
+                {
+                    talkPanel.faceName.text = objName;
+
+                }
+                else if (dialog.SECOND.name == objName)
+                {
+                    talkPanel.otherName.text = objName;
+
+                }
+                else
+                {
+
+                    talkPanel.otherName.text = objName;
+
+                }
+
+            }
+            else
+            {
+
+                talkPanel.faceName.text = objName;
+            }
+
             string shrtName = Common.GetShortName(objName);
             talkPanel.faceImage.sprite = currentScene.speakerFace[index];
             if (talkPanel.faceImage.sprite == null)
@@ -4334,7 +4359,7 @@ public class ManagerScript : EventRunner
             SceneEventContainer sceneEvent = currentScene.sceneEvents[0];
             for (int i = 0; i < currentScene.sceneEvents.Count; i++)
             {
-               // if (i < currentScene.index)
+                // if (i < currentScene.index)
                 {
 
                     sceneEvent = currentScene.sceneEvents[i];
@@ -4377,7 +4402,7 @@ public class ManagerScript : EventRunner
     }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
-        Debug.Log("Original Map change");
+
         if (cutscene != null)
         {
             (currentState, currentObjectiveString) = cutscene.CheckForMapChangeEvent(checkMap, this, defaultSceneEntry, talkPanel, currentScene, currentObjectiveString);
@@ -4703,6 +4728,10 @@ public class ManagerScript : EventRunner
                     break;
             }
         }
+
+        TextObjectHandler.UpdateText(textHolder.subphaseTracker, currentObjectiveString);
+        TextObjectHandler.UpdateText(textHolder.shadowSubphaseTracker, currentObjectiveString);
+
     }
 
     public void insertNewCharMapEvent(MapDetail checkMap)
@@ -4716,7 +4745,7 @@ public class ManagerScript : EventRunner
                     if (checkMap.mapIndex == 17)
                     {
                         if (Common.summonedJax == false)
-                        {                         
+                        {
 
                             myCamera.PlaySoundTrack(3);
                             myCamera.previousClip = myCamera.musicClips[10];
@@ -4856,6 +4885,8 @@ public class ManagerScript : EventRunner
                 gridObjects.Add(liveZeff);
                 turnOrder.Add(liveZeff);
 
+
+
             }
             else if (defaultSceneEntry == 26)
             {
@@ -4886,16 +4917,47 @@ public class ManagerScript : EventRunner
             }
             else
             {
-                GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
-                jax.SetActive(true);
-                jax.transform.position = new Vector3(6.0f, 0.5f, 2.0f);
-                ActorSetup asetup = jax.GetComponent<ActorSetup>();
-                asetup.characterId = 0;
-                LivingObject liveJax = jax.GetComponent<LivingObject>();
-                liveJax.Setup();
-                gridObjects.Add(liveJax);
-                turnOrder.Add(liveJax);
-                myCamera.PlaySoundTrack(3);
+
+
+                if (PlayerPrefs.HasKey(Common.currentStory.ToString()))
+                {
+                    ClearObjects();
+
+                    Debug.Log("found");
+                    string loadString = PlayerPrefs.GetString(Common.currentStory.ToString());
+                    string[] dataString = loadString.Split(',');
+
+                    Debug.Log(loadString);
+                    int dataIIndex = 1;
+                    int livingCount = 0;
+                    System.Int32.TryParse(dataString[dataIIndex], out livingCount);
+                    dataIIndex++;
+                    Debug.Log("living=" + livingCount);
+                    for (int i = 0; i < livingCount; i++)
+                    {
+                        Debug.Log("looking at =" + i);
+
+                        LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
+                        if (!gridObjects.Contains(possibleCharacter))
+                        {
+                            gridObjects.Add(possibleCharacter);
+                        }
+                    }
+                    SoftReset();
+                }
+                else
+                {
+                    GameObject jax = Instantiate(PlayerObject, Vector2.zero, Quaternion.identity);
+                    jax.SetActive(true);
+                    jax.transform.position = new Vector3(6.0f, 0.5f, 2.0f);
+                    ActorSetup asetup = jax.GetComponent<ActorSetup>();
+                    asetup.characterId = 0;
+                    LivingObject liveJax = jax.GetComponent<LivingObject>();
+                    liveJax.Setup();
+                    gridObjects.Add(liveJax);
+                    turnOrder.Add(liveJax);
+                    myCamera.PlaySoundTrack(3);
+                }
             }
         }
         prevState = State.FreeCamera;
@@ -6306,7 +6368,7 @@ public class ManagerScript : EventRunner
 
     public void SaveGame(string saveSlot = "")
     {
-        if(saveSlot == "")
+        if (saveSlot == "")
         {
             saveSlot = Common.currentStory.ToString();
         }
@@ -6737,6 +6799,26 @@ public class ManagerScript : EventRunner
 
         gridObjects.Clear();
     }
+
+    public void ClearObjects()
+    {
+        if (null == tileMap)
+            return;
+        myCamera.infoObject = null;
+        for (int i = 0; i < gridObjects.Count; i++)
+        {
+            gridObjects[i].currentTile = null;
+
+            gridObjects[i].gameObject.SetActive(false);
+
+
+        }
+
+
+        gridObjects.Clear();
+        turnOrder.Clear();
+
+    }
     public void SoftReset()
     {
         if (tileMap == null)
@@ -7102,7 +7184,7 @@ public class ManagerScript : EventRunner
                     if (turnOrder[i].ACTIONS > 0)
                     {
 
-                        if (turnOrder[i].FACTION == Faction.enemy || turnOrder[i].FACTION == Faction.fairy)
+                        if (turnOrder[i].FACTION != Faction.ally && turnOrder[i].FACTION != Faction.hazard)
                         {
                             EnemyScript anEnemy = turnOrder[i].GetComponent<EnemyScript>();
                             CreateEvent(this, anEnemy, "Enemy Event", EnemyEvent, null, -1, SetEnemyEvent);
@@ -7192,7 +7274,7 @@ public class ManagerScript : EventRunner
         }
         if (PlayerPrefs.HasKey(Common.currentStory + "_c"))
         {
-            PlayerPrefs.DeleteKey(Common.currentStory +"_c");
+            PlayerPrefs.DeleteKey(Common.currentStory + "_c");
         }
         SoftReset();
 
@@ -12627,7 +12709,7 @@ public class ManagerScript : EventRunner
                         if (liveTarget.PSTATUS != PrimaryStatus.guarding)
                         {
 
-                            liveTarget.ACTIONS++;
+                            //  liveTarget.ACTIONS++;
                         }
 
                     }
@@ -13924,23 +14006,23 @@ public class ManagerScript : EventRunner
                             //skill.UseSkill(invokingObject, modification);
                             if (skill.SUBTYPE == SubSkillType.Charge)
                             {
-                                if (skill.OWNER.FATIGUE < 50)
-                                {
-                                    skill.OWNER.ACTIONS++;
-                                    //skill.OWNER.GENERATED++;
+                                //if (skill.OWNER.FATIGUE < 50)
+                                //{
+                                //    //skill.OWNER.ACTIONS++;
+                                //    //skill.OWNER.GENERATED++;
 
-                                    if (skill.OWNER.GetComponent<EnemyScript>())
-                                    {
-                                        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<EnemyScript>().DetermineNextAction, null, 0);
+                                //    if (skill.OWNER.GetComponent<EnemyScript>())
+                                //    {
+                                //        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<EnemyScript>().DetermineNextAction, null, 0);
 
-                                    }
+                                //    }
 
-                                    if (skill.OWNER.GetComponent<HazardScript>())
-                                    {
-                                        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<HazardScript>().DetermineNextAction, null, 0);
+                                //    if (skill.OWNER.GetComponent<HazardScript>())
+                                //    {
+                                //        CreateEvent(skill.OWNER, null, "" + "determine action event ", skill.OWNER.GetComponent<HazardScript>().DetermineNextAction, null, 0);
 
-                                    }
-                                }
+                                //    }
+                                //}
 
                             }
                             hitSomething = true;
@@ -16674,7 +16756,7 @@ public class ManagerScript : EventRunner
                 switch (invokingObj.FACTION)
                 {
                     case Faction.ally:
-                        theColor = Color.blue;
+                        theColor = Color.cyan;
                         turnText = "Player Phase";
                         TextObjectHandler.UpdateText(textHolder.phaseTracker, " Goal");
                         TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, " Goal");
@@ -16708,6 +16790,51 @@ public class ManagerScript : EventRunner
                         TextObjectHandler.UpdateText(textHolder.phaseTracker, "Enemy Phase");
                         TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Enemy Phase");
                         textHolder.phaseTracker.SetColor(Color.red);
+                        break;           
+                    case Faction.genie:
+                        {
+                            theColor = Color.green;
+                            turnText = "Genie Phase";
+                            TextObjectHandler.UpdateText(textHolder.phaseTracker, "Genie Phase");
+                            TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Genie Phase");
+                            textHolder.phaseTracker.SetColor(Color.yellow);
+                        }
+                        break;
+                    case Faction.vamprretti:
+                        {
+                            theColor = Color.black;
+                            turnText = "Vampretti Phase";
+                            TextObjectHandler.UpdateText(textHolder.phaseTracker, "Vampretti Phase");
+                            TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Vampretti Phase");
+                            textHolder.phaseTracker.SetColor(Color.yellow);
+                        }
+                        break;
+                    case Faction.revenant:
+                        {
+                            theColor = Color.blue;
+                            turnText = "Revenant Phase";
+                            TextObjectHandler.UpdateText(textHolder.phaseTracker, "Revenant Phase");
+                            TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Revenant Phase");
+                            textHolder.phaseTracker.SetColor(Color.yellow);
+                        }
+                        break;
+                    case Faction.antileon:
+                        {
+                            theColor = Common.orange;
+                            turnText = "Antileon Phase";
+                            TextObjectHandler.UpdateText(textHolder.phaseTracker, "Antileon Phase");
+                            TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Antileon Phase");
+                            textHolder.phaseTracker.SetColor(Color.yellow);
+                        }
+                        break;
+                    case Faction.thieves:
+                        {
+                            theColor = Color.grey;
+                            turnText = "Theif Phase";
+                            TextObjectHandler.UpdateText(textHolder.phaseTracker, "Theif Phase");
+                            TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Theif Phase");
+                            textHolder.phaseTracker.SetColor(Color.yellow);
+                        }
                         break;
                     default:
                         Debug.Log("Ya done goofed");

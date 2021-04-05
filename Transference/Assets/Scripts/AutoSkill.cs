@@ -316,7 +316,7 @@ public class AutoSkill : SkillScript
                 }
                 break;
             default:
-                Debug.Log("No reaction error");
+                Debug.Log("No reaction error auto");
                 return Reaction.none;
                 break;
         }

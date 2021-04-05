@@ -426,7 +426,7 @@ public class UsableScript : ScriptableObject
                 }
                 break;
             default:
-                Debug.Log("No reaction error");
+                Debug.Log("No reaction error usable");
                 return Reaction.none;
                 break;
         }

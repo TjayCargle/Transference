@@ -61,7 +61,11 @@ namespace Doublsb.Dialog
         [HideInInspector]
         public string Result;
 
+        [Header("Extras")]
         public bool autoAdvance = true;
+        public GameObject speaker1Nameplate = null;
+        public GameObject speaker2Nameplate = null;
+
 
         //================================================
         //Private Method
@@ -80,6 +84,17 @@ namespace Doublsb.Dialog
         //================================================
         //Public Method
         //================================================
+  
+        public Character FIRST
+        {
+            get { return _first_Character; }
+        }
+
+        public Character SECOND
+        {
+            get { return _second_Character; }
+        }
+
         #region Show & Hide
         public void Show(DialogData Data)
         {
@@ -97,11 +112,17 @@ namespace Doublsb.Dialog
                 if (_current_Character != _second_Character)
                 {
                     _second_Character.myImage.color = Common.dark;
+                    _current_Character.isFirst = true;
+               
+
                 }
 
                 if (_current_Character != _first_Character)
                 {
                     _first_Character.myImage.color = Common.dark;
+                    _current_Character.isFirst = false;
+                    if (speaker1Nameplate != null)
+                        speaker1Nameplate.SetActive(true);
                 }
 
             }
@@ -281,6 +302,7 @@ namespace Doublsb.Dialog
                 _first_Character = chars[0];
                 _second_Character = chars[1];
                 _current_Character = _first_Character;
+                _current_Character.isFirst = true;
             }
 
             if (_current_Character != null)
@@ -510,6 +532,10 @@ namespace Doublsb.Dialog
                 if (_second_Character != null)
                 {
                     _second_Character.gameObject.SetActive(true);
+                    if (speaker2Nameplate != null)
+                        speaker2Nameplate.SetActive(true);
+                   // if (person2Name != null)
+                        //person2Name.text = _second_Character.name;
                 }
             }
             else
@@ -530,6 +556,8 @@ namespace Doublsb.Dialog
                 if (_second_Character != null)
                 {
                     _second_Character.gameObject.SetActive(false);
+                    if (speaker2Nameplate != null)
+                        speaker2Nameplate.SetActive(false);
                 }
             }
             else
@@ -573,6 +601,7 @@ namespace Doublsb.Dialog
                         _current_Character = _first_Character;
                         _second_Character.gameObject.SetActive(false);
                         _first_Character.gameObject.SetActive(true);
+                        _current_Character.isFirst = true;
                     }
 
                     else if (_current_Character == _first_Character)
@@ -580,12 +609,14 @@ namespace Doublsb.Dialog
                         _current_Character = _second_Character;
                         _first_Character.gameObject.SetActive(false);
                         _second_Character.gameObject.SetActive(true);
+                        _current_Character.isFirst = false;
                     }
                     else
                     {
                         _current_Character = _first_Character;
                         _second_Character.gameObject.SetActive(false);
                         _first_Character.gameObject.SetActive(true);
+                        _current_Character.isFirst = true;
                     }
                 }
 

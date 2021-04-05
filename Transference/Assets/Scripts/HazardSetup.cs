@@ -58,6 +58,7 @@ public class HazardSetup : LivingSetup
             myself.BASE_STATS.DEFENSE = 2;
             myself.BASE_STATS.SPEED = 4;
             myself.BASE_STATS.DEX = 2;
+
             CommandSkill mySkill = myself.INVENTORY.CSKILLS[0] as CommandSkill;
             int reflectnum = (int)mySkill.ELEMENT;
             int weaknum = 7 - reflectnum;

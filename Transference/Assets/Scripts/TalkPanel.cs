@@ -12,6 +12,10 @@ public class TalkPanel : MonoBehaviour
     [SerializeField]
     public TextMeshProUGUI faceName;
 
+
+    [SerializeField]
+    public TextMeshProUGUI otherName;
+
     [SerializeField]
     public TextMeshProUGUI text;
 

@@ -40,8 +40,33 @@ public class NonCombatController : MonoBehaviour
     public int chapterFollow = -1;
     public GameObject animationCanvas;
     public CTTDemoManager cTT;
-    
+    public float enterLocation = 1.2f;
+    public float exitLocation = -1.2f;
+    public MovableObject movedObj1 = null;
+    public MovableObject movedObj2 = null;
     //    public int selectedChapter = 1;
+    private void Awake()
+    {
+        if (!PlayerPrefs.HasKey(Common.VERSION))
+        {
+            PlayerPrefs.DeleteAll();
+            OptionsManager.SaveDefaultSettings();
+        }
+        else
+        {
+            if (PlayerPrefs.GetFloat(Common.VERSION) != Common.VersionNumber)
+            {
+                PlayerPrefs.DeleteAll();
+                OptionsManager.SaveDefaultSettings();
+            }
+
+        }
+        PlayerPrefs.SetFloat(Common.VERSION, Common.VersionNumber);
+
+        PlayerPrefs.Save();
+
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -70,12 +95,13 @@ public class NonCombatController : MonoBehaviour
     }
     public void TogglePanel(GameObject panel)
     {
-        if(panel != null)
+        if (panel != null)
         {
             panel.gameObject.SetActive(!panel.activeInHierarchy);
 
         }
     }
+
     public void SetPlay()
     {
         if (source)
@@ -86,19 +112,63 @@ public class NonCombatController : MonoBehaviour
                 source.Play();
             }
         }
-        if (playCanvas)
-        {
-            playCanvas.gameObject.SetActive(true);
-        }
         for (int i = 0; i < animators.Length; i++)
         {
             Animator animator = animators[i];
             animator.SetBool("Pressed Start", true);
         }
-        if (mainCanvas)
+        if (movedObj1 != null)
         {
-            mainCanvas.gameObject.SetActive(false);
+            movedObj1.MoveEnter(
+                () =>
+                {
+                    if (playCanvas)
+                    {
+                        playCanvas.gameObject.SetActive(true);
+                    }
+
+                    if (mainCanvas)
+                    {
+                        mainCanvas.gameObject.SetActive(false);
+                    }
+
+
+                    if (movedObj2 != null)
+                    {
+                        movedObj2.MoveEnter();
+
+
+                    }
+                    return null;
+                }
+                );
+
+
+
         }
+        else
+        {
+            if (playCanvas)
+            {
+                playCanvas.gameObject.SetActive(true);
+            }
+
+            if (mainCanvas)
+            {
+                mainCanvas.gameObject.SetActive(false);
+            }
+
+
+            if (movedObj2 != null)
+            {
+                movedObj2.MoveEnter();
+
+
+            }
+        }
+
+
+
 
         if (musicCanvas)
         {
@@ -297,6 +367,14 @@ public class NonCombatController : MonoBehaviour
                             //       loading = true;
                             // selectedButton.playJax();
                             selectedButton.executeAction();
+                            NonCombatButton[] butttons = GameObject.FindObjectsOfType<NonCombatButton>();
+                            for (int i = 0; i < butttons.Length; i++)
+                            {
+                                butttons[i].gameObject.SetActive(true);
+                                butttons[i].enabled = true;
+                                butttons[i].CheckRequirements();
+
+                            }
                         }
 
                         break;
@@ -309,7 +387,30 @@ public class NonCombatController : MonoBehaviour
                         }
                         break;
                     case 6:
-                        SetUnPlay();
+                        if (movedObj2 != null)
+                        {
+                            movedObj2.MoveExit(
+                                () =>
+                                {
+                                    SetUnPlay();
+
+                                    if (movedObj1 != null)
+                                    {
+                                        movedObj1.MoveExit();
+                                    }
+                                    return null;
+                                }
+                                );
+                        }
+                        else
+                        {
+
+                            SetUnPlay();
+                            if (movedObj1 != null)
+                            {
+                                movedObj1.MoveExit();
+                            }
+                        }
                         break;
 
                     default:
@@ -321,15 +422,16 @@ public class NonCombatController : MonoBehaviour
                 }
             }
 
-            NonCombatButton[] buttons = GameObject.FindObjectsOfType<NonCombatButton>();
+            NonCombatButton[] buttons = Resources.FindObjectsOfTypeAll<NonCombatButton>();
             for (int i = 0; i < buttons.Length; i++)
             {
+                buttons[i].gameObject.SetActive(true);
                 buttons[i].enabled = true;
                 buttons[i].CheckRequirements();
-                if (buttons[i].type == 5)
-                {
-                    buttons[i].storyFollow = storyFollow;
-                }
+                //if (buttons[i].type == 5)
+                //{
+                //    buttons[i].storyFollow = storyFollow;
+                //}
             }
 
         }
@@ -339,7 +441,7 @@ public class NonCombatController : MonoBehaviour
     {
         if (!loading)
         {
-            if(Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 PlayerPrefs.DeleteKey(StorySection.ZeffSaveSlotPrologue.ToString());
                 PlayerPrefs.DeleteKey(StorySection.JaxSaveSlot1.ToString());

@@ -9,12 +9,12 @@ public class CutsceneManager : MonoBehaviour
 
     public void ChangeBackground(int newBack)
     {
-        if(backgrounds.Count > newBack && mainBackground != null)
+        if (backgrounds.Count > newBack && mainBackground != null)
         {
             mainBackground.sprite = backgrounds[newBack];
             mainBackground.transform.localScale = new Vector3(1.5f, 1.5f, 1);
 
-            if(newBack == 0)
+            if (newBack == 0)
             {
                 mainBackground.color = new Color(0.8f, 0.74f, 0.74f);
             }
@@ -24,21 +24,21 @@ public class CutsceneManager : MonoBehaviour
 
             }
 
-        }    
-    }    
+        }
+    }
 
-    public (State, string) CheckForMapChangeEvent(MapDetail checkMap, ManagerScript someManager, int defaultSceneEntry, TalkPanel talkPanel, SceneContainer currentScene,  string currentObjectiveString)
+    public (State, string) CheckForMapChangeEvent(MapDetail checkMap, ManagerScript someManager, int defaultSceneEntry, TalkPanel talkPanel, SceneContainer currentScene, string currentObjectiveString)
     {
 
 
-   
+
         switch (defaultSceneEntry)
         {
             case 27:
                 {
                     if (checkMap.mapIndex == 27)
                     {
-                    ChangeBackground(1);
+                        ChangeBackground(1);
                         someManager.myCamera.PlaySoundTrack(18);
                         someManager.myCamera.previousClip = someManager.myCamera.musicClips[13];
                         if (talkPanel)
@@ -61,7 +61,36 @@ public class CutsceneManager : MonoBehaviour
                         }
 
                     }
+                    if (checkMap.mapIndex == 17)
+                    {
+                        Common.enemiesCompletedPhase = true;
+                        Common.hasAllocated = true;
+                        Common.hasLearnedFromEnemy = true;
+                        if (Common.summonedZeffron == false)
+                        {
+                            List<tutorialStep> tSteps = new List<tutorialStep>();
+                            List<int> tClar = new List<int>();
 
+                            tSteps.Add(tutorialStep.showTutorial);
+                            tClar.Add(29);
+                            someManager.PrepareTutorial(tSteps, tClar);
+
+                            someManager.myCamera.PlaySoundTrack(6);
+                            someManager.myCamera.previousClip = someManager.myCamera.musicClips[16];
+
+                            if (talkPanel)
+                            {
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = Common.GetDatabase().GetSceneData("JaxTalkToZeffOne");
+                                currentObjectiveString = "Work with Zeffron";
+                                someManager.currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                someManager.SetScene(currentScene);
+
+                            }
+                        }
+                    }
                     if (checkMap.mapIndex == 16)
                     {
                         ChangeBackground(0);
@@ -144,7 +173,7 @@ public class CutsceneManager : MonoBehaviour
                                 //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = Common.GetDatabase().GetSceneData("JaxFindZeff");
-                                currentObjectiveString = "Work with Zeffron";
+                                currentObjectiveString = "Work with Jax";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
@@ -154,15 +183,72 @@ public class CutsceneManager : MonoBehaviour
 
                         }
                     }
+                    if (checkMap.mapIndex == 8)
+                    {
+                        someManager.myCamera.PlaySoundTrack(4);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = Common.GetDatabase().GetSceneData("JaxEncounterGlyph");
+                            currentObjectiveString = "Head to the Library";
+                            someManager.currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            someManager.SetScene(currentScene);
+                        }
+                    }
+                    if (checkMap.mapIndex == 14)
+                    {
+                        someManager.myCamera.PlaySoundTrack(4);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[10];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = Common.GetDatabase().GetSceneData("Scene4");
+                            someManager.currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            someManager.SetScene(currentScene);
+                        }
+                    }
+
+                    if (Common.hasSeenJaxAndZeffCatchUp == false)
+                    {
+                        if (checkMap.mapIndex == 16 || checkMap.mapIndex == 0)
+                        {
+                            someManager.myCamera.PlaySoundTrack(2);
+                            someManager.myCamera.previousClip = someManager.myCamera.musicClips[10];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = Common.GetDatabase().GetSceneData("JaxAndZeffronChapter1");
+                                currentObjectiveString = "Head to the Library";
+                                someManager.currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                someManager.SetScene(currentScene);
+                            }
+                            Common.hasSeenJaxAndZeffCatchUp = true;
+                        }
+
+                    }
+
+
                 }
                 break;
             case 17:
                 {
                     ChangeBackground(0);
-                  
+
                     if (checkMap.mapIndex == 17)
                     {
-
+                        Common.enemiesCompletedPhase = true;
+                        Common.hasAllocated = true;
+                        Common.hasLearnedFromEnemy = true;
                         if (Common.summonedZeffron == false)
                         {
                             List<tutorialStep> tSteps = new List<tutorialStep>();
@@ -177,17 +263,14 @@ public class CutsceneManager : MonoBehaviour
 
                             if (talkPanel)
                             {
-                                //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = Common.GetDatabase().GetSceneData("JaxTalkToZeffOne");
-                                currentObjectiveString = "Work with Jax";
+                                currentObjectiveString = "Work with Zeffron";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
                                 someManager.SetScene(currentScene);
-                                //currentScene.isRunning = true;
-                                //someManager.menuManager.ShowNone();
-                                //(this, null, "scene0 event", someManager.CheckSceneRunning, null, 0);
+
                             }
                         }
                     }
@@ -249,7 +332,7 @@ public class CutsceneManager : MonoBehaviour
                 break;
         }
 
-        return ( someManager.currentState, currentObjectiveString);
+        return (someManager.currentState, currentObjectiveString);
     }
 
 

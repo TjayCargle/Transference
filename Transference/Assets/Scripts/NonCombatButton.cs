@@ -30,7 +30,8 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (controller)
         {
             LeanTween.scale(this.gameObject, new Vector3(1.2f, 1.2f, 1.2f), 0.2f);//.setOnComplete(x => { });
-            LeanTween.moveLocalX(this.gameObject, enterLocation, 0.2f);
+            if (enterLocation != 0)
+                LeanTween.moveLocalX(this.gameObject, enterLocation, 0.2f);
             // controller.selectedButton.GetComponentInChildren<Text>().color = Color.white;
 
             if (type < controller.targets.Length)
@@ -53,7 +54,7 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 Color brown;
                 ColorUtility.TryParseHtmlString("#FF9500", out brown);//;
 
-                controller.selectedButton.GetComponent<Image>().color = brown;
+                controller.selectedButton.GetComponent<Image>().color = Color.white;
                 controller.selectedButton = this;
                 //controller.selectedButton.GetComponentInChildren<Text>().color = Color.yellow;
                 controller.selectedButton.GetComponent<Image>().color = Color.yellow;
@@ -343,7 +344,8 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void OnPointerExit(PointerEventData eventData)
     {
         LeanTween.scale(this.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 0.2f);//.setOnComplete(x => { });
-        LeanTween.moveLocalX(this.gameObject, exitLocation, 0.2f);
+        if (enterLocation != 0)
+            LeanTween.moveLocalX(this.gameObject, exitLocation, 0.2f);
     }
 
     public bool CheckRequirements()
@@ -377,10 +379,8 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             else if (controller.chapterFollow > 0)
                 currentStory += controller.chapterFollow - 1;
 
-            Debug.Log(currentStory);
             if (!PlayerPrefs.HasKey(currentStory.ToString() + "_c"))
             {
-            Debug.Log("turning off");
                 turnOff = true;
             }
             else
@@ -392,20 +392,21 @@ public class NonCombatButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
         if (turnOff == true)
         {
-            Image myImg = GetComponent<Image>();
-            Color disabled;
-            ColorUtility.TryParseHtmlString("#6C440B", out disabled);//;
-            myImg.color = disabled;
-            enabled = false;
+            //Image myImg = GetComponent<Image>();
+            //Color disabled;
+            //ColorUtility.TryParseHtmlString("#6C440B", out disabled);//;
+            //myImg.color = disabled;
+            //enabled = false;
+            gameObject.SetActive(false);
         }
         else
         {
-            if (type == 4)
+            //if (type == 4)
             {
-                Image myImg = GetComponent<Image>();
-                Color enabledColor;
-                ColorUtility.TryParseHtmlString("#FF9500", out enabledColor);//;
-                myImg.color = enabledColor;
+                //Image myImg = GetComponent<Image>();
+                //Color enabledColor;
+                //ColorUtility.TryParseHtmlString("#FF9500", out enabledColor);//;
+                //myImg.color = Color.white; //enabledColor;
                 enabled = true;
                 if (GetComponentInChildren<TextMeshProUGUI>())
                 {

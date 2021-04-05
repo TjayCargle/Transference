@@ -1201,7 +1201,8 @@ public class Common : ScriptableObject
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
-
+    public static float VersionNumber = 0.90f;
+    public static string VERSION = "Version";
     public static string JaxSaveSlot1 = "JaxSaveSlot1";
 
 
@@ -4053,11 +4054,12 @@ public class Common : ScriptableObject
 
         string characterName = dataString[dataIIndex];
         dataIIndex++;
-
+        Debug.Log(characterName);
         Faction newFacttion;
         System.Enum.TryParse(dataString[dataIIndex], out newFacttion);
         //  generatedCharacter.FACTION = newFacttion;
         dataIIndex++;
+
 
         int tempInt = 0;
         System.Int32.TryParse(dataString[dataIIndex], out tempInt);
@@ -4101,6 +4103,7 @@ public class Common : ScriptableObject
 
             case Faction.hazard:
                 {
+                    Debug.Log("-1");
                     HazardManager hazardManager = GameObject.FindObjectOfType<HazardManager>();
                     if (hazardManager != null)
                     {
@@ -4145,6 +4148,7 @@ public class Common : ScriptableObject
         generatedCharacter.currentTile = GetManager().tileMap[currentTileIndex];
         generatedCharacter.transform.position = GetManager().tileMap[currentTileIndex].transform.position + new Vector3(0, 0.5f, 0.12f); ;
         dataIIndex++;
+
 
 
         if (generatedCharacter.BASE_STATS == null)
@@ -4376,6 +4380,14 @@ public class Common : ScriptableObject
             newArmor.TURNCOUNT = curInx;
             dataIIndex++;
 
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.HEALTH = curInx;
+            dataIIndex++;
+
+            System.Int32.TryParse(dataString[dataIIndex], out curInx);
+            newArmor.MAX_HEALTH = curInx;
+            dataIIndex++;
+
             for (int j = 0; j < newArmor.HITLIST.Count; j++)
             {
                 EHitType hittype;
@@ -4407,6 +4419,7 @@ public class Common : ScriptableObject
         totalAmount = 0;
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
+
 
         for (int i = 0; i < totalAmount; i++)
         {
@@ -4527,6 +4540,7 @@ public class Common : ScriptableObject
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
 
+
         for (int i = 0; i < totalAmount; i++)
         {
             int curInx = 0;
@@ -4563,11 +4577,12 @@ public class Common : ScriptableObject
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
 
+
         for (int i = 0; i < totalAmount; i++)
         {
             int curInx = 0;
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
-            Debug.Log("auto=" + curInx);
+            //Debug.Log("auto=" + curInx);
             AutoSkill newAuto = GetDatabase().LearnSkill(curInx, generatedCharacter) as AutoSkill;
             dataIIndex++;
 
@@ -4610,6 +4625,7 @@ public class Common : ScriptableObject
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
 
+
         for (int i = 0; i < totalAmount; i++)
         {
             int curInx = 0;
@@ -4633,6 +4649,7 @@ public class Common : ScriptableObject
         totalAmount = 0;
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
+
 
         for (int i = 0; i < totalAmount; i++)
         {
@@ -4659,13 +4676,13 @@ public class Common : ScriptableObject
         System.Int32.TryParse(dataString[dataIIndex], out totalAmount);
         dataIIndex++;
 
+
         for (int i = 0; i < totalAmount; i++)
         {
             EffectScript someEffect = new EffectScript();
 
             SideEffect side;
             System.Enum.TryParse(dataString[dataIIndex], out side);
-            Debug.Log("eff=" + side);
             dataIIndex++;
             someEffect.EFFECT = side;
 
@@ -4677,6 +4694,7 @@ public class Common : ScriptableObject
 
             generatedCharacter.INVENTORY.EFFECTS.Add(someEffect);
         }
+
 
 
         return generatedCharacter;
