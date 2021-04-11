@@ -185,6 +185,7 @@ public enum SubSkillType
     Strike,
     Skill,
     Spell,
+    Enemy,
     None
 }
 public enum Augment
@@ -564,7 +565,10 @@ public enum SideEffect
     slamback,
     swap,
     cripple,
-    death
+    death,
+    summon,
+    egg,
+    hatch
 
 
 }

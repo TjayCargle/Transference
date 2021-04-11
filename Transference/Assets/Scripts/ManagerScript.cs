@@ -15443,6 +15443,11 @@ public class ManagerScript : EventRunner
 
             switch (effect)
             {
+                case SideEffect.egg:
+                    {
+
+                    }
+                    break;
                 case SideEffect.death:
                     {
                         KillGridObject(skill.OWNER, target);

@@ -72,7 +72,10 @@ public class AutoSkill : SkillScript
                 return Reaction.none;
            
             case SkillReaction.extraAction:
-                OWNER.ACTIONS++;
+                if (OWNER.FACTION == Faction.ally)
+                    OWNER.ACTIONS++;
+                else
+                    OWNER.GENERATED++;
                 return Reaction.none;
            
             case SkillReaction.GainManaAmount:

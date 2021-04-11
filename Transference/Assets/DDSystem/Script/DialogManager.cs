@@ -66,7 +66,11 @@ namespace Doublsb.Dialog
         public GameObject speaker1Nameplate = null;
         public GameObject speaker2Nameplate = null;
 
+        public GameObject logField = null;
+        public TextMeshProUGUI logText;
+        public string trueLog = "";
 
+        public TextMeshProUGUI autoText;
         //================================================
         //Private Method
         //================================================
@@ -84,7 +88,7 @@ namespace Doublsb.Dialog
         //================================================
         //Public Method
         //================================================
-  
+
         public Character FIRST
         {
             get { return _first_Character; }
@@ -113,7 +117,7 @@ namespace Doublsb.Dialog
                 {
                     _second_Character.myImage.color = Common.dark;
                     _current_Character.isFirst = true;
-               
+
 
                 }
 
@@ -141,6 +145,8 @@ namespace Doublsb.Dialog
             _move("0");
             _hide("0");
             _hide("1");
+            trueLog = "";
+            UpdateAuto(autoAdvance);
             StartCoroutine(Activate_List(Data));
 
         }
@@ -153,7 +159,24 @@ namespace Doublsb.Dialog
                     StartCoroutine(_skip()); break;
 
                 case State.Wait:
-                    if (_current_Data.SelectList.Count <= 0) Hide(); break;
+                    {
+                        if (_current_Data.SelectList.Count <= 0)
+                            Hide();
+
+                        if (_manager != null)
+                        {
+                            _manager.NextScene();
+                        }
+
+                        break;
+
+                    }
+                default:
+                    if (_manager != null)
+                    {
+                        _manager.NextScene();
+                    }
+                    break;
             }
         }
 
@@ -167,9 +190,9 @@ namespace Doublsb.Dialog
             if (autoAdvance == false)
             {
 
-                Printer.SetActive(false);
-                Characters.SetActive(false);
-                Selector.SetActive(false);
+                //  Printer.SetActive(false);
+                // Characters.SetActive(false);
+                //Selector.SetActive(false);
             }
 
             state = State.Deactivate;
@@ -294,7 +317,7 @@ namespace Doublsb.Dialog
             Printer_Text.text = string.Empty;
 
             Printer.SetActive(true);
-           // Characters.SetActive(_current_Character != null);
+            // Characters.SetActive(_current_Character != null);
             Character[] chars = Characters.GetComponentsInChildren<Character>();
 
             if (chars.Length == 2)
@@ -309,8 +332,8 @@ namespace Doublsb.Dialog
             {
                 _current_Character.gameObject.SetActive(true);
             }
-            
-            if(_manager == null)
+
+            if (_manager == null)
             {
                 _manager = GameObject.FindObjectOfType<ManagerScript>();
             }
@@ -389,6 +412,8 @@ namespace Doublsb.Dialog
                 {
                     case Command.print:
                         yield return _printingRoutine = StartCoroutine(_print(item.Context));
+                        if (item.Context.Trim() != string.Empty)
+                            trueLog += _current_Character.name + ": " + item.Context + "\n";
                         break;
 
                     case Command.color:
@@ -457,7 +482,7 @@ namespace Doublsb.Dialog
                         break;
                     case Command.setAsFirst:
                         {
-                            if(Characters != null)
+                            if (Characters != null)
                             {
                                 Characters.transform.GetChild(0).name = item.Context;
                             }
@@ -534,8 +559,8 @@ namespace Doublsb.Dialog
                     _second_Character.gameObject.SetActive(true);
                     if (speaker2Nameplate != null)
                         speaker2Nameplate.SetActive(true);
-                   // if (person2Name != null)
-                        //person2Name.text = _second_Character.name;
+                    // if (person2Name != null)
+                    //person2Name.text = _second_Character.name;
                 }
             }
             else
@@ -643,10 +668,63 @@ namespace Doublsb.Dialog
                 _currentDelay = 0;
                 while (state != State.Wait) yield return null;
                 _currentDelay = Delay;
+
             }
         }
 
         #endregion
+        public void ToggleAuto()
+        {
+            autoAdvance = !autoAdvance;
+            if (autoText != null)
+            {
+                if (autoAdvance == true)
+                {
+                    autoText.text = "Auto: <color=green>ON</color>";
+                }
+                else
+                {
+                    autoText.text = "Auto: <color=#808080>OFF</color>";
 
+                }
+            }
+        }
+        public void UpdateAuto(bool newBool)
+        {
+            autoAdvance = newBool;
+            if (autoText != null)
+            {
+                if (autoAdvance == true)
+                {
+                    autoText.text = "Auto: <color=green>ON</color>";
+                }
+                else
+                {
+                    autoText.text = "Auto: <color=#808080>OFF</color>";
+
+                }
+            }
+        }
+        private bool lastAuto = false;
+        public void ToggleLog()
+        {
+            if (logField != null)
+            {
+                logField.gameObject.SetActive(!logField.gameObject.activeInHierarchy);
+                if (logField.activeInHierarchy)
+                {
+                    lastAuto = autoAdvance;
+                    autoAdvance = false;
+                    if (logText != null)
+                    {
+                        logText.text = trueLog;
+                    }
+                }
+                else
+                {
+                    autoAdvance = lastAuto;
+                }
+            }
+        }
     }
 }

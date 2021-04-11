@@ -191,8 +191,8 @@
 123,Confusing Strike,Auto,None,20% chance + Dex to heal the damage you delt after a basic attack.,20.0,afterDmg,confuse,0,210,5
 -
 -Support
-150,Heal,Support,Heal,heal,8,magical,any,1,0,100,tiny,1,0,1,0,1
-151,Swap,Support,Movement,swap,8,magical,adjacent,1,0,100,tiny,1,0,1,0,1
+150,Heal,Support,Heal,heal,8,magical,any,100,tiny,1,0
+151,Swap,Support,Movement,swap,8,magical,adjacent,100,tiny,1,0
 -Revive
 -Siphon
 -Transfer
@@ -235,3 +235,6 @@
 222,Luck Be a Lady,Passive,None,N/A,1,Electric,Water,Slash,0
 223,Arachnofobia,Passive,None,N/A,1,Force,Ailment,Blunt,0
 224,On Guard,Passive,None,N/A,0,Force,slash,Force,1,onUse,enterGuardState
+-
+-Enemy Specific Skills
+3000,Lay Egg,Support, Enemy, egg,0, magical ,adjacent,100,tiny,0,0

@@ -132,7 +132,7 @@ public class UsableScript : ScriptableObject
                             }
                         }
                     }
-                 
+
                 }
             }
             return true;
@@ -151,7 +151,10 @@ public class UsableScript : ScriptableObject
                 return Reaction.none;
 
             case SkillReaction.extraAction:
-                USER.ACTIONS++;
+                if (USER.FACTION == Faction.ally)
+                    USER.ACTIONS++;
+                else
+                    USER.GENERATED++;
                 return Reaction.none;
 
             case SkillReaction.GainManaAmount:
@@ -426,7 +429,10 @@ public class UsableScript : ScriptableObject
                 }
                 break;
             default:
-                Debug.Log("No reaction error usable");
+                if (USER)
+                    Debug.Log("No reaction error usable from " + USER.FullName);
+                else
+                    Debug.Log("No reaction error usable from unknown");
                 return Reaction.none;
                 break;
         }

@@ -524,8 +524,8 @@ public class DatabaseManager : MonoBehaviour
                                 break;
                             case Element.Support:
                                 {
-                                    int index = 15;
-                                    int count = Int32.Parse(parsed[14]);
+                                   // int index = 15;
+                                   // int count = Int32.Parse(parsed[14]);
                                     CommandSkill support = ScriptableObject.CreateInstance<CommandSkill>();
                                     skill.Transfer(support);
                                     support.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
@@ -986,19 +986,19 @@ public class DatabaseManager : MonoBehaviour
                         break;
                     case Element.Support:
                         {
-                            int index = 15;
-                            int count = Int32.Parse(parsed[14]);
+                            //int index = 15;
+                            //int count = Int32.Parse(parsed[14]);
                             CommandSkill support = ScriptableObject.CreateInstance<CommandSkill>();
                             skill.Transfer(support);
                             support.EFFECT = (SideEffect)Enum.Parse(typeof(SideEffect), parsed[4]);
                             support.COST = Int32.Parse(parsed[5]);
                             support.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
                             support.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
-                            support.ACCURACY = Int32.Parse(parsed[10]);
+                            support.ACCURACY = Int32.Parse(parsed[8]);
 
-                            support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
-                            support.HITS = Int32.Parse(parsed[12]);
-                            support.CRIT_RATE = Int32.Parse(parsed[13]);
+                            support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[9]);
+                            support.HITS = Int32.Parse(parsed[10]);
+                            support.CRIT_RATE = Int32.Parse(parsed[11]);
                             //support.TILES = new System.Collections.Generic.List<Vector2>();
                             support.OPPORTUNITY = Element.Buff;
 

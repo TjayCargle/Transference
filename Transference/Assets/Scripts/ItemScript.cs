@@ -802,7 +802,7 @@ public class ItemScript : UsableScript
                 DESC = "Grants " + trueValue + "random effect to ally or self";
                 break;
             case ItemType.summon:
-                DESC = "Summons a " + NAME.Split(' ')[0] + " as an ally. Cannot be used if you already have a summon.";
+                DESC = "Summons a " + NAME.Split(' ')[0] + " as an ally.";
 
                 break;
         }

@@ -651,10 +651,18 @@ public class CommandSkill : SkillScript
                         potentialDesc = "Heals " + DAMAGE + " amount of health to target. Costs " + ((cost * 10)) + "% Mana";
                     }
                     break;
+                case SideEffect.egg:
+                    {
+                        potentialDesc = "Lays a Scorpiee Egg in an unoccupied space. Enemy Specific";
+
+                    }
+                    break;
                 default:
                     potentialDesc = "u messed up ";
                     break;
             }
+            return potentialDesc;
+
 
         }
         else
