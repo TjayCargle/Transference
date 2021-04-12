@@ -238,3 +238,4 @@
 -
 -Enemy Specific Skills
 3000,Lay Egg,Support, Enemy, egg,0, magical ,adjacent,100,tiny,0,0
+3001,Hatch,Support, Enemy, hatch,0, magical ,any,100,tiny,0,0

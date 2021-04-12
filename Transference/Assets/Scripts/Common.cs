@@ -676,7 +676,8 @@ public enum BossCommand
     drain,
     charge,
     shield,
-    overload
+    overload,
+    egg
 }
 public enum NonCombatButtonAction
 {
@@ -2536,11 +2537,13 @@ public class Common : ScriptableObject
                         someProfile.currentPhase = BossPhase.inital;
                         if (someProfile.commands == null)
                             someProfile.commands = new List<BossCommand>();
-                        someProfile.commands.Add(BossCommand.spell);
-                        someProfile.commands.Add(BossCommand.spell);
-                        someProfile.commands.Add(BossCommand.restore);
-                        someProfile.commands.Add(BossCommand.spell);
-                        someProfile.commands.Add(BossCommand.restore);
+                        someProfile.commands.Add(BossCommand.egg);
+                        someProfile.commands.Add(BossCommand.egg);
+                        someProfile.commands.Add(BossCommand.egg);
+                        //someProfile.commands.Add(BossCommand.spell);
+                        //someProfile.commands.Add(BossCommand.restore);
+                        //someProfile.commands.Add(BossCommand.spell);
+                        //someProfile.commands.Add(BossCommand.restore);
                     }
                     break;
                 case BossPhase.inital:

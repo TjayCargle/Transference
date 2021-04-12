@@ -994,7 +994,7 @@ public class DetailsScreen : MonoBehaviour
         {
             for (int i = 0; i < selectedHitlist.Count; i++)
             {
-                Debug.Log("yo");
+
                 armorreacts[i].sprite = armorSprites[(int)selectedHitlist[i]];
 
                 if (armorreacts[i].transform.parent.GetComponent<TooltipConnector>())
@@ -1004,7 +1004,7 @@ public class DetailsScreen : MonoBehaviour
                         pTip.myTooltip.enabled = true;
                     pTip.myUsable = null;
                     pTip.myHitType = selectedHitlist[i];
-                    Debug.Log("sup");
+
                     pTip.UpdateTooltip();
                 }
                 if (viewContent >= 0 && selectableContent[viewContent] == armorreacts[i].transform.parent.GetComponent<Image>())

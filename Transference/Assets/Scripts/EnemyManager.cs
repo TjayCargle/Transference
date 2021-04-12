@@ -93,6 +93,53 @@ public class EnemyManager : MonoBehaviour
         }
         return subenemies;
     }
+    public void ReplaceEnemy(EnemyScript someEnemy, int specialId = -1)
+    {
+
+        EnemySetup enemySetup = someEnemy.GetComponent<EnemySetup>();
+        someEnemy.Unset();
+        enemySetup.Unset();
+
+        if (specialId == -1)
+            specialId = Random.Range(0, 6);
+        enemySetup.enemyId = specialId;
+        someEnemy.Setup();
+
+    }
+
+    public List<EnemyScript> getNewEnemies(int num, int specialId = -1)
+    {
+
+        List<EnemyScript> subenemies = new List<EnemyScript>();
+        {
+
+            while (subenemies.Count < num)
+            {
+                GameObject temp = Instantiate(enemyPrefab, Vector2.zero, Quaternion.identity);
+                EnemySetup enemySetup = temp.GetComponent<EnemySetup>();
+                enemySetup.Unset();
+
+                if (specialId == -1)
+                    specialId = Random.Range(0, 6);
+                enemySetup.enemyId = specialId;
+                EnemyScript enemy = temp.AddComponent<EnemyScript>();
+                enemy.Setup();
+                if (enemySetup.enemyId == 2)
+                {
+                    enemy.FACTION = Faction.fairy;
+                }
+                else
+                {
+                    enemy.FACTION = Faction.enemy;
+                }
+                enemies.Add(enemy);
+                subenemies.Add(enemy);
+
+            }
+        }
+  
+        return subenemies;
+    }
 
     public List<EnemyScript> getEnemies(MapData data)
     {
@@ -116,9 +163,14 @@ public class EnemyManager : MonoBehaviour
                     enemySetup.enemyId = Random.Range(0, 6);
                 }
                 enemies[i].Setup();
-                if (enemySetup.enemyId >= 100)
+                if (enemySetup.enemyId == 101)
                 {
                     enemies[i].FACTION = Faction.fairy;
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
+                }
+                else if (enemySetup.enemyId == 102)
+                {
+                    enemies[i].FACTION = Faction.enemy;
                     Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
                 }
                 subenemies.Add(enemies[i]);
@@ -144,9 +196,14 @@ public class EnemyManager : MonoBehaviour
                 }
 
                 enemies[i].Setup();
-                if (enemySetup.enemyId >= 100)
+                if (enemySetup.enemyId == 101)
                 {
                     enemies[i].FACTION = Faction.fairy;
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
+                }
+                else if (enemySetup.enemyId == 102)
+                {
+                    enemies[i].FACTION = Faction.enemy;
                     Common.UpdateBossProfile(enemySetup.enemyId, enemies[i]);
                 }
                 subenemies.Add(enemies[i]);
@@ -170,8 +227,14 @@ public class EnemyManager : MonoBehaviour
                 EnemyScript enemy = temp.AddComponent<EnemyScript>();
                 enemy.Setup();
                 //enemy.FACTION = Faction.fairy;
-                if (enemySetup.enemyId >= 100)
+                if (enemySetup.enemyId == 101)
                 {
+                    enemy.FACTION = Faction.fairy;
+                    Common.UpdateBossProfile(enemySetup.enemyId, enemy);
+                }
+                else if (enemySetup.enemyId == 102)
+                {
+                    enemy.FACTION = Faction.enemy;
                     Common.UpdateBossProfile(enemySetup.enemyId, enemy);
                 }
                 enemies.Add(enemy);

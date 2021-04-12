@@ -964,7 +964,11 @@ public class LivingObject : GridObject
             }
             float spd = STATS.SPEED + BASE_STATS.SPEED + ARMOR.SPEED;
 
-            ACTIONS = (int)(spd / 10.0f) + 3;
+            ACTIONS = (int)(spd / 10.0f);
+            if (spd == 0)
+                ACTIONS = 1;
+            else
+                ACTIONS += 3;
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.Rotate(new Vector3(90, 0, 0));
@@ -1133,7 +1137,15 @@ public class LivingObject : GridObject
     }
     public void TakeAction()
     {
-        myManager.CreateEvent(this, null, "Neo take action", TakeActionEvent);
+        if (FACTION != Faction.ally)
+        {
+            TakeRealAction();
+        }
+        else
+        {
+
+            myManager.CreateEvent(this, null, "Neo take action", TakeActionEvent);
+        }
 
     }
     public void TakeRealAction()
@@ -1591,7 +1603,7 @@ public class LivingObject : GridObject
         //2 = mag
         //3 = sprt
 
-        switch(expType)
+        switch (expType)
         {
             case 0:
                 {
@@ -1618,7 +1630,7 @@ public class LivingObject : GridObject
                 break;
         }
 
-     
+
 
 
         return 100;
@@ -1887,6 +1899,14 @@ public class LivingObject : GridObject
             {
                 continue;
             }
+            if (possibility.GetType() == typeof(CommandSkill))
+            {
+                if ((possibility as CommandSkill).SUBTYPE == SubSkillType.Enemy)
+                {
+                    continue;
+                }
+            }
+
             if (possibility.GetType() == typeof(ArmorScript))
             {
                 //200 + armor is charcter specific
@@ -2155,7 +2175,7 @@ public class LivingObject : GridObject
         }
     }
 
-   protected Vector2 prev = Vector2.zero;
+    protected Vector2 prev = Vector2.zero;
     private void Update()
     {
 

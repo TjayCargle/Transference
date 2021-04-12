@@ -28,3 +28,4 @@ id, name, description, defense, resistance, speed, Water Affect, Fire Affect, Ic
 212,Royal Barrier,Purely Neutral, 0, 0, 0, absorbs,resists,resists,resists,resists,resists, cripples,normal
 213,Queen Barrier,Purely Neutral, 0, 0, 0, cripples,nulls,reflects,nulls,resists,weak, reflects,resists
 214,QueenBoss,Purely Neutral, 0, 0, 0, normal,normal,normal,normal,weak,weak, weak,weak
+215,Weak Barrier, Weak,0,0,0, weak, weak, weak, weak, weak, weak, weak, weak

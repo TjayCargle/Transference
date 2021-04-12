@@ -6889,8 +6889,15 @@ public class ManagerScript : EventRunner
             }
             else
             {
-                acts += turnOrder[i].GENERATED;
-                acts += 3;
+                if (turnOrder[i].SPEED > 0)
+                {
+                    acts += turnOrder[i].GENERATED;
+                    acts += 3;
+                }
+                else
+                {
+                    acts = 1;
+                }
 
             }
 
@@ -7544,8 +7551,15 @@ public class ManagerScript : EventRunner
                     }
                     else
                     {
-                        acts += livingObjects[i].GENERATED;
-                        acts += 3;
+                        if (turnOrder[i].SPEED > 0)
+                        {
+                            acts += turnOrder[i].GENERATED;
+                            acts += 3;
+                        }
+                        else
+                        {
+                            acts = 1;
+                        }
                     }
 
                     livingObjects[i].GENERATED = 0;
@@ -8069,7 +8083,7 @@ public class ManagerScript : EventRunner
             {
                 if (aliveObj.FACTION != Faction.ally)
                 {
-                    if (atkbles[i].MYCOLOR != Color.blue && atkbles[i].MYCOLOR != new Color(0, 0, 1 * 0.25f, 1))
+                    if (atkbles[i].MYCOLOR != Color.blue && atkbles[i].MYCOLOR != new Color(0, 0, 1 * 0.55f, 1))
                     {
                         atkbles[i].MYCOLOR = Color.magenta;
                     }
@@ -8079,7 +8093,7 @@ public class ManagerScript : EventRunner
             else
             {
 
-                if (atkbles[i].MYCOLOR != Color.cyan && atkbles[i].MYCOLOR != new Color(0, 1 * 0.25f, 1 * 0.25f, 1))
+                if (atkbles[i].MYCOLOR != Color.cyan && atkbles[i].MYCOLOR != new Color(0, 1 * 0.55f, 1 * 0.55f, 1))
                 {
                     atkbles[i].MYCOLOR = Color.red;
                 }
@@ -11712,6 +11726,10 @@ public class ManagerScript : EventRunner
             Debug.Log("U don goofed");
             return react;
         }
+        if (attackingElement == Element.Support)
+        {
+            return react;
+        }
         react.dmgElement = attackingElement;
         float mod = 0.0f;
         switch (dmgObject.ARMOR.HITLIST[(int)attackingElement])
@@ -11989,6 +12007,13 @@ public class ManagerScript : EventRunner
             case SubSkillType.Heal:
                 {
                     return new DmgReaction() { damage = (int)(0.10f + ((float)(attackingObject.MAGIC + attackingObject.MAGLEVEL) / 100.0f) * dmgObject.MAX_HEALTH), reaction = Reaction.Heal, usedSkill = skill };
+                }
+                break;
+            case SubSkillType.Enemy:
+                {
+                    Debug.Log("Hi enemy");
+                    ApplyEffect(dmgObject, skill.EFFECT, skill.ACCURACY, skill);
+                    return new DmgReaction() { damage = 0, reaction = Reaction.none, usedSkill = skill };
                 }
                 break;
             case SubSkillType.Ailment:
@@ -13138,7 +13163,6 @@ public class ManagerScript : EventRunner
                                     else
                                     {
 
-                                        Debug.Log("is.... wahyyssyy");
                                     }
 
                                 }
@@ -13146,7 +13170,7 @@ public class ManagerScript : EventRunner
                             }
                             else
                             {
-                                Debug.Log("Enemy got no skills");
+                                //   Debug.Log("Enemy got no skills");
                             }
                             for (int i = 0; i < currentMap.enemyIndexes.Count; i++)
                             {
@@ -13904,15 +13928,15 @@ public class ManagerScript : EventRunner
                 if (targetIndicies.Count > 0)
                 {
                     opptargets.Clear();
-                    if (expbar)
-                    {
-                        if (invokingObject)
-                        {
+                    //if (expbar)
+                    //{
+                    //    if (invokingObject)
+                    //    {
 
-                            expbar.currentUser = invokingObject;
-                            expbar.slider.value = invokingObject.BASE_STATS.EXP;
-                        }
-                    }
+                    //        expbar.currentUser = invokingObject;
+                    //        expbar.slider.value = invokingObject.BASE_STATS.EXP;
+                    //    }
+                    //}
 
                     if (skill != null)
                     {
@@ -13921,82 +13945,90 @@ public class ManagerScript : EventRunner
                         for (int i = 0; i < targetIndicies.Count; i++)
                         {
                             GridObject potentialTarget = GetObjectAtTile(currentAttackList[targetIndicies[i]]);
-                            if (potentialTarget.GetComponent<LivingObject>())
+                            if (potentialTarget != null)
                             {
-                                LivingObject target = potentialTarget.GetComponent<LivingObject>();
-                                if (skill.SUBTYPE == SubSkillType.Buff || skill.ELEMENT == Element.Support)
+                                if (potentialTarget.GetComponent<LivingObject>())
                                 {
-                                    if (target.FACTION == invokingObject.FACTION)
+                                    LivingObject target = potentialTarget.GetComponent<LivingObject>();
+                                    if (skill.SUBTYPE == SubSkillType.Buff || skill.ELEMENT == Element.Support)
                                     {
-                                        if (!target.INVENTORY.BUFFS.Contains(skill))
+                                        if (target.FACTION == invokingObject.FACTION)
                                         {
-                                            acceptable = true;
+                                            if (!target.INVENTORY.BUFFS.Contains(skill))
+                                            {
+                                                acceptable = true;
 
-                                        }
-                                        else
-                                        {
-                                            CreateTextEvent(this, skill.NAME + " is already applied to " + target.FullName, "validation text", CheckText, TextStart);
-                                            PlayExitSnd();
-                                            return hitSomething;
-                                        }
-                                    }
-
-                                    else
-                                    {
-                                        CreateTextEvent(this, target.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
-                                        PlayExitSnd();
-                                        return hitSomething;
-                                    }
-                                }
-                                else
-                                {
-                                    if (target.FACTION != invokingObject.FACTION)
-                                    {
-                                        if (skill.SUBTYPE == SubSkillType.Debuff)
-                                        {
-                                            if (target.INVENTORY.DEBUFFS.Contains(skill))
+                                            }
+                                            else
                                             {
                                                 CreateTextEvent(this, skill.NAME + " is already applied to " + target.FullName, "validation text", CheckText, TextStart);
                                                 PlayExitSnd();
                                                 return hitSomething;
-
                                             }
-
                                         }
 
-                                        acceptable = true;
-
-
-                                    }
-                                    else if (skill.RTYPE == RangeType.area)
-                                    {
-                                        acceptable = true;
+                                        else
+                                        {
+                                            CreateTextEvent(this, target.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
+                                            PlayExitSnd();
+                                            return hitSomething;
+                                        }
                                     }
                                     else
                                     {
-                                        //CreateTextEvent(this, target.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
-                                        //PlayExitSnd();
-                                        //return hitSomething;
-                                        acceptable = true;
+                                        if (target.FACTION != invokingObject.FACTION)
+                                        {
+                                            if (skill.SUBTYPE == SubSkillType.Debuff)
+                                            {
+                                                if (target.INVENTORY.DEBUFFS.Contains(skill))
+                                                {
+                                                    CreateTextEvent(this, skill.NAME + " is already applied to " + target.FullName, "validation text", CheckText, TextStart);
+                                                    PlayExitSnd();
+                                                    return hitSomething;
+
+                                                }
+
+                                            }
+
+                                            acceptable = true;
+
+
+                                        }
+                                        else if (skill.RTYPE == RangeType.area)
+                                        {
+                                            acceptable = true;
+                                        }
+                                        else
+                                        {
+                                            //CreateTextEvent(this, target.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
+                                            //PlayExitSnd();
+                                            //return hitSomething;
+                                            acceptable = true;
+                                        }
+
                                     }
 
+
+
                                 }
-
-
+                                else
+                                {
+                                    if (skill.SUBTYPE == SubSkillType.Buff || skill.ELEMENT == Element.Support || skill.SUBTYPE == SubSkillType.Ailment)
+                                    {
+                                        CreateTextEvent(this, potentialTarget.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
+                                        PlayExitSnd();
+                                        return hitSomething;
+                                    }
+                                    else
+                                    {
+                                        acceptable = true;
+                                    }
+                                }
 
                             }
                             else
                             {
-                                if (skill.SUBTYPE == SubSkillType.Buff || skill.ELEMENT == Element.Support || skill.SUBTYPE == SubSkillType.Ailment)
-                                {
-                                    CreateTextEvent(this, potentialTarget.FullName + " is not a valid target for " + skill.NAME, "validation text", CheckText, TextStart);
-                                    PlayExitSnd();
-                                    return hitSomething;
-                                }
-                                else
-                                {
-                                    acceptable = true;
-                                }
+
                             }
 
 
@@ -15443,9 +15475,50 @@ public class ManagerScript : EventRunner
 
             switch (effect)
             {
-                case SideEffect.egg:
+                case SideEffect.hatch:
                     {
 
+                        int storedLocation = skill.OWNER.currentTile.listindex;
+                        List<int> possiblies = new List<int>();
+
+                        possiblies.Add(0);
+                        possiblies.Add(1);
+                        possiblies.Add(3);
+                        possiblies.Add(5);
+
+
+
+                        EnemyScript anEnemy = skill.OWNER as EnemyScript;
+                        gridObjects.Remove(anEnemy);
+                        liveEnemies.Remove(anEnemy);
+                        enemyManager.ReplaceEnemy(anEnemy, possiblies[Random.Range(0, 4)]);
+                        liveEnemies.Add(anEnemy);
+
+                        anEnemy.UpdateHealthbar();
+                        anEnemy.ACTIONS = 0;
+                        //gridObjects.Add(anEnemy);
+                        //liveEnemies.Add(anEnemy);
+                        SoftReset();
+
+                        usedEffect = true;
+                    }
+                    break;
+                case SideEffect.egg:
+                    {
+                        EnemyScript anEnemy = enemyManager.getNewEnemies(1, 8)[0];
+                        liveEnemies.Add(anEnemy);
+                        int index = 0;
+                        System.Int32.TryParse(skill.extra, out index);
+                        anEnemy.transform.position = tileMap[index].transform.position + new Vector3(0, 0.5f, 0);
+                        anEnemy.gameObject.SetActive(true);
+                        anEnemy.STATS.HEALTH = anEnemy.BASE_STATS.MAX_HEALTH;
+                        anEnemy.STATS.MANA = anEnemy.BASE_STATS.MAX_MANA;
+                        anEnemy.STATS.FATIGUE = 0;
+                        anEnemy.MapIndex = index;
+                        anEnemy.UpdateHealthbar();
+                
+                        SoftReset();
+                        usedEffect = true;
                     }
                     break;
                 case SideEffect.death:
@@ -15822,7 +15895,8 @@ public class ManagerScript : EventRunner
 
             }
         }
-        target.updateAilmentIcons();
+        if (target != null)
+            target.updateAilmentIcons();
         return usedEffect;
     }
     public bool AttackEvent(Object data)
@@ -16795,7 +16869,7 @@ public class ManagerScript : EventRunner
                         TextObjectHandler.UpdateText(textHolder.phaseTracker, "Enemy Phase");
                         TextObjectHandler.UpdateText(textHolder.shadowPhaseTracker, "Enemy Phase");
                         textHolder.phaseTracker.SetColor(Color.red);
-                        break;           
+                        break;
                     case Faction.genie:
                         {
                             theColor = Color.green;

@@ -96,7 +96,7 @@ public class DatabaseManager : MonoBehaviour
                 for (int i = 0; i < skillLines.Length; i++)
                 {
                     string line = skillLines[i];
-                    if (line[0] != '-')
+                    if ( line[0] != '-')
                     {
                         string[] parsed = line.Split(',');
 
@@ -532,11 +532,11 @@ public class DatabaseManager : MonoBehaviour
                                     support.COST = Int32.Parse(parsed[5]);
                                     support.ETYPE = (EType)Enum.Parse(typeof(EType), parsed[6]);
                                     support.RTYPE = (RangeType)Enum.Parse(typeof(RangeType), parsed[7]);
-                                    support.ACCURACY = Int32.Parse(parsed[10]);
+                                    support.ACCURACY = Int32.Parse(parsed[8]);
 
-                                    support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[11]);
-                                    support.HITS = Int32.Parse(parsed[12]);
-                                    support.CRIT_RATE = Int32.Parse(parsed[13]);
+                                    support.DAMAGE = (DMG)Enum.Parse(typeof(DMG), parsed[9]);
+                                    support.HITS = Int32.Parse(parsed[10]);
+                                    support.CRIT_RATE = Int32.Parse(parsed[11]);
                                     //support.TILES = new System.Collections.Generic.List<Vector2>();
                                     support.OPPORTUNITY = Element.Buff;
 

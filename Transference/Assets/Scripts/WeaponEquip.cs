@@ -45,7 +45,7 @@ public class WeaponEquip : Equipable
     public EType ATTACK_TYPE
     {
 
-        get { return equipped.ATTACK_TYPE; }
+        get { return (equipped != null ? (equipped.ATTACK_TYPE) : EType.magical); }
       
     }
 

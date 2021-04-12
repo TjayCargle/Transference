@@ -76,6 +76,10 @@ public class EnemyScript : LivingObject
             FACTION = Common.GetEnemyFaction(id);
             manager = GameObject.FindObjectOfType<ManagerScript>();
             //currentPath = new Queue<TileScript>();
+            if (possibleAttacks == null)
+            {
+                possibleAttacks = new List<AtkContainer>();
+            }
             isSetup = true;
         }
     }
@@ -180,9 +184,18 @@ public class EnemyScript : LivingObject
     {
         if (atkTarget == null)
         {
-            Debug.Log("what the hell " + NAME);
-            TakeRealAction();
-            return true;
+            if (lastAttack.command != null && lastAttack.command.ELEMENT == Element.Support)
+            {
+                myManager.ApplyEffect(null, lastAttack.command.EFFECT, 100, lastAttack.command);
+                TakeRealAction();
+                return true;
+            }
+            else
+            {
+                Debug.Log("what the hell " + NAME);
+                TakeRealAction();
+                return true;
+            }
         }
         if (lastReaction.usedSkill == null)
         {
@@ -581,9 +594,43 @@ public class EnemyScript : LivingObject
                 }
                 break;
 
+
+            case 6:
+                {
+
+                    // myManager.CreateTextEvent(this, "Overload", "wait event", myManager.CheckText, myManager.TextStart);
+                    if (myManager.log)
+                    {
+                        string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(FACTION)) + ">";
+                        myManager.log.Log(coloroption + NAME + "</color>  laid an egg!");
+                    }
+                    myManager.CreateEvent(this, gao, "Neo wait action", LayEggEvent, null, 0);
+                    myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+                }
+                break;
+
         }
         return true;
     }
+
+    public virtual bool LayEggEvent(Object data)
+    {
+        GridAnimationObj gao = data as GridAnimationObj;
+        if (gao != null)
+        {
+            if (gao.currentTile != null)
+            {
+                CommandSkill cmd = Common.GenericSkill;
+                cmd.extra = "" + gao.currentTile.listindex;
+
+                myManager.ApplyEffect(null, SideEffect.egg, 100, cmd);
+            }
+        }
+
+        TakeRealAction();
+        return true;
+    }
+
     public override bool SummonBarrier(Object data)
     {
 
@@ -1353,7 +1400,7 @@ public class EnemyScript : LivingObject
                 else if (possibleAttacks[i].command != null)
                 {
 
-                 if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                    if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
                     {
                         attackOptions.Add(i);
                     }
@@ -1564,13 +1611,13 @@ public class EnemyScript : LivingObject
         Vector3 v2 = origin.transform.position;
         Vector3 v3 = origin.transform.position;
         Vector3 v4 = origin.transform.position;
-        v1.z += 1;
+        v1.z += 2;
 
-        v2.x += 1;
+        v2.x += 2;
 
-        v3.z -= 1;
+        v3.z -= 2;
 
-        v4.x -= 1;
+        v4.x -= 2;
         possiblePossitions.Add(v1);
         possiblePossitions.Add(v2);
         possiblePossitions.Add(v3);
@@ -1590,6 +1637,43 @@ public class EnemyScript : LivingObject
                 }
             }
         }
+    }
+
+    private TileScript GetAdjacentUnoccupied()
+    {
+        TileScript origin = currentTile;
+        List<Vector3> possiblePossitions = new List<Vector3>();
+        Vector3 v1 = origin.transform.position;
+        Vector3 v2 = origin.transform.position;
+        Vector3 v3 = origin.transform.position;
+        Vector3 v4 = origin.transform.position;
+        v1.z += 2;
+
+        v2.x += 2;
+
+        v3.z -= 2;
+
+        v4.x -= 2;
+        possiblePossitions.Add(v1);
+        possiblePossitions.Add(v2);
+        possiblePossitions.Add(v3);
+        possiblePossitions.Add(v4);
+
+        for (int i = 0; i < possiblePossitions.Count; i++)
+        {
+            int index = myManager.GetTileIndex(possiblePossitions[i]);
+            if (index >= 0)
+            {
+                GridObject griddy = myManager.GetObjectAtTile(myManager.tileMap[index]);
+
+                if (griddy == null)
+                {
+                    return myManager.tileMap[index];
+                }
+            }
+        }
+
+        return null;
     }
     private List<GridObject> DoubleAdjectObjects()
     {
@@ -1634,7 +1718,7 @@ public class EnemyScript : LivingObject
         }
         else
         {
-            Debug.Log("No target tile, waiting...");
+            //Debug.Log("No target tile, waiting...");
             waiting = true;
             myManager.CreateEvent(this, null, "" + FullName + "wait event ", EWaitEvent);
         }
@@ -1667,21 +1751,22 @@ public class EnemyScript : LivingObject
         {
             myManager.requestTurnImgUpdate(this);
         }
-        if (liveObj != null)
+        if (id > 100)
         {
-            if (id > 100)
+            // Debug.Log("boss incoming");
+            if (specialProfile.commands != null)
             {
-                // Debug.Log("boss incoming");
-                if (specialProfile.commands != null)
+                if (specialProfile.commands.Count > 0)
                 {
-                    if (specialProfile.commands.Count > 0)
+                    chosenCommand = specialProfile.commands[Random.Range(0, specialProfile.commands.Count)];
+                    // Debug.Log("Boss should: " + chosenCommand);
+                    switch (chosenCommand)
                     {
-                        chosenCommand = specialProfile.commands[Random.Range(0, specialProfile.commands.Count)];
-                         Debug.Log("Boss should: " + chosenCommand);
-                        switch (chosenCommand)
-                        {
-                            case BossCommand.strike:
+                        case BossCommand.strike:
+                            {
+                                if (liveObj != null)
                                 {
+
                                     bool found = FindEnemiesInRangeOfAttacks(transform.position);
                                     if (found == true)
                                     {
@@ -1694,11 +1779,24 @@ public class EnemyScript : LivingObject
                                         TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
                                         PrepareMoveEvent(targetTile);
                                     }
+                                }
+                                else
+                                {
+                                    TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                    if (currentTile != targetTile)
+                                    {
+                                        targetTile = DetermineMoveLocation(targetTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
 
-                                }
-                                break;
-                            case BossCommand.skill:
+                            }
+                            break;
+                        case BossCommand.skill:
+                            {
+                                if (liveObj != null)
                                 {
+
                                     bool found = FindEnemiesInRangeOfAttacks(transform.position);
                                     if (found == true)
                                     {
@@ -1711,9 +1809,22 @@ public class EnemyScript : LivingObject
                                         PrepareMoveEvent(targetTile);
                                     }
                                 }
-                                break;
-                            case BossCommand.spell:
+                                else
                                 {
+                                    TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                    if (currentTile != targetTile)
+                                    {
+                                        targetTile = DetermineMoveLocation(targetTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                            }
+                            break;
+                        case BossCommand.spell:
+                            {
+                                if (liveObj != null)
+                                {
+
                                     bool found = FindEnemiesInRangeOfAttacks(transform.position);
                                     if (found == true)
                                     {
@@ -1726,75 +1837,146 @@ public class EnemyScript : LivingObject
                                         PrepareMoveEvent(targetTile);
                                     }
                                 }
-                                break;
-                            case BossCommand.barrier:
-                                if(ARMOR == DEFAULT_ARMOR)
+                                else
                                 {
+                                    TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                    if (currentTile != targetTile)
+                                    {
+                                        targetTile = DetermineMoveLocation(targetTile);
+                                        PrepareMoveEvent(targetTile);
+                                    }
+                                }
+                            }
+                            break;
+                        case BossCommand.barrier:
+                            if (ARMOR == DEFAULT_ARMOR)
+                            {
                                 ArmorScript angryArmor = INVENTORY.ARMOR[1];
                                 myManager.CreateEvent(this, angryArmor, "Neo wait action", PrepareBarrier, ItemStart, 0);
+
+                            }
+                            else
+                            {
+                                Shield();
+
+                            }
+                            break;
+                        case BossCommand.item:
+                            {
+                                bool foundItems = FoundItemsCanUse();
+                                if (foundItems == true)
+                                    myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
+                                else
+                                {
+                                    chosenCommand = BossCommand.shield;
+                                    Shield();
+
+                                }
+                            }
+                            break;
+                        case BossCommand.heal:
+                            Heal();
+                            break;
+                        case BossCommand.restore:
+                            Restore();
+                            break;
+                        case BossCommand.drain:
+                            Drain();
+                            break;
+                        case BossCommand.charge:
+                            Charge();
+                            break;
+                        case BossCommand.shield:
+                            Shield();
+                            break;
+                        case BossCommand.overload:
+                            Overload();
+                            break;
+                        case BossCommand.egg:
+                            {
+                                if (myManager.liveEnemies.Count >= 10)
+                                {
+                                    chosenCommand = BossCommand.shield;
+                                    Shield();
 
                                 }
                                 else
                                 {
-                                    Shield();
 
-                                }
-                                break;
-                            case BossCommand.item:
-                                {
-                                    bool foundItems = FoundItemsCanUse();
-                                    if (foundItems == true)
-                                        myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
-                                    else
+                                    TileScript emptyTile = GetAdjacentUnoccupied();
+
+                                    if (emptyTile != null)
                                     {
-                                        chosenCommand = BossCommand.shield;
-                                        Shield();
+
+                                        GridAnimationObj gao = null;
+                                        gao = myManager.PrepareGridAnimation(null, this);
+                                        gao.type = -2;
+                                        gao.magnitute = 0;
+                                        gao.LoadGridAnimation();
+                                        gao.extra = 6;
+                                        gao.currentTile = emptyTile;
+
+
+
+                                        myManager.CreateEvent(this, gao, "Neo wait action", ExecuteEvent, ItemStart, 0);
 
                                     }
+                                    else
+                                    {
+                                        TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                        if (currentTile != targetTile)
+                                        {
+                                            targetTile = DetermineMoveLocation(targetTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
+                                    }
                                 }
-                                break;
-                            case BossCommand.heal:
-                                Heal();
-                                break;
-                            case BossCommand.restore:
-                                Restore();
-                                break;
-                            case BossCommand.drain:
-                                Drain();
-                                break;
-                            case BossCommand.charge:
-                                Charge();
-                                break;
-                            case BossCommand.shield:
-                                Shield();
-                                break;
-                            case BossCommand.overload:
-                                Overload();
-                                break;
-                            default:
-                                {
-                                    Debug.Log("defaultAction, waiting");
-                                    waiting = true;
-                                    myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
-                                }
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("no special commands");
-                        waiting = true;
-                        myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                            }
+                            break;
+                        default:
+                            {
+                                Debug.Log("defaultAction, waiting");
+                                waiting = true;
+                                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+                            }
+                            break;
                     }
                 }
                 else
                 {
-                        Debug.Log("no special profile");
+                    Debug.Log("no special commands");
                     waiting = true;
                     myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                 }
             }
             else
+            {
+                Debug.Log("no special profile");
+                waiting = true;
+                myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
+            }
+        }
+        else if (id == 8)
+        {
+            lastAttack = new AtkContainer();
+            lastAttack.attackingElement = Element.Support;
+            lastAttack.command = INVENTORY.CSKILLS[0];
+            lastAttack.attackType = EType.magical;
+
+            GridAnimationObj gao = null;
+            gao = myManager.PrepareGridAnimation(null, this);
+            gao.type = -2;
+            gao.magnitute = 0;
+            gao.LoadGridAnimation();
+            gao.extra = 0;
+
+            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, ItemStart, 0);
+            myManager.CreateEvent(this, gao, "Animation request: " + myManager.AnimationRequests + "", myManager.CheckAnimation, gao.StartCountDown, 0);
+
+        }
+        else if (liveObj != null)
+        {
+
             {
 
                 if (personality == EPType.scared)
@@ -2097,32 +2279,43 @@ public class EnemyScript : LivingObject
             }
             else
             {
-                TileScript targetTile = null;
-                int depth = 0;
-                while (true)
+                if (SPEED > 0)
                 {
-                    if (depth > 100)
+
+
+                    TileScript targetTile = null;
+                    int depth = 0;
+                    while (true)
                     {
-                        break;
+                        if (depth > 100)
+                        {
+                            break;
+                        }
+                        List<TileScript> possibleTiles = manager.GetDoubleAdjecentTiles(this);
+                        targetTile = possibleTiles[Random.Range(0, possibleTiles.Count - 1)];
+                        if (!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            targetTile = null;
+                        }
+                        depth++;
                     }
-                    List<TileScript> possibleTiles = manager.GetDoubleAdjecentTiles(this);
-                    targetTile = possibleTiles[Random.Range(0, possibleTiles.Count - 1)];
-                    if (!targetTile.isInShadow && !targetTile.isOccupied && currentTile != targetTile)
+
+                    if (currentTile != targetTile && targetTile != null && targetTile.canBeOccupied == true)
                     {
-                        break;
+
+                        targetTile = DetermineMoveLocation(targetTile);
+                        PrepareMoveEvent(targetTile);
                     }
                     else
                     {
-                        targetTile = null;
+                        waiting = true;
+                        myManager.CreateEvent(this, liveObj, "" + FullName + "wait event ", EWaitEvent);
                     }
-                    depth++;
-                }
 
-                if (currentTile != targetTile && targetTile != null && targetTile.canBeOccupied == true)
-                {
-
-                    targetTile = DetermineMoveLocation(targetTile);
-                    PrepareMoveEvent(targetTile);
                 }
                 else
                 {
@@ -2534,10 +2727,16 @@ public class EnemyScript : LivingObject
                     DatabaseManager database = Common.GetDatabase();
                     if (database)
                     {
-                        string response = "I won't be beaten so easily! Not when my wares are at stake";
+                        string response = "";
+                        if (id == 101)
+                            response = "I won't be beaten so easily! Not when my wares are at stake";
+                        else if (id == 102)
+                            response = "DIE! DIE! DIE!";
+
                         SceneContainer scene = database.GenerateScene(NAME, response, FACE);
                         myManager.SetScene(scene);
                     }
+                    Common.UpdateBossProfile(id, this);
 
                 }
                 break;
@@ -2551,10 +2750,16 @@ public class EnemyScript : LivingObject
                     DatabaseManager database = Common.GetDatabase();
                     if (database)
                     {
-                        string response = "Not yet, I will not be beaten yet!";
+                        string response = "";
+                        if (id == 101)
+                            response = "Not yet, I will not be beaten yet!";
+                        else if (id == 102)
+                            response = "SCHREEEEEEEECH!";
                         SceneContainer scene = database.GenerateScene(NAME, response, FACE);
                         myManager.SetScene(scene);
                     }
+                    Common.UpdateBossProfile(id, this);
+
                 }
                 break;
             case BossPhase.desperate:
