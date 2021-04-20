@@ -68,7 +68,6 @@ public class AnimationScript : MonoBehaviour
             {
                 shrtname += subs[i];
             }
-
             currentList = Resources.LoadAll<Sprite>("" + shrtname + "/Idle/"); //obj.FullName + "/Idle/");
             idlePath = "" + shrtname + "/Idle/";
             movePath = "" + shrtname + "/Move/";
@@ -78,6 +77,7 @@ public class AnimationScript : MonoBehaviour
             }
             Sprite[] possibleFaces = Resources.LoadAll<Sprite>("" + shrtname + "/Face/");
             index = 0;
+
             if (currentList.Length > 0)
             {
                 render.sprite = currentList[index];

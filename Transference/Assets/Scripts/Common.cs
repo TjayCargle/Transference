@@ -489,9 +489,9 @@ public enum SkillReaction
     doubleDmg,
     ailmentDmg,
     buffdmg,
-    crippledVengence
-
-
+    crippledVengence,
+    increaseHitCount,
+    increaseMaxHitCount
 
 
 }
@@ -677,7 +677,9 @@ public enum BossCommand
     charge,
     shield,
     overload,
-    egg
+    egg,
+    buff,
+    debuff
 }
 public enum NonCombatButtonAction
 {
@@ -1206,7 +1208,7 @@ public class Common : ScriptableObject
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
-    public static float VersionNumber = 0.90f;
+    public static float VersionNumber = 0.911f;
     public static string VERSION = "Version";
     public static string JaxSaveSlot1 = "JaxSaveSlot1";
 
@@ -1743,6 +1745,33 @@ public class Common : ScriptableObject
                     returnedString += " Remove special ability ";
                 }
                 break;
+            case SkillReaction.doubleDmg:
+                {
+                    returnedString += " double damage delt ";
+                }
+                break;
+            case SkillReaction.ailmentDmg:
+                {
+                    returnedString += " increase damage per ailment target has ";
+                }
+                break;
+            case SkillReaction.buffdmg:
+                {
+                    returnedString += " increase damage for every buff user has ";
+                }
+                break;
+            case SkillReaction.crippledVengence:
+                break;
+            case SkillReaction.increaseHitCount:
+                {
+                    returnedString += " increase hit count ";
+                }
+                break;
+            case SkillReaction.increaseMaxHitCount:
+                {
+                    returnedString += " increase max hit count ";
+                }
+                break;
             default:
                 break;
         }
@@ -1776,6 +1805,16 @@ public class Common : ScriptableObject
             case SkillEvent.onHit:
                 {
                     returnedString += "upon hit.";
+                }
+                break;
+            case SkillEvent.onHitWeakness:
+                {
+                    returnedString += "upon hitting a weakness.";
+                }
+                break;
+            case SkillEvent.onHitResistance:
+                {
+                    returnedString += "upon hitting a resistance.";
                 }
                 break;
             case SkillEvent.onMiss:
@@ -1914,7 +1953,8 @@ public class Common : ScriptableObject
                 text = "Bleeding characters take 5% of their max health as damage and debuffs speed by 10%. ";
                 break;
             case SideEffect.confusion:
-                text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies. ";
+                //text = "Confused characters gain a random amount of action points at start of turn, randomly may attack themselves, allies, or enemies. ";
+                text = "Confused characters randomly may attack themselves, allies, or enemies. ";
                 break;
         }
         return text;
@@ -2554,12 +2594,12 @@ public class Common : ScriptableObject
                         else
                             someProfile.commands.Clear();
                         someProfile.commands.Add(BossCommand.spell);
-                        someProfile.commands.Add(BossCommand.strike);
-                        someProfile.commands.Add(BossCommand.restore);
+                        someProfile.commands.Add(BossCommand.egg);
+                        someProfile.commands.Add(BossCommand.egg);
                         someProfile.commands.Add(BossCommand.spell);
-                        someProfile.commands.Add(BossCommand.heal);
-                        someProfile.commands.Add(BossCommand.barrier);
-                        someProfile.commands.Add(BossCommand.shield);
+                        someProfile.commands.Add(BossCommand.spell);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.skill);
                     }
                     break;
                 case BossPhase.angry:
@@ -4061,7 +4101,7 @@ public class Common : ScriptableObject
 
         string characterName = dataString[dataIIndex];
         dataIIndex++;
-        Debug.Log(characterName);
+
         Faction newFacttion;
         System.Enum.TryParse(dataString[dataIIndex], out newFacttion);
         //  generatedCharacter.FACTION = newFacttion;
@@ -4104,19 +4144,19 @@ public class Common : ScriptableObject
                     {
                         generatedCharacter = enemyManager.getEnemies(1, tempInt)[0];
                     }
-                    GetManager().liveEnemies.Add(generatedCharacter);
+                   // GetManager().liveEnemies.Add(generatedCharacter);
                 }
                 break;
 
             case Faction.hazard:
                 {
-                    Debug.Log("-1");
+
                     HazardManager hazardManager = GameObject.FindObjectOfType<HazardManager>();
                     if (hazardManager != null)
                     {
                         generatedCharacter = hazardManager.getHazards(1, tempInt)[0];
                     }
-                    GetManager().liveEnemies.Add(generatedCharacter);
+                    //GetManager().liveEnemies.Add(generatedCharacter);
                 }
                 break;
 
@@ -4137,7 +4177,10 @@ public class Common : ScriptableObject
         }
 
         generatedCharacter.LivingUnset(false);
-        generatedCharacter.isSetup = true;
+        //generatedCharacter.isSetup = true;
+        if (generatedCharacter.GetComponent<LivingSetup>())
+            generatedCharacter.GetComponent<LivingSetup>().isSetup = true;
+        generatedCharacter.Setup();
         generatedCharacter.gameObject.SetActive(true);
         generatedCharacter.name = characterName;
         generatedCharacter.NAME = characterName;

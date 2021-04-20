@@ -33,7 +33,7 @@ public class FlavorTextImg : MonoBehaviour
             {
                 textObj = myOtherText.GetComponent<TextObj>();
             }
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
             if (manager)
             {
                 manager.flavor = this;

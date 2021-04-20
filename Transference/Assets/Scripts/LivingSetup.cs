@@ -31,7 +31,7 @@ public class LivingSetup : MonoBehaviour
             {
                 dm.Setup();
             }
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
 
             me = GetComponent<LivingObject>();
             otherMe = GetComponent<GridObject>();

@@ -48,7 +48,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         {
             if (GameObject.FindObjectOfType<ManagerScript>())
             {
-                myManager = GameObject.FindObjectOfType<ManagerScript>();
+                myManager = Common.GetManager();
                 if (!myManager.isSetup)
                 {
                     myManager.Setup();
@@ -153,7 +153,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                         if (myManager.SetGridObjectPosition(myManager.tempObject.GetComponent<GridObject>(), myManager.currentAttackList[i].transform.position) == true)
                                         {
                                             myManager.ComfirmMoveGridObject(myManager.tempObject.GetComponent<GridObject>(), myManager.GetTileIndex(myManager.tempObject.GetComponent<GridObject>()));
-
+                                            Debug.Log("2");
                                             myManager.myCamera.potentialDamage = 0;
                                             myManager.myCamera.UpdateCamera();
                                             myManager.anchorHpBar();
@@ -171,8 +171,7 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                                                             reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.currentSkill, Reaction.none, false);
                                                         else
                                                             reac = myManager.CalcDamage(myManager.player.current, livvy, myManager.player.current.WEAPON, Reaction.none, false);
-                                                        if (reac.reaction > Reaction.weak)
-                                                            reac.damage = 0;
+                                                    
                                                         myManager.myCamera.potentialDamage = reac.damage;
                                                         myManager.myCamera.UpdateCamera();
                                                         if (myManager.potential)
@@ -765,7 +764,16 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     {
                         if (invokingObject.GetComponent<LivingObject>())
                         {
-                            invokingObject.GetComponent<LivingObject>().Shield();
+                            LivingObject liveObject = invokingObject.GetComponent<LivingObject>();
+                            if(liveObject.SHIELDS < 10)
+                            {
+
+                                liveObject.Shield();
+                            }
+                            else
+                            {
+                                myManager.ShowCantUseText("Can't stack more than 10 shields");
+                            }
                         }
 
                     }

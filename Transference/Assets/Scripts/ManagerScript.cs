@@ -112,6 +112,9 @@ public class ManagerScript : EventRunner
     public string currentObjectiveString = "Explore the mansion";
     public TextObjHolder[] objectivesAndNotes;
     public CutsceneManager cutscene;
+
+    public StorySection lastStory = StorySection.JaxSaveSlotPrologue;
+
     public List<UsableScript> SHOPLIST
     {
         get { return shopItems; }
@@ -1159,8 +1162,7 @@ public class ManagerScript : EventRunner
                                                         if (livvy.FACTION != player.current.FACTION)
                                                         {
                                                             DmgReaction reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
-                                                            if (reac.reaction > Reaction.weak)
-                                                                reac.damage = 0;
+
                                                             myCamera.potentialDamage = reac.damage;
                                                             myCamera.UpdateCamera();
 
@@ -1171,8 +1173,7 @@ public class ManagerScript : EventRunner
                                                     {
 
                                                         DmgReaction reac = CalcDamage(player.current, griddy, player.current.WEAPON, Reaction.none, false);
-                                                        if (reac.reaction > Reaction.weak)
-                                                            reac.damage = 0;
+
                                                         myCamera.potentialDamage = reac.damage;
                                                         myCamera.UpdateCamera();
 
@@ -1624,8 +1625,7 @@ public class ManagerScript : EventRunner
                                                             if (livvy.FACTION != player.current.FACTION)
                                                             {
                                                                 DmgReaction reac = CalcDamage(player.current, livvy, player.currentSkill, Reaction.none, false);
-                                                                if (reac.reaction > Reaction.weak)
-                                                                    reac.damage = 0;
+
                                                                 myCamera.potentialDamage = reac.damage;
                                                                 myCamera.UpdateCamera();
 
@@ -1635,8 +1635,7 @@ public class ManagerScript : EventRunner
                                                         else
                                                         {
                                                             DmgReaction reac = CalcDamage(player.current, griddy, player.currentSkill, Reaction.none, false);
-                                                            if (reac.reaction > Reaction.weak)
-                                                                reac.damage = 0;
+
                                                             myCamera.potentialDamage = reac.damage;
                                                             myCamera.UpdateCamera();
 
@@ -1667,8 +1666,7 @@ public class ManagerScript : EventRunner
                                                         if (livvy.FACTION != player.current.FACTION)
                                                         {
                                                             DmgReaction reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
-                                                            if (reac.reaction > Reaction.weak)
-                                                                reac.damage = 0;
+
                                                             myCamera.potentialDamage = reac.damage;
                                                             myCamera.UpdateCamera();
 
@@ -1682,8 +1680,7 @@ public class ManagerScript : EventRunner
                                                             player.currentSkill = Common.GenericSkill;
                                                         }
                                                         DmgReaction reac = CalcDamage(player.current, griddy, player.currentSkill, Reaction.none, false);
-                                                        if (reac.reaction > Reaction.weak)
-                                                            reac.damage = 0;
+
                                                         myCamera.potentialDamage = reac.damage;
                                                         myCamera.UpdateCamera();
 
@@ -1864,9 +1861,9 @@ public class ManagerScript : EventRunner
                                     if (GetObjectAtTile(tempGridObj.currentTile) != null)
                                     {
                                         ShowGridObjectAffectArea(GetObjectAtTile(tempGridObj.currentTile));
-                                        if (iconManager)
+                                        //  if (iconManager)
                                         {
-                                            iconManager.loadIconPanel(GetObjectAtTile(tempGridObj.currentTile).GetComponent<LivingObject>());
+                                            //    iconManager.loadIconPanel(GetObjectAtTile(tempGridObj.currentTile).GetComponent<LivingObject>());
                                         }
                                     }
                                     ShowSelectedTile(tempGridObj);
@@ -2639,8 +2636,7 @@ public class ManagerScript : EventRunner
                                 reac = CalcDamage(player.current, livvy, player.current.WEAPON, Reaction.none, false);
                             }
 
-                            if (reac.reaction > Reaction.weak)
-                                reac.damage = 0;
+
                             myCamera.potentialDamage = reac.damage;
                             myCamera.UpdateCamera();
 
@@ -2657,8 +2653,7 @@ public class ManagerScript : EventRunner
                         {
                             reac = CalcDamage(player.current, griddy, player.current.WEAPON, Reaction.none, false);
                         }
-                        if (reac.reaction > Reaction.weak)
-                            reac.damage = 0;
+
                         myCamera.potentialDamage = reac.damage;
                         myCamera.UpdateCamera();
                     }
@@ -4396,9 +4391,9 @@ public class ManagerScript : EventRunner
                 showCurrentState();
             }
 
+            currentScene.isRunning = false;
         }
 
-        currentScene.isRunning = false;
     }
     public void CheckForMapChangeEvent(MapDetail checkMap)
     {
@@ -4923,21 +4918,23 @@ public class ManagerScript : EventRunner
                 {
                     ClearObjects();
 
-                    Debug.Log("found");
+
                     string loadString = PlayerPrefs.GetString(Common.currentStory.ToString());
                     string[] dataString = loadString.Split(',');
 
-                    Debug.Log(loadString);
+                    //Debug.Log(loadString);
                     int dataIIndex = 1;
                     int livingCount = 0;
                     System.Int32.TryParse(dataString[dataIIndex], out livingCount);
                     dataIIndex++;
-                    Debug.Log("living=" + livingCount);
                     for (int i = 0; i < livingCount; i++)
                     {
-                        Debug.Log("looking at =" + i);
-
                         LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
+                        possibleCharacter.ACTIONS = (int)(possibleCharacter.SPEED / 10.0f);
+                        if (possibleCharacter.SPEED == 0)
+                            possibleCharacter.ACTIONS = 1;
+                        else
+                            possibleCharacter.ACTIONS += 3;
                         if (!gridObjects.Contains(possibleCharacter))
                         {
                             gridObjects.Add(possibleCharacter);
@@ -6190,6 +6187,7 @@ public class ManagerScript : EventRunner
         }
 
         List<GridObject> gridobjs = objManager.getObjects(data);
+
         for (int i = 0; i < gridobjs.Count; i++)
         {
 
@@ -6434,6 +6432,9 @@ public class ManagerScript : EventRunner
     {
         MapDetail detail;
 
+        if (Common.currentStory == StorySection.none)
+            Common.currentStory = lastStory;
+
         if (PlayerPrefs.HasKey(Common.currentStory + "_c"))
         {
             Clear();
@@ -6574,6 +6575,10 @@ public class ManagerScript : EventRunner
                     tileMap[data.tilesInShadow[i]].isInShadow = true;
                 }
             }
+            if (data.objMapIndexes.Count > 0)
+            {
+
+            }
             if (data.specialTileIndexes.Count > 0)
             {
 
@@ -6632,6 +6637,7 @@ public class ManagerScript : EventRunner
 
 
             List<GridObject> gridobjs = objManager.getObjects(data);
+            Debug.Log("loaded " + data.objMapIndexes.Count);
             for (int i = 0; i < gridobjs.Count; i++)
             {
 
@@ -6664,13 +6670,21 @@ public class ManagerScript : EventRunner
             int livingCount = 0;
             System.Int32.TryParse(dataString[dataIIndex], out livingCount);
             dataIIndex++;
-            Debug.Log("living=" + livingCount);
+
             for (int i = 0; i < livingCount; i++)
             {
                 LivingObject possibleCharacter = Common.ConstructLivingFromStringArray(dataString, dataIIndex, ref dataIIndex);
                 if (!gridObjects.Contains(possibleCharacter))
                 {
                     gridObjects.Add(possibleCharacter);
+                }
+                if (possibleCharacter.GetComponent<EnemyScript>() || possibleCharacter.GetComponent<HazardScript>())
+                {
+                    if (!liveEnemies.Contains(possibleCharacter))
+                    {
+
+                        liveEnemies.Add(possibleCharacter);
+                    }
                 }
             }
 
@@ -6807,9 +6821,11 @@ public class ManagerScript : EventRunner
         myCamera.infoObject = null;
         for (int i = 0; i < gridObjects.Count; i++)
         {
-            gridObjects[i].currentTile = null;
-
-            gridObjects[i].gameObject.SetActive(false);
+            if (gridObjects[i].GetType().IsSubclassOf(typeof(LivingObject)))
+            {
+                gridObjects[i].currentTile = null;
+                gridObjects[i].gameObject.SetActive(false);
+            }
 
 
         }
@@ -9872,7 +9888,7 @@ public class ManagerScript : EventRunner
                 break;
             case RangeType.any:
                 {
-                    List<TileScript> mytiles = tileManager.GetAdjecentTiles(origin);
+                    List<TileScript> mytiles = tileManager.GetRotatorTiles(origin);
 
                     mytiles.Add(origin);
                     return mytiles;
@@ -10980,9 +10996,11 @@ public class ManagerScript : EventRunner
                                 {
                                     if ((tempTiles[i][j] == liveEnemies[k].currentTile && target == null) || (tempTiles[i][j] == liveEnemies[k].currentTile && target.currentTile == liveEnemies[k].currentTile))
                                     {
-
-                                        EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
-                                        liveEnemies[k].ShowHideWeakness(hitType);
+                                        if (skill.ELEMENT < Element.Buff)
+                                        {
+                                            EHitType hitType = liveEnemies[k].ARMOR.HITLIST[(int)skill.ELEMENT];
+                                            liveEnemies[k].ShowHideWeakness(hitType);
+                                        }
                                     }
                                 }
                             }
@@ -12464,6 +12482,7 @@ public class ManagerScript : EventRunner
                                     buff.BUFF = cmd.BUFF;
                                     buff.COUNT = 3;
                                     livetarget.UpdateBuffsAndDebuffs();
+                                    livetarget.INVENTORY.TBUFFS.Add(buff);
                                     livetarget.updateAilmentIcons();
                                 }
                             }
@@ -12508,7 +12527,7 @@ public class ManagerScript : EventRunner
                 {
                     string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
 
-                    log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=blue>NULLED</color>");
+                    log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=#ADD8E6>NULLED</color>");
                 }
                 break;
             case Reaction.reflected:
@@ -12519,7 +12538,7 @@ public class ManagerScript : EventRunner
                 {
                     string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
 
-                    log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=blue>REFLECTED</color> back at them");
+                    log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=#ADD8E6>REFLECTED</color> back at them");
                 }
                 break;
             case Reaction.knockback:
@@ -12716,7 +12735,7 @@ public class ManagerScript : EventRunner
                     if (log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
-                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=blue> ABSORBED </color>");
+                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=#ADD8E6> ABSORBED </color>");
 
                         coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(target.FACTION)) + ">";
 
@@ -12814,6 +12833,7 @@ public class ManagerScript : EventRunner
                                     buff.SKILL = cmd;
                                     buff.BUFF = cmd.BUFF;
                                     buff.COUNT = 3;
+                                    livetarget.INVENTORY.TDEBUFFS.Add(buff);
 
                                     livetarget.UpdateBuffsAndDebuffs();
                                     livetarget.updateAilmentIcons();
@@ -13051,7 +13071,7 @@ public class ManagerScript : EventRunner
                                     }
 
                                     CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13278,7 +13298,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    //CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13321,7 +13341,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13345,7 +13365,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13367,7 +13387,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13393,7 +13413,7 @@ public class ManagerScript : EventRunner
                                     { Debug.Log("no attacker"); }
                                     if (!useable)
                                     { Debug.Log("no usable  for " + inum); }
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13417,7 +13437,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    //  CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -13443,7 +13463,7 @@ public class ManagerScript : EventRunner
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                                    CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
+                                    // CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", CheckText, TextStart);
                                 }
                                 else
                                 {
@@ -15478,6 +15498,8 @@ public class ManagerScript : EventRunner
                 case SideEffect.hatch:
                     {
 
+                        CreateTextEvent(this, "" + skill.OWNER.NAME + " used <sprite=1> Hatch <sprite=41>", "skill atk", CheckText, TextStart);
+
                         int storedLocation = skill.OWNER.currentTile.listindex;
                         List<int> possiblies = new List<int>();
 
@@ -15516,7 +15538,7 @@ public class ManagerScript : EventRunner
                         anEnemy.STATS.FATIGUE = 0;
                         anEnemy.MapIndex = index;
                         anEnemy.UpdateHealthbar();
-                
+
                         SoftReset();
                         usedEffect = true;
                     }
@@ -15668,6 +15690,8 @@ public class ManagerScript : EventRunner
                                     buff.BUFF = strDebuff.BUFF;
                                     buff.COUNT = 2;
                                     target.UpdateBuffsAndDebuffs();
+                                    target.INVENTORY.TDEBUFFS.Add(buff);
+
                                     usedEffect = true;
                                     target.updateAilmentIcons();
                                 }
@@ -15882,6 +15906,8 @@ public class ManagerScript : EventRunner
                                     buff.SKILL = skill;
                                     buff.BUFF = skill.BUFF;
                                     buff.COUNT = 3;
+                                    target.INVENTORY.TDEBUFFS.Add(buff);
+
                                     target.UpdateBuffsAndDebuffs();
                                     usedEffect = true;
 
@@ -15992,6 +16018,8 @@ public class ManagerScript : EventRunner
                                 buff.SKILL = skill;
                                 buff.BUFF = skill.BUFF;
                                 buff.COUNT = 3;
+
+                                target.INVENTORY.TDEBUFFS.Add(buff);
                                 target.UpdateBuffsAndDebuffs();
 
                                 target.updateAilmentIcons();
@@ -16539,7 +16567,7 @@ public class ManagerScript : EventRunner
                             { Debug.Log("no attacker"); }
                             if (!useable)
                             { Debug.Log("no usable  for " + inum); }
-                            CreateTextEvent(this, "" + player.current.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                            // CreateTextEvent(this, "" + player.current.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
                         }
                         else
                         {
@@ -18351,7 +18379,7 @@ public class ManagerScript : EventRunner
 
 
                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
-                        CreateTextEvent(this, "" + player.current.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
+                        // CreateTextEvent(this, "" + player.current.FullName + " gained " + useable.NAME, "new skill event", CheckText, TextStart);
 
                         shopScreen.PreviousMenu();
                         shopScreen.PreviousMenu();

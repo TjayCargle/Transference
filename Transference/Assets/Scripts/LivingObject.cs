@@ -47,6 +47,8 @@ public class LivingObject : GridObject
     protected List<SpriteObject> lastUsedSprites = new List<SpriteObject>();
     protected SpriteObject highestDamage;
     protected List<SpriteObject> ailments;
+    [SerializeField]
+    protected List<StatIcon> statusIcons;
     private ArmorScript defaultArmor;
     public List<TileScript> moveableTiles = new List<TileScript>();
 
@@ -110,6 +112,12 @@ public class LivingObject : GridObject
     {
         get { return ailments; }
         set { ailments = value; }
+    }
+
+    public List<StatIcon> STATUSS
+    {
+        get { return statusIcons; }
+        set { statusIcons = value; }
     }
 
     public InventoryScript INVENTORY
@@ -888,6 +896,17 @@ public class LivingObject : GridObject
             //    worstWeakness.Setup();
             //    updateWeaknessIcon();
             //}
+            if (STATUSS == null)
+            {
+                STATUSS = new List<StatIcon>();
+            }
+            STATUSS.Clear();
+            StatIcon[] myIcons = GetComponentsInChildren<StatIcon>();
+            for (int i = 0; i < myIcons.Length; i++)
+            {
+                myIcons[i].Setup();
+                STATUSS.Add(myIcons[i]);
+            }
 
             if (AILMENTS == null)
             {
@@ -1016,13 +1035,23 @@ public class LivingObject : GridObject
         {
             StatusIconManager iconManager = manager.iconManager;
 
-            if (iconManager)
+            if (iconManager != null && STATUSS != null)
             {
+
+                if (STATUSS.Count < 6)
+                    return;
 
                 int almentIndex = 0;
                 if (PSTATUS == PrimaryStatus.crippled)
                 {
-                    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Crippled];
+                    // AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Crippled];
+                    STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)StatusIcon.Crippled];
+                    STATUSS[almentIndex].myImage.color = Color.white;
+                    STATUSS[almentIndex].childImage.color = Color.white;
+                    STATUSS[almentIndex].myProText.text = "x1";
+
+                    STATUSS[almentIndex].tooltip.defaultString = "*Status: @Crippled! \nWhile crippled target will do half damage, take double damage, and movement will be reduced to 1";
+                    STATUSS[almentIndex].tooltip.UpdateTooltip();
                     almentIndex++;
                 }
                 //if (PSTATUS == PrimaryStatus.guarding)
@@ -1030,19 +1059,47 @@ public class LivingObject : GridObject
                 //    AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
                 //    almentIndex++;
                 //}
-                for (int i = 0; i < SHIELDS; i++)
+                if (SHIELDS > 0)
+                // if (almentIndex < 6)
                 {
-                    if (almentIndex < 6)
-                    {
-                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
-                        almentIndex++;
-                    }
+                    // AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
+
+                    STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)StatusIcon.Guard];
+                    STATUSS[almentIndex].myImage.color = Color.white;
+                    STATUSS[almentIndex].childImage.color = Color.white;
+                    STATUSS[almentIndex].myProText.text = "x" + SHIELDS;
+
+                    STATUSS[almentIndex].tooltip.defaultString = "*Status: @Guarding! \nWhile guarding you take half damage and can't be crippled.\nLasts for " + SHIELDS + " hit";
+                    STATUSS[almentIndex].tooltip.UpdateTooltip();
+                    if (SHIELDS > 1)
+                        STATUSS[almentIndex].tooltip.defaultString += "s.";
+                    else
+                        STATUSS[almentIndex].tooltip.defaultString += ".";
+                    STATUSS[almentIndex].tooltip.UpdateTooltip();
+
+
+                    almentIndex++;
                 }
+
                 for (int i = 0; i < INVENTORY.EFFECTS.Count; i++)
                 {
                     if (almentIndex < 6)
                     {
-                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.EffectToIcon(INVENTORY.EFFECTS[i].EFFECT)];
+                        // AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.EffectToIcon(INVENTORY.EFFECTS[i].EFFECT)];
+
+                        STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)Common.EffectToIcon(INVENTORY.EFFECTS[i].EFFECT)];
+                        STATUSS[almentIndex].myImage.color = Color.white;
+                        STATUSS[almentIndex].childImage.color = Color.white;
+                        STATUSS[almentIndex].myProText.text = "x" + INVENTORY.EFFECTS[i].TURNS;
+
+                        EffectScript cmd = INVENTORY.EFFECTS[i];
+                        STATUSS[almentIndex].tooltip.defaultString = "*Ailment: @" + cmd.EFFECT.ToString() + "\n @" + Common.GetSideEffectText(cmd.EFFECT) + "\nEnds in " + INVENTORY.EFFECTS[i].TURNS + " turn";
+                        if (INVENTORY.EFFECTS[i].TURNS > 1)
+                            STATUSS[almentIndex].tooltip.defaultString += "s.";
+                        else
+                            STATUSS[almentIndex].tooltip.defaultString += ".";
+                        STATUSS[almentIndex].tooltip.UpdateTooltip();
+
                         almentIndex++;
                     }
                 }
@@ -1051,7 +1108,20 @@ public class LivingObject : GridObject
                 {
                     if (almentIndex < 6)
                     {
-                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.BUFFS[i].BUFF)];
+                        // AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.BUFFS[i].BUFF)];
+
+                        STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.BUFFS[i].BUFF)];
+                        STATUSS[almentIndex].myImage.color = Color.white;
+                        STATUSS[almentIndex].childImage.color = Color.white;
+                        STATUSS[almentIndex].myProText.text = "x" + INVENTORY.TBUFFS[i].COUNT;
+
+                        CommandSkill buffskill = INVENTORY.BUFFS[i];
+                        STATUSS[almentIndex].tooltip.defaultString = "*Buff: @" + buffskill.NAME + "\n @" + "Increases " + buffskill.BUFFEDSTAT + " by " + buffskill.BUFFVAL + "%. \nEnds in " + INVENTORY.TBUFFS[i].COUNT + " turn";
+                        if (INVENTORY.TBUFFS[i].COUNT > 1)
+                            STATUSS[almentIndex].tooltip.defaultString += "s.";
+                        else
+                            STATUSS[almentIndex].tooltip.defaultString += ".";
+                        STATUSS[almentIndex].tooltip.UpdateTooltip();
                         almentIndex++;
                     }
                 }
@@ -1060,7 +1130,22 @@ public class LivingObject : GridObject
                 {
                     if (almentIndex < 6)
                     {
-                        AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
+                        //  AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
+
+                        STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
+                        STATUSS[almentIndex].myImage.color = Color.white;
+                        STATUSS[almentIndex].childImage.color = Color.white;
+                        STATUSS[almentIndex].myProText.text = "x" + INVENTORY.TDEBUFFS[i].COUNT;
+
+                        CommandSkill buffskill = INVENTORY.DEBUFFS[i];
+
+                        STATUSS[almentIndex].tooltip.defaultString = "*DeBuff: @" + buffskill.NAME + "\n @" + "Decreases " + buffskill.BUFFEDSTAT + " by " + buffskill.BUFFVAL + "%. \nEnds in " + INVENTORY.TDEBUFFS[i].COUNT + " turn";
+                        if (INVENTORY.TDEBUFFS[i].COUNT > 1)
+                            STATUSS[almentIndex].tooltip.defaultString += "s.";
+                        else
+                            STATUSS[almentIndex].tooltip.defaultString += ".";
+                        STATUSS[almentIndex].tooltip.UpdateTooltip();
+
                         almentIndex++;
                     }
                 }
@@ -1068,7 +1153,12 @@ public class LivingObject : GridObject
                 {
                     for (int i = almentIndex; i < 6; i++)
                     {
-                        AILMENTS[almentIndex].sr.sprite = null;
+                        //AILMENTS[almentIndex].sr.sprite = null;
+
+                        STATUSS[almentIndex].childImage.sprite = null;// iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.BUFFS[i].BUFF)];
+                        STATUSS[almentIndex].myImage.color = Common.trans;
+                        STATUSS[almentIndex].childImage.color = Common.trans;
+                        STATUSS[almentIndex].myProText.text = "";
                     }
                 }
             }
@@ -2043,7 +2133,7 @@ public class LivingObject : GridObject
                     {
                         useable.USER = attackingObject;
                         myManager.CreateEvent(this, useable, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                        myManager.CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                        //myManager.CreateTextEvent(this, "" + attackingObject.FullName + " learned " + useable.NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                         if (myManager.log)
                         {

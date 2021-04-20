@@ -169,8 +169,8 @@ public class ArmorScript : UsableScript
             if(LEVEL < Common.MaxSkillLevel)
             {
                 LevelUP();
-               // UpdateDesc();
-                ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                // UpdateDesc();
+                ManagerScript manager = Common.GetManager();
            
                   
                 manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);

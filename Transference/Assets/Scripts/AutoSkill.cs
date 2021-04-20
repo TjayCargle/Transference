@@ -129,6 +129,7 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -159,6 +160,7 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -189,6 +191,7 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -219,6 +222,8 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
+
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -250,6 +255,7 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -280,7 +286,8 @@ public class AutoSkill : SkillScript
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
-                        
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
+
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
                         }
@@ -307,7 +314,7 @@ public class AutoSkill : SkillScript
                         if (!target.DEAD)
                         {
                             target.DEAD = true;
-                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            ManagerScript manager = Common.GetManager();
                             if (manager)
                             {
                                 manager.gridObjects.Remove(target);

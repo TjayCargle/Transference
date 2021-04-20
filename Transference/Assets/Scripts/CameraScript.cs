@@ -84,7 +84,7 @@ public class CameraScript : MonoBehaviour
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.Rotate(new Vector3(90, 0, 0));
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
             audio = GetComponent<AudioSource>();
             SetCameraPosDefault();
             transparent = new Color(0, 0, 0, 0);
@@ -593,8 +593,8 @@ public class CameraScript : MonoBehaviour
                                         }
                                     }
 
-                                    if (manager.iconManager)
-                                        manager.iconManager.loadIconPanel(liver);
+                                   // if (manager.iconManager)
+                                     //   manager.iconManager.loadIconPanel(liver);
 
 
                                     // " - " + liver.GetClassType();//

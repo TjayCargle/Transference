@@ -34,7 +34,7 @@ public class PhaseImg : ImgObj
         else
         {
 
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
             if (manager)
             {
                 if (manager.GetState() == State.EventRunning)

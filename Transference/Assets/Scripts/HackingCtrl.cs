@@ -78,7 +78,7 @@ public class HackingCtrl : MonoBehaviour
             LoadSequence(defaultList);
             updateTarget();
             isSetup = true;
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
         }
     }
     private void Start()

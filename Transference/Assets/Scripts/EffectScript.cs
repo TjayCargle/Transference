@@ -196,6 +196,9 @@ public class EffectScript : ScriptableObject
                             buff.SKILL = strDebuff;
                             buff.BUFF = strDebuff.BUFF;
                             buff.COUNT = 2;
+
+                            living.INVENTORY.TDEBUFFS.Add(buff);
+
                             living.UpdateBuffsAndDebuffs();
 
                         }
@@ -221,7 +224,6 @@ public class EffectScript : ScriptableObject
                         manager.log.Log(coloroption + living.NAME + "</color> is no longer <color=#8A2BE2>poisoned</color>");
                     }
                     living.INVENTORY.EFFECTS.Remove(this);
-                    living.updateAilmentIcons();
                     PoolManager.GetManager().ReleaseEffect(this);
 
                     living.updateAilmentIcons();
@@ -264,6 +266,8 @@ public class EffectScript : ScriptableObject
                             buff.SKILL = Common.CommonDebuffStr;
                             buff.BUFF = Common.CommonDebuffStr.BUFF;
                             buff.COUNT = 1;
+
+                            living.INVENTORY.TDEBUFFS.Add(buff);
                             living.UpdateBuffsAndDebuffs();
 
                         }

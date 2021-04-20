@@ -41,7 +41,7 @@ public class ConditionalDisplay : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        manager = GameObject.FindObjectOfType<ManagerScript>();
+        manager = Common.GetManager();
     }
 
     //public void UpdateDisplay()

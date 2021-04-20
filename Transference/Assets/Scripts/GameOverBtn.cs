@@ -16,7 +16,7 @@ public class GameOverBtn : MonoBehaviour, IPointerEnterHandler
     UsedText used;
     private void Start()
     {
-        manager = GameObject.FindObjectOfType<ManagerScript>();
+        manager = Common.GetManager();
         GameOverText gmt = GameObject.FindObjectOfType<GameOverText>();
         mybutton = GetComponent<Button>();
         used = GetComponentInChildren<UsedText>();

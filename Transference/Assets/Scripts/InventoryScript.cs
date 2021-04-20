@@ -23,6 +23,12 @@ public class InventoryScript : MonoBehaviour
     List<CommandSkill> activeBuffs;
     [SerializeField]
     List<CommandSkill> activeDeBuffs;
+
+    [SerializeField]
+    List<BuffScript> trueBuffs;
+    [SerializeField]
+    List<DebuffScript> trueDeBuffs;
+
     [SerializeField]
     List<OppSkill> oppSkills;
 
@@ -93,6 +99,18 @@ public class InventoryScript : MonoBehaviour
     {
         get { return activeDeBuffs; }
         set { activeDeBuffs = value; }
+    }
+
+
+    public List<BuffScript> TBUFFS
+    {
+        get { return trueBuffs; }
+        set { trueBuffs = value; }
+    }
+    public List<DebuffScript> TDEBUFFS
+    {
+        get { return trueDeBuffs; }
+        set { trueDeBuffs = value; }
     }
 
     public List<EffectScript> EFFECTS
@@ -310,7 +328,9 @@ public class InventoryScript : MonoBehaviour
         this.ARMOR.Clear();
         this.AUTOS.Clear();
         this.BUFFS.Clear();
+        this.TBUFFS.Clear();
         this.DEBUFFS.Clear();
+        this.TDEBUFFS.Clear();
         this.CSKILLS.Clear();
         //this.CSPELLS.Clear();
         for (int i = 0; i < effects.Count; i++)

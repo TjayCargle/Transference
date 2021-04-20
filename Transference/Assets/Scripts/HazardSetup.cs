@@ -16,7 +16,7 @@ public class HazardSetup : LivingSetup
             {
                 dm.Setup();
             }
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
 
             myself = GetComponent<HazardScript>();
             if (!myself)

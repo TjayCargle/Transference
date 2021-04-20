@@ -17,7 +17,7 @@ public class EnemySetup : LivingSetup
             {
                 dm.Setup();
             }
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
 
             myself = GetComponent<EnemyScript>();
             if (!myself)

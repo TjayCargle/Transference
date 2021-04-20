@@ -24,7 +24,7 @@
 - Water all moves area
 -
 -Slash
-10,Slice,Slash,Charge,none,25,physical,adjacent,2,2,80,tiny,2,0,0
+10,Slice,Slash,Charge,none,25,physical,adjacent,2,2,80,tiny,2,0,0, onHitResistance, doubleDmg
 11,Alt Slice,Slash,Charge,none,17,physical,spear,2,2,70,tiny,2,0,0
 12,Mega Slice,Slash,Cost,none,-40,physical,rotator,2,2,75,tiny,2,0,0
 13,Ultra Slice,Slash,Cost,none,-30,physical,line,2,2,75,tiny,2,0,0
@@ -35,8 +35,8 @@
 18,Thousand Cuts,Slash,Cost,none,20,physical,adjacent,3,3,100,tiny,1,0,1,onKill,increaseSpd
 -
 -Pierce
-20,Sting,Pierce,Charge,none,25,physical,adjacent,1,1,75,tiny,1,0,0
-21,Alt Sting,Pierce,Charge,none,10,physical,detached,1,1,70,tiny,1,0,0
+20,Sting,Pierce,Charge,none,25,physical,adjacent,1,1,80,tiny,1,0,0
+21,Alt Sting,Pierce,Charge,none,10,physical,detached,1,1,70,tiny,1,0,0, onHitWeakness, doubleDmg
 22,Mega Sting,Pierce,Cost,none,-30,physical,spear,1,1,85,tiny,1,0,0
 23,Ultra Sting,Pierce,Cost,none,-50,physical,lance,2,2,85,tiny,2,0,0
 24,Arcane Sting,Pierce,Magic,none,30,magical,line,1,1,85,tiny,1,0,0
@@ -48,9 +48,9 @@
 -Blunt
 30,Smash,Blunt,Charge,none,25,physical,adjacent,1,1,80,tiny,1,10,0
 31,Alt Smash,Blunt,Charge,none,14,physical,rotator,1,1,80,tiny,1,10,0
-32,Mega Smash,Blunt,Cost,none,-50,physical,adjacent,2,2,85,tiny,2,10,0
+32,Mega Smash,Blunt,Cost,none,-50,physical,adjacent,2,2,85,tiny,2,10,0, onHitResistance, cripple
 33,Ultra Smash,Blunt,Cost,none,-20,physical,square,2,2,85,tiny,1,10,0
-34,Arcane Smash,Blunt,Magic,none,28,magical,adjacent,1,1,90,tiny,1,10,0
+34,Arcane Smash,Blunt,Magic,none,28,magical,adjacent,1,1,90,tiny,1,10,0, onHit, GainManaByDmg
 35,Etherial Smash,Blunt,Magic,none,30,magical,rotator,1,1,90,tiny,1,10,0
 36,Mystic Smash,Blunt,Magic,knockback,34,magical,adjacent,1,1,80,tiny,1,0,0
 37,Hidden Smash,Blunt,Charge,reposition,15,physical,adjacent,1,1,80,tiny,1,0,0
@@ -58,7 +58,7 @@
 39,Hammer Time!,Blunt,Magic,none,0,magical,adjacent,1,1,1,none,skip1,skip2,2,onMiss,increaseCrit,onHit,resetCrit
 -
 -Water
-40,Splash,Water,Charge,none,25,physical,adjacent,1,1,75,tiny,1,0,0
+40,Splash,Water,Charge,none,25,physical,adjacent,1,1,80,tiny,1,0,0
 41,Alt Splash,Water,Charge,none,12,physical,diamond,1,1,70,tiny,1,0,0
 42,Mega Splash,Water,Cost,none,-20,physical,cross,2,2,75,tiny,2,0,0
 43,Ultra Splash,Water,RngAtk,none,-40,physical,square,2,5,75,tiny,1,0,0
@@ -70,7 +70,7 @@
 49,Blazing Splash,Water,Magic,none,30,magical,pinWheel,1,1,70,tiny,1,0,4,onHit,becomePyro,onMiss,becomeWater,onHit,decreaseAccurracy,onMiss,increaseAccurracy
 -
 -Pyro
-50,Blaze,Pyro,Charge,none,25,physical,adjacent,1,1,90,tiny,1,0,0
+50,Blaze,Pyro,Charge,none,25,physical,adjacent,1,1,90,tiny,1,0,0, onHit, healByDmg
 51,Alt Blaze,Pyro,Charge,none,13,physical,rotator,1,1,90,tiny,1,0,0
 52,Mega Blaze,Pyro,Cost,burn,-20,physical,line,2,2,85,tiny,2,0,0
 53,Ultra Blaze,Pyro,Cost,burn,-50,physical,cone,2,2,85,tiny,2,0,0
@@ -81,7 +81,7 @@
 58,Internal Combustion,Pyro,Cost,none,20,physical,rotator,1,1,100,tiny,1,0,1,onKill,extraAction
 -
 -Ice
-60,Frost,Ice,Charge,none,25,physical,adjacent,1,1,70,tiny,1,0,0
+60,Frost,Ice,Charge,none,25,physical,adjacent,1,1,90,tiny,1,0,0
 61,Alt Frost,Ice,Charge,none,10,physical,detached,1,1,70,tiny,1,0,0
 62,Mega Frost,Ice,Cost,none,-30,physical,cone,2,2,95,tiny,2,0,0
 63,Ultra Frost,Ice,Cost,none,-10,physical,lance,1,1,75,tiny,1,0,0
@@ -92,11 +92,11 @@
 68,Ice Tower,Ice,Cost,none,20,physical,spear,1,1,100,tiny,1,0,1,onKill,enterGuardState
 -
 -Elec
-70,Zap,Electric,RngAtk,none,25,physical,adjacent,1,2,70,tiny,1,0,0
+70,Zap,Electric,RngAtk,none,25,physical,adjacent,1,2,90,tiny,1,0,0
 71,Alt Zap,Electric,RngAtk,none,12,physical,rotator,1,2,70,tiny,1,0,0
 72,Mega Zap,Electric,RngAtk,none,-20,physical,clover,1,4,65,tiny,1,0,0
 73,Ultra Zap,Electric,RngAtk,none,-40,physical,cone,2,3,65,tiny,1,0,0
-74,Arcane Zap,Electric,RngAtk,none,30,magical,rotator,1,2,85,tiny,1,0,0
+74,Arcane Zap,Electric,RngAtk,none,30,magical,rotator,1,2,85,tiny,1,0,0,onKill,increaseMaxHitCount
 75,Etherial Zap,Electric,RngAtk,none,28,magical,detached,1,3,65,tiny,2,0,0
 76,Mystic Zap,Electric,RngAtk,pullin,32,magical,adjacent,1,2,75,tiny,2,0,0
 77,Hidden Zap,Electric,RngAtk,knockback,30,physical,adjacent,1,2,70,tiny,1,0,0
@@ -201,10 +201,10 @@
 -PullBack
 -
 -Force
-160,Pulse,Force,Charge,pullin,3,physical,adjacent,0,0,70,tiny,1,0,1,1,2
+160,Pulse,Force,Charge,pullin,3,physical,adjacent,0,0,90,tiny,1,0,1,1,2
 161,Alt Pulse,Force,Charge,pullin,3,physical,detached,0,0,70,tiny,1,0,1,1,1
-162,Mega Pulse,Force,Cost,pullin,-6,physical,lance,0,0,75,tiny,2,0,1,0,2
-163,Ultra Pulse,Force,Cost,pullin,-8,physical,line,5,0,75,tiny,1,0,2,0,2,1,1
+162,Mega Pulse,Force,Cost,pullin,-6,physical,lance,0,0,75,tiny,2,0,1,0,2, onHit, ailmentDmg
+163,Ultra Pulse,Force,Cost,pullin,-8,physical,line,5,0,75,tiny,1,0,2,0,2,1,1, onHit, buffdmg
 164,Arcane Pulse,Force,Magic,pullin,4,magical,cone,0,0,80,tiny,1,0,1,1,1
 165,Etherial Pulse,Force,Magic,pullin,2,magical,detached,0,0,80,tiny,2,0,1,0,2
 168,Killer Whale,Force,Cost,none,20,physical,square,1,1,100,tiny,1,0,1,onKill,enterGuardState

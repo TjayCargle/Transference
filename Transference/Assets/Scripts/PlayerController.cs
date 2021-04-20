@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        myManager = GameObject.FindObjectOfType<ManagerScript>();
+        myManager = Common.GetManager();
         invm = myManager.GetComponent<InventoryMangager>();
         if (!myManager.isSetup)
         {
@@ -758,7 +758,7 @@ public class PlayerController : MonoBehaviour
                                             current.INVENTORY.WEAPONS.Add(myManager.newSkillEvent.data as WeaponScript);
                                             (myManager.newSkillEvent.data as UsableScript).USER = current;
                                             myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                            myManager.CreateTextEvent(this, "Learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                           // myManager.CreateTextEvent(this, "Learned " + (myManager.newSkillEvent.data as WeaponScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                             if (myManager.log)
                                             {
@@ -803,7 +803,7 @@ public class PlayerController : MonoBehaviour
                                             current.INVENTORY.ARMOR.Add(myManager.newSkillEvent.data as ArmorScript);
                                             (myManager.newSkillEvent.data as UsableScript).USER = current;
                                             myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                            myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ArmorScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                           // myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ArmorScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                             if (myManager.log)
                                             {
@@ -851,7 +851,7 @@ public class PlayerController : MonoBehaviour
                                                     current.INVENTORY.COMBOS.Add(myManager.newSkillEvent.data as ComboSkill);
                                                     (myManager.newSkillEvent.data as UsableScript).USER = current;
                                                     myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ComboSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                   // myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ComboSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                     if (myManager.log)
                                                     {
@@ -886,7 +886,7 @@ public class PlayerController : MonoBehaviour
                                                     current.INVENTORY.AUTOS.Add(myManager.newSkillEvent.data as AutoSkill);
                                                     (myManager.newSkillEvent.data as UsableScript).USER = current;
                                                     myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as AutoSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                    //myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as AutoSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                     if (myManager.log)
                                                     {
@@ -921,7 +921,7 @@ public class PlayerController : MonoBehaviour
                                                     current.INVENTORY.OPPS.Add(myManager.newSkillEvent.data as OppSkill);
                                                     (myManager.newSkillEvent.data as UsableScript).USER = current;
                                                     myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as OppSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                   // myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as OppSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                     if (myManager.log)
                                                     {
@@ -957,7 +957,7 @@ public class PlayerController : MonoBehaviour
                                                     current.INVENTORY.CSKILLS.Add(myManager.newSkillEvent.data as CommandSkill);
                                                     (myManager.newSkillEvent.data as UsableScript).USER = current;
                                                     myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                    myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as CommandSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                    //myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as CommandSkill).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                     if (myManager.log)
                                                     {
@@ -1006,7 +1006,7 @@ public class PlayerController : MonoBehaviour
                                                         (myManager.newSkillEvent.data as UsableScript).USER = current;
 
                                                         myManager.CreateEvent(this, myManager.newSkillEvent.data, "New Skill Event", myManager.CheckCount, null, 0, myManager.CountStart);
-                                                        myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ItemScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
+                                                       // myManager.CreateTextEvent(this, "" + current.FullName + " learned " + (myManager.newSkillEvent.data as ItemScript).NAME, "new skill event", myManager.CheckText, myManager.TextStart);
 
                                                         if (myManager.log)
                                                         {
@@ -1643,12 +1643,13 @@ public class PlayerController : MonoBehaviour
             myManager.tempObject.transform.position = myManager.currentObject.transform.position;
             myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
         }
+
         myManager.myCamera.potentialDamage = 0;
         myManager.myCamera.UpdateCamera();
         myManager.anchorHpBar();
 
-        GridObject griddy = myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
-        if (griddy)
+        GridObject griddy = possibleObject;//myManager.GetObjectAtTile(myManager.tempObject.GetComponent<GridObject>().currentTile);
+        if (possibleObject)
         {
             DmgReaction reac;
             if (griddy.FACTION != myManager.player.current.FACTION)
@@ -1668,8 +1669,6 @@ public class PlayerController : MonoBehaviour
                     else
                         reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
-                if (reac.reaction > Reaction.weak)
-                    reac.damage = 0;
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
                 if (myManager.potential)
@@ -1678,6 +1677,10 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+        }
+        else
+        {
+
         }
         MenuManager myMenuManager = GameObject.FindObjectOfType<MenuManager>();
         if (myMenuManager)
@@ -1776,6 +1779,7 @@ public class PlayerController : MonoBehaviour
             myManager.tempObject.transform.position = myManager.currentObject.transform.position;
             myManager.tempObject.GetComponent<GridObject>().currentTile = myManager.currentObject.currentTile;
         }
+        Debug.Log("1");
         myManager.myCamera.potentialDamage = 0;
         myManager.myCamera.UpdateCamera();
         myManager.anchorHpBar();
@@ -1801,8 +1805,7 @@ public class PlayerController : MonoBehaviour
                     else
                         reac = myManager.CalcDamage(attacker, griddy, attacker.WEAPON, Reaction.none, false);
                 }
-                if (reac.reaction > Reaction.weak)
-                    reac.damage = 0;
+     
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
                 if (myManager.potential)
@@ -1920,8 +1923,7 @@ public class PlayerController : MonoBehaviour
 
                     reac = myManager.CalcDamage(current, griddy, myManager.player.current.WEAPON, Reaction.none, false);
                 }
-                if (reac.reaction > Reaction.weak)
-                    reac.damage = 0;
+             
 
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
@@ -2054,8 +2056,7 @@ public class PlayerController : MonoBehaviour
 
                     reac = myManager.CalcDamage(current, griddy, currentSkill, Reaction.none, false);
                 }
-                if (reac.reaction > Reaction.weak)
-                    reac.damage = 0;
+           
                 myManager.myCamera.potentialDamage = reac.damage;
                 myManager.myCamera.UpdateCamera();
                 if (myManager.potential)

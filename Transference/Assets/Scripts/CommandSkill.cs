@@ -409,11 +409,25 @@ public class CommandSkill : SkillScript
                 break;
             case SkillReaction.removeEvent:
                 {
-                    if(SPECIAL_EVENTS.Count > 0)
+                    if (SPECIAL_EVENTS.Count > 0)
                     {
                         SPECIAL_EVENTS.Remove(SPECIAL_EVENTS[0]);
                     }
                 }
+                break;
+            case SkillReaction.doubleDmg:
+                break;
+            case SkillReaction.ailmentDmg:
+                break;
+            case SkillReaction.buffdmg:
+                break;
+            case SkillReaction.crippledVengence:
+                break;
+            case SkillReaction.increaseHitCount:
+                HITS++;
+                break;
+            case SkillReaction.increaseMaxHitCount:
+                MAX_HIT++;
                 break;
             default:
                 break;

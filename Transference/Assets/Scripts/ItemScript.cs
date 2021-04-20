@@ -172,7 +172,7 @@ public class ItemScript : UsableScript
                     {
                         if (target.FACTION != user.FACTION)
                         {
-                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            ManagerScript manager = Common.GetManager();
                             if (manager)
                             {
 
@@ -247,6 +247,7 @@ public class ItemScript : UsableScript
                                 buff.SKILL = randomBuff;
                                 buff.BUFF = randomBuff.BUFF;
                                 buff.COUNT = 1;
+                                target.INVENTORY.TBUFFS.Add(buff);
                                 target.UpdateBuffsAndDebuffs();
                             }
 
@@ -260,11 +261,12 @@ public class ItemScript : UsableScript
                                 randomDeBuff.ELEMENT = Element.Buff;
                                 randomDeBuff.SUBTYPE = SubSkillType.Debuff;
 
-                                target.INVENTORY.BUFFS.Add(randomDeBuff);
+                                target.INVENTORY.DEBUFFS.Add(randomDeBuff);
                                 DebuffScript buff = target.gameObject.AddComponent<DebuffScript>();
                                 buff.SKILL = randomDeBuff;
                                 buff.BUFF = randomDeBuff.BUFF;
                                 buff.COUNT = 1;
+                                target.INVENTORY.TDEBUFFS.Add(buff);
                                 target.UpdateBuffsAndDebuffs();
                             }
                             break;
@@ -288,6 +290,7 @@ public class ItemScript : UsableScript
                                 buff.BUFF = randomBuff.BUFF;
                                 buff.COUNT = 1;
                                 target.UpdateBuffsAndDebuffs();
+                                target.INVENTORY.TBUFFS.Add(buff);
 
                                 CommandSkill randomDeBuff = ScriptableObject.CreateInstance<CommandSkill>();
                                 randomDeBuff.EFFECT = SideEffect.none;
@@ -296,11 +299,13 @@ public class ItemScript : UsableScript
                                 randomDeBuff.ELEMENT = Element.Buff;
                                 randomDeBuff.SUBTYPE = SubSkillType.Debuff;
 
-                                target.INVENTORY.BUFFS.Add(randomDeBuff);
+                                target.INVENTORY.DEBUFFS.Add(randomDeBuff);
                                 DebuffScript debuff = target.gameObject.AddComponent<DebuffScript>();
                                 debuff.SKILL = randomDeBuff;
                                 debuff.BUFF = randomDeBuff.BUFF;
                                 debuff.COUNT = 1;
+                                target.INVENTORY.TDEBUFFS.Add(debuff);
+
                                 target.UpdateBuffsAndDebuffs();
                             }
                             break;
@@ -315,7 +320,7 @@ public class ItemScript : UsableScript
                         return usedEffect;
                     }
                     EnemyManager enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                    ManagerScript manager = Common.GetManager();
                     if (enemyManager)
                     {
                         if (manager)
@@ -676,7 +681,7 @@ public class ItemScript : UsableScript
                     {
                         if (target.FACTION != user.FACTION)
                         {
-                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            ManagerScript manager = Common.GetManager();
                             if (manager)
                             {
 
@@ -708,7 +713,7 @@ public class ItemScript : UsableScript
                     }
 
                     LivingObject liveTarget = target.GetComponent<LivingObject>();
-                    ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                    ManagerScript manager = Common.GetManager();
                     CommandSkill itemskill = Common.GenericSkill;
                     itemskill.ACCURACY = 100;
                     itemskill.EFFECT = EFFECT;
@@ -751,7 +756,7 @@ public class ItemScript : UsableScript
     public bool ExecuteEffect(Object data)
     {
         CommandSkill itemskill = data as CommandSkill;
-        ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+        ManagerScript manager = Common.GetManager();
         manager.ApplyEffect(lastTarget, EFFECT, 100, itemskill);
         return true;
     }

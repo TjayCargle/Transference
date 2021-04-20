@@ -8,6 +8,8 @@ public class TooltipConnector : MonoBehaviour
     public SimpleTooltip myTooltip;
     public UsableScript myUsable;
     public EHitType myHitType = EHitType.normal;
+    public string defaultString = "";
+
     private void Start()
     {
         if(myTooltip == null)
@@ -24,7 +26,11 @@ public class TooltipConnector : MonoBehaviour
     }
     public void UpdateTooltip()
     {
-        if(myTooltip != null)
+        if (myTooltip == null)
+        {
+            myTooltip = GetComponent<SimpleTooltip>();
+        }
+        if (myTooltip != null)
         {
             if(myUsable != null)
             {
@@ -72,7 +78,7 @@ public class TooltipConnector : MonoBehaviour
                 }
 
             }
-            else
+            else if( myHitType != EHitType.normal)
             {
                 switch (myHitType)
                 {
@@ -113,6 +119,10 @@ public class TooltipConnector : MonoBehaviour
                 }
 
 
+            }
+            else
+            {
+                myTooltip.infoLeft = defaultString;
             }
         }
     }

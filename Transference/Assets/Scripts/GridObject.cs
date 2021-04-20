@@ -86,7 +86,7 @@ public class GridObject : MonoBehaviour
             mySR = GetComponent<SpriteRenderer>();
             if (GameObject.FindObjectOfType<ManagerScript>())
             {
-                myManager = GameObject.FindObjectOfType<ManagerScript>();
+                myManager = Common.GetManager();
             }
             if (myManager)
             {

@@ -15,7 +15,7 @@ public class ActorSetup: LivingSetup
             {
                 dm.Setup();
             }
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
 
             me = GetComponent<LivingObject>();
             if (!me)

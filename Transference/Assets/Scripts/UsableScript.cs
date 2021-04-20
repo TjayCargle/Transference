@@ -114,7 +114,7 @@ public class UsableScript : ScriptableObject
             maxExp = exp;
             if (USER)
             {
-                ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                ManagerScript manager = Common.GetManager();
                 if (manager)
                 {
                     if (manager.GetState() != State.EnemyTurn && manager.GetState() != State.HazardTurn)
@@ -123,7 +123,7 @@ public class UsableScript : ScriptableObject
                         {
 
                             manager.CreateEvent(this, this, "New Skill Event", manager.CheckCount, null, 0, manager.CountStart);
-                            manager.CreateTextEvent(this, "" + USER.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
+                            //manager.CreateTextEvent(this, "" + USER.FullName + "'s " + NAME + " leveled up!", "new skill event", manager.CheckText, manager.TextStart);
                             if (manager.log)
                             {
                                 string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(USER.FACTION)) + ">";
@@ -190,6 +190,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -239,6 +240,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -269,6 +271,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -299,6 +302,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -329,6 +333,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -360,6 +365,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -390,6 +396,7 @@ public class UsableScript : ScriptableObject
                             buff.SKILL = randomDeBuff;
                             buff.BUFF = randomDeBuff.BUFF;
                             buff.COUNT = 1;
+                            liveTarget.INVENTORY.TDEBUFFS.Add(buff);
 
                             liveTarget.UpdateBuffsAndDebuffs();
                             liveTarget.updateAilmentIcons();
@@ -417,7 +424,7 @@ public class UsableScript : ScriptableObject
                         if (!target.DEAD)
                         {
                             target.DEAD = true;
-                            ManagerScript manager = GameObject.FindObjectOfType<ManagerScript>();
+                            ManagerScript manager = Common.GetManager();
                             if (manager)
                             {
                                 manager.gridObjects.Remove(target);

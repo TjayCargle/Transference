@@ -335,7 +335,7 @@ namespace Doublsb.Dialog
 
             if (_manager == null)
             {
-                _manager = GameObject.FindObjectOfType<ManagerScript>();
+                _manager = Common.GetManager();
             }
         }
 

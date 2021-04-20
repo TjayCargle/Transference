@@ -59,6 +59,7 @@ public class EnemyScript : LivingObject
         internalTimer = 1.0f;
         myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
         myManager.myCamera.UpdateCamera();
+
         lastReaction = DetermineBestDmgOutput();
     }
     public void ItemStart()
@@ -74,7 +75,7 @@ public class EnemyScript : LivingObject
         {
             base.Setup();
             FACTION = Common.GetEnemyFaction(id);
-            manager = GameObject.FindObjectOfType<ManagerScript>();
+            manager = Common.GetManager();
             //currentPath = new Queue<TileScript>();
             if (possibleAttacks == null)
             {
@@ -622,7 +623,7 @@ public class EnemyScript : LivingObject
             {
                 CommandSkill cmd = Common.GenericSkill;
                 cmd.extra = "" + gao.currentTile.listindex;
-
+                myManager.CreateTextEvent(this, "" + this.NAME + " used <sprite=1> Lay Egg <sprite=41>", "skill atk", myManager.CheckText, myManager.TextStart);
                 myManager.ApplyEffect(null, SideEffect.egg, 100, cmd);
             }
         }
@@ -757,14 +758,14 @@ public class EnemyScript : LivingObject
 
     }
 
-    public bool FindEnemiesInRangeOfAttacks(Vector3 location)
+    public bool FindEnemiesInRangeOfAttacks(Vector3 location, bool checkForBuffs = false)
     {
         bool foundEnemy = false;
 
         GridObject[] objects = GameObject.FindObjectsOfType<GridObject>();
         int skip = -1;
         int consider = -1;
-        if (personality == EPType.support)
+        if (personality == EPType.support || id > 100)
         {
             for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
             {
@@ -789,6 +790,7 @@ public class EnemyScript : LivingObject
                         conatiner.dmg = (int)possibleSkill.DAMAGE;
 
                         possibleAttacks.Add(conatiner);
+
                         atkNames.Add(possibleSkill.NAME + " " + this.NAME);
 
                     }
@@ -835,7 +837,7 @@ public class EnemyScript : LivingObject
                                 }
                             }
                         }
-                        if (objects[i].FACTION != this.FACTION)
+                        if (objects[i].FACTION != this.FACTION && checkForBuffs == false)
                         {
                             if (!objects[i].DEAD)
                             {
@@ -1042,6 +1044,75 @@ public class EnemyScript : LivingObject
                                         }
 
                                     }
+                                }
+                            }
+                        }
+                        else if (objects[i].FACTION == this.FACTION)
+                        {
+                            for (int j = 0; j < INVENTORY.CSKILLS.Count; j++)
+                            {
+                                CommandSkill possibleSkill = INVENTORY.CSKILLS[j];
+                                if (!possibleSkill.USER)
+                                {
+                                    Debug.Log("got no user");
+                                    possibleSkill.USER = this;
+                                }
+                                if (possibleSkill.CanUse())
+                                {
+                                    if (objects[i].GetComponent<LivingObject>())
+                                    {
+                                        LivingObject livvyo = objects[i].GetComponent<LivingObject>();
+                                        if (livvyo.INVENTORY.BUFFS.Contains(possibleSkill))
+                                        {
+                                            continue;
+                                        }
+                                        if (livvyo.INVENTORY.DEBUFFS.Contains(possibleSkill))
+                                        {
+                                            continue;
+                                        }
+                                        if (reflectedSkills.Contains(possibleSkill))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (objects[i].GetComponent<HazardScript>())
+                                        {
+                                            if (possibleSkill.ELEMENT != Element.Buff)
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        if (possibleSkill.SUBTYPE == SubSkillType.Buff)
+                                        {
+                                            //Debug.Log("Can use " + possibleSkill.NAME + " with " + HEALTH + " hp, " + MANA + " mp, " + FATIGUE + "ft");
+                                            List<TileScript> skilltiles = myManager.GetSkillAttackableTilesOneList(currentTile, possibleSkill);
+
+                                            if (skilltiles.Contains(livvyo.currentTile))
+                                            {
+
+                                                if (!livvyo.INVENTORY.BUFFS.Contains(possibleSkill) && livvyo.id != 8)
+                                                {
+                                                    //  Debug.Log("on: " + livvyo.NAME);
+
+                                                    foundEnemy = true;
+                                                    AtkContainer conatiner = ScriptableObject.CreateInstance<AtkContainer>();
+                                                    conatiner.alteration = possibleSkill.REACTION;
+                                                    conatiner.attackingElement = possibleSkill.ELEMENT;
+                                                    conatiner.attackType = possibleSkill.ETYPE;
+                                                    conatiner.attackingObject = this;
+                                                    conatiner.dmgObject = livvyo;
+                                                    conatiner.command = possibleSkill;
+                                                    conatiner.dmg = (int)possibleSkill.DAMAGE;
+
+                                                    possibleAttacks.Add(conatiner);
+                                                    atkNames.Add(possibleSkill.NAME + " " + this.NAME);
+
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
                         }
@@ -1399,14 +1470,22 @@ public class EnemyScript : LivingObject
                 }
                 else if (possibleAttacks[i].command != null)
                 {
+                    if (possibleAttacks[i].command.SUBTYPE == SubSkillType.Buff && chosenCommand == BossCommand.buff)
+                    {
+                        attackOptions.Add(i);
 
-                    if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
-                    {
-                        attackOptions.Add(i);
                     }
-                    else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                    else
                     {
-                        attackOptions.Add(i);
+
+                        if (possibleAttacks[i].command.ETYPE == EType.physical && chosenCommand == BossCommand.skill)
+                        {
+                            attackOptions.Add(i);
+                        }
+                        else if (possibleAttacks[i].command.ETYPE == EType.magical && chosenCommand == BossCommand.spell)
+                        {
+                            attackOptions.Add(i);
+                        }
                     }
                 }
             }
@@ -1431,6 +1510,7 @@ public class EnemyScript : LivingObject
             DmgReaction aReaction = myManager.CalcDamage(possibleAttacks[i], false);
             if (aReaction.reaction <= Reaction.weak && aReaction.reaction >= Reaction.leathal)
             {
+
                 if (id < 100)
                 {
                     attackOptions.Add(i);
@@ -1519,6 +1599,7 @@ public class EnemyScript : LivingObject
                 }
                 else
                 {
+
                     if (STRENGTH > MAGIC)
                     {
                         if (id < 100)
@@ -1556,7 +1637,7 @@ public class EnemyScript : LivingObject
             }
 
         }
-        //   Debug.Log("concluded options " + attackOptions.Count);
+
         if (attackOptions.Count > 0)
         {
 
@@ -1596,9 +1677,9 @@ public class EnemyScript : LivingObject
         }
         else
         {
-            Debug.Log("basic atk");
+            Debug.Log("basic atk, " + attackOptions.Count);
             bestReaction = myManager.CalcDamage(this, atkTarget, WEAPON, Reaction.none, false);
-            lastAttack = null;
+            // lastAttack = null;
         }
 
         return bestReaction;
@@ -1764,6 +1845,12 @@ public class EnemyScript : LivingObject
                     {
                         case BossCommand.strike:
                             {
+
+                                if (((float)MAX_HEALTH - (float)HEALTH / 100.0f) < 20)
+                                {
+                                    chosenCommand = BossCommand.heal;
+                                    Heal();
+                                }
                                 if (liveObj != null)
                                 {
 
@@ -1822,28 +1909,37 @@ public class EnemyScript : LivingObject
                             break;
                         case BossCommand.spell:
                             {
-                                if (liveObj != null)
+                                if (MANA < 20)
                                 {
-
-                                    bool found = FindEnemiesInRangeOfAttacks(transform.position);
-                                    if (found == true)
-                                    {
-                                        myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
-                                    }
-                                    else
-                                    {
-                                        currentEnemy = liveObj;
-                                        TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
-                                        PrepareMoveEvent(targetTile);
-                                    }
+                                    chosenCommand = BossCommand.restore;
+                                    Restore();
                                 }
                                 else
                                 {
-                                    TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
-                                    if (currentTile != targetTile)
+
+                                    if (liveObj != null)
                                     {
-                                        targetTile = DetermineMoveLocation(targetTile);
-                                        PrepareMoveEvent(targetTile);
+
+                                        bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                                        if (found == true)
+                                        {
+                                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                        }
+                                        else
+                                        {
+                                            currentEnemy = liveObj;
+                                            TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                        if (currentTile != targetTile)
+                                        {
+                                            targetTile = DetermineMoveLocation(targetTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
                                     }
                                 }
                             }
@@ -1896,8 +1992,45 @@ public class EnemyScript : LivingObject
                             {
                                 if (myManager.liveEnemies.Count >= 10)
                                 {
-                                    chosenCommand = BossCommand.shield;
-                                    Shield();
+                                    if (adjacentObjects.Count > 0)
+                                    {
+
+                                        if (MANA < 35)
+                                        {
+                                            chosenCommand = BossCommand.restore;
+                                            Restore();
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < adjacentObjects.Count; i++)
+                                            {
+                                                if (adjacentObjects[i].FACTION == this.FACTION)
+                                                {
+                                                    bool found = FindEnemiesInRangeOfAttacks(transform.position, true);
+                                                    if (found == true)
+                                                    {
+
+                                                        chosenCommand = BossCommand.buff;
+                                                        myManager.CreateEvent(this, adjacentObjects[i], "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                            if (chosenCommand != BossCommand.buff)
+                                            {
+                                                chosenCommand = BossCommand.shield;
+                                                Shield();
+                                            }
+
+
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                        chosenCommand = BossCommand.shield;
+                                        Shield();
+                                    }
 
                                 }
                                 else
