@@ -4205,17 +4205,62 @@ public class ManagerScript : EventRunner
 
             case SceneEvent.endChapter:
                 {
+                    if (currentState == State.PlayerWait)
+                        return;
 
+                    currentState = State.PlayerWait;
                     if (menuManager)
                     {
                         if (menuManager.cTT)
                         {
+                            if (menuManager.loadingCanvas != null)
+                            {
+                                menuManager.loadingCanvas.SetActive(true);
+                            }
 
                             switch (Common.currentStory)
                             {
                                 case StorySection.none:
+                                    menuManager.cTT.SetColors(Color.red, Common.pink);
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                    menuManager.cTT.chapterText.text = "You";
+                                    menuManager.cTT.beginEndText.text = "Broke it!";
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
                                     break;
                                 case StorySection.JaxSaveSlot1:
+                                    {
+                                        menuManager.cTT.SetColors(Color.red, Common.pink);
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.cTT.chapterText.text = "Chapter 1";
+                                        menuManager.cTT.beginEndText.text = "End!";
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                        LeanTween.moveX(gameObject, 30, 275 * Time.deltaTime).setOnComplete(() =>
+                                        {
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                            menuManager.cTT.chapterText.text = "DEMO";
+                                            menuManager.cTT.beginEndText.text = "COMPLETE!";
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                            LeanTween.moveX(gameObject, 90, 275 * Time.deltaTime).setOnComplete(() =>
+                                            {
+                                                menuManager.cTT.SetColors(Color.magenta, Common.orange);
+
+                                                menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                                menuManager.cTT.nameText.text = "Thank You";
+                                                menuManager.cTT.chapterText.text = "For";
+                                                menuManager.cTT.beginEndText.text = "Playing!";
+                                                menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                                LeanTween.moveX(gameObject, 250, 275 * Time.deltaTime).setOnComplete(() =>
+                                                {
+                                                    SceneManager.LoadSceneAsync("Start");
+                                                });
+                                            });
+
+
+                                        });
+                                    }
                                     break;
                                 case StorySection.JaxSaveSlot2:
                                     break;
@@ -4231,27 +4276,36 @@ public class ManagerScript : EventRunner
                                     menuManager.cTT.chapterText.text = "Prologue";
                                     menuManager.cTT.beginEndText.text = "End";
                                     menuManager.ToggleCanvas(menuManager.animationCanvas);
-                                    LeanTween.moveX(gameObject, 0, 125 * Time.deltaTime).setOnComplete(() =>
+                                    LeanTween.moveX(gameObject, 30, 275 * Time.deltaTime).setOnComplete(() =>
                                     {
+                                        Debug.Log("0");
                                         menuManager.ToggleCanvas(menuManager.animationCanvas);
                                         menuManager.cTT.chapterText.text = "Chapter 1";
                                         menuManager.cTT.beginEndText.text = "Unlocked!";
                                         menuManager.ToggleCanvas(menuManager.animationCanvas);
-                                    });
-                                    LeanTween.moveX(gameObject, 0, 375 * Time.deltaTime).setOnComplete(() =>
-                                    {
-                                        menuManager.cTT.SetColors(Color.green, Common.lime);
 
-                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
-                                        menuManager.cTT.nameText.text = "Zeffron Drix";
-                                        menuManager.cTT.chapterText.text = "Story";
-                                        menuManager.cTT.beginEndText.text = "Unlocked!";
-                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        LeanTween.moveX(gameObject, 90, 275 * Time.deltaTime).setOnComplete(() =>
+                                        {
+                                            Debug.Log("1");
+                                            menuManager.cTT.SetColors(Color.green, Common.lime);
+
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                            menuManager.cTT.nameText.text = "Zeffron Drix";
+                                            menuManager.cTT.chapterText.text = "Story";
+                                            menuManager.cTT.beginEndText.text = "Unlocked!";
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                            LeanTween.moveX(gameObject, 250, 275 * Time.deltaTime).setOnComplete(() =>
+                                            {
+                                                Debug.Log("2");
+                                                SceneManager.LoadSceneAsync("Start");
+                                            });
+                                        });
+
+
                                     });
-                                    LeanTween.moveX(gameObject, 0, 600 * Time.deltaTime).setOnComplete(() =>
-                                    {
-                                        SceneManager.LoadSceneAsync("Start");
-                                    });
+
+
 
                                     break;
                                 case StorySection.ZeffSaveSlot1:
@@ -4266,6 +4320,38 @@ public class ManagerScript : EventRunner
                                     break;
                                 case StorySection.ZeffSaveSlotPrologue:
                                     SaveGame(StorySection.ZeffSaveSlot1.ToString());
+
+                                    menuManager.cTT.SetColors(Color.red, Common.pink);
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                    menuManager.cTT.chapterText.text = "Chapter 1";
+                                    menuManager.cTT.beginEndText.text = "End!";
+                                    menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                    LeanTween.moveX(gameObject, 30, 275 * Time.deltaTime).setOnComplete(() =>
+                                    {
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.cTT.chapterText.text = "DEMO";
+                                        menuManager.cTT.beginEndText.text = "COMPLETE!";
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                        LeanTween.moveX(gameObject, 90, 275 * Time.deltaTime).setOnComplete(() =>
+                                        {
+                                            menuManager.cTT.SetColors(Color.magenta, Common.orange);
+
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                            menuManager.cTT.nameText.text = "Thank You";
+                                            menuManager.cTT.chapterText.text = "For";
+                                            menuManager.cTT.beginEndText.text = "Playing!";
+                                            menuManager.ToggleCanvas(menuManager.animationCanvas);
+
+                                            LeanTween.moveX(gameObject, 250, 275 * Time.deltaTime).setOnComplete(() =>
+                                            {
+                                                SceneManager.LoadSceneAsync("Start");
+                                            });
+                                        });
+
+
+                                    });
                                     break;
                                 case StorySection.PryinaSaveSlot1:
                                     break;
@@ -4315,6 +4401,17 @@ public class ManagerScript : EventRunner
                                     break;
                                 case StorySection.LukonSaveSlotPrologue:
                                     break;
+                                default:
+                                    {
+                                        menuManager.cTT.SetColors(Color.red, Common.pink);
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        menuManager.cTT.chapterText.text = "You";
+                                        menuManager.cTT.beginEndText.text = "Defaulted!";
+                                        menuManager.ToggleCanvas(menuManager.animationCanvas);
+                                        SceneManager.LoadSceneAsync("Start");
+
+                                    }
+                                    break;
                             }
                         }
                     }
@@ -4343,7 +4440,6 @@ public class ManagerScript : EventRunner
     public void EndScene()
     {
 
-        myCamera.PlayPreviousSoundTrack();
 
         talkPanel.gameObject.SetActive(false);
         bool resetState = true;
@@ -4372,6 +4468,7 @@ public class ManagerScript : EventRunner
         }
         if (resetState == true)
         {
+            myCamera.PlayPreviousSoundTrack();
 
             if (eventManager.activeEvents > 0)
             {
@@ -5367,150 +5464,153 @@ public class ManagerScript : EventRunner
             }
             anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
-
-            for (int j = 0; j < lvtimes; j++)
+            if (anEnemy.name != "Scorpiee Egg")
             {
-                if (j % 3 == 0)
+
+                for (int j = 0; j < lvtimes; j++)
                 {
-                    // anEnemy.LevelUp();
-                    rand = Random.Range(0, 3);
-                    // Debug.Log("r is " + rand);
-                    switch (rand)
+                    if (j % 3 == 0)
                     {
-                        case 0:
-                            {
-                                anEnemy.GainPhysExp(20, false);
-                            }
-                            break;
-                        case 1:
-                            {
-                                anEnemy.GainMagExp(20, false);
-                            }
-                            break;
-                        case 2:
-                            {
-                                anEnemy.GainDexExp(20, false);
-                            }
-                            break;
-                        default:
-                            {
-                                Debug.Log("default lv up");
-                                anEnemy.GainDexExp(100);
-                            }
-                            break;
-                    }
-                    int attackCount = 0;
-                    if (rand == 0)
-                    {
-
-
-                        for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                        // anEnemy.LevelUp();
+                        rand = Random.Range(0, 3);
+                        // Debug.Log("r is " + rand);
+                        switch (rand)
                         {
-                            if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.magical)
-                            {
-                                attackCount++;
-                            }
-                        }
-                        if (attackCount < 6)
-                        {
-                            //    Debug.Log("command skill" + itemNum);
-                            int itemNum = 0;
-                            itemNum = Random.Range(0, 4);
-                            itemNum += (Random.Range(1, 8) * 10);
-                            UsableScript useable = database.LearnSkill(itemNum, anEnemy);
-                        }
-
-                    }
-                    rand = Random.Range(0, 2);
-                    attackCount = 0;
-                    if (rand == 0)
-                    {
-
-
-                        for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
-                        {
-                            if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.physical)
-                            {
-                                attackCount++;
-                            }
-                        }
-                        if (attackCount < 6)
-                        {
-                            //    Debug.Log("command skill" + itemNum);
-                            int itemNum = 0;
-                            itemNum = Random.Range(4, 7);
-                            itemNum += (Random.Range(1, 10) * 10);
-                            UsableScript useable = database.LearnSkill(itemNum, anEnemy);
-                        }
-
-                    }
-                    rand = Random.Range(0, 2);
-                    attackCount = 0;
-                    if (rand == 0)
-                    {
-
-                        if (anEnemy.INVENTORY.WEAPONS.Count < 6)
-                        {
-
-                            UsableScript useable = database.GetWeapon(Random.Range(0, 48), anEnemy);
-                        }
-                    }
-                }
-                else if (j % 2 == 0)
-                {
-                    rand = Random.Range(0, 4);
-                    switch (rand)
-                    {
-                        case 0:
-                            {
-                                if (anEnemy.INVENTORY.CSKILLS.Count > 0)
+                            case 0:
                                 {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
-                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(2, false);
+                                    anEnemy.GainPhysExp(20, false);
+                                }
+                                break;
+                            case 1:
+                                {
+                                    anEnemy.GainMagExp(20, false);
+                                }
+                                break;
+                            case 2:
+                                {
+                                    anEnemy.GainDexExp(20, false);
+                                }
+                                break;
+                            default:
+                                {
+                                    Debug.Log("default lv up");
+                                    anEnemy.GainDexExp(100);
+                                }
+                                break;
+                        }
+                        int attackCount = 0;
+                        if (rand == 0)
+                        {
+
+
+                            for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                            {
+                                if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.magical)
+                                {
+                                    attackCount++;
                                 }
                             }
-                            break;
-
-                        case 1:
+                            if (attackCount < 6)
                             {
-                                if (anEnemy.INVENTORY.WEAPONS.Count > 0)
+                                //    Debug.Log("command skill" + itemNum);
+                                int itemNum = 0;
+                                itemNum = Random.Range(0, 4);
+                                itemNum += (Random.Range(1, 8) * 10);
+                                UsableScript useable = database.LearnSkill(itemNum, anEnemy);
+                            }
+
+                        }
+                        rand = Random.Range(0, 2);
+                        attackCount = 0;
+                        if (rand == 0)
+                        {
+
+
+                            for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                            {
+                                if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.physical)
                                 {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
-                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(2, false);
+                                    attackCount++;
                                 }
                             }
-                            break;
-
-                        case 2:
+                            if (attackCount < 6)
                             {
-                                if (anEnemy.INVENTORY.USEABLES.Count > 0)
+                                //    Debug.Log("command skill" + itemNum);
+                                int itemNum = 0;
+                                itemNum = Random.Range(4, 7);
+                                itemNum += (Random.Range(1, 10) * 10);
+                                UsableScript useable = database.LearnSkill(itemNum, anEnemy);
+                            }
+
+                        }
+                        rand = Random.Range(0, 2);
+                        attackCount = 0;
+                        if (rand == 0)
+                        {
+
+                            if (anEnemy.INVENTORY.WEAPONS.Count < 6)
+                            {
+
+                                UsableScript useable = database.GetWeapon(Random.Range(0, 48), anEnemy);
+                            }
+                        }
+                    }
+                    else if (j % 2 == 0)
+                    {
+                        rand = Random.Range(0, 4);
+                        switch (rand)
+                        {
+                            case 0:
                                 {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.USEABLES.Count);
-                                    UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
-                                    if (useable.GetType() != typeof(ItemScript))
+                                    if (anEnemy.INVENTORY.CSKILLS.Count > 0)
                                     {
-                                        useable.GrantXP(2, false);
+                                        rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
+                                        anEnemy.INVENTORY.CSKILLS[rand].GrantXP(2, false);
                                     }
                                 }
-                            }
-                            break;
+                                break;
+
+                            case 1:
+                                {
+                                    if (anEnemy.INVENTORY.WEAPONS.Count > 0)
+                                    {
+                                        rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
+                                        anEnemy.INVENTORY.WEAPONS[rand].GrantXP(2, false);
+                                    }
+                                }
+                                break;
+
+                            case 2:
+                                {
+                                    if (anEnemy.INVENTORY.USEABLES.Count > 0)
+                                    {
+                                        rand = Random.Range(0, anEnemy.INVENTORY.USEABLES.Count);
+                                        UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
+                                        if (useable.GetType() != typeof(ItemScript))
+                                        {
+                                            useable.GrantXP(2, false);
+                                        }
+                                    }
+                                }
+                                break;
 
 
+                        }
                     }
+
+
                 }
 
-
-            }
-
-            if (lvtimes > 5)
-            {
-                if (anEnemy.INVENTORY.ARMOR.Count > 0)
+                if (lvtimes > 5)
                 {
-                    for (int j = 0; j < anEnemy.INVENTORY.ARMOR.Count; j++)
+                    if (anEnemy.INVENTORY.ARMOR.Count > 0)
                     {
-                        if (anEnemy.INVENTORY.ARMOR[j] != anEnemy.DEFAULT_ARMOR)
+                        for (int j = 0; j < anEnemy.INVENTORY.ARMOR.Count; j++)
                         {
-                            anEnemy.ARMOR.Equip(anEnemy.INVENTORY.ARMOR[j]);
+                            if (anEnemy.INVENTORY.ARMOR[j] != anEnemy.DEFAULT_ARMOR)
+                            {
+                                anEnemy.ARMOR.Equip(anEnemy.INVENTORY.ARMOR[j]);
+                            }
                         }
                     }
                 }
@@ -5962,219 +6062,222 @@ public class ManagerScript : EventRunner
             }
             anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
-
-            for (int j = 0; j < lvtimes; j++)
+            if (anEnemy.name != "Scorpiee Egg")
             {
-                // anEnemy.LevelUp();
-                rand = Random.Range(0, 3);
-                // Debug.Log("r=" + rand);
-                switch (rand)
+
+                for (int j = 0; j < lvtimes; j++)
                 {
-                    case 0:
-                        {
-                            anEnemy.GainPhysExp(30, false);
-                        }
-                        break;
-                    case 1:
-                        {
-                            anEnemy.GainMagExp(30, false);
-                        }
-                        break;
-                    case 2:
-                        {
-                            anEnemy.GainDexExp(30, false);
-                        }
-                        break;
-                }
-                if (j % 3 == 0)
-                {
-                    int attackCount = 0;
-                    if (rand == 0)
-                    {
-
-
-                        for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
-                        {
-                            if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.magical)
-                            {
-                                attackCount++;
-                            }
-                        }
-                        if (attackCount < 6)
-                        {
-                            //    Debug.Log("command skill" + itemNum);
-                            int itemNum = 0;
-                            itemNum = Random.Range(0, 4);
-                            itemNum += (Random.Range(1, 8) * 10);
-                            UsableScript useable = database.LearnSkill(itemNum, anEnemy);
-                        }
-
-                    }
-                    rand = Random.Range(0, 2);
-                    attackCount = 0;
-                    if (rand == 0)
-                    {
-
-
-                        for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
-                        {
-                            if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.physical)
-                            {
-                                attackCount++;
-                            }
-                        }
-                        if (attackCount < 6)
-                        {
-                            //    Debug.Log("command skill" + itemNum);
-                            int itemNum = 0;
-                            itemNum = Random.Range(4, 7);
-                            itemNum += (Random.Range(1, 10) * 10);
-                            UsableScript useable = database.LearnSkill(itemNum, anEnemy);
-                        }
-
-                    }
-                    rand = Random.Range(0, 2);
-                    attackCount = 0;
-                    if (rand == 0)
-                    {
-
-                        if (anEnemy.INVENTORY.WEAPONS.Count < 6)
-                        {
-
-                            UsableScript useable = database.GetWeapon(Random.Range(0, 48), anEnemy);
-                        }
-                    }
-                }
-                if (j % 2 == 0)
-                {
-                    rand = Random.Range(0, 4);
+                    // anEnemy.LevelUp();
+                    rand = Random.Range(0, 3);
+                    // Debug.Log("r=" + rand);
                     switch (rand)
                     {
                         case 0:
                             {
+                                anEnemy.GainPhysExp(30, false);
+                            }
+                            break;
+                        case 1:
+                            {
+                                anEnemy.GainMagExp(30, false);
+                            }
+                            break;
+                        case 2:
+                            {
+                                anEnemy.GainDexExp(30, false);
+                            }
+                            break;
+                    }
+                    if (j % 3 == 0)
+                    {
+                        int attackCount = 0;
+                        if (rand == 0)
+                        {
+
+
+                            for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                            {
+                                if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.magical)
+                                {
+                                    attackCount++;
+                                }
+                            }
+                            if (attackCount < 6)
+                            {
+                                //    Debug.Log("command skill" + itemNum);
+                                int itemNum = 0;
+                                itemNum = Random.Range(0, 4);
+                                itemNum += (Random.Range(1, 8) * 10);
+                                UsableScript useable = database.LearnSkill(itemNum, anEnemy);
+                            }
+
+                        }
+                        rand = Random.Range(0, 2);
+                        attackCount = 0;
+                        if (rand == 0)
+                        {
+
+
+                            for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                            {
+                                if (anEnemy.INVENTORY.CSKILLS[k].ETYPE != EType.physical)
+                                {
+                                    attackCount++;
+                                }
+                            }
+                            if (attackCount < 6)
+                            {
+                                //    Debug.Log("command skill" + itemNum);
+                                int itemNum = 0;
+                                itemNum = Random.Range(4, 7);
+                                itemNum += (Random.Range(1, 10) * 10);
+                                UsableScript useable = database.LearnSkill(itemNum, anEnemy);
+                            }
+
+                        }
+                        rand = Random.Range(0, 2);
+                        attackCount = 0;
+                        if (rand == 0)
+                        {
+
+                            if (anEnemy.INVENTORY.WEAPONS.Count < 6)
+                            {
+
+                                UsableScript useable = database.GetWeapon(Random.Range(0, 48), anEnemy);
+                            }
+                        }
+                    }
+                    if (j % 2 == 0)
+                    {
+                        rand = Random.Range(0, 4);
+                        switch (rand)
+                        {
+                            case 0:
+                                {
+                                    if (anEnemy.INVENTORY.CSKILLS.Count > 0)
+                                    {
+                                        rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
+                                        anEnemy.INVENTORY.CSKILLS[rand].GrantXP(lvtimes, false);
+                                    }
+                                }
+                                break;
+
+                            case 1:
+                                {
+                                    if (anEnemy.INVENTORY.WEAPONS.Count > 0)
+                                    {
+                                        rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
+                                        anEnemy.INVENTORY.WEAPONS[rand].GrantXP(lvtimes, false);
+                                    }
+                                }
+                                break;
+
+                            case 2:
+                                {
+                                    if (anEnemy.INVENTORY.USEABLES.Count > 0)
+                                    {
+                                        rand = Random.Range(0, anEnemy.INVENTORY.USEABLES.Count);
+                                        UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
+                                        if (useable.GetType() != typeof(ItemScript))
+                                        {
+                                            useable.GrantXP(lvtimes, false);
+                                        }
+                                    }
+                                }
+                                break;
+
+
+                        }
+                    }
+                    switch (Common.GetEPCluster(anEnemy.personality))
+                    {
+                        case EPCluster.physical:
+                            {
                                 if (anEnemy.INVENTORY.CSKILLS.Count > 0)
                                 {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.CSKILLS.Count);
-                                    anEnemy.INVENTORY.CSKILLS[rand].GrantXP(lvtimes, false);
+                                    for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                                    {
+                                        if (anEnemy.INVENTORY.CSKILLS[k].ETYPE == EType.physical)
+                                        {
+                                            rand = Random.Range(0, 2);
+                                            if (rand == 0)
+                                            {
+                                                anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             break;
+                        case EPCluster.magical:
+                            {
+                                if (anEnemy.INVENTORY.CSKILLS.Count > 0)
+                                {
+                                    for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
+                                    {
+                                        if (anEnemy.INVENTORY.CSKILLS[k].ETYPE == EType.magical)
+                                        {
 
-                        case 1:
+                                            rand = Random.Range(0, 2);
+                                            if (rand == 0)
+                                            {
+                                                anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case EPCluster.logical:
                             {
                                 if (anEnemy.INVENTORY.WEAPONS.Count > 0)
                                 {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.WEAPONS.Count);
-                                    anEnemy.INVENTORY.WEAPONS[rand].GrantXP(lvtimes, false);
-                                }
-                            }
-                            break;
-
-                        case 2:
-                            {
-                                if (anEnemy.INVENTORY.USEABLES.Count > 0)
-                                {
-                                    rand = Random.Range(0, anEnemy.INVENTORY.USEABLES.Count);
-                                    UsableScript useable = anEnemy.INVENTORY.USEABLES[rand];
-                                    if (useable.GetType() != typeof(ItemScript))
+                                    for (int k = 0; k < anEnemy.INVENTORY.WEAPONS.Count; k++)
                                     {
-                                        useable.GrantXP(lvtimes, false);
+
+
+                                        rand = Random.Range(0, 2);
+                                        if (rand == 0)
+                                        {
+                                            anEnemy.INVENTORY.WEAPONS[k].GrantXP(1, false);
+                                        }
                                     }
+
                                 }
                             }
                             break;
+                        case EPCluster.natural:
+                            {
+                                if (anEnemy.INVENTORY.ARMOR.Count > 0)
+                                {
+                                    for (int k = 0; k < anEnemy.INVENTORY.ARMOR.Count; k++)
+                                    {
 
 
+                                        rand = Random.Range(0, 2);
+                                        if (rand == 0)
+                                        {
+                                            anEnemy.INVENTORY.ARMOR[k].LevelUP();
+                                        }
+                                    }
+
+                                }
+                            }
+                            break;
                     }
-                }
-                switch (Common.GetEPCluster(anEnemy.personality))
-                {
-                    case EPCluster.physical:
-                        {
-                            if (anEnemy.INVENTORY.CSKILLS.Count > 0)
-                            {
-                                for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
-                                {
-                                    if (anEnemy.INVENTORY.CSKILLS[k].ETYPE == EType.physical)
-                                    {
-                                        rand = Random.Range(0, 2);
-                                        if (rand == 0)
-                                        {
-                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case EPCluster.magical:
-                        {
-                            if (anEnemy.INVENTORY.CSKILLS.Count > 0)
-                            {
-                                for (int k = 0; k < anEnemy.INVENTORY.CSKILLS.Count; k++)
-                                {
-                                    if (anEnemy.INVENTORY.CSKILLS[k].ETYPE == EType.magical)
-                                    {
 
-                                        rand = Random.Range(0, 2);
-                                        if (rand == 0)
-                                        {
-                                            anEnemy.INVENTORY.CSKILLS[k].GrantXP(1, false);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case EPCluster.logical:
-                        {
-                            if (anEnemy.INVENTORY.WEAPONS.Count > 0)
-                            {
-                                for (int k = 0; k < anEnemy.INVENTORY.WEAPONS.Count; k++)
-                                {
-
-
-                                    rand = Random.Range(0, 2);
-                                    if (rand == 0)
-                                    {
-                                        anEnemy.INVENTORY.WEAPONS[k].GrantXP(1, false);
-                                    }
-                                }
-
-                            }
-                        }
-                        break;
-                    case EPCluster.natural:
-                        {
-                            if (anEnemy.INVENTORY.ARMOR.Count > 0)
-                            {
-                                for (int k = 0; k < anEnemy.INVENTORY.ARMOR.Count; k++)
-                                {
-
-
-                                    rand = Random.Range(0, 2);
-                                    if (rand == 0)
-                                    {
-                                        anEnemy.INVENTORY.ARMOR[k].LevelUP();
-                                    }
-                                }
-
-                            }
-                        }
-                        break;
                 }
 
-            }
-
-            if (lvtimes > 5)
-            {
-                if (anEnemy.INVENTORY.ARMOR.Count > 0)
+                if (lvtimes > 5)
                 {
-                    for (int j = 0; j < anEnemy.INVENTORY.ARMOR.Count; j++)
+                    if (anEnemy.INVENTORY.ARMOR.Count > 0)
                     {
-                        if (anEnemy.INVENTORY.ARMOR[j] != anEnemy.DEFAULT_ARMOR)
+                        for (int j = 0; j < anEnemy.INVENTORY.ARMOR.Count; j++)
                         {
-                            anEnemy.ARMOR.Equip(anEnemy.INVENTORY.ARMOR[j]);
+                            if (anEnemy.INVENTORY.ARMOR[j] != anEnemy.DEFAULT_ARMOR)
+                            {
+                                anEnemy.ARMOR.Equip(anEnemy.INVENTORY.ARMOR[j]);
+                            }
                         }
                     }
                 }
@@ -6637,7 +6740,7 @@ public class ManagerScript : EventRunner
 
 
             List<GridObject> gridobjs = objManager.getObjects(data);
-            Debug.Log("loaded " + data.objMapIndexes.Count);
+
             for (int i = 0; i < gridobjs.Count; i++)
             {
 
@@ -6920,7 +7023,7 @@ public class ManagerScript : EventRunner
 
             turnOrder[i].GENERATED = 0;
             turnOrder[i].ACTIONS = acts;
-            turnOrder[i].LAST_USED.Clear();
+            // turnOrder[i].LAST_USED.Clear();
             turnOrder[i].updateLastSprites();
         }
 
@@ -7134,7 +7237,7 @@ public class ManagerScript : EventRunner
 
 
 
-
+            bool canAct = false;
             for (int i = 0; i < turnOrder.Count; i++)
             {
                 if (turnOrder[i].GetComponent<BuffScript>())
@@ -7206,6 +7309,7 @@ public class ManagerScript : EventRunner
                     turnOrder[i].turnUpdate(liveEnemies.Count);
                     if (turnOrder[i].ACTIONS > 0)
                     {
+                        canAct = true;
 
                         if (turnOrder[i].FACTION != Faction.ally && turnOrder[i].FACTION != Faction.hazard)
                         {
@@ -7229,7 +7333,26 @@ public class ManagerScript : EventRunner
             {
                 livingObjects[i].updateAilmentIcons();
             }
-            CreateEvent(this, turnOrder[0], "Phase Announce Event", PhaseAnnounce, null, 0, PhaseAnnounceStart);
+
+            if (canAct == true)
+            {
+                CreateEvent(this, turnOrder[0], "Phase Announce Event", PhaseAnnounce, null, 0, PhaseAnnounceStart);
+            }
+            else if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
+            {
+                myCamera.PlaySoundTrack(9);
+                menuManager.ShowNone();
+                menuManager.ShowGameOver();
+
+                //eventManager.gridEvents.Clear();
+                currentState = State.PlayerDead;
+                nextRoundCalled = true;
+            }
+            else
+            {
+                nextRoundCalled = false;
+                NextTurn("next round moving on");
+            }
         }
         else if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
         {
@@ -12772,7 +12895,7 @@ public class ManagerScript : EventRunner
                     if (log)
                     {
                         string coloroption = "<color=#" + ColorUtility.ToHtmlStringRGB(Common.GetFactionColor(attackingObject.FACTION)) + ">";
-                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=cyan> RESISTED </color> damage");
+                        log.Log(coloroption + attackingObject.FullName + "</color> attack was <color=#00FFFF> RESISTED </color> damage");
                     }
                 }
                 break;
@@ -12934,19 +13057,19 @@ public class ManagerScript : EventRunner
                         }
                         else if (react.reaction > Reaction.missed)
                         {
-                            CreateDmgTextEvent(react.reaction.ToString(), Color.blue, target);
+                            CreateDmgTextEvent(react.reaction.ToString(), Common.cyan, target);
                             CreateDmgTextEvent(react.damage.ToString(), Common.green, target);
                         }
                         else if (react.reaction > Reaction.weak)
                         {
 
-                            CreateDmgTextEvent(react.reaction.ToString(), Color.blue, target);
-                            CreateDmgTextEvent(react.damage.ToString(), Color.blue, target);
+                            CreateDmgTextEvent(react.reaction.ToString(), Common.cyan, target);
+                            CreateDmgTextEvent(react.damage.ToString(), Common.cyan, target);
 
                             if (react.reaction == Reaction.reflected)
                                 CreateDmgTextEvent(react.damage.ToString(), Color.red, attackingObject);
                             else
-                                CreateDmgTextEvent(react.damage.ToString(), Color.blue, target);
+                                CreateDmgTextEvent(react.damage.ToString(), Common.cyan, target);
                         }
                         else
                         {
@@ -13293,7 +13416,7 @@ public class ManagerScript : EventRunner
                                     //    Debug.Log("command skill" + itemNum);
                                     int itemNum = 0;
                                     itemNum = Random.Range(0, 4);
-                                    itemNum += (Random.Range(1, 8) * 10);
+                                    itemNum += (Random.Range(1, 9) * 10);
                                     UsableScript useable = database.LearnSkill(itemNum, attackingObject);
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
@@ -13304,7 +13427,7 @@ public class ManagerScript : EventRunner
                                 {
                                     int itemNum = 0;
                                     itemNum = Random.Range(0, 4);
-                                    itemNum += (Random.Range(1, 8) * 10);
+                                    itemNum += (Random.Range(1, 9) * 10);
                                     UsableScript useable = database.GetSkill(itemNum);
 
                                     LearnContainer learnContainer = ScriptableObject.CreateInstance<LearnContainer>();
@@ -13361,7 +13484,7 @@ public class ManagerScript : EventRunner
                             {
                                 if (attackingObject.INVENTORY.WEAPONS.Count < 6)
                                 {
-                                    UsableScript useable = database.GetWeapon(Random.Range(0, 48), attackingObject);
+                                    UsableScript useable = database.GetWeapon(Random.Range(0, 57), attackingObject);
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
                                         CreateEvent(this, useable, "New Skill Event", CheckCount, null, 0, CountStart);
@@ -13370,7 +13493,7 @@ public class ManagerScript : EventRunner
                                 else
                                 {
 
-                                    UsableScript useable = database.GetWeapon(Random.Range(0, 48), null);
+                                    UsableScript useable = database.GetWeapon(Random.Range(0, 57), null);
 
                                     LearnContainer learnContainer = ScriptableObject.CreateInstance<LearnContainer>();
                                     learnContainer.attackingObject = attackingObject;

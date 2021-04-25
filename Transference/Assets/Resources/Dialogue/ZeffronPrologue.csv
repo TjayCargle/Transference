@@ -1,6 +1,6 @@
 -2 basil (temp)
 -4 indigo (temp)
-a,1,/hide:1/ /setAsFirst:Zeffron Drix/ /setAsSecond:Fairy Warrior/ 
+a,1,/hide:0/ /setAsFirst:Fairy Warrior/ /setAsSecond:Zeffron Drix/ 
 a,1,Everything in this world is made of Essence.
 a,1,From flowers; to people; to magic.
 a,1,As descendants of those who survived the Great Cataclysm....

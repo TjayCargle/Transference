@@ -24,8 +24,9 @@ d,31,4,43
 m,Guest Room,East Shop,Lesson Room
 l,17,18,5
 x,14,22,3
-g,27
-gi,4
+-g,27
+-gi,4
+e,27
 stt,swap,swap,swap,help,help
 sti,11,14,30,23,39
 ex,13,15

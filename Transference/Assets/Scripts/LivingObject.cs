@@ -68,6 +68,7 @@ public class LivingObject : GridObject
 
     [SerializeField]
     protected TextMeshProUGUI blackWeaknessText = null;
+    [SerializeField]
     protected TextMeshProUGUI WeaknessText = null;
 
     public TextMeshPro TEXT
@@ -945,9 +946,21 @@ public class LivingObject : GridObject
                 myWorldHealthBar = GetComponentInChildren<UnityEngine.UI.Slider>();
                 if (GetComponentsInChildren<TextMeshProUGUI>().Length >= 2)
                 {
+                    TextMeshProUGUI[] textObjects = GetComponentsInChildren<TextMeshProUGUI>();
 
-                    blackWeaknessText = GetComponentsInChildren<TextMeshProUGUI>()[0];
-                    WeaknessText = GetComponentsInChildren<TextMeshProUGUI>()[1];
+                    for (int i = 0; i < textObjects.Length; i++)
+                    {
+                        if (textObjects[i].name == "BlackenedText")
+                        {
+                            blackWeaknessText = textObjects[i];
+                        }
+                        else if (textObjects[i].name == "WeakText")
+                        {
+                            WeaknessText = textObjects[i];
+
+                        }
+                    }
+
                     ShowHideWeakness(EHitType.normal, false);
                 }
 
@@ -1003,7 +1016,7 @@ public class LivingObject : GridObject
 
     public void updateLastSprites()
     {
-
+        return;
         if (LAST_SPRITES != null)
         {
             InventoryMangager invmger = GameObject.FindObjectOfType<InventoryMangager>();
@@ -1125,28 +1138,42 @@ public class LivingObject : GridObject
                         almentIndex++;
                     }
                 }
+                if (INVENTORY.DEBUFFS.Count != INVENTORY.TDEBUFFS.Count)
+                {
+                    Debug.Log("invalid debuff vs tdbuff count");
+                    INVENTORY.DEBUFFS.Clear();
+                    INVENTORY.TDEBUFFS.Clear();
 
+                    DebuffScript[] possibleDebuffs = GetComponents<DebuffScript>();
+                    for (int i = possibleDebuffs.Length - 1; i >= 0; i--)
+                    {
+                        Destroy(possibleDebuffs[i]);
+                    }
+                }
                 for (int i = 0; i < INVENTORY.DEBUFFS.Count; i++)
                 {
                     if (almentIndex < 6)
                     {
                         //  AILMENTS[almentIndex].sr.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
-
-                        STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
-                        STATUSS[almentIndex].myImage.color = Color.white;
-                        STATUSS[almentIndex].childImage.color = Color.white;
-                        STATUSS[almentIndex].myProText.text = "x" + INVENTORY.TDEBUFFS[i].COUNT;
-
                         CommandSkill buffskill = INVENTORY.DEBUFFS[i];
+                        if (buffskill.BUFFEDSTAT != ModifiedStat.none)
+                        {
 
-                        STATUSS[almentIndex].tooltip.defaultString = "*DeBuff: @" + buffskill.NAME + "\n @" + "Decreases " + buffskill.BUFFEDSTAT + " by " + buffskill.BUFFVAL + "%. \nEnds in " + INVENTORY.TDEBUFFS[i].COUNT + " turn";
-                        if (INVENTORY.TDEBUFFS[i].COUNT > 1)
-                            STATUSS[almentIndex].tooltip.defaultString += "s.";
-                        else
-                            STATUSS[almentIndex].tooltip.defaultString += ".";
-                        STATUSS[almentIndex].tooltip.UpdateTooltip();
+                            STATUSS[almentIndex].childImage.sprite = iconManager.statusIconImages[(int)Common.BuffToIcon(INVENTORY.DEBUFFS[i].BUFF, true)];
+                            STATUSS[almentIndex].myImage.color = Color.white;
+                            STATUSS[almentIndex].childImage.color = Color.white;
+                            STATUSS[almentIndex].myProText.text = "x" + INVENTORY.TDEBUFFS[i].COUNT;
 
-                        almentIndex++;
+
+                            STATUSS[almentIndex].tooltip.defaultString = "*DeBuff: @" + buffskill.NAME + "\n @" + "Decreases " + buffskill.BUFFEDSTAT + " by " + buffskill.BUFFVAL + "%. \nEnds in " + INVENTORY.TDEBUFFS[i].COUNT + " turn";
+                            if (INVENTORY.TDEBUFFS[i].COUNT > 1)
+                                STATUSS[almentIndex].tooltip.defaultString += "s.";
+                            else
+                                STATUSS[almentIndex].tooltip.defaultString += ".";
+                            STATUSS[almentIndex].tooltip.UpdateTooltip();
+
+                            almentIndex++;
+                        }
                     }
                 }
                 if (almentIndex < 6)
@@ -2235,7 +2262,7 @@ public class LivingObject : GridObject
         {
             LAST_USED.Remove(LAST_USED[0]);
         }
-        updateLastSprites();
+        //  updateLastSprites();
         if (LAST_USED.Count == 3)
         {
             CheckForCombos();

@@ -1,22 +1,24 @@
-a,0,Sheesh; was that all this place had? 
-a,0,I figured the /speed:down/big; bad; /speed:init/Vampretti manor would be more exciting
-a,1,Jax; what are you doing in here?
+a,0,Sheesh; was that all this place had?,1 
+a,0,I figured the /speed:down/big; bad; /speed:init/Vampretti manor would be more exciting,2
+a,1,Jax; what are you doing in here?,1
 -Jax turns to glance back at the scorpiee bodies and beams up at Zeffron.
-a,0,/speed:down/Oh; you know. /speed:up/A little /speed:init/exterminating.
-a,1,Jax.
+a,0,/speed:down/Oh; you know. /speed:up/A little /speed:init/exterminating.,5
+a,1,Jax.,3
 -Jax raises his arms.
-a,0,Alright; fine. 
+a,0,Alright; fine., 3 
 a,0,I snuck in because I was looking for the Book of Transference.
 -He takes a step back.
 a,0,/select:1//move:-50/Look; I know what you’re gonna say. But I’m not stopping. 
 a,0,I’m finding that book; alright.
 -Zeffron forces a smile.
-a,1,Easy; Jax. Take it easy./select:1//move:0/ I’m on your side.
-a,0,What? /move:-35/; since when?/move:-75/
+a,1,Easy; Jax. Take it easy./select:1//move:0/ I’m on your side.,1
+a,0,What? /move:-35/; since when?/move:-75/,6
 -Zeffron doesn’t move. He turns around forces the smile again.
 a,1,I think I understand why you left; and I just... 
-a,1,I dunno; I missed my brother./move:75/
-a,0,/move:-25/Except; we're not brothers. Not really anyway./move:0/
+a,1,I dunno; I missed my brother./move:75/,4
+a,0,/move:-25/Except; we're not brothers. Not really anyway./move:0/,1
 a,1,Yeah; I know; but still-
 a,0, Now come on./move:0/ We’ve got work to do. 
-a,0,I will leave you behind if I have to.
+a,0,Onward; to the /color:yellow/Library/color:white/!
+a,1,Why....,2
+a,0,It's called hiding in plain sight.,5

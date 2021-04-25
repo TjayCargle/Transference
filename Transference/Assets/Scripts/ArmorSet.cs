@@ -141,7 +141,7 @@ public class ArmorSet : MonoBehaviour
         {
             if (attr1 != null)
             {
-                attr1.text = "Def: " + currentObj.DEFENSE + selectedArmor.DEFENSE;
+                attr1.text = "Def: " + (currentObj.DEFENSE + selectedArmor.DEFENSE);
             }
         }
         //val = currentObj.STATS.MAGIC;
@@ -157,7 +157,7 @@ public class ArmorSet : MonoBehaviour
         {
             if (attr3 != null)
             {
-                attr3.text = "Spd: " + currentObj.SPEED + selectedArmor.SPEED;
+                attr3.text = "Spd: " + (currentObj.SPEED + selectedArmor.SPEED);
             }
         }
         //val = currentObj.STATS.RESIESTANCE + currentObj.ARMOR.RESISTANCE;
@@ -184,7 +184,7 @@ public class ArmorSet : MonoBehaviour
         {
             if (attr2 != null)
             {
-                attr2.text = "Res: " + currentObj.RESIESTANCE + selectedArmor.RESISTANCE;
+                attr2.text = "Res: " + (currentObj.RESIESTANCE + selectedArmor.RESISTANCE);
             }
         }
         //val = currentObj.STATS.SPEED + currentObj.ARMOR.SPEED;

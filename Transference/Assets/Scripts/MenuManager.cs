@@ -30,6 +30,7 @@ public class MenuManager : MonoBehaviour
     public Canvas hackingCanvas;
     public Canvas opportunityCanvas;
     public GameObject animationCanvas;
+    public GameObject loadingCanvas;
     public CTTDemoManager cTT;
     public TextMeshProUGUI DESC
     {

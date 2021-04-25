@@ -308,6 +308,7 @@ MonoBehaviour:
   generatedCounterText: {fileID: 0}
   myWorldHealthBar: {fileID: 0}
   blackWeaknessText: {fileID: 0}
+  WeaknessText: {fileID: 0}
 --- !u!1 &290936085458140517
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5609305688549942096
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1818,12 +1819,12 @@ GameObject:
   - component: {fileID: 1132775572972949166}
   - component: {fileID: 1413261081381426397}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NeoAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1301674272312101538
 RectTransform:
   m_ObjectHideFlags: 0

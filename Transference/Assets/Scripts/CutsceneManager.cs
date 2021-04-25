@@ -66,7 +66,7 @@ public class CutsceneManager : MonoBehaviour
                         Common.enemiesCompletedPhase = true;
                         Common.hasAllocated = true;
                         Common.hasLearnedFromEnemy = true;
-                        if (Common.summonedZeffron == false)
+                        if (Common.summonedJax == false)
                         {
                             List<tutorialStep> tSteps = new List<tutorialStep>();
                             List<int> tClar = new List<int>();
@@ -82,7 +82,7 @@ public class CutsceneManager : MonoBehaviour
                             {
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = Common.GetDatabase().GetSceneData("JaxTalkToZeffOne");
-                                currentObjectiveString = "Work with Zeffron";
+                                currentObjectiveString = "Work with Jax";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
@@ -91,10 +91,64 @@ public class CutsceneManager : MonoBehaviour
                             }
                         }
                     }
-                    if (checkMap.mapIndex == 16)
+                    if (checkMap.mapIndex == 16 && Common.summonedJax == false)
                     {
                         ChangeBackground(0);
                         currentObjectiveString = "Look for the faries";
+                    }
+
+                    if (checkMap.mapIndex == 8)
+                    {
+                        someManager.myCamera.PlaySoundTrack(4);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[15];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = Common.GetDatabase().GetSceneData("JaxEncounterGlyph");
+                            currentObjectiveString = "Head to the Library";
+                            someManager.currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            someManager.SetScene(currentScene);
+                        }
+                    }
+                    if (checkMap.mapIndex == 14)
+                    {
+                        someManager.myCamera.PlaySoundTrack(3);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
+                        if (talkPanel)
+                        {
+
+                            talkPanel.gameObject.SetActive(true);
+                            currentScene = Common.GetDatabase().GetSceneData("Scene4");
+                            someManager.currentState = State.SceneRunning;
+                            talkPanel.scene = currentScene;
+                            currentScene.index = 0;
+                            someManager.SetScene(currentScene);
+                        }
+                    }
+
+                    if (Common.hasSeenJaxAndZeffCatchUp == false && Common.summonedJax == true)
+                    {
+                        if (checkMap.mapIndex == 16 || checkMap.mapIndex == 0)
+                        {
+                            someManager.myCamera.PlaySoundTrack(2);
+                            someManager.myCamera.previousClip = someManager.myCamera.musicClips[10];
+                            if (talkPanel)
+                            {
+
+                                talkPanel.gameObject.SetActive(true);
+                                currentScene = Common.GetDatabase().GetSceneData("JaxAndZeffronChapter1");
+                                currentObjectiveString = "Head to the Library";
+                                someManager.currentState = State.SceneRunning;
+                                talkPanel.scene = currentScene;
+                                currentScene.index = 0;
+                                someManager.SetScene(currentScene);
+                            }
+                            Common.hasSeenJaxAndZeffCatchUp = true;
+                        }
+
                     }
 
                 }
@@ -186,7 +240,7 @@ public class CutsceneManager : MonoBehaviour
                     if (checkMap.mapIndex == 8)
                     {
                         someManager.myCamera.PlaySoundTrack(4);
-                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[15];
                         if (talkPanel)
                         {
 
@@ -201,8 +255,8 @@ public class CutsceneManager : MonoBehaviour
                     }
                     if (checkMap.mapIndex == 14)
                     {
-                        someManager.myCamera.PlaySoundTrack(4);
-                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[10];
+                        someManager.myCamera.PlaySoundTrack(3);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
                         if (talkPanel)
                         {
 
@@ -292,8 +346,8 @@ public class CutsceneManager : MonoBehaviour
                     }
                     if (checkMap.mapIndex == 14)
                     {
-                        someManager.myCamera.PlaySoundTrack(4);
-                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[10];
+                        someManager.myCamera.PlaySoundTrack(3);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
                         if (talkPanel)
                         {
 

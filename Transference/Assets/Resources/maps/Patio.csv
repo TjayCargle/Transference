@@ -23,10 +23,10 @@ d,24
 m,Guest Room
 l,17
 x,4
-o,16,17
+o,2,9
 oi,6,7
 stt,help,help,saveLoad
-sti,12,8,3
+sti,1,8,3
 ex,0,10
 st,16,23,24
 -e,10

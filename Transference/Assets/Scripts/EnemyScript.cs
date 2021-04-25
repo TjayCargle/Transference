@@ -1964,8 +1964,37 @@ public class EnemyScript : LivingObject
                                     myManager.CreateEvent(this, liveObj, "" + FullName + "use item event", UseItemEvent, ItemStart, 0);
                                 else
                                 {
-                                    chosenCommand = BossCommand.shield;
-                                    Shield();
+                                    chosenCommand = BossCommand.strike;
+                                    if (((float)MAX_HEALTH - (float)HEALTH / 100.0f) < 20)
+                                    {
+                                        chosenCommand = BossCommand.heal;
+                                        Heal();
+                                    }
+                                    if (liveObj != null)
+                                    {
+
+                                        bool found = FindEnemiesInRangeOfAttacks(transform.position);
+                                        if (found == true)
+                                        {
+
+                                            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event ", EAtkEvent, AttackStart, 0);
+                                        }
+                                        else
+                                        {
+                                            currentEnemy = liveObj;
+                                            TileScript targetTile = DetermineMoveLocation(liveObj.currentTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        TileScript targetTile = myManager.tileMap[Random.Range(0, myManager.tileMap.Count)];
+                                        if (currentTile != targetTile)
+                                        {
+                                            targetTile = DetermineMoveLocation(targetTile);
+                                            PrepareMoveEvent(targetTile);
+                                        }
+                                    }
 
                                 }
                             }
@@ -2817,8 +2846,31 @@ public class EnemyScript : LivingObject
                         DatabaseManager database = Common.GetDatabase();
                         if (database)
                         {
-                            string response = "Fine! Take my treasure, but I stil demand payment!";
-                            SceneContainer scene = database.GenerateScene(NAME, response, FACE);
+                            string response = "";
+                            if (id == 101)
+                                response = "You will pay for this!";
+                            else
+                                response = "Just.... Die.. . .";
+
+                                SceneContainer scene = database.GenerateScene(NAME, response, FACE);
+                            if (id == 102)
+                            {
+                               myManager.myCamera.PlaySoundTrack(13);
+                            scene.speakerNames.Add("???");
+                            scene.speakertext.Add("Having troubles");
+                            scene.speakerFace.Add(Resources.Load<Sprite>("PyrinaPhixie/Face/Pyrina 1"));
+
+                            scene.speakerNames.Add("???");
+                            scene.speakertext.Add("Oh? Are we going to save their butts?");
+                            scene.speakerFace.Add(Resources.Load<Sprite>("FlaraPhixie/Face/Flara (1)"));
+
+                                scene.speakerNames.Add("???");
+                                scene.speakertext.Add(" ");
+                                scene.speakerFace.Add(FACE);
+                                scene = database.AddInterruptToScene(scene, 3, SceneEvent.endChapter, 0);
+                                scene.soundTrack = 13;
+                            }
+
                             myManager.SetScene(scene);
                         }
                     }

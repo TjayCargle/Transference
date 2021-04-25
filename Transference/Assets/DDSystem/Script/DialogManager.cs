@@ -405,6 +405,11 @@ namespace Doublsb.Dialog
             {
                 _current_Data.Commands.Insert(0, new DialogCommand(Command.emote, "-1"));
             }
+            if(_current_Character == _second_Character)
+            {
+                if (speaker2Nameplate != null)
+                    speaker2Nameplate.SetActive(true);
+            }
 
             foreach (var item in _current_Data.Commands)
             {

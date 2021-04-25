@@ -1208,7 +1208,7 @@ public class Common : ScriptableObject
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
-    public static float VersionNumber = 0.911f;
+    public static float VersionNumber = 0.9112f;
     public static string VERSION = "Version";
     public static string JaxSaveSlot1 = "JaxSaveSlot1";
 
@@ -2515,9 +2515,9 @@ public class Common : ScriptableObject
                             someProfile.commands = new List<BossCommand>();
                         someProfile.commands.Add(BossCommand.strike);
                         someProfile.commands.Add(BossCommand.strike);
-                        someProfile.commands.Add(BossCommand.strike);
                         someProfile.commands.Add(BossCommand.item);
-                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.item);
+                        someProfile.commands.Add(BossCommand.item);
                     }
                     break;
                 case BossPhase.inital:
@@ -2531,8 +2531,8 @@ public class Common : ScriptableObject
                         someProfile.commands.Add(BossCommand.strike);
                         someProfile.commands.Add(BossCommand.item);
                         someProfile.commands.Add(BossCommand.item);
-                        someProfile.commands.Add(BossCommand.heal);
-                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.shield);
                         someProfile.commands.Add(BossCommand.shield);
                     }
                     break;
@@ -2547,8 +2547,8 @@ public class Common : ScriptableObject
                         someProfile.commands.Add(BossCommand.item);
                         someProfile.commands.Add(BossCommand.item);
                         someProfile.commands.Add(BossCommand.item);
-                        someProfile.commands.Add(BossCommand.heal);
-                        someProfile.commands.Add(BossCommand.heal);
+                        someProfile.commands.Add(BossCommand.strike);
+                        someProfile.commands.Add(BossCommand.shield);
                         someProfile.commands.Add(BossCommand.shield);
                         someProfile.commands.Add(BossCommand.shield);
                     }
@@ -3122,7 +3122,7 @@ public class Common : ScriptableObject
                 break;
             case 10:
                 {
-                    returnedString = "Hacking;Glyph Technology is relatively new and while they are hard to destroy by attacking, they can be hacked if you can <color=yellow>get close enough</color>. \nEvery Glyph has a <color=yellow>9 sequence</color> pattern that will cause it to shutdown.  Pay attention to which <color=yellow>shapes are in the output</color>";
+                    returnedString = "Hacking;Glyph Technology is relatively new and while they are hard to destroy by attacking, they can be hacked if you can <color=yellow>get close enough</color>.\n\nEvery Glyph has a <color=yellow>9 sequence</color> pattern that will cause it to shutdown.  \n\nPay attention to which <color=yellow>shapes match with the current</color>";
                 }
                 break;
             case 11:
@@ -3132,7 +3132,9 @@ public class Common : ScriptableObject
                 break;
             case 12:
                 {
-                    returnedString = "Action Points;Action Points or AP determines how many times a character can perform an action in a turn. \nAt the beginning of the phase, <color=yellow>characters are given 3 AP to use</color>. Additional <color=yellow>AP is given for every 10 speed</color> that character has.";
+                    //returnedString = "Action Points;Action Points or AP determines how many times a character can perform an action in a turn. \nAt the beginning of the phase, <color=yellow>characters are given 3 AP to use</color>. Additional <color=yellow>AP is given for every 10 speed</color> that character has.";
+                    returnedString = "Action Points;Action Points or AP determines how many times a character can perform an action in a turn. \nAt the beginning of the phase, <color=yellow>characters are given AP to use based on their speed.</color> \n\n Now use another action to attack the enemy with a strike!";
+                   // returnedString = "Tutorial - Action Points;Action Points or AP determines how many times a character can perform an action in a turn. \nYou just used 1 action to move Jax. That means he has 2 actions remaining for this turn. \nMoving, Attacking, or Healing all require an action point to use. The number next to a character shows how many actions they have left. \nNow use an action to attack an enemy with a strike!";
                 }
                 break;
             case 15:
@@ -3147,7 +3149,14 @@ public class Common : ScriptableObject
                 break;
             case 17:
                 {
-                    returnedString = "Weaknesses and Resistances; There are 4 types of weaknesses (displayed in<color=yellow> red</color>) and 4 types of resistances (displayed in<color=yellow> blue</color>).\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn. However characters who<color=yellow> hit a target's resistance will gain AP</color> for next turn."; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Crippling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                    returnedString = "Weaknesses and Resistances; There are 4 types of weaknesses (displayed in<color=yellow> red</color>) and 4 types of resistances (displayed in<color=yellow> blue</color>).\n\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn and characters who<color=yellow> hit a target's resistance will gain AP</color> for next turn. \n\nNow finish off the enemy with a spell!"; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Crippling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                }
+                break;
+            case 32:
+                {
+                    returnedString = "Weaknesses; There are 4 types of weaknesses (displayed in<color=yellow> red</color>).\nThe effects vary but characters<color=yellow> hit by a weakness will lose AP</color> for their next turn.\n\n Now finish off the enemy with a spell!"; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Crippling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+                     returnedString = "Resistances; There are 4 types of resistances (displayed in<color=yellow> blue</color>).\nThe effects vary but characters who hit a target's resistance will gain AP</color> for next turn."; // There are 4 kinds of weaknesses and 4 kinds of resistances to elements. As noted by a characters weakness chart in the bottom left of the screen: weaknesses are showcased in red and can be 'Weak', 'Savage', 'Crippling', or 'Lethal' damage (which all will be explained later). Resistances are showcased in blue and can 'Resist', 'Null', 'Absorb', or 'Repel' damage.";
+
                 }
                 break;
             case 21:
@@ -3167,22 +3176,23 @@ public class Common : ScriptableObject
                 break;
             case 24:
                 {
-                    returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n<color=yellow>Strikes</color> require a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
+                    returnedString = "Allocate;You can choose to spend an action point on healing, restoring mana and more in the allocate menu.\n\n<color=yellow>Strikes</color> require a small amount of health to use so <color=yellow>be mindful of when to heal</color>.\n\n<color=yellow>Spells</color> on the other hand generally require a lot of mana so <color=yellow>restoring mana is important.</color>";
                 }
                 break;
             case 25:
                 {
-                    returnedString = "Learn from Enemies; When you defeat an enemy, you have a chance of <color=yellow>learning one of the enemy's attacks</color> if they have any attacks that you haven't learned.\n\nFor the purposes of this demo, you will have <color=yellow>100% chance to learn a new attack</color> from an enemy.";
+                    returnedString = "Learn from Enemies; When you defeat an enemy, you have a chance of <color=yellow>learning one of the enemy's attacks</color> if they have any attacks that you haven't learned.";
                 }
                 break;
             case 26:
                 {
-                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own decisions</color>.\nFor tips please check tiles with a <color=yellow>question mark</color>.\nAlso, check your status menu often for information on new attacks!\nGood luck and remember: <color=yellow>the choice is yours.</color>";
+                    returnedString = "Freedom;This concludes the basics of gameplay, more prompts will show up if needed, but <color=yellow>you are now free to make your own decisions</color>.\n\nFor tips please check tiles with a <color=yellow>question mark</color>.\nAlso, check your status menu often for information on new attacks!\n\nGood luck and remember: <color=yellow>the choice is yours.</color>";
                 }
                 break;
             case 27:
                 {
-                    returnedString = "Welcome to the demo;Thank you for taking the time to play this demo! Your feedback is very important and will be used to enhance the experience of the final game.\n\nIf this is your first time playing please play with a mouse. Use the left click to <color=yellow>confirm</color> any selection, and the right click to <color=yellow>cancel</color> any selection. Start by moving to the <color=yellow>Orange</color> tile. ";
+                    //returnedString = "Welcome to the demo;Thank you for taking the time to play this demo! Your feedback is very important and will be used to enhance the experience of the final game.\n\nIf this is your first time playing please play with a mouse. Use the left click to <color=yellow>confirm</color> any selection, and the right click to <color=yellow>cancel</color> any selection. Start by moving to the <color=yellow>Orange</color> tile. ";
+                    returnedString = "Tutorial - Moving;To control your character (Jax), click on him. \nOnce selected, click move. Then click a space in range to move to. Finally click on Jax once more to confirm.\n\nBegin by <color=yellow>moving to the orange tile</color>";
                 }
                 break;
             case 28:

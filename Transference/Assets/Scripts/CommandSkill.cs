@@ -540,6 +540,7 @@ public class CommandSkill : SkillScript
     }
     public bool CanUse(float modification = 1.0f)
     {
+        modification = 1.0f;
         bool can = false;
         int amt = 0;
         switch (ETYPE)
@@ -563,11 +564,12 @@ public class CommandSkill : SkillScript
                     case SubSkillType.Cost:
                         {
                             amt = GetCost();// (int)((((float)(COST * 10) / 100.0f) * OWNER.MAX_FATIGUE) * OWNER.STATS.FTCOSTCHANGE);
-                            amt *= -1;
+
+                            //amt *= -1;
 
                             //  if (amt <= owner.FATIGUE)
                             {
-                                if (owner.FATIGUE >= amt)
+                                if (owner.FATIGUE + amt >= 0)
                                 {
 
                                     can = true;

@@ -412,7 +412,11 @@ public class NonCombatController : MonoBehaviour
                             }
                         }
                         break;
-
+                    case 12:
+                        {
+                            ReturnFromCredits();
+                        }
+                        break;
                     default:
                         {
                             selectedButton.executeAction();
@@ -564,18 +568,23 @@ public class NonCombatController : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButton(1))
                     {
-                        for (int i = 0; i < animators.Length; i++)
-                        {
-                            Animator animator = animators[i];
-                            animator.SetBool("Patched", false);
-                        }
-                        patchCnvs.gameObject.SetActive(false);
+                        ReturnFromCredits();
                     }
 
 
                 }
             }
         }
+    }
+
+    public void ReturnFromCredits()
+    {
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animator = animators[i];
+            animator.SetBool("Patched", false);
+        }
+        patchCnvs.gameObject.SetActive(false);
     }
 
 }
