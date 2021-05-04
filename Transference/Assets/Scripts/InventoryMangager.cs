@@ -887,14 +887,14 @@ public class InventoryMangager : MonoBehaviour
                                 {
                                     CommandSkill cmd = selectedMenuItem.refItem as CommandSkill;
 
-                                    if(manager.GetState() == State.PlayerOppOptions)
+                                    if (manager.GetState() == State.PlayerOppOptions)
                                     {
-                                    manager.ShowSkillAttackbleTiles(manager.player.current, cmd, manager.player.current.OPP_SLOTS.lastTarget);
+                                        manager.ShowSkillAttackbleTiles(manager.player.current, cmd, manager.player.current.OPP_SLOTS.lastTarget);
 
                                     }
                                     else
                                     {
-                                    manager.ShowSkillAttackbleTiles(manager.player.current, cmd);
+                                        manager.ShowSkillAttackbleTiles(manager.player.current, cmd);
 
                                     }
 
@@ -1609,8 +1609,8 @@ public class InventoryMangager : MonoBehaviour
                 useType = 1;
                 for (int i = 0; i < liveObject.INVENTORY.ARMOR.Count; i++)
                 {
-                    if (liveObject.INVENTORY.ARMOR[i].INDEX < 200)
-                        currentList.Add(liveObject.INVENTORY.ARMOR[i]);
+                    //if (liveObject.INVENTORY.ARMOR[i].INDEX < 200)
+                    currentList.Add(liveObject.INVENTORY.ARMOR[i]);
                 }
                 break;
             case 2:
@@ -1810,49 +1810,49 @@ public class InventoryMangager : MonoBehaviour
 
                         attr = selectableItem.GetComponentsInChildren<Image>()[3];
                         {
-                                if (attr)
-                                {
-                                    attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                                    if (item != genericAtk)
-                                    {
-                                        int indxex = (int)((CommandSkill)item).ELEMENT;
-                                        attr.sprite = attributeImages[indxex];
-                                    }
-                                    else
-                                    {
-                                        int indxex = (int)(liveObject.WEAPON.ELEMENT);
-                                        attr.sprite = attributeImages[indxex];
-                                    }
-                                }
-                            }
-                            CommandSkill cmd = ((CommandSkill)item);
-               
-                            string extraText = "";
-                            if (proText)
+                            if (attr)
                             {
-
-                                proText.text = newText;
-                                if (item.NAME.Length > 7)
+                                attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                                if (item != genericAtk)
                                 {
-                                    proText.enableAutoSizing = true;
+                                    int indxex = (int)((CommandSkill)item).ELEMENT;
+                                    attr.sprite = attributeImages[indxex];
                                 }
                                 else
                                 {
-                                    proText.enableAutoSizing = false;
-                                    proText.fontSize = 25.0f;
+                                    int indxex = (int)(liveObject.WEAPON.ELEMENT);
+                                    attr.sprite = attributeImages[indxex];
                                 }
-                          
+                            }
+                        }
+                        CommandSkill cmd = ((CommandSkill)item);
+
+                        string extraText = "";
+                        if (proText)
+                        {
+
+                            proText.text = newText;
+                            if (item.NAME.Length > 7)
+                            {
+                                proText.enableAutoSizing = true;
                             }
                             else
                             {
-                                if (selectedText)
-                                {
-                                    selectedText.text = newText;
-                                    selectedText.supportRichText = true;
-
-                                }
+                                proText.enableAutoSizing = false;
+                                proText.fontSize = 25.0f;
                             }
-                        
+
+                        }
+                        else
+                        {
+                            if (selectedText)
+                            {
+                                selectedText.text = newText;
+                                selectedText.supportRichText = true;
+
+                            }
+                        }
+
                     }
                     else
                     {
@@ -2081,7 +2081,8 @@ public class InventoryMangager : MonoBehaviour
                                     attr.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
                                     // int indxex = (int)realitem.ELEMENT;
-                                    attr.sprite = armor.FACE; //attributeImages[indxex];
+                                    if (armor.FACE != null)
+                                        attr.sprite = armor.FACE; //attributeImages[indxex];
 
                                 }
 

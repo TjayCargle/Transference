@@ -5464,7 +5464,7 @@ public class ManagerScript : EventRunner
             }
             anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
-            if (anEnemy.name != "Scorpiee Egg")
+            if (anEnemy.id != 8)
             {
 
                 for (int j = 0; j < lvtimes; j++)
@@ -6062,7 +6062,7 @@ public class ManagerScript : EventRunner
             }
             anEnemy.BASE_STATS.LEVEL += Random.Range(0, largestLevel);
             int rand = Random.Range(0, 2);
-            if (anEnemy.name != "Scorpiee Egg")
+            if (anEnemy.id != 8)
             {
 
                 for (int j = 0; j < lvtimes; j++)
@@ -13283,7 +13283,7 @@ public class ManagerScript : EventRunner
                             {
 
 
-                                float chance = 100.0f;
+                                float chance = 25.0f;
                                 float result = Random.value * 100;
                                 if (result <= chance)
                                 {
@@ -17846,6 +17846,7 @@ public class ManagerScript : EventRunner
 
     public void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity, bool immediate = true)
     {
+        return;
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
         currentTutorial.clarifications.Clear();

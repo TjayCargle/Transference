@@ -23,9 +23,7 @@ d,1,29,44
 m,Music Room,Western Hallway,Theatre
 l,20,6,11
 x,46,14,4
-e,24
+e,24, 25, 23,8,42,41,5,6
 o,7,21
-oi,1,8
-stt,help
-sti,8
+oi,1,5
 ex,17

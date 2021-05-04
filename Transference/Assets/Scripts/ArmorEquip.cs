@@ -153,11 +153,16 @@ public class ArmorEquip : Equipable
         equipped = armor;
         hitList.Clear();
         hitList.AddRange(equipped.HITLIST);
+
         if (owner)
         {
             if (owner.BARRIER)
             {
-                if (ARMORID < 200)
+                owner.BARRIER.sr.sprite = null;
+
+                owner.BARRIER.sr.color = Color.white;
+
+                if (ARMORID < 11)
                 {
                     int aID = 9;
                     Sprite[] shields = Resources.LoadAll<Sprite>("Shields/");
@@ -165,8 +170,18 @@ public class ArmorEquip : Equipable
                     {
                         aID = ARMORID;
                     }
-                    owner.BARRIER.GetComponent<SpriteRenderer>().sprite = shields[aID];
-                    owner.BARRIER.GetComponent<SpriteRenderer>().color = Color.white;
+                    owner.BARRIER.sr.sprite = shields[aID];
+                }
+                else
+                {
+                    int aID = Common.GetTrueArmorID(ARMORID);
+                    if(aID != -1)
+                    {
+                        Sprite[] shields = Resources.LoadAll<Sprite>("Shields/");
+
+                        owner.BARRIER.sr.sprite = shields[aID];
+                    }
+
                 }
             }
         //    owner.updateLastSprites();

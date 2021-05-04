@@ -4779,5 +4779,24 @@ public class Common : ScriptableObject
 
         return Faction.enemy;
     }
-
+    public static int GetTrueArmorID(int armorID)
+    {
+        switch (armorID)
+        {
+            case 13:
+                return 11;
+                break;
+            case 211:
+                return 12;
+            case 212:
+                return 14;
+            case 213:
+                return 13;
+                break;
+            default:
+                return -1;
+                break;
+        }
+                return -1;
+    }
 }

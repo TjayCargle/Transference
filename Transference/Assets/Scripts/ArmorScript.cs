@@ -39,7 +39,7 @@ public class ArmorScript : UsableScript
 
     public Sprite FACE
     {
-        get { if (mySprite == null) { mySprite = Resources.LoadAll<Sprite>("Shields/")[INDEX]; } return mySprite; }
+        get { if (mySprite == null) { mySprite = INDEX < 11 ? Resources.LoadAll<Sprite>("Shields/")[INDEX] :  Resources.LoadAll<Sprite>("Shields/")[Common.GetTrueArmorID(INDEX)]; } return mySprite; }
         set { mySprite = value; }
     }
     public int DEFENSE
