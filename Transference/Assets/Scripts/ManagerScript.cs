@@ -3376,6 +3376,7 @@ public class ManagerScript : EventRunner
 
     public void showCurrentState()
     {
+
         ShowWhite();
         //if (menuStack.Count == 2)
         //{
@@ -3395,17 +3396,33 @@ public class ManagerScript : EventRunner
                 currEntry = defaultEntry;
                 menuStack.Add(defaultEntry);
             }
-
+        
+                        //Debug.Log("menu is: " + currEntry.menu);
             switch (currEntry.menu)
             {
                 case currentMenu.command:
                     {
 
-                        currentState = State.PlayerInput;
-                        menuManager.ShowCommandCanvas();
-                        ShowGridObjectAffectArea(currentObject);
+                        
                         if (player.current)
-                            ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
+                        {
+                            if(player.current.ACTIONS > 0)
+                            {
+                                currentState = State.PlayerInput;
+                                menuManager.ShowCommandCanvas();
+                                ShowGridObjectAffectArea(currentObject);
+                                ComfirmMoveGridObject(tempGridObj, GetTileIndex(player.current));
+                            }
+                            else
+                            {
+                                returnState();
+                            }
+                        } 
+                        else
+                        {
+                            returnState();
+
+                        }
                     }
                     break;
                 case currentMenu.act:
@@ -3501,8 +3518,13 @@ public class ManagerScript : EventRunner
                     currentState = State.PlayerInput;
                     break;
             }
-            invManager.currentIndex = currEntry.index;
-            invManager.ForceSelect();
+
+            if (menuStack.Count > 0)
+            {
+                invManager.currentIndex = currEntry.index;
+                invManager.ForceSelect();
+            }
+
         }
         else if (GetState() == State.PlayerTransition)
         {
@@ -3633,6 +3655,15 @@ public class ManagerScript : EventRunner
 
             }
         }
+
+        if (player.current)
+        {
+            if (player.current.ACTIONS <= 0)
+            {
+                CleanMenuStack(true);
+            }
+        }
+
         UpdateCameraPosition();
         myCamera.UpdateCamera();
         updateConditionals();
@@ -4278,7 +4309,7 @@ public class ManagerScript : EventRunner
                                     menuManager.ToggleCanvas(menuManager.animationCanvas);
                                     LeanTween.moveX(gameObject, 30, 275 * Time.deltaTime).setOnComplete(() =>
                                     {
-                                        Debug.Log("0");
+
                                         menuManager.ToggleCanvas(menuManager.animationCanvas);
                                         menuManager.cTT.chapterText.text = "Chapter 1";
                                         menuManager.cTT.beginEndText.text = "Unlocked!";
@@ -4286,7 +4317,6 @@ public class ManagerScript : EventRunner
 
                                         LeanTween.moveX(gameObject, 90, 275 * Time.deltaTime).setOnComplete(() =>
                                         {
-                                            Debug.Log("1");
                                             menuManager.cTT.SetColors(Color.green, Common.lime);
 
                                             menuManager.ToggleCanvas(menuManager.animationCanvas);
@@ -4297,7 +4327,6 @@ public class ManagerScript : EventRunner
 
                                             LeanTween.moveX(gameObject, 250, 275 * Time.deltaTime).setOnComplete(() =>
                                             {
-                                                Debug.Log("2");
                                                 SceneManager.LoadSceneAsync("Start");
                                             });
                                         });
@@ -5749,23 +5778,49 @@ public class ManagerScript : EventRunner
                     case 1:
                         itemNum = Random.Range(0, 4);
                         itemNum += (Random.Range(1, 8) * 10);
-                        //    Debug.Log("command skill" + itemNum);
+
+                        // Debug.Log("command skill" + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
                     case 2:
                         itemNum = Random.Range(4, 7);
-                        itemNum += (Random.Range(1, 10) * 10);
-                        //    Debug.Log("command spell" + itemNum);
+                        itemNum += (Random.Range(1, 8) * 10);
+
+                        //  Debug.Log("command spell" + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
                     case 3:
-                        itemNum = Random.Range(110, 117);
-                        //  Debug.Log("auto " + itemNum);
+                        itemNum = Random.Range(200, 224);
+                        //  Debug.Log("passive " + itemNum);
                         newItem = database.GetSkill(itemNum);
+
+
                         break;
                     case 4:
-                        itemNum = Random.Range(204, 214);
-                        //  Debug.Log("passive " + itemNum);
+                        itemNum = Random.Range(0, 4);
+                        if (itemNum == 0)
+                        {
+                            //7, or 8
+                            itemNum = Random.Range(7, 9);
+                            itemNum += (Random.Range(1, 8) * 10);
+                        }
+                        else if (itemNum == 1)
+                        {
+                            //buff or debuff
+                            itemNum = Random.Range(0, 6);
+                            itemNum += (Random.Range(8, 10) * 10);
+                        }
+                        else if (itemNum == 2)
+                        {
+                            //ailment
+                            itemNum = Random.Range(100, 108);
+                        }
+                        else
+                        {
+                            //force attack
+                            itemNum = Random.Range(160, 169);
+                        }
+                        // Debug.Log("random " + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
 
@@ -6437,23 +6492,49 @@ public class ManagerScript : EventRunner
                     case 1:
                         itemNum = Random.Range(0, 4);
                         itemNum += (Random.Range(1, 8) * 10);
-                        //    Debug.Log("command skill" + itemNum);
+
+                        //  Debug.Log("command skill" + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
                     case 2:
                         itemNum = Random.Range(4, 7);
-                        itemNum += (Random.Range(1, 10) * 10);
-                        //    Debug.Log("command spell" + itemNum);
+                        itemNum += (Random.Range(1, 8) * 10);
+
+                        //Debug.Log("command spell" + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
                     case 3:
-                        itemNum = Random.Range(110, 120);
-                        //  Debug.Log("auto " + itemNum);
+                        itemNum = Random.Range(200, 224);
+                        //  Debug.Log("passive " + itemNum);
                         newItem = database.GetSkill(itemNum);
+
+
                         break;
                     case 4:
-                        itemNum = Random.Range(204, 214);
-                        //  Debug.Log("passive " + itemNum);
+                        itemNum = Random.Range(0, 4);
+                        if (itemNum == 0)
+                        {
+                            //7, or 8
+                            itemNum = Random.Range(7, 9);
+                            itemNum += (Random.Range(1, 8) * 10);
+                        }
+                        else if (itemNum == 1)
+                        {
+                            //buff or debuff
+                            itemNum = Random.Range(0, 6);
+                            itemNum += (Random.Range(8, 10) * 10);
+                        }
+                        else if (itemNum == 2)
+                        {
+                            //ailment
+                            itemNum = Random.Range(100, 108);
+                        }
+                        else
+                        {
+                            //force attack
+                            itemNum = Random.Range(160, 169);
+                        }
+                        //Debug.Log("random " + itemNum);
                         newItem = database.GetSkill(itemNum);
                         break;
 
@@ -6550,6 +6631,8 @@ public class ManagerScript : EventRunner
             int soundTrack = 0;
 
             System.Int32.TryParse(dataString[dataIIndex], out soundTrack);
+            myCamera.Setup();
+
             myCamera.PlaySoundTrack(soundTrack);
             dataIIndex++;
 
@@ -13417,6 +13500,10 @@ public class ManagerScript : EventRunner
                                     int itemNum = 0;
                                     itemNum = Random.Range(0, 4);
                                     itemNum += (Random.Range(1, 9) * 10);
+                                    if (itemNum >= 80)
+                                    {
+                                        itemNum += 80;
+                                    }
                                     UsableScript useable = database.LearnSkill(itemNum, attackingObject);
 
                                     if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
@@ -13428,6 +13515,10 @@ public class ManagerScript : EventRunner
                                     int itemNum = 0;
                                     itemNum = Random.Range(0, 4);
                                     itemNum += (Random.Range(1, 9) * 10);
+                                    if (itemNum >= 80)
+                                    {
+                                        itemNum += 80;
+                                    }
                                     UsableScript useable = database.GetSkill(itemNum);
 
                                     LearnContainer learnContainer = ScriptableObject.CreateInstance<LearnContainer>();
@@ -14660,17 +14751,17 @@ public class ManagerScript : EventRunner
             //    }
             //}
         }
-        if (currentTutorial.steps.Count > 0)
-        {
-            if (currentTutorial.currentStep < currentTutorial.steps.Count)
-            {
-                tutorialStep curStep = currentTutorial.steps[currentTutorial.currentStep];
-                if (curStep == tutorialStep.useSkill || curStep == tutorialStep.useSpell)
-                {
-                    DidCompleteTutorialStep();
-                }
-            }
-        }
+        //if (currentTutorial.steps.Count > 0)
+        //{
+        //    if (currentTutorial.currentStep < currentTutorial.steps.Count)
+        //    {
+        //        tutorialStep curStep = currentTutorial.steps[currentTutorial.currentStep];
+        //        if (curStep == tutorialStep.useSkill || curStep == tutorialStep.useSpell)
+        //        {
+        //            DidCompleteTutorialStep();
+        //        }
+        //    }
+        //}
         return hitSomething;
     }
 
@@ -15104,17 +15195,17 @@ public class ManagerScript : EventRunner
 
             }
         }
-        if (currentTutorial.steps.Count > 0)
-        {
-            if (currentTutorial.currentStep < currentTutorial.steps.Count)
-            {
-                tutorialStep curStep = currentTutorial.steps[currentTutorial.currentStep];
-                if (curStep == tutorialStep.useStrike)
-                {
-                    DidCompleteTutorialStep();
-                }
-            }
-        }
+        //if (currentTutorial.steps.Count > 0)
+        //{
+        //    if (currentTutorial.currentStep < currentTutorial.steps.Count)
+        //    {
+        //        tutorialStep curStep = currentTutorial.steps[currentTutorial.currentStep];
+        //        if (curStep == tutorialStep.useStrike)
+        //        {
+        //            DidCompleteTutorialStep();
+        //        }
+        //    }
+        //}
         return hitSomething;
     }
     public bool OppAttackTargets(LivingObject target, LivingObject invokingObject, CommandSkill skill)
@@ -15123,21 +15214,6 @@ public class ManagerScript : EventRunner
         bool hitSomething = false;
         if (currentAttackList.Count > 0)
         {
-            float modification = 1.0f;
-            if (skill.ETYPE == EType.magical)
-                modification = invokingObject.STATS.MANACHANGE;
-
-            if (skill.ETYPE == EType.physical)
-            {
-                if (skill.COST > 0)
-                {
-                    modification = invokingObject.STATS.FTCHARGECHANGE;
-                }
-                else
-                {
-                    modification = invokingObject.STATS.FTCOSTCHANGE;
-                }
-            }
 
 
             //opptargets.Clear();
@@ -15437,11 +15513,7 @@ public class ManagerScript : EventRunner
                 {
                     bool leveledup = skill.GrantXP(1);
                 }
-                skill.UseSkill(invokingObject, modification);
-                if (skill.OWNER)
-                {
-                    skill.OWNER.UpdateLastUsed(skill.ELEMENT);
-                }
+
                 if (skill.SPECIAL_EVENTS.Count > 0)
                 {
                     for (int i = 0; i < skill.SPECIAL_EVENTS.Count; i++)
@@ -15566,13 +15638,7 @@ public class ManagerScript : EventRunner
                     CreateGridAnimationEvent(calcAnimationLocation, skill, totalDmg);
 
                 }
-                bool show = ((GetState() == State.EnemyTurn) ? false : true);
-                //DetermineAtkExp(invokingObject, GetObjectAtTile(currentAttackList[targetIndicies[0]]), skill, false, (int)skill.DAMAGE, show);
-                if (totalDmg > 0)
-                {
-                    if (GetState() != State.EnemyTurn && currentState != State.HazardTurn)
-                        CreateEvent(this, conatiners, "check for opp event", CheckForOppChanceEvent);
-                }
+
 
 
 
@@ -15581,17 +15647,7 @@ public class ManagerScript : EventRunner
 
 
         }
-        if (currentTutorial.steps.Count > 0)
-        {
-            if (currentTutorial.currentStep < currentTutorial.steps.Count)
-            {
-                tutorialStep curStep = currentTutorial.steps[currentTutorial.currentStep];
-                if (curStep == tutorialStep.useSkill || curStep == tutorialStep.useSpell)
-                {
-                    DidCompleteTutorialStep();
-                }
-            }
-        }
+
         return hitSomething;
     }
 
@@ -15613,6 +15669,12 @@ public class ManagerScript : EventRunner
         {
             realChance = 100;
         }
+
+        if (effect == SideEffect.hatch)
+        {
+            realChance = 100;
+        }
+
         if (valres <= realChance)
         {
 
@@ -17496,11 +17558,21 @@ public class ManagerScript : EventRunner
 
         if (stackManager)
         {
+            if (Common.hasSeenOpportunity == false)
+            {
+                List<tutorialStep> tSteps = new List<tutorialStep>();
+                List<int> tClar = new List<int>();
+                tSteps.Add(tutorialStep.showTutorial);
+                tClar.Add(33);
+                PrepareTutorial(tSteps, tClar, false);
+                Common.hasSeenOpportunity = true;
+            }
             menuStackEntry oppSelection = stackManager.GetOppSelectionStack();
 
             oppSelection.index = invManager.currentIndex;
             enterState(oppSelection);
             menuManager.showOpportunityOptions(currentObject.GetComponent<LivingObject>());
+
         }
         else
         {
@@ -17846,7 +17918,7 @@ public class ManagerScript : EventRunner
 
     public void PrepareTutorial(List<tutorialStep> newSteps, List<int> newClarity, bool immediate = true)
     {
-        return;
+
         currentTutorial.isActive = true;
         currentTutorial.steps.Clear();
         currentTutorial.clarifications.Clear();

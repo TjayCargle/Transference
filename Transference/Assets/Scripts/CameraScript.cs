@@ -134,7 +134,7 @@ public class CameraScript : MonoBehaviour
         if (currentTile)
         {
             Vector3 tilePos = currentTile.transform.position;
-            Vector3 camPos = transform.position;
+            //Vector3 camPos = transform.position;
             tilePos.x += x;
             tilePos.y += y;
             tilePos.z += z;
@@ -152,13 +152,14 @@ public class CameraScript : MonoBehaviour
                 {
                     hoverTime += 2 * Time.deltaTime;
 
-                    if (hoverTime >= 2.5f)
+                    if (hoverTime >= 2f)
                     {
 
-                        moving = true;
+                        //moving = true;
                         Vector3 smooth = Vector3.Lerp(transform.position, tilePos, smoothSpd * Time.fixedDeltaTime);
                         transform.position = smooth;
                     }
+                 
                 }
                 else
                 {
@@ -195,6 +196,7 @@ public class CameraScript : MonoBehaviour
             }
             else
             {
+      
                 moving = false;
             }
         }
@@ -277,6 +279,13 @@ public class CameraScript : MonoBehaviour
                         soundTrack = num;
                         fadeMode = -1;
                         nextClip = musicClips[num - 1];
+                    }
+                }
+                else
+                {
+                    if(!audio.isPlaying)
+                    {
+                        audio.Play();
                     }
                 }
             }

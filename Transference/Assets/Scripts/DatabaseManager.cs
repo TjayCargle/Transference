@@ -425,7 +425,7 @@ public class DatabaseManager : MonoBehaviour
                             case Element.Buff:
                                 {
 
-                                    int index = 14;
+
                                     int count = Int32.Parse(parsed[13]);
                                     CommandSkill buff = ScriptableObject.CreateInstance<CommandSkill>();
                                     skill.Transfer(buff);
@@ -832,7 +832,7 @@ public class DatabaseManager : MonoBehaviour
                                         int index = 15;
                                         for (int i = 0; i < count; i++)
                                         {
-                                            SkillEventContainer cont = new SkillEventContainer();
+                                            SkillEventContainer cont = ScriptableObject.CreateInstance<SkillEventContainer>(); //new SkillEventContainer();
                                             SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
                                             index++;
                                             SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);
@@ -1180,7 +1180,7 @@ public class DatabaseManager : MonoBehaviour
                                 int index = 15;
                                 for (int i = 0; i < count; i++)
                                 {
-                                    SkillEventContainer cont = new SkillEventContainer();
+                                    SkillEventContainer cont = ScriptableObject.CreateInstance<SkillEventContainer>();
                                     SkillEvent se = (SkillEvent)Enum.Parse(typeof(SkillEvent), parsed[index]);
                                     index++;
                                     SkillReaction sr = (SkillReaction)Enum.Parse(typeof(SkillReaction), parsed[index]);

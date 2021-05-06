@@ -103,29 +103,29 @@
 78,High Voltage,Electric,Cost,none,20,physical,clover,1,1,100,tiny,1,0,1,onKill,increaseDex
 -
 -Buffs
-80,Ralli Str,Buff,Buff,none,3,magical,any,1,0,20,1,Str,1,0,1
-81,Ralli Mag,Buff,Buff,none,3,magical,any,1,0,20,1,Mag,1,0,1
-82,Ralli Spd,Buff,Buff,none,3,magical,any,1,0,20,1,Spd,1,0,1
-83,Ralli Def,Buff,Buff,none,3,magical,any,1,0,20,1,Def,1,0,1
-84,Ralli Res,Buff,Buff,none,3,magical,any,1,0,20,1,Res,1,0,1
-85,Ralli Dex,Buff,Buff,none,3,magical,any,1,0,20,1,Dex,1,0,1
+80,Ralli Str,Buff,Buff,none,30,magical,any,1,0,20,1,Str,1,0,1
+81,Ralli Mag,Buff,Buff,none,30,magical,any,1,0,20,1,Mag,1,0,1
+82,Ralli Spd,Buff,Buff,none,30,magical,any,1,0,20,1,Spd,1,0,1
+83,Ralli Def,Buff,Buff,none,30,magical,any,1,0,20,1,Def,1,0,1
+84,Ralli Res,Buff,Buff,none,30,magical,any,1,0,20,1,Res,1,0,1
+85,Ralli Dex,Buff,Buff,none,30,magical,any,1,0,20,1,Dex,1,0,1
 -
 -Debuffs
-90,Regress Str,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Str,1,0,1
-91,Regress Mag,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Mag,1,0,1
-92,Regress Spd,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Spd,1,0,1
-93,Regress Def,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Def,1,0,1
-94,Regress Res,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Res,1,0,1
-95,Regress Dex,Buff,Debuff,none,3,magical,adjacent,1,0,-20,1,Dex,1,0,1
+90,Regress Str,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Str,1,0,1
+91,Regress Mag,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Mag,1,0,1
+92,Regress Spd,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Spd,1,0,1
+93,Regress Def,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Def,1,0,1
+94,Regress Res,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Res,1,0,1
+95,Regress Dex,Buff,Debuff,none,30,magical,adjacent,1,0,-20,1,Dex,1,0,1
 -
 -Aliments
-100,Poison Dust,Ailment,Ailment,poison,2,magical,adjacent,1,30,20,poison,1,0,0
-101,Burning Dust,Ailment,Ailment,burn,2,magical,adjacent,1,30,100,burn,1,0,0
-102,Sleepy Dust,Ailment,Ailment,sleep,2,magical,adjacent,1,30,100,sleep,1,0,0
-103,Stunning Dust,Ailment,Ailment,paralyze,2,magical,adjacent,1,30,100,paralyze,1,0,0
-104,Freezing Dust,Ailment,Ailment,freeze,2,magical,adjacent,1,30,100,freeze,1,0,0
-105,Bloody Dust,Ailment,Ailment,bleed,2,magical,adjacent,1,30,100,bleed,1,0,0
-106,Confusing Dust,Ailment,Ailment,confusion,2,magical,adjacent,1,30,100,confusion,1,0,0
+100,Poison Dust,Ailment,Ailment,poison,35,magical,adjacent,1,30,20,poison,1,0,0
+101,Burning Dust,Ailment,Ailment,burn,35,magical,adjacent,1,30,100,burn,1,0,0
+102,Sleepy Dust,Ailment,Ailment,sleep,35,magical,adjacent,1,30,100,sleep,1,0,0
+103,Stunning Dust,Ailment,Ailment,paralyze,35,magical,adjacent,1,30,100,paralyze,1,0,0
+104,Freezing Dust,Ailment,Ailment,freeze,35,magical,adjacent,1,30,100,freeze,1,0,0
+105,Bloody Dust,Ailment,Ailment,bleed,35,magical,adjacent,1,30,100,bleed,1,0,0
+106,Confusing Dust,Ailment,Ailment,confusion,35,magical,adjacent,1,30,100,confusion,1,0,0
 107,Chance Of Fate,Ailment,Ailment,death,0,magical,adjacent,1,1,1,none,skip1,skip2,2,onMiss,increaseAccurracy,onHit,resetAccurracy
 -
 -Opportunity
@@ -201,12 +201,12 @@
 -PullBack
 -
 -Force
-160,Pulse,Force,Charge,pullin,3,physical,adjacent,0,0,90,tiny,1,0,1,1,2
-161,Alt Pulse,Force,Charge,pullin,3,physical,detached,0,0,70,tiny,1,0,1,1,1
-162,Mega Pulse,Force,Cost,pullin,-6,physical,lance,0,0,75,tiny,2,0,1,0,2, onHit, ailmentDmg
-163,Ultra Pulse,Force,Cost,pullin,-8,physical,line,5,0,75,tiny,1,0,2,0,2,1,1, onHit, buffdmg
-164,Arcane Pulse,Force,Magic,pullin,4,magical,cone,0,0,80,tiny,1,0,1,1,1
-165,Etherial Pulse,Force,Magic,pullin,2,magical,detached,0,0,80,tiny,2,0,1,0,2
+160,Pulse,Force,Charge,pullin,30,physical,adjacent,0,0,90,tiny,1,0,1,1,2
+161,Alt Pulse,Force,Charge,pullin,30,physical,detached,0,0,70,tiny,1,0,1,1,1
+162,Mega Pulse,Force,Cost,pullin,-50,physical,lance,0,0,75,tiny,2,0,1,0,2, onHit, ailmentDmg
+163,Ultra Pulse,Force,Cost,pullin,-60,physical,line,5,0,75,tiny,1,0,2,0,2,1,1, onHit, buffdmg
+164,Arcane Pulse,Force,Magic,pullin,40,magical,cone,0,0,80,tiny,1,0,1,1,1
+165,Etherial Pulse,Force,Magic,pullin,20,magical,detached,0,0,80,tiny,2,0,1,0,2
 166,Mystic Pulse,Electric,RngAtk,pullin,32,magical,clover,1,2,75,tiny,2,0,0
 167,Hidden Pulse,Electric,RngAtk,knockback,30,physical,spear,1,2,70,tiny,1,0,0
 168,Forced Shield,Force,Cost,none,20,physical,square,1,1,100,tiny,1,0,1,onKill,enterGuardState

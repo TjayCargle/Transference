@@ -204,6 +204,8 @@ public class ShopScreen : MonoBehaviour
                                 }
 
                             }
+
+
                         }
                     }
                 }
@@ -226,17 +228,20 @@ public class ShopScreen : MonoBehaviour
                                     if (SELECTED.refItem.GetType() == typeof(WeaponScript))
                                     {
                                         loadBuyerList(2);
+                                                topicText.text += "\n Strikes require Skills";
                                     }
                                     else if (SELECTED.refItem.GetType() == typeof(ArmorScript))
                                     {
-                                        loadBuyerList(1);
+                                        loadBuyerList(3);
+                                                topicText.text += "\n Barriers require Spells";
                                     }
                                     else
                                     {
                                         switch (((SkillScript)SELECTED.refItem).ELEMENT)
                                         {
                                             case Element.Passive:
-                                                loadBuyerList(5);
+                                                loadBuyerList(1);
+                                                topicText.text += "\n Combos require Barriers";
                                                 break;
                                             case Element.Auto:
                                                 loadBuyerList(4);
@@ -245,7 +250,27 @@ public class ShopScreen : MonoBehaviour
                                                 loadBuyerList(6);
                                                 break;
                                             default:
-                                                loadBuyerList(0);
+                                                if (SELECTED.refItem is CommandSkill)
+                                                {
+
+                                                    if (((CommandSkill)SELECTED.refItem).ETYPE == EType.physical)
+                                                    {
+                                                        loadBuyerList(3);
+                                                        topicText.text += "\n Skills require Spells";
+                                                    }
+                                                    else
+                                                    {
+                                                        loadBuyerList(0);
+                                                        topicText.text += "\n Spells require Strikes";
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    loadBuyerList(0);
+
+                                                }
+
                                                 break;
                                         }
                                     }
@@ -703,37 +728,37 @@ public class ShopScreen : MonoBehaviour
                         case 0:
                             refUseable = buyer.INVENTORY.WEAPONS[i];
                             selectedType = 0;
-                         
+
                             break;
                         case 1:
                             refUseable = buyer.INVENTORY.ARMOR[i];
                             selectedType = 1;
-                          
+
                             break;
                         case 2:
                             refUseable = buyer.PHYSICAL_SLOTS.SKILLS[i];
                             selectedType = 2;
-                         
+
                             break;
                         case 3:
                             refUseable = buyer.MAGICAL_SLOTS.SKILLS[i];
                             selectedType = 3;
-                           
+
                             break;
                         case 4:
                             refUseable = buyer.COMBO_SLOTS.SKILLS[i];
                             selectedType = 4;
-                          
+
                             break;
                         case 5:
                             refUseable = buyer.AUTO_SLOTS.SKILLS[i];
                             selectedType = 5;
-                         
+
                             break;
                         case 6:
                             refUseable = buyer.INVENTORY.OPPS[i];
                             selectedType = 5;
-                          
+
                             break;
                     }
                     if (buyerSkills[i].transform.parent.GetComponent<shopBtn>())
@@ -901,6 +926,8 @@ public class ShopScreen : MonoBehaviour
                                 if (augBtn.GetComponentInChildren<TextMeshProUGUI>())
                                     augBtn.GetComponentInChildren<TextMeshProUGUI>().text = Common.GetAugmentNameText(augBtn.AUGMENT);
                                 augBtn.GetComponent<shopBtn>().desc = Common.GetAugmentEffectText(augBtn.AUGMENT, usingSkill);
+                                augBtn.GetComponent<shopBtn>().UpdateInactivity(false);
+
                             }
                             else
                             {

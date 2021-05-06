@@ -447,7 +447,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Charge:
                     {
                         if (OWNER)
-                            return Mathf.Max(0,(cost - OWNER.PHYSLEVEL));
+                            return Mathf.Max(0, (cost - OWNER.PHYSLEVEL));
                         else
                             return (int)(cost * modification);
                     }
@@ -455,7 +455,7 @@ public class CommandSkill : SkillScript
                 case SubSkillType.Cost:
                     {
                         if (OWNER)
-                            return Mathf.Min(0, (cost + (OWNER.PHYSLEVEL*2)));
+                            return Mathf.Min(0, (cost + (OWNER.PHYSLEVEL * 2)));
                         else
                             return (int)(cost * modification);
                     }
@@ -486,7 +486,7 @@ public class CommandSkill : SkillScript
         else
         {
             if (OWNER)
-                return Mathf.Max(0, (cost - OWNER.MAGLEVEL)); 
+                return Mathf.Max(0, (cost - OWNER.MAGLEVEL));
             else
                 return (int)(cost * modification);
         }
@@ -763,7 +763,7 @@ public class CommandSkill : SkillScript
         {
             if (SUBTYPE == SubSkillType.Charge)
             {
-                potentialDesc += " Must Charge Fatigue by " +(cost * -1) + ".";
+                potentialDesc += " Must Charge Fatigue by " + (cost * -1) + ".";
             }
             else
             {
@@ -796,7 +796,7 @@ public class CommandSkill : SkillScript
         {
             case Augment.levelAugment:
                 // DAMAGE = Common.GetNextDmg(DAMAGE);
-                for (int i = 0; i < 2; i++)
+                // for (int i = 0; i < 2; i++)
                 {
                     LevelUP();
                 }
@@ -856,7 +856,11 @@ public class CommandSkill : SkillScript
     public override void LevelUP()
     {
         // base.LevelUP();
-
+        if (exp > 0)
+        {
+            exp = 5 + (level * 3);
+            maxExp = exp;
+        }
         if (level > 0 && level < Common.MaxSkillLevel)
         {
             LEVEL++;
@@ -1116,11 +1120,11 @@ public class CommandSkill : SkillScript
 
         if (level < Common.MaxSkillLevel)
         {
-       
+
             returnedString += "\n " + (exp) + " uses to level up";
-            
+
         }
-     
+
 
         return returnedString;
     }

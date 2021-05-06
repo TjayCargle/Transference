@@ -131,7 +131,7 @@ public class WeaponScript : UsableScript
             case Augment.none:
                 break;
             case Augment.levelAugment:
-                for (int i = 0; i < 5; i++)
+               // for (int i = 0; i < 5; i++)
                 {
                     LevelUP();
                 }

@@ -1308,7 +1308,16 @@ public class LivingObject : GridObject
         TakeRealAction();
         myManager.myCamera.UpdateCamera();
 
-        myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        if (ACTIONS <= 0)
+        {
+            myManager.CreateEvent(this, null, "buffered clean event", myManager.BufferedCleanEvent);
+
+        }
+        else
+        {
+
+            myManager.CreateEvent(this, null, "return state event", myManager.BufferedCamUpdate);
+        }
         return true;
     }
     public virtual bool HealEvent(Object data)
@@ -1545,7 +1554,7 @@ public class LivingObject : GridObject
     }
     public void TrueHeal()
     {
-        ChangeHealth((int)((0.20f * MAX_HEALTH)));
+        ChangeHealth((int)((0.25f * MAX_HEALTH)));
         if (myManager != null)
         {
             if (myManager.liveEnemies.Count == 0)
@@ -1564,7 +1573,7 @@ public class LivingObject : GridObject
     }
     public void TrueRestore()
     {
-        ChangeMana((int)((0.20f * MAX_MANA)));
+        ChangeMana((int)((0.25f * MAX_MANA)));
         if (myManager != null)
         {
             if (myManager.liveEnemies.Count == 0)
@@ -1581,7 +1590,7 @@ public class LivingObject : GridObject
     }
     public void TrueCharge()
     {
-        ChangeFatigue(-1 * (int)((0.20f * MAX_FATIGUE)));
+        ChangeFatigue(-1 * (int)((0.25f * MAX_FATIGUE)));
         if (myManager != null)
         {
             if (myManager.liveEnemies.Count == 0)
@@ -1598,7 +1607,7 @@ public class LivingObject : GridObject
     }
     public void TrueDrain()
     {
-        ChangeFatigue((int)((0.20f * MAX_FATIGUE)));
+        ChangeFatigue((int)((0.25f * MAX_FATIGUE)));
         if (myManager != null)
         {
             if (myManager.liveEnemies.Count == 0)
@@ -1638,9 +1647,21 @@ public class LivingObject : GridObject
     }
     public void TrueWait()
     {
-        ChangeHealth((int)((0.10f * MAX_HEALTH) * (actions + 1)));
-        ChangeMana((int)((0.10f * MAX_MANA) * (actions + 1)));
-        ChangeFatigue((int)((0.10f * MAX_FATIGUE) * (actions + 1)));
+        ChangeHealth((int)((0.15f * MAX_HEALTH) * (actions + 1)));
+        ChangeMana((int)((0.15f * MAX_MANA) * (actions + 1)));
+        ChangeFatigue((int)((0.15f * MAX_FATIGUE) * (actions + 1)));
+
+        if (myManager != null)
+        {
+            if (myManager.liveEnemies.Count == 0)
+            {
+                ChangeHealth(100);
+                ChangeMana(100);
+                ChangeFatigue(100);
+
+            }
+        }
+
         //   Debug.Log(NAME + " pre: " + modifiedStats.MANA);
         // float t1 = ((int)(0.15 * MAX_MANA) * (actions + 1));
         // Debug.Log(NAME + " test: " + t1 + " actions:" + actions);

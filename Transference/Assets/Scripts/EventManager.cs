@@ -56,7 +56,7 @@ public class EventManager : EventRunner
                         currentEvent.START();
                     if (currentEvent.STARTW != null)
                         currentEvent.STARTW(currentEvent.data);
-                  // Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
+                //   Debug.Log("Starting event: " + currentEvent.name + " from " + currentEvent.caller);
 
                 }
             }

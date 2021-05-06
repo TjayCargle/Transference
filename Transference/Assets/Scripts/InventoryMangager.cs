@@ -1484,7 +1484,7 @@ public class InventoryMangager : MonoBehaviour
 
     private void AutoRotate()
     {
-        float startingDegree = 0;
+        //float startingDegree = 0;
         if (currentRect)
         {
             if (currentContent)
@@ -1827,7 +1827,7 @@ public class InventoryMangager : MonoBehaviour
                         }
                         CommandSkill cmd = ((CommandSkill)item);
 
-                        string extraText = "";
+                        //string extraText = "";
                         if (proText)
                         {
 

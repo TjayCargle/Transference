@@ -38,7 +38,7 @@ public class TooltipConnector : MonoBehaviour
                 {
                     ComboSkill combo = myUsable as ComboSkill;
 
-                    myTooltip.infoLeft = "*Combo: @" + combo.NAME + " \n @" +  combo.FIRST + "," +  combo.SECOND + "," + combo.THIRD + ". \n" + "Grant + 1 action on next turn when above combination is used";
+                    myTooltip.infoLeft = "*Combo: @" + combo.NAME + " \n @" +  combo.FIRST + "," +  combo.SECOND + "," + combo.THIRD + ". \n" + "Grant + "+combo.GAIN+" action on next turn when above combination is used";
 
                 }
                 else if (myUsable.GetType() == typeof(ItemScript))

@@ -22,7 +22,7 @@ h,9
 d,5,85,40,49
 m,Lower Hallway,Upper Hallway,Bridge,Lesson Room
 l,7,1,9,5
-x,37,1,47,0
+x,37,2,47,0
 e,35,13,44,46,75,45
 ei,3,0,1,0,5,101
 -g,45

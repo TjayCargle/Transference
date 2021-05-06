@@ -22,6 +22,7 @@ d,0,37,4
 m,Western Hallway,Art Gallery,Gift Shop
 l,6,8,3
 x,34,5,23
-e,17,18
-stt,reposition,saveLoad
-sti,12,30
+e,17,18,11,12,22
+stt,reposition,reposition,saveLoad
+sti,21,13,30
+st, 10, 15, 20, 14, 19, 24

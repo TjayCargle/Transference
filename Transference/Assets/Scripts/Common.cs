@@ -1205,10 +1205,11 @@ public class Common : ScriptableObject
     public static bool hasLearnedFromEnemy = false;
     public static bool hasSeenJaxAndZeffCatchUp = false;
     public static bool hasSeenDesperation = false;
+    public static bool hasSeenOpportunity = false;
     public static int MaxSkillLevel = 10;
     public static int maxDmg = 999;
     public static int MaxLevel = 99;
-    public static float VersionNumber = 0.9112f;
+    public static float VersionNumber = 0.925f;
     public static string VERSION = "Version";
     public static string JaxSaveSlot1 = "JaxSaveSlot1";
 
@@ -3215,6 +3216,11 @@ public class Common : ScriptableObject
                     returnedString = "Desperation; When a unit ends up with negative actions, they take <color=yellow>non-lethal </color>desperation damage. Desperation damage is 10 times the amount of negative actions.\nBe careful, a unit that starts their turn with zero or less actions, they gain <color=yellow>a resistance barrier and shields </color> equal to how many actions were negative.\nUse this to take down mighty foes!";
                 }
                 break;
+            case 33:
+                {
+                    returnedString = "Opportunity Attacks; When an <color=yellow>adjacent </color>ally uses a specific element, some <color=yellow>Skills</color> and <color=yellow>Spells</color> can be activated immediately. \n\n When activated this way, these attacks cost no resources or actions to be used. However, the same Opportunity Attack cannot be triggered again until the character moves to a new location.";
+                }
+                break;
             default:
                 break;
 
@@ -4320,6 +4326,7 @@ public class Common : ScriptableObject
             dataIIndex++;
 
             System.Int32.TryParse(dataString[dataIIndex], out curInx);
+
             newWeapon.LEVEL = curInx;
             dataIIndex++;
 
@@ -4389,11 +4396,7 @@ public class Common : ScriptableObject
                 newWeapon.AUGMENTS.Add(someAugment);
                 dataIIndex++;
             }
-
-            for (int j = 1; j < newWeapon.LEVEL; j++)
-            {
-                newWeapon.LevelUP();
-            }
+           
 
         }
 
@@ -4469,10 +4472,7 @@ public class Common : ScriptableObject
                 dataIIndex++;
             }
 
-            for (int j = 1; j < newArmor.LEVEL; j++)
-            {
-                newArmor.LevelUP();
-            }
+
 
         }
 
@@ -4589,10 +4589,10 @@ public class Common : ScriptableObject
                 dataIIndex++;
             }
 
-            for (int j = 1; j < newSkill.LEVEL; j++)
-            {
-                newSkill.LevelUP();
-            }
+            //for (int j = 1; j < newSkill.LEVEL; j++)
+            //{
+            //    newSkill.LevelUP();
+            //}
 
         }
 
@@ -4626,10 +4626,10 @@ public class Common : ScriptableObject
                 newCombo.GAIN++;
             }
 
-            for (int j = 1; j < newCombo.LEVEL; j++)
-            {
-                newCombo.LevelUP();
-            }
+            //for (int j = 1; j < newCombo.LEVEL; j++)
+            //{
+            //    newCombo.LevelUP();
+            //}
 
         }
 
@@ -4725,10 +4725,10 @@ public class Common : ScriptableObject
 
 
 
-            for (int j = 1; j < newItem.LEVEL; j++)
-            {
-                newItem.LevelUP();
-            }
+            //for (int j = 1; j < newItem.LEVEL; j++)
+            //{
+            //    newItem.LevelUP();
+            //}
 
         }
 

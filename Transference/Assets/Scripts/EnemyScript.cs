@@ -187,6 +187,7 @@ public class EnemyScript : LivingObject
         {
             if (lastAttack.command != null && lastAttack.command.ELEMENT == Element.Support)
             {
+
                 myManager.ApplyEffect(null, lastAttack.command.EFFECT, 100, lastAttack.command);
                 TakeRealAction();
                 return true;
@@ -266,7 +267,7 @@ public class EnemyScript : LivingObject
             // LivingObject realTarget = target as LivingObject;
             if (SSTATUS == SecondaryStatus.confusion)
             {
-                int chance = Random.Range(0, 2);
+                int chance = Random.Range(0, 5);
 
                 if (chance <= 2)
                 {
@@ -2120,11 +2121,23 @@ public class EnemyScript : LivingObject
         }
         else if (id == 8)
         {
+            if(lastAttack == null)
+            {
             lastAttack = new AtkContainer();
+            }
+            lastReaction.atkName = INVENTORY.CSKILLS[0].NAME;
+            lastReaction.usedSkill = INVENTORY.CSKILLS[0];
+            lastReaction.usedStrike = null;
+            lastReaction.reaction = Reaction.none;
+           // bestReaction = myManager.CalcDamage(this, target, usedSkill, Reaction.none, false);
+
             lastAttack.attackingElement = Element.Support;
             lastAttack.command = INVENTORY.CSKILLS[0];
             lastAttack.attackType = EType.magical;
-
+            lastAttack.dmgObject = this;
+            lastAttack.strike = null;
+            lastAttack.react = lastReaction;
+            atkTarget = null;
             GridAnimationObj gao = null;
             gao = myManager.PrepareGridAnimation(null, this);
             gao.type = -2;
@@ -2509,95 +2522,14 @@ public class EnemyScript : LivingObject
         {
             TakeAction();
         }
-        //  List<EActType> etypes = new List<EActType>();
-        //  List<path> possiblePaths = new List<path>();
-        //  LivingObject liveObj = null;
+
         for (int i = 0; i < psudeoActions; i++)
         {
             myManager.CreateEvent(this, null, "" + FullName + "determine action event " + i, DetermineNextAction, null, 0);
-            //if (HEALTH > HEALTH * 0.5)
-            // {
-            // Debug.Log(FullName + " performing action " + i);
-
-            //    liveObj = FindNearestEnemy();
-            //    if (liveObj)
-            //    {
-            //        bool amount = FindEnemiesInRangeOfAttacks(calcLocation);
-            //        if (amount == false)
-            //        {
-            //            TileScript targetTile = new TileScript();
-            //            currentEnemy = liveObj;
-            //            targetTile = DetermineMoveLocation(liveObj.currentTile);
-
-            //            if (targetTile)
-            //            {
-            //                if (myManager.eventManager)
-            //                {
-            //                    calcLocation = targetTile.transform.position;
-            //                    calcLocation.y = 0.5f;
-
-            //                    path p = ScriptableObject.CreateInstance<path>();
-            //                    p.realTarget = targetTile;
-            //                    p.currentPath = new Queue<TileScript>();
-            //                    //myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-            //                    //myManager.CreateEvent(this, p, "" + FullName + "move event" + i, MoveEvent,null,0);
-            //                    etypes.Add(EActType.move);
-            //                    possiblePaths.Add(p);
-            //                }
-            //                else
-            //                {
-            //                    Debug.Log("Could not find event manager");
-            //                }
-            //            }
-            //            else
-            //            {
-            //                Debug.Log("No target tile, waiting...");
-            //                Wait();
-            //            }
-
-            //        }
-            //        else
-            //        {
-            //            //        Debug.Log("Doing an attack event");
-            //            //   myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event", EAtkEvent, null,0);
-            //            etypes.Insert(0, EActType.atk);
-            //            //   TakeAction();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        // TakeAction();
-
-            //        isPerforming = false;
-            //        Wait();
-            //    }
-            //}
+   
         }
-        //int pathNum = possiblePaths.Count - 1;
-        //for (int i = 0; i < etypes.Count; i++)
-        //{
-        //    switch (etypes[i])
-        //    {
-        //        case EActType.move:
-        //            //  myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-        //            myManager.CreateEvent(this, possiblePaths[pathNum], "" + FullName + "move event " + i, MoveEvent, null, 0, MoveStart);
-        //            pathNum--;
-        //            break;
+        myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
 
-        //        case EActType.atk:
-        //            // myManager.CreateEvent(this, this, "Enemy Camera Event", myManager.CameraEvent);
-        //            myManager.CreateEvent(this, liveObj, "" + FullName + "Atk event " + i, EAtkEvent, AttackStart, 0);
-        //            break;
-
-
-
-        //    }
-        //}
-        //   else
-
-        // myManager.CreateEvent(this, this, "Select Camera Event", myManager.CameraEvent, null, 0);
-
-        //  myManager.ShowGridObjectMoveArea(this);
         isPerforming = false;
     }
     public override void Die()
@@ -2848,9 +2780,15 @@ public class EnemyScript : LivingObject
                         {
                             string response = "";
                             if (id == 101)
+                            {
                                 response = "You will pay for this!";
+                                myManager.myCamera.previousClip = myManager.myCamera.musicClips[10];
+                            }
                             else
+                            {
+
                                 response = "Just.... Die.. . .";
+                            }
 
                                 SceneContainer scene = database.GenerateScene(NAME, response, FACE);
                             if (id == 102)

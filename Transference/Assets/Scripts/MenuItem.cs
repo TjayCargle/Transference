@@ -391,7 +391,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     break;
                 case MenuItemType.Skills:
                     {
-
+                        if (invokingObject == null)
+                            return;
                         myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
                         MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();
@@ -600,6 +601,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     break;
                 case MenuItemType.Spells:
                     {
+                        if (invokingObject == null)
+                            return;
 
                         myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
@@ -618,7 +621,8 @@ public class MenuItem : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     break;
                 case MenuItemType.Strikes:
                     {
-
+                        if (invokingObject == null)
+                            return;
                         myManager.StackNewSelection(State.playerUsingSkills, currentMenu.act);
 
                         MenuManager myMenuManager = myManager.gameObject.GetComponent<MenuManager>();

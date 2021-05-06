@@ -95,7 +95,7 @@ public class ComboSkill : SkillScript
         {
             if (OWNER)
             {
-                OWNER.GENERATED++;
+                OWNER.GENERATED+= GAIN;
             }
             else
             {

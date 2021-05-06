@@ -330,8 +330,8 @@ public class CutsceneManager : MonoBehaviour
                     }
                     if (checkMap.mapIndex == 8)
                     {
-                        someManager.myCamera.PlaySoundTrack(4);
-                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[4];
+                        someManager.myCamera.PlaySoundTrack(2);
+                        someManager.myCamera.previousClip = someManager.myCamera.musicClips[16];
                         if (talkPanel)
                         {
 

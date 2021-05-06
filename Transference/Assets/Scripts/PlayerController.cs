@@ -1322,6 +1322,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("no opp");
             return;
         }
+            Debug.Log("opp from " + invoker.FullName);
         bool check = false;
         if (currentSkill != null)
         {
@@ -2084,6 +2085,19 @@ public class PlayerController : MonoBehaviour
 
     public bool ShowCmd(Object data)
     {
+
+        if (myManager.currentTutorial.steps.Count > 0)
+      {
+          if (myManager.currentTutorial.currentStep < myManager.currentTutorial.steps.Count)
+          {
+              tutorialStep curStep = myManager.currentTutorial.steps[myManager.currentTutorial.currentStep];
+              if (curStep == tutorialStep.useStrike || curStep == tutorialStep.useSkill || curStep == tutorialStep.useSpell)
+              {
+                    myManager.DidCompleteTutorialStep();
+              }
+          }
+      }
+
         if (myManager.oppEvent.caller == null)
         {
             if (current)
@@ -2094,6 +2108,7 @@ public class PlayerController : MonoBehaviour
                     sr.color = Color.white;
                 }
                 current.TakeAction();
+
 
             }
         }

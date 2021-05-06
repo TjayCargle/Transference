@@ -101,10 +101,7 @@ public class MenuManager : MonoBehaviour
 
     public void ShowEventCanvas(int type = -1)
     {
-        if (opportunityCanvas)
-        {
-            opportunityCanvas.gameObject.SetActive(false);
-        }
+     
         if (eventCanvas)
         {
             eventCanvas.gameObject.SetActive(true);
