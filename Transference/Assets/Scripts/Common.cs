@@ -246,6 +246,16 @@ public enum DetailType
     Effects,
     Exp
 }
+
+public enum ObjectiveType
+{
+    none,
+    exit,
+    defeatAll,
+    defeatBoss,
+    defeatAllFaction
+}
+
 public enum ShopWindow
 {
     none,
