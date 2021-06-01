@@ -15,6 +15,7 @@
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
 i,34
+t,4
 w,9
 h,6
 r,10,11,12,14,15,16,28,31,34,37,40,43

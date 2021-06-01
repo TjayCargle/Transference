@@ -15,9 +15,10 @@
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
 i,35
+t,5
 w,5
 h,7
-r,6,7,8,12,17,22,26,27,28
+r,0,1,4,11,12,13,17,22,26,27,28
 st,0,4,11,13,16,18,21,23,30,34
 d,19,32
 m,Kitchen,Basement Stairwell

@@ -15,11 +15,12 @@
 -num objs/ obj indexs = o [location], [location] 
 -obj ids = oi [location], [location] 
 i,28
+t,2
 w,6
 h,5
-r,1,7,13,14,15,20,21
+r,1,3,4,5,7,13,14,15,20,21
 st,8,9,18,19,22,25,28,29
-sti,5
+sti,16
 stt,saveLoad
 d,0,2,17
 m,Basement,Pantry,Museum
