@@ -363,7 +363,7 @@ public class LevelCreationManager : MonoBehaviour
                     {
                         int tindex = data.unOccupiedIndexes[i];
                         tileMap[tindex].canBeOccupied = false;
-                        tileMap[tindex].MYCOLOR = Common.trans;
+                        tileMap[tindex].MYCOLOR = Color.white; //Common.trans;
                     }
                 }
 

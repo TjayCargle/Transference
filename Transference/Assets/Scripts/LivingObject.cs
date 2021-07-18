@@ -1004,7 +1004,7 @@ public class LivingObject : GridObject
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.Rotate(new Vector3(90, 0, 0));
-            transform.localScale = new Vector3(2, 2, 2);
+            transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
 
         }
         //  Debug.Log("Setup done");

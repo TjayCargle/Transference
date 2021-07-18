@@ -247,15 +247,6 @@ public enum DetailType
     Exp
 }
 
-public enum ObjectiveType
-{
-    none,
-    exit,
-    defeatAll,
-    defeatBoss,
-    defeatAllFaction
-}
-
 public enum ShopWindow
 {
     none,
@@ -1159,7 +1150,10 @@ public enum ObjectiveType
     defeatAllEnemies,
     defeatSpecificGlyph,
     defeatAllGlyphs,
-    storyRelated
+    storyRelated,
+    exit,
+    defeatBoss,
+    defeatAllFaction
 }
 
 public class Common : ScriptableObject

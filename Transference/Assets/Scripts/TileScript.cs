@@ -58,7 +58,7 @@ public class TileScript : MonoBehaviour, IComparable
                     {
                         if(value != Common.orange)
                         {
-                        myColor = value * 0.25f;
+                        myColor = value * 0.65f;
                         myColor.a = 1;
                         }
                         else
@@ -109,7 +109,7 @@ public class TileScript : MonoBehaviour, IComparable
             mat = myRender.material;
             texture = mat.mainTexture;
         }
-        MYCOLOR = Color.black;
+        MYCOLOR = Color.white;
 
         if (GetComponent<MeshFilter>())
         {
@@ -190,12 +190,12 @@ public class TileScript : MonoBehaviour, IComparable
 
     public void setTexture(Texture t)
     {
-        //texture = t;
-        //mat.mainTexture = texture;
+        texture = t;
+        mat.mainTexture = texture;
     }
     public void setUVs(float startX, float finaleX, float startY, float finaleY)
     {
-        return;
+       // return;
         if (uvs.Length != 4)
         {
             uvs = new Vector2[4];

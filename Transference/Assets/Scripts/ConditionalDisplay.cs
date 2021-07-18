@@ -36,8 +36,10 @@ public class ConditionalDisplay : MonoBehaviour
     public bool dontShowForStrikeTutorial = false;
     public bool dontShowForSkillTutorial = false;
     public bool dontShowForSpellTutorial = false;
-	 public bool dontShowForAllocateTutorial = false;
+    public bool dontShowForAllocateTutorial = false;
+    public bool playerOrTile = false;
 
+    public bool tweenAble = false;
     // Use this for initialization
     void Start()
     {
@@ -107,7 +109,25 @@ public class ConditionalDisplay : MonoBehaviour
 
         }
 
-
+        if (playerOrTile == true)
+        {
+            if (manager.myCamera.infoObject == null)
+            {
+                if (manager.myCamera.selectedTile)
+                {
+                    if (manager.myCamera.selectedTile.TTYPE == TileType.regular)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                }
+            }
+            else if (manager.myCamera.infoObject.FACTION != Faction.ally)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+        }
 
         if (requriesSelectedPlayer == true)
         {
@@ -119,7 +139,7 @@ public class ConditionalDisplay : MonoBehaviour
                     gameObject.SetActive(false);
                     return;
                 }
-                else if(manager.myCamera.infoObject.FACTION != Faction.ally)
+                else if (manager.myCamera.infoObject.FACTION != Faction.ally)
                 {
                     gameObject.SetActive(false);
                     return;
@@ -151,12 +171,12 @@ public class ConditionalDisplay : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
-           else if (mustBeLiving == true && !manager.myCamera.infoObject.GetComponent<LivingObject>())
-           {
+            else if (mustBeLiving == true && !manager.myCamera.infoObject.GetComponent<LivingObject>())
+            {
 
-               gameObject.SetActive(false);
-               return;
-           }
+                gameObject.SetActive(false);
+                return;
+            }
         }
 
         if (manager)
@@ -309,13 +329,13 @@ public class ConditionalDisplay : MonoBehaviour
                         case tutorialStep.useItem:
                             break;
                         case tutorialStep.allocate:
-						{
-							if(dontShowForAllocateTutorial == true)
-							{
-								gameObject.SetActive(false);
+                            {
+                                if (dontShowForAllocateTutorial == true)
+                                {
+                                    gameObject.SetActive(false);
                                     return;
-							}
-						}
+                                }
+                            }
                             break;
                         case tutorialStep.defeatEnemy:
                             break;

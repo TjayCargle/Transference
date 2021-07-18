@@ -168,8 +168,6 @@ public class ManagerScript : EventRunner
             currentTutorial.steps = new List<tutorialStep>();
             currentTutorial.clarifications = new List<int>();
 
-
-
             if (eventImage)
             {
                 eventImage.Setup();
@@ -2837,11 +2835,67 @@ public class ManagerScript : EventRunner
 
         for (int i = 0; i < displays.Length; i++)
         {
+            Vector3 originPosition = displays[i].transform.position;
             displays[i].UpdateDisplay(this);
+            if (displays[i].tweenAble)
+            {
+
+                if (displays[i].isActiveAndEnabled)
+                {
+                    ComeOnScreen(displays[i], originPosition);
+                }
+                else
+                {
+                    MoveOffScreen(displays[i], originPosition);
+                }
+            }
         }
 
+    }
+
+    private void MoveOffScreen(ConditionalDisplay obj, Vector3 finalPosition)
+    {
+        obj.gameObject.SetActive(true);
+        RectTransform poss = obj.GetComponent<RectTransform>();
+        Vector2 anoChor = Vector2.zero;
+
+        if (poss != null)
+        {
+            anoChor = poss.anchoredPosition;
+        }
+        LeanTween.move(obj.gameObject, finalPosition - new Vector3(1000, 1000), 0.2f).setOnComplete(x =>
+        {
+            obj.gameObject.transform.position = finalPosition;
+            if (poss != null)
+            {
+                obj.GetComponent<RectTransform>().anchoredPosition = anoChor;
+            }
+            obj.gameObject.SetActive(false);
+        });
 
     }
+
+    private void ComeOnScreen(ConditionalDisplay obj, Vector3 finalPosition)
+    {
+        obj.gameObject.SetActive(true);
+        RectTransform poss = obj.GetComponent<RectTransform>();
+        Vector2 anoChor = Vector2.zero;
+
+        if (poss != null)
+        {
+            anoChor = poss.anchoredPosition;
+        }
+        obj.gameObject.transform.position = finalPosition - new Vector3(1000, 1000);
+        LeanTween.move(obj.gameObject, finalPosition, 0.2f).setOnComplete(x =>
+        {
+            obj.gameObject.transform.position = finalPosition;
+            if (poss != null)
+            {
+                obj.GetComponent<RectTransform>().anchoredPosition = anoChor;
+            }
+        });
+    }
+
     public void ShowCantUseText(string showText)
     {
         CreateTextEvent(this, showText, "error text event", CheckText, TextStart);
@@ -3396,17 +3450,17 @@ public class ManagerScript : EventRunner
                 currEntry = defaultEntry;
                 menuStack.Add(defaultEntry);
             }
-        
-                        //Debug.Log("menu is: " + currEntry.menu);
+
+            //Debug.Log("menu is: " + currEntry.menu);
             switch (currEntry.menu)
             {
                 case currentMenu.command:
                     {
 
-                        
+
                         if (player.current)
                         {
-                            if(player.current.ACTIONS > 0)
+                            if (player.current.ACTIONS > 0)
                             {
                                 currentState = State.PlayerInput;
                                 menuManager.ShowCommandCanvas();
@@ -3417,7 +3471,7 @@ public class ManagerScript : EventRunner
                             {
                                 returnState();
                             }
-                        } 
+                        }
                         else
                         {
                             returnState();
@@ -4076,10 +4130,30 @@ public class ManagerScript : EventRunner
         if (dialog != null)
         {
             var dialogTexts = new List<DialogData>();
+            DialogData ddata = null;
             for (int i = 0; i < currentScene.speakertext.Count; i++)
             {
                 //Debug.Log(scene.speakerFace);
-                dialogTexts.Add(new DialogData(currentScene.speakertext[i], currentScene.speakerFace[i], currentScene.speakerNames[i]));
+                if (currentScene.speakertext[i].StartsWith("$") && ddata != null)
+                {
+                    string[] splitStr = currentScene.speakertext[i].Split('|');
+                    ddata.SelectList.Add(splitStr[0], splitStr[1]);
+                }
+                else
+                {
+                    ddata = new DialogData(currentScene.speakertext[i], currentScene.speakerFace[i], currentScene.speakerNames[i]);
+                    dialogTexts.Add(ddata);
+                }
+
+            }
+            for (int i = currentScene.speakertext.Count - 1; i >= 0; i--)
+            {
+                if (currentScene.speakertext[i].StartsWith("$"))
+                {
+                    currentScene.speakerNames.RemoveAt(i);
+                    currentScene.speakertext.RemoveAt(i);
+                    currentScene.speakerFace.RemoveAt(i);
+                }
             }
             dialog.state = Doublsb.Dialog.State.Active;
             dialog.Show(dialogTexts);
@@ -5403,11 +5477,11 @@ public class ManagerScript : EventRunner
 
         for (int i = 0; i < map.doorIndexes.Count; i++)
         {
-            tileMap[map.doorIndexes[i]].MAT.mainTexture = doorTexture;
+            //tileMap[map.doorIndexes[i]].MAT.mainTexture = doorTexture;
             tileMap[map.doorIndexes[i]].MAP = map.roomNames[i];
             tileMap[map.doorIndexes[i]].ROOM = map.roomIndexes[i];
             tileMap[map.doorIndexes[i]].START = map.startIndexes[i];
-            tileMap[map.doorIndexes[i]].setUVs(0, 1, 0, 1);
+            //tileMap[map.doorIndexes[i]].setUVs(0, 1, 0, 1);
             tileMap[map.doorIndexes[i]].TTYPE = TileType.door;
         }
         if (map.shopIndexes.Count > 0)
@@ -5894,11 +5968,11 @@ public class ManagerScript : EventRunner
         data.yElevation = -1 * data.yElevation;
         for (int i = 0; i < data.doorIndexes.Count; i++)
         {
-            tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
+            //tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
             tileMap[data.doorIndexes[i]].MAP = data.roomNames[i];
             tileMap[data.doorIndexes[i]].ROOM = data.roomIndexes[i];
             tileMap[data.doorIndexes[i]].START = data.startIndexes[i];
-            tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
+            // tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
             tileMap[data.doorIndexes[i]].TTYPE = TileType.door;
         }
         if (data.shopIndexes.Count > 0)
@@ -5969,7 +6043,7 @@ public class ManagerScript : EventRunner
             {
                 int tindex = data.unOccupiedIndexes[i];
                 tileMap[tindex].canBeOccupied = false;
-                tileMap[tindex].gameObject.SetActive(false);
+                tileMap[tindex].gameObject.SetActive(true);
             }
         }
         int largestLevel = 1;
@@ -6735,11 +6809,11 @@ public class ManagerScript : EventRunner
             data.yElevation = -1 * data.yElevation;
             for (int i = 0; i < data.doorIndexes.Count; i++)
             {
-                tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
+                // tileMap[data.doorIndexes[i]].MAT.mainTexture = doorTexture;
                 tileMap[data.doorIndexes[i]].MAP = data.roomNames[i];
                 tileMap[data.doorIndexes[i]].ROOM = data.roomIndexes[i];
                 tileMap[data.doorIndexes[i]].START = data.startIndexes[i];
-                tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
+                // tileMap[data.doorIndexes[i]].setUVs(0, 1, 0, 1);
                 tileMap[data.doorIndexes[i]].TTYPE = TileType.door;
             }
             if (data.shopIndexes.Count > 0)
@@ -6814,7 +6888,7 @@ public class ManagerScript : EventRunner
                 {
                     int tindex = data.unOccupiedIndexes[i];
                     tileMap[tindex].canBeOccupied = false;
-                    tileMap[tindex].gameObject.SetActive(false);
+                    tileMap[tindex].gameObject.SetActive(true);
                 }
             }
 
@@ -16486,6 +16560,19 @@ public class ManagerScript : EventRunner
 
     public void GotoNewRoom()
     {
+        if (currentObjective.TYPE != ObjectiveType.none)
+        {
+            if (isObjectiveMet() == false)
+            {
+                CreateTextEvent(this, "Have not completed objective", "objective", CheckText, TextStart);
+                PlayExitSnd();
+                return;
+            }
+            else
+            {
+                currentObjective.CompleteObjective();
+            }
+        }
         if (player.current)
         {
             TileScript tile = player.current.currentTile;
@@ -18213,6 +18300,29 @@ public class ManagerScript : EventRunner
                     {
                         return true;
                     }
+                }
+                break;
+            case ObjectiveType.exit:
+                {
+                    return true;
+                }
+                break;
+            case ObjectiveType.defeatBoss:
+                {
+                    for (int i = 0; i < liveEnemies.Count; i++)
+                    {
+                        if (liveEnemies[i].id >= 100)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+                break;
+            case ObjectiveType.defeatAllFaction:
+                {
+                    //todo
                 }
                 break;
         }

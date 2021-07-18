@@ -401,6 +401,7 @@ public class CameraScript : MonoBehaviour
                         // infoCanvas.gameObject.SetActive(true);
                         if (infoObject != null)
                         {
+                            actionText.alignment = TextAlignmentOptions.Right;
 
 
                             if (!infoObject.GetComponent<TempObject>())
@@ -758,6 +759,7 @@ public class CameraScript : MonoBehaviour
                     }
                     else
                     {
+                        actionText.alignment = TextAlignmentOptions.Center;
                         switch (updateTile.TTYPE)
                         {
                             case TileType.regular:
@@ -765,7 +767,7 @@ public class CameraScript : MonoBehaviour
                             case TileType.door:
                                 {
 
-                                    actionText.text = "" + updateTile.MAP;
+                                    actionText.text = "Exit to " + updateTile.MAP;
                                     infoText.text = "";
                                 }
                                 break;
@@ -778,7 +780,7 @@ public class CameraScript : MonoBehaviour
                                 break;
                             case TileType.help:
                                 {
-                                    actionText.text = "Tip";
+                                    actionText.text = "Tip Tile";
                                     string[] extraParse = updateTile.EXTRA.Split(';');
                                     if (extraParse.Length > 1)
                                     {
@@ -851,6 +853,7 @@ public class CameraScript : MonoBehaviour
             {
                 if (actionText.gameObject.activeInHierarchy)
                 {
+
                     // actionText.gameObject.SetActive(false);
                 }
             }

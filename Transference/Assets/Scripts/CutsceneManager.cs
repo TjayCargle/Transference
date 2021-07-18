@@ -227,7 +227,7 @@ public class CutsceneManager : MonoBehaviour
                                 //MoveCameraAndShow(liveZeff);
                                 talkPanel.gameObject.SetActive(true);
                                 currentScene = Common.GetDatabase().GetSceneData("JaxFindZeff");
-                                currentObjectiveString = "Work with Jax";
+                                currentObjectiveString = "Work with Zeffron";
                                 someManager.currentState = State.SceneRunning;
                                 talkPanel.scene = currentScene;
                                 currentScene.index = 0;
